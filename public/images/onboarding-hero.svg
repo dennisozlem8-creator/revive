@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+  <rect width="800" height="400" fill="#0d1b2e"/>
+  <circle cx="200" cy="200" r="100" fill="#2563eb" opacity="0.15"/>
+  <circle cx="600" cy="180" r="80" fill="#8b5cf6" opacity="0.12"/>
+  <rect x="280" y="60" width="240" height="280" rx="20" fill="#1a2f4a" stroke="#60a5fa" stroke-width="2"/>
+  <circle cx="400" cy="130" r="40" fill="#2563eb" opacity="0.3"/>
+  <rect x="320" y="190" width="160" height="12" rx="4" fill="#334155"/>
+  <rect x="320" y="220" width="120" height="12" rx="4" fill="#334155"/>
+  <rect x="320" y="260" width="160" height="40" rx="20" fill="#2563eb" opacity="0.5"/>
+  <text x="355" y="287" fill="#f0f6ff" font-family="system-ui" font-size="16" font-weight="bold">Get Started</text>
+  <text x="120" y="350" fill="#60a5fa" font-family="system-ui" font-size="20" font-weight="bold">Welcome aboard!</text>
+  <path d="M100 200 L180 160 L180 240 Z" fill="#10b981" opacity="0.3"/>
+  <text x="145" y="210" fill="#10b981" font-family="system-ui" font-size="24">1</text>
+  <path d="M620 200 L700 160 L700 240 Z" fill="#f59e0b" opacity="0.3"/>
+  <text x="665" y="210" fill="#f59e0b" font-family="system-ui" font-size="24">2</text>
+</svg>

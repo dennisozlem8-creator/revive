@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" fill="none">
+  <rect width="200" height="160" rx="16" fill="#112240"/>
+  <path d="M60 120 Q100 40 140 120" stroke="#60A5FA" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <circle cx="60" cy="120" r="8" fill="#2563EB"/>
+  <circle cx="140" cy="120" r="8" fill="#2563EB"/>
+  <path d="M100 50 L100 90" stroke="#93C5FD" stroke-width="4" stroke-dasharray="4 4"/>
+  <text x="100" y="150" text-anchor="middle" fill="#94A3B8" font-size="12" font-family="sans-serif">Stretch</text>
+</svg>

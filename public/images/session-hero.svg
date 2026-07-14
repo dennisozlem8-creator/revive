@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+  <rect width="800" height="400" fill="#0d1b2e"/>
+  <circle cx="400" cy="200" r="130" fill="#2563eb" opacity="0.12"/>
+  <rect x="200" y="80" width="400" height="240" rx="20" fill="#1a2f4a" stroke="#60a5fa" stroke-width="2"/>
+  <path d="M250 280 L350 180 L450 240 L550 140" stroke="#10b981" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle cx="550" cy="140" r="12" fill="#10b981"/>
+  <rect x="250" y="100" width="120" height="60" rx="8" fill="#2563eb" opacity="0.2"/>
+  <text x="270" y="140" fill="#60a5fa" font-family="system-ui" font-size="28" font-weight="bold">87�</text>
+  <rect x="430" y="100" width="120" height="60" rx="8" fill="#10b981" opacity="0.2"/>
+  <text x="455" y="140" fill="#10b981" font-family="system-ui" font-size="28" font-weight="bold">8/10</text>
+  <text x="280" y="340" fill="#60a5fa" font-family="system-ui" font-size="22" font-weight="bold">Live ROM Session</text>
+</svg>
