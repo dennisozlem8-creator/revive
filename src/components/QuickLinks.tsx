@@ -3,44 +3,45 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "./AuthProvider";
-import { t } from "@/lib/i18n";
+import { t, resolveLocale } from "@/lib/i18n";
 
 type QuickLink = {
   href: string;
   icon: string;
   labelKey:
     | "today"
-    | "assess"
-    | "library"
-    | "charts"
-    | "ai"
+    | "progress"
+    | "healthRecord"
+    | "coach"
+    | "notifications"
+    | "painLog"
     | "patients"
     | "ptPortal"
     | "support"
-    | "progress"
-    | "home";
+    | "home"
+    | "charts";
 };
 
 const patientLinks: QuickLink[] = [
   { href: "/briefing", icon: "📋", labelKey: "today" },
-  { href: "/", icon: "🦴", labelKey: "assess" },
-  { href: "/library", icon: "📚", labelKey: "library" },
-  { href: "/charts", icon: "📊", labelKey: "charts" },
-  { href: "/recover-ai", icon: "✨", labelKey: "ai" },
+  { href: "/charts", icon: "📊", labelKey: "progress" },
+  { href: "/health-record", icon: "🏥", labelKey: "healthRecord" },
+  { href: "/notifications", icon: "🔔", labelKey: "notifications" },
+  { href: "/recover-ai", icon: "✨", labelKey: "coach" },
 ];
 
 const doctorLinks: QuickLink[] = [
   { href: "/doctor", icon: "🩺", labelKey: "patients" },
   { href: "/pt-update", icon: "📝", labelKey: "ptPortal" },
-  { href: "/charts", icon: "📊", labelKey: "charts" },
-  { href: "/recover-ai", icon: "✨", labelKey: "ai" },
+  { href: "/charts", icon: "charts", labelKey: "charts" },
+  { href: "/recover-ai", icon: "✨", labelKey: "coach" },
 ];
 
 const caregiverLinks: QuickLink[] = [
   { href: "/caregiver", icon: "🏠", labelKey: "home" },
   { href: "/caregiver/support", icon: "💬", labelKey: "support" },
   { href: "/charts", icon: "📈", labelKey: "progress" },
-  { href: "/recover-ai", icon: "✨", labelKey: "ai" },
+  { href: "/recover-ai", icon: "✨", labelKey: "coach" },
 ];
 
 type QuickLinksProps = {
@@ -50,7 +51,7 @@ type QuickLinksProps = {
 export function QuickLinks({ variant }: QuickLinksProps) {
   const { user } = useAuth();
   const pathname = usePathname();
-  const locale = user?.language ?? "en";
+  const locale = resolveLocale(user);
 
   const resolved =
     variant ?? (user?.role === "doctor" ? "doctor" : user?.role === "caregiver" ? "caregiver" : "patient");

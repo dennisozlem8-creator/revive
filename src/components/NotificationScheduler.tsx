@@ -14,12 +14,11 @@ export function NotificationScheduler() {
     if (!user || user.role !== "patient" || !user.notificationsEnabled) return;
 
     requestNotificationPermission();
-
-    sendDailyNotifications(user.email, user.name, user.doctorEmail);
+    sendDailyNotifications(user);
 
     const interval = setInterval(() => {
-      sendDailyNotifications(user.email, user.name, user.doctorEmail);
-    }, 60 * 60 * 1000);
+      sendDailyNotifications(user);
+    }, 15 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, [user]);

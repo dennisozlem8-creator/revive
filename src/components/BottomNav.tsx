@@ -3,27 +3,27 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "./AuthProvider";
-import { t } from "@/lib/i18n";
+import { t, resolveLocale } from "@/lib/i18n";
 
 const patientTabs = [
   { href: "/briefing", key: "today" as const, icon: "📋" },
-  { href: "/charts", key: "charts" as const, icon: "📊" },
-  { href: "/dashboard", key: "care" as const, icon: "💚" },
-  { href: "/recover-ai", key: "ai" as const, icon: "✨" },
+  { href: "/charts", key: "progress" as const, icon: "📊" },
+  { href: "/health-record", key: "healthRecord" as const, icon: "🏥" },
+  { href: "/recover-ai", key: "coach" as const, icon: "✨" },
 ];
 
 const doctorTabs = [
   { href: "/doctor", key: "patients" as const, icon: "🩺" },
   { href: "/pt-update", key: "ptPortal" as const, icon: "📝" },
   { href: "/charts", key: "charts" as const, icon: "📊" },
-  { href: "/recover-ai", key: "ai" as const, icon: "✨" },
+  { href: "/recover-ai", key: "coach" as const, icon: "✨" },
 ];
 
 const caregiverTabs = [
   { href: "/caregiver", key: "home" as const, icon: "🏠" },
   { href: "/caregiver/support", key: "support" as const, icon: "💬" },
   { href: "/charts", key: "progress" as const, icon: "📈" },
-  { href: "/recover-ai", key: "ai" as const, icon: "✨" },
+  { href: "/recover-ai", key: "coach" as const, icon: "✨" },
 ];
 
 type NavVariant = "patient" | "doctor" | "caregiver";
@@ -31,7 +31,7 @@ type NavVariant = "patient" | "doctor" | "caregiver";
 export function BottomNav({ variant }: { variant?: NavVariant }) {
   const { user } = useAuth();
   const pathname = usePathname();
-  const locale = user?.language ?? "en";
+  const locale = resolveLocale(user);
 
   const resolved: NavVariant =
     variant ?? (user?.role === "doctor" ? "doctor" : user?.role === "caregiver" ? "caregiver" : "patient");

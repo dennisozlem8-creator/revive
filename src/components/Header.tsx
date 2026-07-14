@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Logo } from "./Logo";
 import { LanguageToggle } from "./LanguageToggle";
 import { useAuth } from "./AuthProvider";
-import { t } from "@/lib/i18n";
+import { t, resolveLocale } from "@/lib/i18n";
 
 type HeaderProps = {
   linkHome?: boolean;
@@ -20,7 +20,7 @@ function homeHref(role?: string, isKids?: boolean) {
 
 export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   const { user, logout } = useAuth();
-  const locale = user?.language ?? "en";
+  const locale = resolveLocale(user);
   const isKids = variant === "kids";
   const isDoctor = variant === "doctor" || user?.role === "doctor";
   const isCaregiver = variant === "caregiver" || user?.role === "caregiver";
@@ -49,7 +49,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
                 : "text-muted"
           }`}
         >
-          Physical Therapy
+          Physical therapy assistant
         </p>
       </div>
     </div>

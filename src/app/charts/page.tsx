@@ -6,7 +6,8 @@ import { TabRow } from "@/components/ui/TabRow";
 import { useAuth } from "@/components/AuthProvider";
 import { calculateStreak } from "@/lib/streak";
 import { painTrend, averagePain } from "@/lib/pain-tracker";
-import { t } from "@/lib/i18n";
+import { patientCompliance } from "@/lib/progress-analytics";
+import { t, resolveLocale } from "@/lib/i18n";
 
 type ChartTab = "rom" | "reps" | "pain";
 
@@ -16,10 +17,11 @@ export default function ChartsPage() {
 
   if (!user) return null;
 
-  const locale = user.language ?? "en";
+  const locale = resolveLocale(user);
   const isDoctor = user.role === "doctor";
   const isCaregiver = user.role === "caregiver";
   const isProvider = isDoctor || isCaregiver;
+  const compliance = isProvider ? undefined : patientCompliance(user);
   const patients = isDoctor ? getPatientsForDoctor() : isCaregiver ? getPatientsForCaregiver() : [];
   const sessions = user.exerciseHistory;
   const romValues = isProvider
@@ -49,7 +51,7 @@ export default function ChartsPage() {
           ? `${patients.length} ${t("patients", locale).toLowerCase()} · ${t("doctorChartsHint", locale)}`
           : isCaregiver
             ? `${patients.length} ${t("lovedOnes", locale).toLowerCase()} · ${t("caregiverChartsHint", locale)}`
-            : `${sessions.length} sessions · ${calculateStreak(user)} day streak`
+            : `${sessions.length} sessions · ${calculateStreak(user)} day streak · ${compliance ?? 0}% ${t("complianceLabel", locale).toLowerCase()}`
       }
     >
       <div className="mt-6">

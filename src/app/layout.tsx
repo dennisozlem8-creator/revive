@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Revive Motion",
-  description: "Guided recovery and mobility exercises by body area.",
+  description: "Physical therapy assistant for guided recovery and mobility exercises.",
 };
 
 export default function RootLayout({

@@ -73,8 +73,8 @@ export function Logo({ size = 56, showText = true, className = "" }: LogoProps) 
           <span className="text-2xl font-semibold tracking-tight text-foreground">
             Revive Motion
           </span>
-          <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent-light">
-            Physical Therapy
+          <span className="text-xs font-medium uppercase tracking-[0.14em] text-accent-light">
+            Physical therapy assistant
           </span>
         </div>
       )}

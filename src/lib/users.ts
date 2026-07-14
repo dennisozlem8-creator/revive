@@ -1,6 +1,8 @@
 import type { PainEntry } from "./pain-tracker";
 import type { DailyPlan } from "./daily-plan";
 
+import type { TreatmentPlan } from "./treatment-plan";
+
 export type InjuryType = "knee" | "ankle" | "elbow" | "wrist" | "other";
 
 export type PTPrescription = {
@@ -59,6 +61,7 @@ export type User = {
   ptPrescription?: PTPrescription;
   lastCheckInDate?: string;
   checkInAnswers?: Record<string, string | number>;
+  treatmentPlan?: TreatmentPlan;
 };
 
 const USERS_KEY = "revive-motion-users";
@@ -111,6 +114,7 @@ export function loadUsers(): User[] {
       ptPrescription: u.ptPrescription,
       lastCheckInDate: u.lastCheckInDate,
       checkInAnswers: u.checkInAnswers,
+      treatmentPlan: u.treatmentPlan,
     }));
   } catch {
     return [];

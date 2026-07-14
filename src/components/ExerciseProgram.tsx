@@ -6,6 +6,9 @@ import { getExerciseMedia } from "@/lib/exercise-media";
 import { getFeedbackState } from "@/lib/feedback";
 import { repDetected } from "@/lib/device-sensor";
 import { startSensorStream } from "@/lib/sensor-hub";
+import { computeAdaptiveSettings } from "@/lib/adaptive-difficulty";
+import { speakVoiceCue } from "@/lib/voice-guide";
+import { resolveLocale } from "@/lib/i18n";
 import { useAuth } from "./AuthProvider";
 import { useSensor } from "./SensorProvider";
 import { addNotification, sendBrowserNotification } from "@/lib/notifications";
@@ -46,10 +49,12 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
   const current = exercises[index];
   if (!current) return null;
 
+  const locale = resolveLocale(user);
+  const adaptive = user ? computeAdaptiveSettings(user, current) : null;
   const media = getExerciseMedia(current.id, current.name);
   const progress = ((index + 1) / exercises.length) * 100;
-  const targetReps = parseTargetReps(current.sets);
-  const targetAngle = user?.targetRom ?? 90;
+  const targetReps = adaptive?.targetReps ?? parseTargetReps(current.sets);
+  const targetAngle = adaptive?.targetAngle ?? user?.targetRom ?? 90;
   const feedback = getFeedbackState(simAngle, targetAngle);
 
   useEffect(() => {
@@ -102,13 +107,16 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
     if (feedback === "alert") {
       pushAlert(`form-${Date.now()}`, "Adjust your form — move slowly through the full range.", "form");
       setCoachEvent("feedback");
+      speakVoiceCue("adjust", locale);
     } else if (feedback === "almost") {
       pushAlert(`almost-${Date.now()}`, "Almost there — a little more bend!", "tip");
       setCoachEvent("feedback");
+      speakVoiceCue("almost", locale);
     } else if (feedback === "correct") {
       setCoachEvent("tick");
+      speakVoiceCue("correct", locale);
     }
-  }, [feedback, active]);
+  }, [feedback, active, locale]);
 
   function pushAlert(id: string, message: string, tone: ExerciseAlert["tone"]) {
     setAlerts((prev) => {
@@ -130,11 +138,13 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
   function startExercise() {
     setActive(true);
     setCoachEvent("start");
+    speakVoiceCue("start", locale);
     pushAlert("start", `Starting ${current.name} — follow the picture and move with your sensor.`, "tip");
   }
 
   function markDone() {
     setCoachEvent("complete");
+    speakVoiceCue("complete", locale);
     const nextCompleted = [...completed, current.id];
     setCompleted(nextCompleted);
     pushAlert("finish", `✓ ${current.name} logged.`, "success");
@@ -167,6 +177,12 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
 
   return (
     <div className="space-y-6">
+      {adaptive && (
+        <p className="text-sm text-muted">
+          Adaptive: {adaptive.intensity} — {adaptive.reason}
+        </p>
+      )}
+
       <div>
         <div className="mb-2 flex justify-between text-sm">
           <span className="rm-label">Follow your exercises</span>

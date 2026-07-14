@@ -13,6 +13,7 @@ import { logActivityToday } from "@/lib/streak";
 import { addNotification } from "@/lib/notifications";
 import { getPatientsForProvider } from "@/lib/provider-helpers";
 import { logPainEntry, painSpikeDetected, type PainContext } from "@/lib/pain-tracker";
+import { getStoredLocale } from "@/lib/i18n";
 import { generateDailyPlan } from "@/lib/daily-plan";
 import type { RomRecord } from "@/lib/users";
 
@@ -82,6 +83,7 @@ function normalizeUser(raw: Partial<User> & Pick<User, "email" | "password" | "n
     ptPrescription: raw.ptPrescription,
     lastCheckInDate: raw.lastCheckInDate,
     checkInAnswers: raw.checkInAnswers,
+    treatmentPlan: raw.treatmentPlan,
   };
 }
 
@@ -113,6 +115,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
     if (!found) return "Invalid email or password.";
     const normalized = normalizeUser(found);
+    if (!found.language && getStoredLocale() !== "en") {
+      normalized.language = getStoredLocale();
+    }
     localStorage.setItem(SESSION_KEY, normalized.email);
     setUser(normalized);
     return null;
@@ -143,6 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ? options.caregiverEmail.trim().toLowerCase()
           : undefined,
       notificationsEnabled: options.notificationsEnabled ?? true,
+      language: getStoredLocale(),
       exerciseHistory: [],
       questProgress: {},
       xp: 0,
@@ -243,14 +249,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         bodyArea: user.injuryType,
       });
       const spike = painSpikeDetected(history, level);
-      persistUser({ ...user, painHistory: history, painToday: level });
+      const updated = { ...user, painHistory: history, painToday: level };
+      const plan = generateDailyPlan(updated);
+      persistUser({ ...updated, dailyPlan: plan });
 
       if (spike && user.doctorEmail) {
         addNotification({
           toEmail: user.doctorEmail,
           role: "doctor",
-          title: "Pain spike detected",
-          message: `${user.name} reported ${level}/10 (${context}). 7-day trend exceeded.`,
+          title: user.language === "es" ? "Pico de dolor detectado" : "Pain spike detected",
+          message: `${user.name} reported ${level}/10 (${context}).`,
         });
       }
     },

@@ -1,3 +1,5 @@
+import type { User } from "./users";
+
 export type AppNotification = {
   id: string;
   toEmail: string;
@@ -9,7 +11,10 @@ export type AppNotification = {
 };
 
 const NOTIFICATIONS_KEY = "revive-motion-notifications";
-const LAST_DAILY_KEY = "revive-motion-last-daily";
+
+function dailyKey(email: string) {
+  return `revive-motion-last-daily-${email}`;
+}
 
 export function loadNotifications(): AppNotification[] {
   if (typeof window === "undefined") return [];
@@ -48,16 +53,26 @@ export function getNotificationsForUser(email: string) {
   return loadNotifications().filter((n) => n.toEmail === email);
 }
 
-export function shouldSendDailyReminder() {
-  const last = localStorage.getItem(LAST_DAILY_KEY);
+function isReminderWindow(sessionTime: User["sessionTime"]): boolean {
+  const hour = new Date().getHours();
+  if (sessionTime === "morning") return hour >= 7 && hour < 11;
+  if (sessionTime === "afternoon") return hour >= 12 && hour < 17;
+  return hour >= 17 && hour < 21;
+}
+
+export function shouldSendDailyReminder(user: User): boolean {
+  if (!user.notificationsEnabled) return false;
+  if (!isReminderWindow(user.sessionTime)) return false;
+
+  const last = localStorage.getItem(dailyKey(user.email));
   if (!last) return true;
   const lastDate = new Date(last);
   const now = new Date();
-  return now.getTime() - lastDate.getTime() > 24 * 60 * 60 * 1000;
+  return now.getTime() - lastDate.getTime() > 12 * 60 * 60 * 1000;
 }
 
-export function markDailyReminderSent() {
-  localStorage.setItem(LAST_DAILY_KEY, new Date().toISOString());
+export function markDailyReminderSent(email: string) {
+  localStorage.setItem(dailyKey(email), new Date().toISOString());
 }
 
 export async function sendBrowserNotification(title: string, body: string) {
@@ -74,33 +89,36 @@ export function requestNotificationPermission() {
   }
 }
 
-export function sendDailyNotifications(
-  patientEmail: string,
-  patientName: string,
-  doctorEmail?: string
-) {
-  if (!shouldSendDailyReminder()) return;
+export function sendDailyNotifications(user: User) {
+  if (!shouldSendDailyReminder(user)) return;
+
+  const first = user.name.split(" ")[0];
+  const isEs = user.language === "es";
 
   addNotification({
-    toEmail: patientEmail,
+    toEmail: user.email,
     role: "patient",
-    title: "Daily exercise reminder",
-    message: `Hi ${patientName.split(" ")[0]}, time for today's Revive Motion exercises!`,
+    title: isEs ? "Recordatorio diario" : "Daily exercise reminder",
+    message: isEs
+      ? `Hola ${first}, es hora de tus ejercicios de Revive Motion.`
+      : `Hi ${first}, time for today's Revive Motion exercises.`,
   });
 
   sendBrowserNotification(
     "Revive Motion",
-    `Hi ${patientName.split(" ")[0]}, time for your exercises today!`
+    isEs ? `Hola ${first}, ¡hora de ejercitar!` : `Hi ${first}, time for your exercises today!`
   );
 
-  if (doctorEmail) {
+  if (user.doctorEmail) {
     addNotification({
-      toEmail: doctorEmail,
+      toEmail: user.doctorEmail,
       role: "doctor",
-      title: "Patient check-in",
-      message: `${patientName} has a daily exercise reminder. Review their progress in your dashboard.`,
+      title: isEs ? "Recordatorio del paciente" : "Patient reminder",
+      message: isEs
+        ? `${user.name} recibió un recordatorio diario.`
+        : `${user.name} received a daily exercise reminder.`,
     });
   }
 
-  markDailyReminderSent();
+  markDailyReminderSent(user.email);
 }

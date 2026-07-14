@@ -6,19 +6,15 @@ import { useAuth } from "./AuthProvider";
 import { loadUsers } from "@/lib/users";
 import { todayDateString } from "@/lib/streak";
 import type { UserRole } from "@/lib/users";
+import { t, type Locale } from "@/lib/i18n";
 
 type AuthFormProps = {
   mode: "login" | "register";
   hideHeader?: boolean;
+  locale?: Locale;
 };
 
 const roles: UserRole[] = ["patient", "doctor", "caregiver"];
-
-const roleLabels: Record<UserRole, string> = {
-  patient: "Patient",
-  doctor: "Doctor",
-  caregiver: "Caregiver",
-};
 
 function homeForRole(role: UserRole) {
   if (role === "doctor") return "/doctor";
@@ -26,7 +22,7 @@ function homeForRole(role: UserRole) {
   return "/onboarding";
 }
 
-export function AuthForm({ mode, hideHeader }: AuthFormProps) {
+export function AuthForm({ mode, hideHeader, locale = "en" }: AuthFormProps) {
   const { login, register } = useAuth();
   const router = useRouter();
   const [name, setName] = useState("");
@@ -37,6 +33,12 @@ export function AuthForm({ mode, hideHeader }: AuthFormProps) {
   const [caregiverEmail, setCaregiverEmail] = useState("");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [error, setError] = useState("");
+
+  const roleLabels: Record<UserRole, string> = {
+    patient: locale === "es" ? "Paciente" : "Patient",
+    doctor: locale === "es" ? "Doctor" : "Doctor",
+    caregiver: locale === "es" ? "Cuidador" : "Caregiver",
+  };
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -88,34 +90,30 @@ export function AuthForm({ mode, hideHeader }: AuthFormProps) {
       {!hideHeader && (
         <div>
           <h1 className="text-2xl font-semibold">
-            {mode === "login" ? "Welcome back" : "Create your account"}
+            {mode === "login" ? t("patientSignIn", locale) : t("createAccount", locale)}
           </h1>
-          <p className="mt-2 text-sm text-muted">
-            {mode === "login"
-              ? "Sign in as patient, doctor, or caregiver."
-              : "Patients recover at home. Doctors manage clinical plans. Caregivers send daily support."}
-          </p>
+          <p className="mt-2 text-base text-muted">{t("signInSubtitle", locale)}</p>
         </div>
       )}
 
       {hideHeader && mode === "login" && (
         <div className="pb-1">
-          <h2 className="text-lg font-semibold text-white">Sign in</h2>
-          <p className="mt-1 text-sm text-muted">Use your email and password</p>
+          <h2 className="text-xl font-semibold text-white">{t("patientSignIn", locale)}</h2>
+          <p className="mt-1 text-base text-muted">{t("signInSubtitle", locale)}</p>
         </div>
       )}
 
       {mode === "register" && (
         <>
           <div>
-            <label className="rm-auth-label">I am a</label>
+            <label className="rm-auth-label">{locale === "es" ? "Soy un" : "I am a"}</label>
             <div className="grid grid-cols-3 gap-2">
               {roles.map((r) => (
                 <button
                   key={r}
                   type="button"
                   onClick={() => setRole(r)}
-                  className={`rounded-xl border px-2 py-3 text-xs font-bold transition sm:text-sm ${
+                  className={`rounded-xl border px-2 py-3 text-sm font-bold transition sm:text-base ${
                     role === r
                       ? "border-brand bg-brand-soft text-brand-light"
                       : "border-[var(--border)] bg-background"
@@ -128,7 +126,7 @@ export function AuthForm({ mode, hideHeader }: AuthFormProps) {
           </div>
           <div>
             <label htmlFor="name" className="rm-auth-label">
-              Full name
+              {locale === "es" ? "Nombre completo" : "Full name"}
             </label>
             <input
               id="name"
@@ -144,7 +142,7 @@ export function AuthForm({ mode, hideHeader }: AuthFormProps) {
 
       <div>
         <label htmlFor="email" className="rm-auth-label">
-          Email
+          {t("email", locale)}
         </label>
         <input
           id="email"
@@ -158,7 +156,7 @@ export function AuthForm({ mode, hideHeader }: AuthFormProps) {
       </div>
       <div>
         <label htmlFor="password" className="rm-auth-label">
-          Password
+          {t("password", locale)}
         </label>
         <input
           id="password"
@@ -176,38 +174,38 @@ export function AuthForm({ mode, hideHeader }: AuthFormProps) {
         <>
           <div>
             <label htmlFor="doctorEmail" className="rm-auth-label">
-              Doctor email (optional)
+              {locale === "es" ? "Correo del doctor (opcional)" : "Doctor email (optional)"}
             </label>
             <input
               id="doctorEmail"
               type="email"
               value={doctorEmail}
               onChange={(e) => setDoctorEmail(e.target.value)}
-              placeholder="Links you to your PT / doctor"
+              placeholder={locale === "es" ? "Vincula con tu fisioterapeuta" : "Links you to your physical therapist"}
               className="rm-auth-input"
             />
           </div>
           <div>
             <label htmlFor="caregiverEmail" className="rm-auth-label">
-              Caregiver email (optional)
+              {locale === "es" ? "Correo del cuidador (opcional)" : "Caregiver email (optional)"}
             </label>
             <input
               id="caregiverEmail"
               type="email"
               value={caregiverEmail}
               onChange={(e) => setCaregiverEmail(e.target.value)}
-              placeholder="Links you to a family caregiver"
+              placeholder={locale === "es" ? "Vincula con un familiar" : "Links you to a family caregiver"}
               className="rm-auth-input"
             />
           </div>
-          <label className="flex items-center gap-3 text-sm">
+          <label className="flex items-center gap-3 text-base">
             <input
               type="checkbox"
               checked={notificationsEnabled}
               onChange={(e) => setNotificationsEnabled(e.target.checked)}
               className="accent-brand"
             />
-            Send me daily exercise reminders
+            {locale === "es" ? "Enviarme recordatorios diarios" : "Send me daily exercise reminders"}
           </label>
         </>
       )}
@@ -219,7 +217,7 @@ export function AuthForm({ mode, hideHeader }: AuthFormProps) {
       )}
 
       <button type="submit" className="rm-btn rm-btn-primary rm-btn-lg w-full shadow-lg shadow-brand/20">
-        {mode === "login" ? "Sign in" : "Create account"}
+        {mode === "login" ? t("signIn", locale) : t("createAccount", locale)}
       </button>
     </form>
   );
