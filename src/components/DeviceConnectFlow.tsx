@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DEMO_DEVICES } from "@/lib/sensor-hub";
+import { DEMO_DEVICES, getConnectionLabel } from "@/lib/sensor-hub";
 import { SensorHelp } from "./SensorHelp";
 import { useSensor } from "./SensorProvider";
 
@@ -10,9 +10,11 @@ type DeviceConnectFlowProps = {
   compact?: boolean;
 };
 
+type ConnectPhase = "idle" | "scanning" | "found" | "connecting" | "connected";
+
 export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowProps) {
-  const { connection, connectSimulated, connectBluetooth, connectSerial, bluetoothAvailable, serialAvailable } = useSensor();
-  const [phase, setPhase] = useState<"idle" | "scanning" | "found" | "connecting" | "connected">("idle");
+  const { connection, connectSimulated, connectBluetooth, connectSerial, connectHc05, bluetoothAvailable, serialAvailable } = useSensor();
+  const [phase, setPhase] = useState<ConnectPhase>("idle");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [visibleDevices, setVisibleDevices] = useState<typeof DEMO_DEVICES>([]);
   const [error, setError] = useState<string | null>(null);
@@ -42,9 +44,25 @@ export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowPro
     setSelectedId(null);
   }
 
+  async function attemptPair(
+    connect: () => Promise<boolean>,
+    failureMessage: string,
+    failurePhase: Extract<ConnectPhase, "idle" | "found"> = "idle"
+  ) {
+    setPhase("connecting");
+    setError(null);
+    const ok = await connect();
+    if (ok) {
+      setPhase("connected");
+      onConnected();
+      return;
+    }
+    setError(failureMessage);
+    setPhase(failurePhase);
+  }
+
   async function connectDevice(id: string, name: string, kind: "rom" | "pulse" | "combo" = "rom") {
     setSelectedId(id);
-    setPhase("connecting");
     setError(null);
     try {
       await connectSimulated(id, name, kind);
@@ -56,35 +74,11 @@ export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowPro
     }
   }
 
-  async function pairBluetooth() {
-    setPhase("connecting");
-    setError(null);
-    const ok = await connectBluetooth();
-    if (ok) {
-      setPhase("connected");
-      onConnected();
-    } else {
-      setError("Bluetooth pairing cancelled or unavailable.");
-      setPhase("idle");
-    }
-  }
-
-  async function pairSerial() {
-    setPhase("connecting");
-    setError(null);
-    const ok = await connectSerial();
-    if (ok) {
-      setPhase("connected");
-      onConnected();
-    } else {
-      setError("USB connection cancelled or failed. Close Arduino Serial Monitor first.");
-      setPhase("idle");
-    }
-  }
-
   const deviceName =
     connection?.deviceName ??
     DEMO_DEVICES.find((d) => d.id === selectedId)?.name;
+
+  const connectionLabel = getConnectionLabel(connection);
 
   return (
     <div className={compact ? "space-y-4" : "space-y-6"}>
@@ -126,12 +120,12 @@ export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowPro
             {phase === "connected" && "Sensor connected"}
           </p>
           <p className="text-sm text-muted">
-            {phase === "idle" && "Pair via USB cable, Bluetooth, or demo sensor."}
+            {phase === "idle" && "Pair via USB, HC-05 Bluetooth, BLE, or demo sensor."}
             {phase === "scanning" && "Looking for Revive Motion sensors"}
             {phase === "found" && "Tap a device to pair — readings feed measurements automatically"}
             {phase === "connecting" && `Pairing with ${deviceName ?? "sensor"}…`}
             {phase === "connected" &&
-              `${connection?.source === "serial" ? "USB" : connection?.source === "bluetooth" ? "Bluetooth" : "Demo"} · ${
+              `${connectionLabel} · ${
                 connection?.hasHeartRate ? "MAX30102 BPM" : "ROM"
               }${connection?.kind === "combo" ? " + angle" : ""}`}
           </p>
@@ -139,15 +133,44 @@ export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowPro
         {phase === "idle" && (
           <div className="flex shrink-0 flex-col gap-2">
             {serialAvailable && (
-              <button type="button" onClick={pairSerial} className="rm-btn rm-btn-primary px-5 py-3 text-sm">
-                USB Cable
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() =>
+                    attemptPair(
+                      connectSerial,
+                      "USB connection cancelled or failed. Close Arduino Serial Monitor first."
+                    )
+                  }
+                  className="rm-btn rm-btn-primary px-5 py-3 text-sm"
+                >
+                  USB Cable
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    attemptPair(
+                      connectHc05,
+                      "HC-05 connection failed. Pair in Windows Bluetooth first, then pick the COM port."
+                    )
+                  }
+                  className="rm-btn rm-btn-primary px-5 py-3 text-sm"
+                >
+                  HC-05 Bluetooth
+                </button>
+              </>
             )}
             <button type="button" onClick={startScan} className="rm-btn rm-btn-brand px-5 py-3 text-sm">
               Scan
             </button>
             {bluetoothAvailable && (
-              <button type="button" onClick={pairBluetooth} className="rm-btn rm-btn-ghost px-5 py-2 text-xs">
+              <button
+                type="button"
+                onClick={() =>
+                  attemptPair(connectBluetooth, "Bluetooth pairing cancelled or unavailable.")
+                }
+                className="rm-btn rm-btn-ghost px-5 py-2 text-xs"
+              >
                 Real BLE
               </button>
             )}

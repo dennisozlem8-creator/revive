@@ -31,6 +31,7 @@ type SensorContextValue = {
   connectSimulated: (deviceId: string, deviceName: string, kind?: SensorDeviceKind) => Promise<void>;
   connectBluetooth: () => Promise<boolean>;
   connectSerial: () => Promise<boolean>;
+  connectHc05: () => Promise<boolean>;
   disconnect: () => void;
   refresh: () => void;
 };
@@ -91,23 +92,27 @@ export function SensorProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  const connectBluetooth = useCallback(async () => {
-    const conn = await tryConnectBluetooth();
-    if (conn) {
-      setConnection(conn);
-      return true;
-    }
-    return false;
+  const attemptConnect = useCallback(async (connect: () => Promise<SensorConnection | null>) => {
+    const conn = await connect();
+    if (!conn) return false;
+    setConnection(conn);
+    return true;
   }, []);
 
-  const connectSerial = useCallback(async () => {
-    const conn = await tryConnectSerial();
-    if (conn) {
-      setConnection(conn);
-      return true;
-    }
-    return false;
-  }, []);
+  const connectBluetooth = useCallback(
+    () => attemptConnect(tryConnectBluetooth),
+    [attemptConnect]
+  );
+
+  const connectSerial = useCallback(
+    () => attemptConnect(() => tryConnectSerial("usb")),
+    [attemptConnect]
+  );
+
+  const connectHc05 = useCallback(
+    () => attemptConnect(() => tryConnectSerial("hc05")),
+    [attemptConnect]
+  );
 
   const disconnect = useCallback(() => {
     disconnectSensor();
@@ -125,10 +130,11 @@ export function SensorProvider({ children }: { children: React.ReactNode }) {
       connectSimulated,
       connectBluetooth,
       connectSerial,
+      connectHc05,
       disconnect,
       refresh,
     }),
-    [connection, bluetoothAvailable, serialAvailable, vitals, connectSimulated, connectBluetooth, connectSerial, disconnect, refresh]
+    [connection, bluetoothAvailable, serialAvailable, vitals, connectSimulated, connectBluetooth, connectSerial, connectHc05, disconnect, refresh]
   );
 
   return <SensorContext.Provider value={value}>{children}</SensorContext.Provider>;

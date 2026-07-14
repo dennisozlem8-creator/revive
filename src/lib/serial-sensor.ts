@@ -1,5 +1,17 @@
 import { isValidBpm } from "./heart-rate";
 
+export type SerialTransport = "usb" | "hc05";
+
+export type SerialProfileKey = SerialTransport;
+
+export const SERIAL_PROFILES: Record<
+  SerialProfileKey,
+  { baudRate: number; label: string; transport: SerialTransport }
+> = {
+  usb: { baudRate: 115200, label: "Arduino USB", transport: "usb" },
+  hc05: { baudRate: 9600, label: "HC-05 Bluetooth", transport: "hc05" },
+};
+
 export type SerialSensorPayload = {
   hr?: number;
   spo2?: number;
@@ -87,17 +99,25 @@ async function readSerialLoop(port: SerialPort) {
   }
 }
 
-export async function connectSerialPort(): Promise<string | null> {
+export type SerialConnectOptions = {
+  baudRate?: number;
+  deviceLabel?: string;
+};
+
+export async function connectSerialPort(options?: SerialConnectOptions): Promise<string | null> {
   if (!isSerialAvailable() || !navigator.serial) return null;
 
   await disconnectSerialPort();
 
+  const baudRate = options?.baudRate ?? SERIAL_PROFILES.usb.baudRate;
+  const deviceLabel = options?.deviceLabel ?? SERIAL_PROFILES.usb.label;
+
   try {
     const port = await navigator.serial.requestPort();
-    await port.open({ baudRate: 115200 });
+    await port.open({ baudRate });
     serialPort = port;
     void readSerialLoop(port);
-    return "Arduino USB";
+    return deviceLabel;
   } catch {
     return null;
   }

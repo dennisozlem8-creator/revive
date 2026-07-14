@@ -1,5 +1,6 @@
 "use client";
 
+import { getConnectionDescription, getConnectionLabel } from "@/lib/sensor-hub";
 import { useSensor } from "./SensorProvider";
 
 export function SensorStatus({ compact }: { compact?: boolean }) {
@@ -28,23 +29,12 @@ export function SensorStatus({ compact }: { compact?: boolean }) {
   return (
     <div className={`rounded-xl border border-correct/30 bg-correct/5 ${compact ? "px-3 py-2" : "px-4 py-3"}`}>
       <p className="text-xs font-medium text-correct">
-        {connection.source === "serial"
-          ? "USB"
-          : connection.source === "bluetooth"
-            ? "Bluetooth"
-            : "Demo"}{" "}
-        · {connection.deviceName}
+        {getConnectionLabel(connection)} · {connection.deviceName}
         {pulseLabel}
       </p>
       {!compact && (
         <p className="mt-0.5 text-xs text-muted">
-          {connection.source === "serial"
-            ? "MAX30102 via Arduino USB — finger on sensor for BPM"
-            : connection.kind === "pulse"
-            ? "Heart rate from MAX30102 — wear on finger during exercises"
-            : connection.kind === "combo"
-              ? "Live angle + MAX30102 heart rate"
-              : "Live ROM and rep measurements"}
+          {getConnectionDescription(connection)}
           {liveSpO2 ? ` · SpO₂ ${liveSpO2}%` : ""}
           {connection.source === "simulated" && " (demo mode)"}
         </p>

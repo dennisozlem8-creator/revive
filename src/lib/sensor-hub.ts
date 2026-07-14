@@ -2,8 +2,11 @@ import {
   connectSerialPort,
   disconnectSerialPort,
   isSerialAvailable,
+  SERIAL_PROFILES,
   setSerialDataHandler,
+  type SerialProfileKey,
   type SerialSensorPayload,
+  type SerialTransport,
 } from "./serial-sensor";
 import {
   estimateBpmFromActivity,
@@ -28,6 +31,9 @@ export type SensorReading = {
 
 export type SensorDeviceKind = "rom" | "pulse" | "combo";
 
+export type { SerialProfileKey, SerialTransport };
+export { SERIAL_PROFILES };
+
 export type SensorConnection = {
   deviceId: string;
   deviceName: string;
@@ -35,6 +41,7 @@ export type SensorConnection = {
   kind: SensorDeviceKind;
   hasHeartRate: boolean;
   connectedAt: string;
+  serialTransport?: SerialTransport;
 };
 
 const SENSOR_KEY = "revive-motion-sensor";
@@ -64,6 +71,30 @@ let latestSensorAngle = 0;
 let latestSensorHr: number | null = null;
 let latestSensorSpO2: number | null = null;
 let hrSource: HeartRateSource = "none";
+
+export function getConnectionLabel(conn: SensorConnection | null | undefined): string {
+  if (!conn) return "Demo";
+  if (conn.serialTransport === "hc05") return "HC-05";
+  if (conn.source === "serial") return "USB";
+  if (conn.source === "bluetooth") return "Bluetooth";
+  return "Demo";
+}
+
+export function getConnectionDescription(conn: SensorConnection): string {
+  if (conn.serialTransport === "hc05") {
+    return "MAX30102 via Arduino + HC-05 — finger on sensor for BPM";
+  }
+  if (conn.source === "serial") {
+    return "MAX30102 via Arduino USB — finger on sensor for BPM";
+  }
+  if (conn.kind === "pulse") {
+    return "Heart rate from MAX30102 — wear on finger during exercises";
+  }
+  if (conn.kind === "combo") {
+    return "Live angle + MAX30102 heart rate";
+  }
+  return "Live ROM and rep measurements";
+}
 
 export function loadSensorConnection(): SensorConnection | null {
   if (typeof window === "undefined") return null;
@@ -232,11 +263,12 @@ function resetSensorVitals() {
   hrSource = "none";
 }
 
-export async function tryConnectSerial(): Promise<SensorConnection | null> {
+export async function tryConnectSerial(profile: SerialProfileKey = "usb"): Promise<SensorConnection | null> {
+  const { baudRate, label, transport } = SERIAL_PROFILES[profile];
   resetSensorVitals();
   setSerialDataHandler(handleSerialPayload);
 
-  const portName = await connectSerialPort();
+  const portName = await connectSerialPort({ baudRate, deviceLabel: label });
   if (!portName) {
     setSerialDataHandler(null);
     return null;
@@ -249,9 +281,15 @@ export async function tryConnectSerial(): Promise<SensorConnection | null> {
     kind: "pulse",
     hasHeartRate: true,
     connectedAt: new Date().toISOString(),
+    serialTransport: transport,
   };
   saveSensorConnection(conn);
   return conn;
+}
+
+/** HC-05 classic Bluetooth — pairs as a COM port on Windows (9600 baud). */
+export async function tryConnectHc05(): Promise<SensorConnection | null> {
+  return tryConnectSerial("hc05");
 }
 
 export async function tryConnectBluetooth(): Promise<SensorConnection | null> {

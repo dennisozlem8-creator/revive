@@ -31,6 +31,19 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
       {open && (
         <div className="mt-3 space-y-3 text-sm text-body">
           <div>
+            <p className="font-semibold text-foreground">Arduino + HC-05 (wireless, no ESP32)</p>
+            <p className="mt-1">
+              Wire MAX30102 to Arduino and HC-05 to pins 0/1, upload{" "}
+              <code className="text-brand-light">hardware/arduino-max30102-hc05.ino</code>, pair HC-05
+              in Windows Bluetooth, then tap <strong className="text-foreground">HC-05 Bluetooth</strong> and
+              pick the COM port (not Real BLE).
+            </p>
+            <p className="mt-1 text-xs text-muted">
+              See <code className="text-brand-light">hardware/HC05-SETUP.md</code> for wiring and pairing.
+            </p>
+          </div>
+
+          <div>
             <p className="font-semibold text-foreground">Arduino + USB (no ESP32)</p>
             <p className="mt-1">
               Wire MAX30102 to Arduino Uno (3.3V, SDA→A4, SCL→A5), upload{" "}

@@ -4,8 +4,9 @@ Three ways to get live data into the app:
 
 | Method | Hardware | Best for |
 |--------|----------|----------|
-| **USB Cable** | Arduino + MAX30102 | No ESP32 — plug Arduino into PC |
-| **Real BLE** | ESP32 + MAX30102 | Wireless |
+| **USB Cable** | Arduino + MAX30102 | Plug Arduino into PC |
+| **HC-05 Bluetooth** | Arduino + MAX30102 + HC-05 | Wireless without ESP32 |
+| **Real BLE** | ESP32 + MAX30102 | Wireless (Web Bluetooth) |
 | **Scan (demo)** | None | Testing UI without hardware |
 
 ---
@@ -79,7 +80,27 @@ MAX30102          Elegoo Uno R3
 
 ---
 
-## Option B: ESP32 + Bluetooth
+## Option B: Arduino + HC-05 Bluetooth (wireless, no ESP32)
+
+HC-05 is **classic Bluetooth** — it shows up as a **COM port** on Windows after pairing. The app uses **HC-05 Bluetooth** (not Real BLE).
+
+Full wiring and pairing: **`HC05-SETUP.md`**
+
+| Part | Connect |
+|------|---------|
+| MAX30102 | Same as USB: 5V, GND, SDA→A4, SCL→A5 |
+| HC-05 VCC/GND | 5V, GND |
+| HC-05 TXD → Arduino pin 0 | HC-05 RXD ← pin 1 (use 1k/2k divider on 3.3V modules) |
+
+1. Upload `arduino-max30102-hc05/arduino-max30102-hc05.ino` (9600 baud).
+2. Pair HC-05 in Windows → note COM port in Device Manager.
+3. App: Session → **HC-05 Bluetooth** → select that COM port.
+
+Test link only (no sensor): `arduino-hc05-demo/arduino-hc05-demo.ino`
+
+---
+
+## Option C: ESP32 + Bluetooth (BLE)
 
 See `esp32-max30102-ble.ino` — same sensor, wireless via BLE.
 
