@@ -8,6 +8,7 @@ import { KidsModeLink } from "@/components/KidsModeLink";
 import { ResetAppButton } from "@/components/ResetAppButton";
 import { CaregiverPortalHint } from "@/components/CaregiverPortalHint";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { BRAND_NAME } from "@/lib/branding";
 import { getStoredLocale, t } from "@/lib/i18n";
 
 export default function LoginPage() {
@@ -28,10 +29,10 @@ export default function LoginPage() {
         </div>
 
         <header className="animate-fade-up mb-8 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-lg shadow-brand/10">
-            <Logo size={44} showText={false} />
+          <div className="mx-auto flex h-24 w-24 items-center justify-center">
+            <Logo size={88} showText={false} />
           </div>
-          <h1 className="rm-login-title">Revive Motion</h1>
+          <h1 className="rm-login-title">{BRAND_NAME}</h1>
           <p className="rm-login-subtitle">{t("physicalTherapyAssistant", locale)}</p>
         </header>
 

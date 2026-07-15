@@ -7,26 +7,20 @@ type CaregiverPortalHintProps = {
 export function CaregiverPortalHint({ variant = "default" }: CaregiverPortalHintProps) {
   if (variant === "compact") {
     return (
-      <div className="grid grid-cols-2 gap-3">
-        <Link
-          href="/doctor"
-          className="group rounded-xl border border-teal/25 bg-teal/5 p-4 transition hover:border-teal/40 hover:bg-teal/10"
-        >
-          <span className="text-lg" aria-hidden>
+      <div className="grid grid-cols-2 gap-4">
+        <Link href="/doctor" className="rm-portal-tile rm-portal-tile--doctor">
+          <span className="rm-portal-tile-icon" aria-hidden>
             🩺
           </span>
-          <p className="mt-2 text-sm font-semibold text-teal">Doctor</p>
-          <p className="mt-0.5 text-xs text-muted">Clinical dashboard</p>
+          <p className="rm-portal-tile-title text-teal">Doctor</p>
+          <p className="rm-portal-tile-desc">Clinical dashboard</p>
         </Link>
-        <Link
-          href="/caregiver"
-          className="group rounded-xl border border-orange/25 bg-orange/5 p-4 transition hover:border-orange/40 hover:bg-orange/10"
-        >
-          <span className="text-lg" aria-hidden>
+        <Link href="/caregiver" className="rm-portal-tile rm-portal-tile--caregiver">
+          <span className="rm-portal-tile-icon" aria-hidden>
             💛
           </span>
-          <p className="mt-2 text-sm font-semibold text-orange">Caregiver</p>
-          <p className="mt-0.5 text-xs text-muted">Family support</p>
+          <p className="rm-portal-tile-title text-orange">Caregiver</p>
+          <p className="rm-portal-tile-desc">Family support</p>
         </Link>
       </div>
     );

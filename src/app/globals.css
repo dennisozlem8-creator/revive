@@ -31,6 +31,8 @@
   --purple: #a78bfa;
   --gold: #fcd34d;
   --teal: #2dd4bf;
+  --brand-subtitle: #0e7490;
+  --logo-glow: rgba(34, 211, 238, 0.35);
   --kids-bg: #0a0520;
   --caregiver-bg: #fffbf7;
   --caregiver-text: #292524;
@@ -135,10 +137,10 @@ body {
 
 .rm-brand-subtitle {
   font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-light);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: var(--brand-subtitle);
 }
 
 .rm-brand-title--compact {
@@ -165,7 +167,9 @@ body {
 .rm-login-subtitle {
   margin-top: 0.5rem;
   font-size: var(--text-lg);
-  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--brand-subtitle);
 }
 
 /* Patient pages on very light blue — dark headings over legacy text-white */
@@ -175,6 +179,77 @@ body {
 
 .rm-auth-page :is(h1, h2, .rm-login-title) {
   color: var(--foreground);
+}
+
+.rm-portal-tile {
+  display: block;
+  min-height: 8.5rem;
+  border-radius: var(--radius-xl);
+  border-width: 2px;
+  border-style: solid;
+  padding: 1.25rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+@media (min-width: 640px) {
+  .rm-portal-tile {
+    padding: 1.5rem;
+  }
+}
+
+.rm-portal-tile--doctor {
+  border-color: rgba(45, 212, 191, 0.3);
+  background: rgba(45, 212, 191, 0.08);
+}
+
+.rm-portal-tile--doctor:hover {
+  border-color: rgba(45, 212, 191, 0.5);
+  background: rgba(45, 212, 191, 0.12);
+}
+
+.rm-portal-tile--caregiver {
+  border-color: rgba(251, 146, 60, 0.3);
+  background: rgba(251, 146, 60, 0.08);
+}
+
+.rm-portal-tile--caregiver:hover {
+  border-color: rgba(251, 146, 60, 0.5);
+  background: rgba(251, 146, 60, 0.12);
+}
+
+.rm-portal-tile-icon {
+  font-size: 1.875rem;
+  line-height: 1;
+}
+
+@media (min-width: 640px) {
+  .rm-portal-tile-icon {
+    font-size: 2.25rem;
+  }
+}
+
+.rm-portal-tile-title {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+@media (min-width: 640px) {
+  .rm-portal-tile-title {
+    font-size: 1.125rem;
+  }
+}
+
+.rm-portal-tile-desc {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+@media (min-width: 640px) {
+  .rm-portal-tile-desc {
+    font-size: 1rem;
+  }
 }
 
 /* Cards & surfaces */

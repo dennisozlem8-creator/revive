@@ -1,3 +1,5 @@
+import { BRAND_SUBTITLE } from "./branding";
+
 export type Locale = "en" | "es";
 
 const copy = {
@@ -135,7 +137,7 @@ const copy = {
     painToday: "Pain today",
     support: "Support",
     progress: "Progress",
-    physicalTherapyAssistant: "Physical therapy assistant",
+    physicalTherapyAssistant: BRAND_SUBTITLE,
     patientSignIn: "Patient Sign In",
     signInSubtitle: "Sign in to start today's recovery session",
     createAccount: "Create an account",

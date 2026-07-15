@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BRAND_DESCRIPTION, BRAND_NAME } from "@/lib/branding";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthGate } from "@/components/AuthGate";
 import { AuthProvider } from "@/components/AuthProvider";
@@ -18,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Revive Motion",
-  description: "Physical therapy assistant for guided recovery and mobility exercises.",
+  title: BRAND_NAME,
+  description: BRAND_DESCRIPTION,
 };
 
 export default function RootLayout({

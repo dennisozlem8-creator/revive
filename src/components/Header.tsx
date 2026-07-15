@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BRAND_NAME } from "@/lib/branding";
 import { Logo } from "./Logo";
 import { LanguageToggle } from "./LanguageToggle";
 import { useAuth } from "./AuthProvider";
@@ -38,7 +39,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
                 : ""
           }`}
         >
-          Revive Motion
+          {BRAND_NAME}
         </p>
         <p
           className={`rm-brand-subtitle rm-brand-subtitle--compact ${
@@ -46,10 +47,10 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
               ? "text-[var(--doctor-muted)]"
               : isCaregiver
                 ? "text-[var(--caregiver-muted)]"
-                : "text-muted"
+                : ""
           }`}
         >
-          Physical therapy assistant
+          {t("physicalTherapyAssistant", locale)}
         </p>
       </div>
     </div>

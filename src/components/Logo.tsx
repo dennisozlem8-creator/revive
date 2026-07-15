@@ -1,3 +1,5 @@
+import { BRAND_NAME, BRAND_SUBTITLE } from "@/lib/branding";
+
 type LogoProps = {
   size?: number;
   showText?: boolean;
@@ -10,68 +12,35 @@ export function Logo({ size = 56, showText = true, className = "" }: LogoProps) 
       <svg
         width={size}
         height={size}
-        viewBox="0 0 48 48"
+        viewBox="0 0 100 100"
         fill="none"
         aria-hidden
-        className="shrink-0 drop-shadow-[0_4px_12px_rgba(37,99,235,0.35)]"
+        className="shrink-0 drop-shadow-[0_4px_14px_var(--logo-glow)]"
       >
         <defs>
-          <linearGradient id="rm-bg" x1="8" y1="4" x2="40" y2="44">
-            <stop stopColor="#1D4ED8" />
-            <stop offset="1" stopColor="#2563EB" />
-          </linearGradient>
-          <linearGradient id="rm-arc" x1="12" y1="12" x2="36" y2="36">
-            <stop stopColor="#93C5FD" />
-            <stop offset="1" stopColor="#60A5FA" />
+          <linearGradient id="rm-logo-gradient" x1="18" y1="12" x2="82" y2="88" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#84CC16" />
+            <stop offset="0.45" stopColor="#4ADE80" />
+            <stop offset="1" stopColor="#22D3EE" />
           </linearGradient>
         </defs>
 
-        <rect width="48" height="48" rx="14" fill="url(#rm-bg)" />
+        <circle cx="50" cy="50" r="42" stroke="url(#rm-logo-gradient)" strokeWidth="3.5" strokeDasharray="52 18" strokeLinecap="round" />
+        <circle cx="50" cy="8" r="4.5" stroke="url(#rm-logo-gradient)" strokeWidth="2.5" fill="none" />
+        <circle cx="86" cy="68" r="4.5" stroke="url(#rm-logo-gradient)" strokeWidth="2.5" fill="none" />
+        <circle cx="14" cy="68" r="4.5" stroke="url(#rm-logo-gradient)" strokeWidth="2.5" fill="none" />
 
-        <path
-          d="M34 14a14 14 0 0 0-20 0"
-          stroke="url(#rm-arc)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path
-          d="M14 34a14 14 0 0 0 20 0"
-          stroke="url(#rm-arc)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.7"
-        />
-
-        <circle cx="24" cy="22" r="4" fill="#DBEAFE" />
-        <path
-          d="M24 26v6"
-          stroke="#EFF6FF"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M18 34c2-4 4-6 6-6s4 2 6 6"
-          stroke="#EFF6FF"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path
-          d="M24 26l-5-4M24 26l5-4"
-          stroke="#BFDBFE"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-
-        <circle cx="34" cy="34" r="3" fill="#60A5FA" />
-        <circle cx="34" cy="34" r="1.2" fill="#EFF6FF" />
+        <circle cx="58" cy="34" r="5.5" stroke="url(#rm-logo-gradient)" strokeWidth="3" fill="none" />
+        <path d="M58 39.5 L52 52" stroke="url(#rm-logo-gradient)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M52 52 L44 66" stroke="url(#rm-logo-gradient)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M52 52 L62 66" stroke="url(#rm-logo-gradient)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M52 46 L46 38" stroke="url(#rm-logo-gradient)" strokeWidth="3" strokeLinecap="round" />
+        <path d="M52 46 L60 40" stroke="url(#rm-logo-gradient)" strokeWidth="3" strokeLinecap="round" />
       </svg>
       {showText && (
         <div className="flex flex-col">
-          <span className="rm-brand-title">Revive Motion</span>
-          <span className="rm-brand-subtitle">Physical therapy assistant</span>
+          <span className="rm-brand-title">{BRAND_NAME}</span>
+          <span className="rm-brand-subtitle">{BRAND_SUBTITLE}</span>
         </div>
       )}
     </div>
