@@ -1,16 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  --background: #a0cff0;
-  --foreground: #ffffff;
-  --surface: #b5daf5;
-  --surface-elevated: #c5e3f8;
+  /* Patient theme — very light blue */
+  --patient-bg: #e8f4fc;
+  --patient-surface: #f5faff;
+  --patient-surface-elevated: #ffffff;
+  --patient-text: #0c2847;
+  --patient-text-muted: #4a6d8c;
+  --patient-text-body: #1a4468;
+  --patient-border: rgba(59, 130, 246, 0.16);
+  --patient-header: rgba(232, 244, 252, 0.97);
+  --patient-nav: rgba(255, 255, 255, 0.96);
+  --patient-ai-panel: #eef6fc;
+  --patient-glow: rgba(255, 255, 255, 0.9);
+
+  --background: var(--patient-bg);
+  --foreground: var(--patient-text);
+  --surface: var(--patient-surface);
+  --surface-elevated: var(--patient-surface-elevated);
   --accent: #2563eb;
-  --accent-light: #ffffff;
-  --accent-soft: rgba(255, 255, 255, 0.2);
+  --accent-light: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, 0.1);
   --brand: #2563eb;
-  --brand-light: #ffffff;
-  --brand-soft: rgba(255, 255, 255, 0.2);
+  --brand-light: #1d4ed8;
+  --brand-soft: rgba(37, 99, 235, 0.12);
   --correct: #34d399;
   --almost: #fbbf24;
   --alert: #f87171;
@@ -27,12 +40,12 @@
   --doctor-text: #0f172a;
   --doctor-muted: #64748b;
   --doctor-border: #e2e8f0;
-  --muted: rgba(255, 255, 255, 0.82);
-  --body: rgba(255, 255, 255, 0.95);
-  --border: rgba(255, 255, 255, 0.22);
-  --shadow: rgba(15, 23, 42, 0.06);
-  --shadow-lg: rgba(15, 23, 42, 0.1);
-  --ai-panel: #9ec5e8;
+  --muted: var(--patient-text-muted);
+  --body: var(--patient-text-body);
+  --border: var(--patient-border);
+  --shadow: rgba(15, 23, 42, 0.05);
+  --shadow-lg: rgba(15, 23, 42, 0.08);
+  --ai-panel: var(--patient-ai-panel);
   --radius-lg: 0.875rem;
   --radius-xl: 1rem;
   --btn-min-h: 3.125rem;
@@ -42,8 +55,6 @@
   --text-lg: 1.25rem;
   --text-xl: 1.5rem;
   --text-2xl: 2rem;
-  --patient-header: rgba(160, 207, 240, 0.94);
-  --patient-nav: rgba(181, 218, 245, 0.97);
 }
 
 @theme inline {
@@ -148,13 +159,22 @@ body {
   font-size: 2.25rem;
   font-weight: 600;
   letter-spacing: -0.025em;
-  color: #ffffff;
+  color: var(--foreground);
 }
 
 .rm-login-subtitle {
   margin-top: 0.5rem;
   font-size: var(--text-lg);
-  color: var(--brand-light);
+  color: var(--muted);
+}
+
+/* Patient pages on very light blue — dark headings over legacy text-white */
+.rm-glow-patient :is(h1, h2, h3, .rm-title) {
+  color: var(--foreground);
+}
+
+.rm-auth-page :is(h1, h2, .rm-login-title) {
+  color: var(--foreground);
 }
 
 /* Cards & surfaces */
@@ -258,8 +278,8 @@ body {
 .rm-btn-ghost {
   min-height: 2.875rem;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--brand-light);
+  background: var(--patient-surface-elevated);
+  color: var(--brand);
   font-size: var(--text-base);
   font-weight: 500;
 }
@@ -352,9 +372,10 @@ body {
 
 /* Ambient glow backgrounds */
 .rm-glow-patient {
+  color: var(--foreground);
   background:
-    radial-gradient(ellipse 90% 60% at 50% -20%, rgba(255, 255, 255, 0.55), transparent),
-    radial-gradient(ellipse 70% 50% at 80% 100%, rgba(37, 99, 235, 0.08), transparent),
+    radial-gradient(ellipse 90% 60% at 50% -20%, var(--patient-glow), transparent),
+    radial-gradient(ellipse 70% 50% at 80% 100%, rgba(37, 99, 235, 0.05), transparent),
     var(--background);
 }
 
@@ -428,6 +449,7 @@ body {
   border: 1px solid var(--border);
   background: var(--patient-nav);
   backdrop-filter: blur(20px);
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.08);
 }
 
 .rm-bottom-nav-inner--caregiver {
@@ -457,8 +479,11 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
-.rm-nav-tab--patient { color: rgba(255, 255, 255, 0.85); }
-.rm-nav-tab--patient.rm-nav-tab--active { background: rgba(255, 255, 255, 0.25); color: #ffffff; }
+.rm-nav-tab--patient { color: var(--patient-text-muted); }
+.rm-nav-tab--patient.rm-nav-tab--active {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
 .rm-nav-tab--caregiver { color: var(--caregiver-muted); }
 .rm-nav-tab--caregiver.rm-nav-tab--active { background: rgba(251, 146, 60, 0.1); color: #c2410c; }
 .rm-nav-tab--doctor { color: var(--doctor-muted); }
@@ -494,7 +519,7 @@ body {
   gap: 0.375rem;
   border-radius: 9999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--patient-surface-elevated);
   padding: 0.5rem 0.875rem;
   min-width: auto;
   color: var(--muted);
@@ -505,14 +530,14 @@ body {
 }
 
 .rm-quick-link:hover {
-  border-color: rgba(147, 197, 253, 0.35);
-  color: var(--brand-light);
+  border-color: rgba(37, 99, 235, 0.28);
+  color: var(--brand);
 }
 
 .rm-quick-link--active {
-  border-color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.3);
-  color: #ffffff;
+  border-color: rgba(37, 99, 235, 0.35);
+  background: var(--brand-soft);
+  color: var(--brand);
 }
 
 .rm-quick-link--caregiver {
@@ -541,11 +566,9 @@ body {
 
 .rm-auth-shell {
   border-radius: var(--radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.12) 100%);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
-    0 24px 48px -12px rgba(37, 99, 235, 0.2);
+  border: 1px solid var(--border);
+  background: var(--patient-surface-elevated);
+  box-shadow: 0 12px 40px -16px rgba(37, 99, 235, 0.15);
   backdrop-filter: blur(12px);
 }
 
@@ -580,8 +603,8 @@ body {
 .rm-auth-input {
   width: 100%;
   border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border);
+  background: var(--patient-bg);
   padding: 0.75rem 1rem;
   font-size: var(--text-base);
   color: var(--foreground);

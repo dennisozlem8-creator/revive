@@ -98,7 +98,7 @@ export function AuthForm({ mode, hideHeader, locale = "en" }: AuthFormProps) {
 
       {hideHeader && mode === "login" && (
         <div className="pb-1">
-          <h2 className="text-xl font-semibold text-white">{t("patientSignIn", locale)}</h2>
+          <h2 className="text-xl font-semibold text-foreground">{t("patientSignIn", locale)}</h2>
           <p className="mt-1 text-base text-muted">{t("signInSubtitle", locale)}</p>
         </div>
       )}

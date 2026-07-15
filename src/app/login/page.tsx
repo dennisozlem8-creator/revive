@@ -43,7 +43,7 @@ export default function LoginPage() {
           {t("newHere", locale)}{" "}
           <Link
             href="/register"
-            className="font-medium text-brand-light underline-offset-4 hover:text-white hover:underline"
+            className="font-medium text-brand underline-offset-4 hover:text-brand-light hover:underline"
           >
             {t("createAccount", locale)}
           </Link>

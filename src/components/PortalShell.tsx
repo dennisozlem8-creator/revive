@@ -66,7 +66,7 @@ export function PortalShell({
           </p>
           <h1
             className={`mt-1.5 text-2xl font-semibold tracking-tight sm:text-[1.75rem] ${
-              isProvider ? "" : "text-white"
+              isProvider ? "" : "text-foreground"
             }`}
           >
             {title}
