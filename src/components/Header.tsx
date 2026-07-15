@@ -30,18 +30,18 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
       <Logo size={44} />
       <div className="hidden sm:block">
         <p
-          className={`text-sm font-bold leading-tight ${
+          className={`rm-brand-title rm-brand-title--compact ${
             isDoctor
               ? "text-[var(--doctor-text)]"
               : isCaregiver
                 ? "text-[var(--caregiver-text)]"
-                : "text-foreground"
+                : ""
           }`}
         >
           Revive Motion
         </p>
         <p
-          className={`text-xs ${
+          className={`rm-brand-subtitle rm-brand-subtitle--compact ${
             isDoctor
               ? "text-[var(--doctor-muted)]"
               : isCaregiver

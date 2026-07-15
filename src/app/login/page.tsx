@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { AuthForm } from "@/components/AuthForm";
@@ -32,8 +31,8 @@ export default function LoginPage() {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-lg shadow-brand/10">
             <Logo size={44} showText={false} />
           </div>
-          <h1 className="mt-5 text-3xl font-semibold tracking-tight text-white">Revive Motion</h1>
-          <p className="mt-2 text-base text-brand-light">{t("physicalTherapyAssistant", locale)}</p>
+          <h1 className="rm-login-title">Revive Motion</h1>
+          <p className="rm-login-subtitle">{t("physicalTherapyAssistant", locale)}</p>
         </header>
 
         <div className="animate-fade-up rm-auth-shell p-6 sm:p-7" style={{ animationDelay: "0.05s" }}>
