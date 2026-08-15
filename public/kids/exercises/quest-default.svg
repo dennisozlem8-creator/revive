@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#0a0520"/>
+  <circle cx="200" cy="140" r="70" fill="#8b5cf6" opacity="0.25"/>
+  <text x="155" y="160" font-family="system-ui" font-size="64"><�</text>
+  <rect x="100" y="210" width="200" height="30" rx="15" fill="url(#qg)" opacity="0.8"/>
+  <text x="145" y="232" fill="#fff" font-family="system-ui" font-size="14" font-weight="bold">Quest Exercise</text>
+  <defs>
+    <linearGradient id="qg" x1="100" y1="225" x2="300" y2="225">
+      <stop stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+</svg>

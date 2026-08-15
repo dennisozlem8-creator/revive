@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+  <rect width="800" height="400" fill="#0a0520"/>
+  <circle cx="400" cy="200" r="160" fill="#8b5cf6" opacity="0.2"/>
+  <circle cx="200" cy="100" r="60" fill="#f59e0b" opacity="0.3"/>
+  <circle cx="600" cy="300" r="50" fill="#fbbf24" opacity="0.25"/>
+  <text x="340" y="180" font-family="system-ui" font-size="80">>�</text>
+  <text x="420" y="180" font-family="system-ui" font-size="60">�</text>
+  <text x="300" y="260" font-family="system-ui" font-size="50">=�</text>
+  <text x="480" y="260" font-family="system-ui" font-size="50">P</text>
+  <rect x="200" y="300" width="400" height="50" rx="25" fill="url(#grad)" opacity="0.8"/>
+  <text x="280" y="335" fill="#fff" font-family="system-ui" font-size="22" font-weight="bold">Kids Quest Adventure!</text>
+  <defs>
+    <linearGradient id="grad" x1="200" y1="325" x2="600" y2="325">
+      <stop stop-color="#f59e0b"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+</svg>

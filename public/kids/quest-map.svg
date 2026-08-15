@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+  <rect width="800" height="400" fill="#0a0520"/>
+  <ellipse cx="400" cy="220" rx="300" ry="120" fill="#1a0a40" stroke="#8b5cf6" stroke-width="2" opacity="0.6"/>
+  <circle cx="200" cy="180" r="40" fill="#14b8a6" opacity="0.5"/>
+  <text x="180" y="192" font-family="system-ui" font-size="28">>�</text>
+  <circle cx="350" cy="150" r="40" fill="#f59e0b" opacity="0.5"/>
+  <text x="330" y="162" font-family="system-ui" font-size="28">>�</text>
+  <circle cx="500" cy="160" r="40" fill="#2563eb" opacity="0.5"/>
+  <text x="480" y="172" font-family="system-ui" font-size="28"><
+</text>
+  <circle cx="620" cy="190" r="40" fill="#8b5cf6" opacity="0.5"/>
+  <text x="600" y="202" font-family="system-ui" font-size="28"></text>
+  <circle cx="400" cy="120" r="35" fill="#fbbf24" opacity="0.5"/>
+  <text x="385" y="132" font-family="system-ui" font-size="24">P</text>
+  <path d="M200 180 Q275 140 350 150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 4" opacity="0.5"/>
+  <path d="M350 150 Q425 130 500 160" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="6 4" opacity="0.5"/>
+  <path d="M500 160 Q560 170 620 190" stroke="#14b8a6" stroke-width="2" stroke-dasharray="6 4" opacity="0.5"/>
+  <text x="280" y="340" fill="#f59e0b" font-family="system-ui" font-size="24" font-weight="bold">Quest Map  Pick Your Zone!</text>
+</svg>
