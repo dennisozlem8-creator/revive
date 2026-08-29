@@ -9,12 +9,12 @@ Source: [https://github.com/dennisozlem8-creator/revive](https://github.com/denn
 
 Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo tab), or today’s briefing.
 
-1. Take or upload a side-view JPG/PNG.
-2. Tap hip, then knee, then ankle.
-3. Save the estimated knee angle.
-4. Review the progress graph (goal line uses your target ROM).
+1. Open the camera and take a side-view photo, or choose a photo from files. The app reads the hip, knee, and ankle and shows the angle at the bottom of that page.
+2. Or record a short side-view video, then tap **Send to analysis** or **Save to database**.
+3. Saved angles stay on this device. If Supabase is connected, a copy is also sent to the clinic database.
+4. You can still mark hip → knee → ankle by hand if the camera cannot see the leg.
 
-Photos stay on the device. Saved angles are stored in this browser. The estimate is for progress tracking, not a diagnosis.
+The estimate is for progress tracking, not a diagnosis. Video files are not stored in the browser database.
 
 ## Run locally
 

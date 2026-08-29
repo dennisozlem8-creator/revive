@@ -82,6 +82,71 @@ export function saveMeasurement(row: GoniometerMeasurement) {
   localStorage.setItem(GONIOMETER_KEY, JSON.stringify(all));
 }
 
+export type PersistResult = {
+  local: true;
+  cloud: boolean;
+  message: string;
+};
+
+/** Always writes to this device. Also tries the clinic database when Supabase is configured. */
+export async function persistMeasurement(row: GoniometerMeasurement): Promise<PersistResult> {
+  saveMeasurement(row);
+  try {
+    const { getSupabaseEnv } = await import("./supabase/env");
+    if (!getSupabaseEnv()) {
+      return {
+        local: true,
+        cloud: false,
+        message: "Saved on this device. Connect a clinic database later to also store it in the cloud.",
+      };
+    }
+    const { createClient } = await import("./supabase/client");
+    const client = createClient();
+    const { error } = await (
+      client as unknown as {
+        from: (table: string) => {
+          insert: (value: Record<string, unknown>) => Promise<{ error: { message: string } | null }>;
+        };
+      }
+    )
+      .from("goniometer_measurements")
+      .insert({
+        id: row.id,
+        user_email: row.userEmail,
+        measured_at: row.date,
+        exercise: row.exercise,
+        joint: row.joint,
+        angle: row.angle,
+        note: row.note,
+        source: row.source ?? null,
+        min_angle: row.minAngle ?? null,
+        range: row.range ?? null,
+        duration_sec: row.durationSec ?? null,
+      });
+    if (error) {
+      return {
+        local: true,
+        cloud: false,
+        message: `Saved on this device. Cloud save skipped (${error.message}).`,
+      };
+    }
+    return {
+      local: true,
+      cloud: true,
+      message: "Saved on this device and sent to the clinic database.",
+    };
+  } catch (error) {
+    return {
+      local: true,
+      cloud: false,
+      message:
+        error instanceof Error
+          ? `Saved on this device. Cloud save skipped (${error.message}).`
+          : "Saved on this device. Cloud save skipped.",
+    };
+  }
+}
+
 export function deleteMeasurement(id: string) {
   try {
     const all = JSON.parse(localStorage.getItem(GONIOMETER_KEY) ?? "[]") as GoniometerMeasurement[];

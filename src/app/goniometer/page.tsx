@@ -26,8 +26,8 @@ export default function GoniometerPage() {
         <p className="rm-label">Movement tool</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Photo Goniometer</h1>
         <p className="mt-2 text-body">
-          Record a side-view video of the knee bending. The app tracks hip, knee, and
-          ankle, graphs the motion, and saves the peak angle.
+          Take a side-view photo to see the knee angle at the bottom of this page.
+          After a video, send it to analysis or save it to records.
         </p>
 
         <div className="mt-6">

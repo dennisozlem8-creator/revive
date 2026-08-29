@@ -179,6 +179,61 @@ export async function analyzeVideoUrl(
   return samples;
 }
 
+export type PhotoPoseResult = {
+  angle: number;
+  hip: Point;
+  knee: Point;
+  ankle: Point;
+};
+
+async function createImageLandmarker() {
+  const vision = await import("@mediapipe/tasks-vision");
+  const fileset = await vision.FilesetResolver.forVisionTasks(WASM_URL);
+  const options = {
+    baseOptions: { modelAssetPath: MODEL_URL, delegate: "GPU" as const },
+    runningMode: "IMAGE" as const,
+    numPoses: 1,
+  };
+  try {
+    return await vision.PoseLandmarker.createFromOptions(fileset, options);
+  } catch {
+    return vision.PoseLandmarker.createFromOptions(fileset, {
+      ...options,
+      baseOptions: { modelAssetPath: MODEL_URL, delegate: "CPU" },
+    });
+  }
+}
+
+function loadHtmlImage(url: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Could not read that photo."));
+    image.src = url;
+  });
+}
+
+export async function analyzeImageUrl(
+  imageUrl: string,
+  preferLeft: boolean
+): Promise<PhotoPoseResult | null> {
+  const landmarker = await createImageLandmarker();
+  try {
+    const image = await loadHtmlImage(imageUrl);
+    const result = landmarker.detect(image);
+    const sample = sampleFromPose(result.landmarks?.[0], preferLeft, 0);
+    if (!sample) return null;
+    return {
+      angle: sample.angle,
+      hip: sample.hip,
+      knee: sample.knee,
+      ankle: sample.ankle,
+    };
+  } finally {
+    landmarker.close();
+  }
+}
+
 export function pickRecorderMime() {
   const types = [
     "video/webm;codecs=vp9",

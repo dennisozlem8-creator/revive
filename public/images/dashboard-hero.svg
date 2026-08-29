@@ -1,17 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
-  <rect width="800" height="400" fill="#0d1b2e"/>
-  <circle cx="400" cy="200" r="150" fill="#2563eb" opacity="0.1"/>
-  <rect x="100" y="80" width="180" height="140" rx="16" fill="#1a2f4a" stroke="#60a5fa" stroke-width="2"/>
-  <rect x="310" y="80" width="180" height="140" rx="16" fill="#1a2f4a" stroke="#f59e0b" stroke-width="2"/>
-  <rect x="520" y="80" width="180" height="140" rx="16" fill="#1a2f4a" stroke="#10b981" stroke-width="2"/>
-  <text x="155" y="160" fill="#60a5fa" font-family="system-ui" font-size="48">=%</text>
-  <text x="365" y="160" fill="#f59e0b" font-family="system-ui" font-size="48">=�</text>
-  <text x="575" y="160" fill="#10b981" font-family="system-ui" font-size="48">P</text>
-  <text x="130" y="210" fill="#94a3b8" font-family="system-ui" font-size="14" font-weight="bold">STREAK</text>
-  <text x="340" y="210" fill="#94a3b8" font-family="system-ui" font-size="14" font-weight="bold">PROGRESS</text>
-  <text x="545" y="210" fill="#94a3b8" font-family="system-ui" font-size="14" font-weight="bold">XP</text>
-  <path d="M150 280 Q400 320 650 260" stroke="#2563eb" stroke-width="3" fill="none" opacity="0.5"/>
-  <circle cx="150" cy="280" r="8" fill="#2563eb"/>
-  <circle cx="400" cy="305" r="8" fill="#60a5fa"/>
-  <circle cx="650" cy="260" r="8" fill="#10b981"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" fill="none">
+  <rect width="800" height="200" fill="#e8f3fb"/>
+  <rect x="48" y="40" width="200" height="120" rx="16" fill="#ffffff" stroke="#c5d9ea"/>
+  <text x="68" y="72" fill="#4f90c6" font-family="system-ui,sans-serif" font-size="13" font-weight="700">Today</text>
+  <rect x="68" y="88" width="110" height="10" rx="5" fill="#d7e8f6"/>
+  <rect x="68" y="110" width="80" height="10" rx="5" fill="#c5d9ea"/>
+  <rect x="68" y="132" width="64" height="16" rx="6" fill="#4f90c6"/>
+  <rect x="280" y="40" width="240" height="120" rx="16" fill="#ffffff" stroke="#c5d9ea"/>
+  <polyline points="310,132 350,118 390,124 440,86 490,96" stroke="#4f90c6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="310" y="58" width="90" height="8" rx="4" fill="#9bb8d0"/>
+  <rect x="556" y="40" width="196" height="120" rx="16" fill="#ffffff" stroke="#c5d9ea"/>
+  <circle cx="654" cy="100" r="36" fill="#d7e8f6"/>
+  <circle cx="654" cy="100" r="22" fill="#4f90c6"/>
 </svg>

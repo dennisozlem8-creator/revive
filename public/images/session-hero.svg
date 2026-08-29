@@ -1,12 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
-  <rect width="800" height="400" fill="#0d1b2e"/>
-  <circle cx="400" cy="200" r="130" fill="#2563eb" opacity="0.12"/>
-  <rect x="200" y="80" width="400" height="240" rx="20" fill="#1a2f4a" stroke="#60a5fa" stroke-width="2"/>
-  <path d="M250 280 L350 180 L450 240 L550 140" stroke="#10b981" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <circle cx="550" cy="140" r="12" fill="#10b981"/>
-  <rect x="250" y="100" width="120" height="60" rx="8" fill="#2563eb" opacity="0.2"/>
-  <text x="270" y="140" fill="#60a5fa" font-family="system-ui" font-size="28" font-weight="bold">87�</text>
-  <rect x="430" y="100" width="120" height="60" rx="8" fill="#10b981" opacity="0.2"/>
-  <text x="455" y="140" fill="#10b981" font-family="system-ui" font-size="28" font-weight="bold">8/10</text>
-  <text x="280" y="340" fill="#60a5fa" font-family="system-ui" font-size="22" font-weight="bold">Live ROM Session</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" fill="none">
+  <rect width="800" height="200" fill="#e8f3fb"/>
+  <rect x="60" y="36" width="250" height="128" rx="16" fill="#ffffff" stroke="#c5d9ea"/>
+  <circle cx="185" cy="88" r="28" fill="#d7e8f6"/>
+  <path d="M185 70v36M167 88h36" stroke="#4f90c6" stroke-width="5" stroke-linecap="round"/>
+  <rect x="88" y="132" width="194" height="10" rx="5" fill="#c5d9ea"/>
+  <rect x="350" y="36" width="390" height="128" rx="16" fill="#ffffff" stroke="#c5d9ea"/>
+  <polyline points="380,132 430,108 480,118 540,78 620,92 700,70" stroke="#4f90c6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="380" y="54" width="120" height="8" rx="4" fill="#9bb8d0"/>
 </svg>

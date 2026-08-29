@@ -12,10 +12,11 @@ import {
   kneeAngleDegrees,
   loadMeasurements,
   nextLandmark,
-  saveMeasurement,
+  persistMeasurement,
   type GoniometerMeasurement,
 } from "@/lib/goniometer";
 import {
+  analyzeImageUrl,
   analyzeVideoUrl,
   detectVideoFrame,
   getPoseLandmarker,
@@ -26,7 +27,7 @@ import {
 import { GoniometerProgressChart } from "./GoniometerProgressChart";
 import { MovementChart } from "./MovementChart";
 
-type Step = "upload" | "mark" | "review" | "movement";
+type Step = "upload" | "mark";
 
 const DOT_COLOR: Record<LandmarkId, string> = {
   hip: "#60a5fa",
@@ -189,7 +190,12 @@ export function PhotoGoniometer({
   const [joint, setJoint] = useState(JOINT_OPTIONS[0]);
   const [note, setNote] = useState("");
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [photoAnalyzing, setPhotoAnalyzing] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const [rows, setRows] = useState<GoniometerMeasurement[]>([]);
+  const analysisRef = useRef<HTMLElement>(null);
 
   const preferLeft = joint.toLowerCase().includes("left");
   preferLeftRef.current = preferLeft;
@@ -388,7 +394,7 @@ export function PhotoGoniometer({
         if (videoUrl) URL.revokeObjectURL(videoUrl);
         const url = URL.createObjectURL(blob);
         setVideoUrl(url);
-        finishRecording(url);
+        finishRecording();
       };
       recorder.start(200);
     } catch {
@@ -407,15 +413,18 @@ export function PhotoGoniometer({
     }
   }
 
-  async function finishRecording(url: string) {
-    const liveSamples = samplesRef.current;
-    if (liveSamples.length >= 8) {
-      setSamples(liveSamples);
-      stopTracks();
-      setStep("movement");
-      return;
-    }
-    await runVideoAnalysis(url);
+  function scrollToAnalysis() {
+    window.setTimeout(() => {
+      analysisRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+  }
+
+  function finishRecording() {
+    stopTracks();
+    setVideoReady(true);
+    setSaved(false);
+    setSaveMessage("");
+    setStep("upload");
   }
 
   async function runVideoAnalysis(url: string) {
@@ -423,7 +432,11 @@ export function PhotoGoniometer({
     setAnalyzePct(0);
     setCameraError("");
     try {
-      const found = await analyzeVideoUrl(url, preferLeft, setAnalyzePct);
+      const liveSamples = samplesRef.current;
+      const found =
+        liveSamples.length >= 8
+          ? liveSamples
+          : await analyzeVideoUrl(url, preferLeft, setAnalyzePct);
       if (found.length < 6) {
         setCameraError(
           "Could not see the hip, knee, and ankle clearly. Record from the side, with the whole leg in view."
@@ -432,8 +445,8 @@ export function PhotoGoniometer({
         return;
       }
       setSamples(found);
-      stopTracks();
-      setStep("movement");
+      setStep("upload");
+      scrollToAnalysis();
     } catch (error) {
       setCameraError(
         error instanceof Error
@@ -445,15 +458,67 @@ export function PhotoGoniometer({
     }
   }
 
+  async function runPhotoAnalysis(url: string) {
+    setPhotoAnalyzing(true);
+    setCameraError("");
+    setSaved(false);
+    setSaveMessage("");
+    try {
+      const found = await analyzeImageUrl(url, preferLeft);
+      if (!found) {
+        setPoints({});
+        setCameraError(
+          "Could not see the hip, knee, and ankle in that photo. Mark the points, or take another side-view shot."
+        );
+        return;
+      }
+      setPoints({ hip: found.hip, knee: found.knee, ankle: found.ankle });
+      scrollToAnalysis();
+    } catch (error) {
+      setPoints({});
+      setCameraError(
+        error instanceof Error
+          ? error.message
+          : "Could not analyze that photo. Mark the points by hand."
+      );
+    } finally {
+      setPhotoAnalyzing(false);
+    }
+  }
+
+  async function captureStill() {
+    const video = videoRef.current;
+    if (!video?.videoWidth) {
+      setCameraError("Wait for the camera picture to appear, then take the photo.");
+      return;
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0);
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/jpeg", 0.92)
+    );
+    if (!blob) return;
+    stopCamera();
+    onPhotoFile(new File([blob], "knee-photo.jpg", { type: "image/jpeg" }));
+  }
+
   function onPhotoFile(file: File | undefined) {
     if (!file) return;
     if (!file.type.startsWith("image/")) return;
     if (photoUrl) URL.revokeObjectURL(photoUrl);
     const url = URL.createObjectURL(file);
     setPhotoUrl(url);
+    setVideoReady(false);
     setPoints({});
+    setSamples([]);
     setSaved(false);
+    setSaveMessage("");
     setStep("upload");
+    void runPhotoAnalysis(url);
   }
 
   function onVideoFile(file: File | undefined) {
@@ -463,8 +528,13 @@ export function PhotoGoniometer({
     const url = URL.createObjectURL(file);
     setVideoUrl(url);
     setSamples([]);
+    samplesRef.current = [];
     setSaved(false);
-    void runVideoAnalysis(url);
+    setSaveMessage("");
+    setVideoReady(true);
+    setPhotoUrl(null);
+    setPoints({});
+    setStep("upload");
   }
 
   function handleClick(event: React.MouseEvent<HTMLImageElement>) {
@@ -476,9 +546,15 @@ export function PhotoGoniometer({
     setPoints((prev) => ({ ...prev, [pending]: { x, y } }));
   }
 
-  function savePhotoResult() {
+  function videoSummaryForSave() {
+    return movement ?? summarizeMovement(samplesRef.current);
+  }
+
+  async function savePhotoResult() {
     if (photoAngle == null) return;
-    saveMeasurement({
+    setSaving(true);
+    setSaveMessage("");
+    const result = await persistMeasurement({
       id: crypto.randomUUID(),
       userEmail,
       date: new Date().toISOString(),
@@ -490,25 +566,36 @@ export function PhotoGoniometer({
     });
     setRows(loadMeasurements(userEmail));
     setSaved(true);
+    setSaveMessage(result.message);
+    setSaving(false);
   }
 
-  function saveVideoResult() {
-    if (!movement) return;
-    saveMeasurement({
+  async function saveVideoResult() {
+    const summary = videoSummaryForSave();
+    if (!summary) {
+      setSaveMessage("Send the video to analysis first, then save the numbers.");
+      return;
+    }
+    setSaving(true);
+    setSaveMessage("");
+    if (!movement) setSamples(samplesRef.current);
+    const result = await persistMeasurement({
       id: crypto.randomUUID(),
       userEmail,
       date: new Date().toISOString(),
       exercise,
       joint,
-      angle: movement.peak,
+      angle: summary.peak,
       note: note.trim(),
       source: "video",
-      minAngle: movement.min,
-      range: movement.range,
-      durationSec: Number(movement.duration.toFixed(1)),
+      minAngle: summary.min,
+      range: summary.range,
+      durationSec: Number(summary.duration.toFixed(1)),
     });
     setRows(loadMeasurements(userEmail));
     setSaved(true);
+    setSaveMessage(result.message);
+    setSaving(false);
   }
 
   function resetCapture() {
@@ -518,8 +605,11 @@ export function PhotoGoniometer({
     setVideoUrl(null);
     setPoints({});
     setSamples([]);
+    samplesRef.current = [];
     setNote("");
     setSaved(false);
+    setSaveMessage("");
+    setVideoReady(false);
     setLiveAngle(null);
     setCameraError("");
     setStep("upload");
@@ -535,12 +625,11 @@ export function PhotoGoniometer({
       {step === "upload" && (
         <section className="rm-card p-6">
           <p className="rm-label">Step 1</p>
-          <h2 className="mt-1 text-xl font-bold">Record a side-view video</h2>
+          <h2 className="mt-1 text-xl font-bold">Record a side-view video or take a photo</h2>
           <p className="mt-2 rm-body">
-            Stand or sit sideways to the camera so the hip, knee, and ankle stay in view.
-            Tap Record movement, bend and straighten the knee, then tap Stop. The app
-            watches the video and graphs the angle. A still photo still works if you
-            prefer.
+            Stand or sit sideways so the hip, knee, and ankle stay in view. After a photo,
+            the angle appears at the bottom of this page. After a video, you choose whether
+            to send it to analysis or save it to records.
           </p>
 
           <div className="relative mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-black">
@@ -564,15 +653,20 @@ export function PhotoGoniometer({
                     {liveAngle != null ? ` · ${liveAngle}°` : ""}
                   </p>
                 )}
-                <div className="flex gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row">
                   {recording ? (
                     <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={stopRecording}>
-                      Stop and analyze
+                      Stop recording
                     </button>
                   ) : (
-                    <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={startRecording}>
-                      Record movement
-                    </button>
+                    <>
+                      <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={startRecording}>
+                        Record movement
+                      </button>
+                      <button type="button" className="rm-btn rm-btn-brand flex-1" onClick={() => void captureStill()}>
+                        Take photo
+                      </button>
+                    </>
                   )}
                   <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={stopCamera}>
                     Close camera
@@ -585,8 +679,23 @@ export function PhotoGoniometer({
                 )}
               </div>
             ) : photoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={photoUrl} alt="Uploaded side-view photo" className="max-h-80 w-full bg-background object-contain" />
+              <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={photoUrl} alt="Side-view photo" className="max-h-80 w-full bg-background object-contain" />
+                {photoAnalyzing && (
+                  <div className="absolute inset-x-0 bottom-0 bg-background/90 px-4 py-3 text-center text-sm">
+                    Measuring the knee on this photo…
+                  </div>
+                )}
+              </div>
+            ) : videoUrl && videoReady ? (
+              <video
+                src={videoUrl}
+                controls
+                playsInline
+                muted
+                className="max-h-80 w-full bg-black object-contain"
+              />
             ) : videoUrl && analyzing ? (
               <div className="flex h-40 flex-col items-center justify-center gap-2 bg-background px-6 text-sm text-muted">
                 <p>Watching the video and measuring the knee…</p>
@@ -661,16 +770,38 @@ export function PhotoGoniometer({
                   if (photoUrl) URL.revokeObjectURL(photoUrl);
                   setPhotoUrl(null);
                   setPoints({});
+                  setSaveMessage("");
                 }}
               >
                 Retake
               </button>
               <button
                 type="button"
-                className="rm-btn rm-btn-primary flex-1"
+                className="rm-btn rm-btn-ghost flex-1"
                 onClick={() => setStep("mark")}
               >
-                Mark points on photo
+                Mark points by hand
+              </button>
+            </div>
+          )}
+
+          {videoReady && videoUrl && !liveCamera && (
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                className="rm-btn rm-btn-primary flex-1 disabled:opacity-40"
+                disabled={analyzing}
+                onClick={() => void runVideoAnalysis(videoUrl)}
+              >
+                {analyzing ? `Analyzing… ${analyzePct}%` : "Send to analysis"}
+              </button>
+              <button
+                type="button"
+                className="rm-btn rm-btn-brand flex-1 disabled:opacity-40"
+                disabled={saving}
+                onClick={() => void saveVideoResult()}
+              >
+                {saving ? "Saving…" : saved ? "Saved to records" : "Save to database"}
               </button>
             </div>
           )}
@@ -787,6 +918,13 @@ export function PhotoGoniometer({
             <button
               type="button"
               className="rm-btn rm-btn-ghost flex-1"
+              onClick={() => setStep("upload")}
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              className="rm-btn rm-btn-ghost flex-1"
               onClick={() => setPoints({})}
             >
               Reset points
@@ -795,91 +933,103 @@ export function PhotoGoniometer({
               type="button"
               className="rm-btn rm-btn-primary flex-1 disabled:opacity-40"
               disabled={photoAngle == null}
-              onClick={() => setStep("review")}
+              onClick={() => {
+                setStep("upload");
+                scrollToAnalysis();
+              }}
             >
-              Confirm
+              Show analysis
             </button>
           </div>
         </section>
       )}
 
-      {step === "review" && photoAngle != null && (
-        <section className="rm-card p-6">
-          <p className="rm-label">Step 3</p>
-          <h2 className="mt-1 text-xl font-bold">Estimated knee angle</h2>
-          <p className="rm-display mt-4 text-correct">{photoAngle}°</p>
-          <p className="mt-2 text-sm text-muted">
-            Estimated from your three landmarks. For progress tracking, not a medical diagnosis.
-          </p>
-          {metaFields(exercise, setExercise, joint, setJoint, note, setNote)}
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={() => setStep("mark")}>
-              Edit points
-            </button>
-            <button
-              type="button"
-              className="rm-btn rm-btn-primary flex-1 disabled:opacity-40"
-              disabled={saved}
-              onClick={savePhotoResult}
-            >
-              {saved ? "Saved" : "Save result"}
-            </button>
-          </div>
-          <button type="button" className="rm-btn rm-btn-ghost mt-3 w-full" onClick={resetCapture}>
-            New recording
-          </button>
-        </section>
-      )}
-
-      {step === "movement" && movement && (
-        <section className="rm-card p-6">
-          <p className="rm-label">Movement result</p>
-          <h2 className="mt-1 text-xl font-bold">Knee motion from your video</h2>
-          <p className="mt-2 rm-body">
-            Peak is the highest angle in this clip. Min is the smallest. Range is how far the
-            joint traveled. For progress tracking, not a medical diagnosis.
-          </p>
-          {videoUrl && (
-            <video
-              src={videoUrl}
-              controls
-              playsInline
-              muted
-              className="mt-4 max-h-64 w-full rounded-2xl bg-black object-contain"
-            />
+      {(photoAnalyzing || photoAngle != null || movement) && (
+        <section ref={analysisRef} id="capture-analysis" className="rm-card p-6">
+          <p className="rm-label">Analysis</p>
+          {photoAnalyzing && (
+            <>
+              <h2 className="mt-1 text-xl font-bold">Reading this photo</h2>
+              <p className="mt-2 rm-body">Finding the hip, knee, and ankle. The angle will show here.</p>
+            </>
           )}
-          <div className="mt-5 grid grid-cols-3 gap-3 text-center">
-            <div className="rounded-xl bg-background px-2 py-3">
-              <p className="rm-stat text-correct">{movement.peak}°</p>
-              <p className="rm-label mt-1">Peak</p>
-            </div>
-            <div className="rounded-xl bg-background px-2 py-3">
-              <p className="rm-stat">{movement.min}°</p>
-              <p className="rm-label mt-1">Min</p>
-            </div>
-            <div className="rounded-xl bg-background px-2 py-3">
-              <p className="rm-stat text-brand-light">{movement.range}°</p>
-              <p className="rm-label mt-1">Range</p>
-            </div>
-          </div>
-          <div className="mt-4">
-            <MovementChart samples={samples} goal={goal} />
-          </div>
-          {metaFields(exercise, setExercise, joint, setJoint, note, setNote)}
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={resetCapture}>
-              Record again
-            </button>
-            <button
-              type="button"
-              className="rm-btn rm-btn-primary flex-1 disabled:opacity-40"
-              disabled={saved}
-              onClick={saveVideoResult}
-            >
-              {saved ? "Saved" : "Save peak angle"}
-            </button>
-          </div>
+          {!photoAnalyzing && photoAngle != null && (
+            <>
+              <h2 className="mt-1 text-xl font-bold">Photo analysis</h2>
+              <p className="rm-display mt-4 text-correct">{photoAngle}°</p>
+              <p className="mt-2 text-sm text-muted">
+                Estimated knee angle from this photo. For progress tracking, not a medical diagnosis.
+              </p>
+              {photoUrl && points.hip && points.knee && points.ankle && (
+                <div className="relative mt-4 overflow-hidden rounded-2xl border border-[var(--border)] bg-background">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photoUrl} alt="Analyzed photo" className="max-h-72 w-full object-contain" />
+                </div>
+              )}
+              {metaFields(exercise, setExercise, joint, setJoint, note, setNote)}
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={() => setStep("mark")}>
+                  Edit points
+                </button>
+                <button
+                  type="button"
+                  className="rm-btn rm-btn-brand flex-1 disabled:opacity-40"
+                  disabled={saving || saved}
+                  onClick={() => void savePhotoResult()}
+                >
+                  {saving ? "Saving…" : saved ? "Saved to records" : "Save to database"}
+                </button>
+              </div>
+            </>
+          )}
+          {!photoAnalyzing && movement && (
+            <>
+              <h2 className={`text-xl font-bold ${photoAngle != null ? "mt-8" : "mt-1"}`}>
+                Video analysis
+              </h2>
+              <p className="mt-2 rm-body">
+                Peak is the highest angle in this clip. Min is the smallest. Range is how far the
+                joint traveled.
+              </p>
+              <div className="mt-5 grid grid-cols-3 gap-3 text-center">
+                <div className="rounded-xl bg-background px-2 py-3">
+                  <p className="rm-stat text-correct">{movement.peak}°</p>
+                  <p className="rm-label mt-1">Peak</p>
+                </div>
+                <div className="rounded-xl bg-background px-2 py-3">
+                  <p className="rm-stat">{movement.min}°</p>
+                  <p className="rm-label mt-1">Min</p>
+                </div>
+                <div className="rounded-xl bg-background px-2 py-3">
+                  <p className="rm-stat text-brand-light">{movement.range}°</p>
+                  <p className="rm-label mt-1">Range</p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <MovementChart samples={samples} goal={goal} />
+              </div>
+              {photoAngle == null && metaFields(exercise, setExercise, joint, setJoint, note, setNote)}
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={resetCapture}>
+                  Record again
+                </button>
+                <button
+                  type="button"
+                  className="rm-btn rm-btn-brand flex-1 disabled:opacity-40"
+                  disabled={saving || saved}
+                  onClick={() => void saveVideoResult()}
+                >
+                  {saving ? "Saving…" : saved ? "Saved to records" : "Save to database"}
+                </button>
+              </div>
+            </>
+          )}
+          {saveMessage && <p className="mt-3 text-sm text-muted">{saveMessage}</p>}
         </section>
+      )}
+
+      {saveMessage && !(photoAnalyzing || photoAngle != null || movement) && (
+        <p className="text-sm text-muted">{saveMessage}</p>
       )}
 
       <section className="rm-card p-6">

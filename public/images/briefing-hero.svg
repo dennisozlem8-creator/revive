@@ -1,14 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
-  <rect width="800" height="400" fill="#0d1b2e"/>
-  <circle cx="650" cy="80" r="120" fill="#2563eb" opacity="0.15"/>
-  <circle cx="120" cy="320" r="90" fill="#10b981" opacity="0.12"/>
-  <rect x="80" y="120" width="280" height="200" rx="16" fill="#1a2f4a" stroke="#60a5fa" stroke-width="2"/>
-  <circle cx="220" cy="200" r="50" fill="#2563eb" opacity="0.3"/>
-  <path d="M170 240 L220 180 L270 240" stroke="#60a5fa" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <rect x="400" y="100" width="320" height="24" rx="4" fill="#1a2f4a"/>
-  <rect x="400" y="140" width="260" height="16" rx="4" fill="#1a2f4a"/>
-  <rect x="400" y="180" width="200" height="80" rx="12" fill="#10b981" opacity="0.2" stroke="#10b981" stroke-width="2"/>
-  <text x="500" y="230" fill="#10b981" font-family="system-ui" font-size="18" font-weight="bold">Today's Plan</text>
-  <circle cx="680" cy="280" r="40" fill="#2563eb" opacity="0.4"/>
-  <text x="660" y="288" fill="#f0f6ff" font-family="system-ui" font-size="28">=�</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" fill="none">
+  <rect width="800" height="200" fill="#e8f3fb"/>
+  <rect x="70" y="40" width="300" height="120" rx="16" fill="#ffffff" stroke="#c5d9ea"/>
+  <rect x="94" y="62" width="180" height="10" rx="5" fill="#4f90c6"/>
+  <rect x="94" y="86" width="240" height="8" rx="4" fill="#c5d9ea"/>
+  <rect x="94" y="108" width="200" height="8" rx="4" fill="#d7e8f6"/>
+  <rect x="94" y="130" width="70" height="16" rx="6" fill="#4f90c6"/>
+  <rect x="420" y="40" width="310" height="120" rx="16" fill="#ffffff" stroke="#c5d9ea"/>
+  <rect x="448" y="62" width="80" height="80" rx="12" fill="#d7e8f6"/>
+  <path d="M468 122V88c8-12 20-16 32-8v42" stroke="#4f90c6" stroke-width="7" stroke-linecap="round"/>
+  <rect x="548" y="70" width="150" height="8" rx="4" fill="#9bb8d0"/>
+  <rect x="548" y="94" width="120" height="8" rx="4" fill="#c5d9ea"/>
+  <rect x="548" y="118" width="90" height="18" rx="6" fill="#4f90c6"/>
 </svg>

@@ -18,13 +18,14 @@ export function PageHeroImage({
       className={`relative overflow-hidden rounded-2xl border border-[var(--border)] bg-surface-elevated ${className}`}
     >
       <Image
-        src={src}
+        src={`${src}${src.includes("?") ? "&" : "?"}v=clinic`}
         alt={alt}
         width={800}
         height={400}
         className="w-full object-cover"
         style={{ height }}
         priority
+        unoptimized
       />
     </div>
   );
