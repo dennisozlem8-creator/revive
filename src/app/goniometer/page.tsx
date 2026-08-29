@@ -7,7 +7,15 @@ import { PhotoGoniometer } from "@/components/PhotoGoniometer";
 import { useAuth } from "@/components/AuthProvider";
 
 export default function GoniometerPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex min-h-full items-center justify-center text-muted">
+        Loading camera…
+      </div>
+    );
+  }
 
   if (!user) return null;
 

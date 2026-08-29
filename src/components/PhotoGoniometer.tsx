@@ -25,6 +25,46 @@ const DOT_COLOR: Record<LandmarkId, string> = {
   ankle: "#f59e0b",
 };
 
+function attachVideoStream(video: HTMLVideoElement, stream: MediaStream) {
+  if (video.srcObject !== stream) {
+    video.srcObject = stream;
+  }
+  video.muted = true;
+  video.autoplay = true;
+  video.playsInline = true;
+  video.setAttribute("playsinline", "true");
+  video.setAttribute("webkit-playsinline", "true");
+  const play = () => {
+    void video.play().catch(() => {
+      requestAnimationFrame(() => {
+        void video.play().catch(() => undefined);
+      });
+    });
+  };
+  if (video.readyState >= HTMLMediaElement.HAVE_METADATA) play();
+  else video.addEventListener("loadedmetadata", play, { once: true });
+}
+
+async function requestCameraStream() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    throw new Error("unsupported");
+  }
+  const attempts: MediaStreamConstraints[] = [
+    { audio: false, video: { facingMode: { ideal: "environment" } } },
+    { audio: false, video: { facingMode: "user" } },
+    { audio: false, video: true },
+  ];
+  let last: unknown;
+  for (const constraints of attempts) {
+    try {
+      return await navigator.mediaDevices.getUserMedia(constraints);
+    } catch (error) {
+      last = error;
+    }
+  }
+  throw last instanceof Error ? last : new Error("denied");
+}
+
 function contentBox(img: HTMLImageElement) {
   const rect = img.getBoundingClientRect();
   const scale = Math.min(rect.width / img.naturalWidth, rect.height / img.naturalHeight);
@@ -50,6 +90,8 @@ export function PhotoGoniometer({
   const fileRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const cameraOnRef = useRef(false);
+  const cameraRequestRef = useRef(0);
   const [overlay, setOverlay] = useState({ left: 0, top: 0, width: 100, height: 100 });
   const [step, setStep] = useState<Step>("upload");
   const [liveCamera, setLiveCamera] = useState(false);
@@ -73,13 +115,23 @@ export function PhotoGoniometer({
   }, [photoUrl]);
 
   useEffect(() => {
-    return () => stopCamera();
+    return () => {
+      streamRef.current?.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+      cameraOnRef.current = false;
+    };
   }, []);
+
+  function bindVideo(el: HTMLVideoElement | null) {
+    videoRef.current = el;
+    if (el && streamRef.current && cameraOnRef.current) {
+      attachVideoStream(el, streamRef.current);
+    }
+  }
 
   useEffect(() => {
     if (!liveCamera || !videoRef.current || !streamRef.current) return;
-    videoRef.current.srcObject = streamRef.current;
-    void videoRef.current.play();
+    attachVideoStream(videoRef.current, streamRef.current);
   }, [liveCamera]);
 
   useEffect(() => {
@@ -109,28 +161,45 @@ export function PhotoGoniometer({
       : null;
 
   function stopCamera() {
+    cameraRequestRef.current += 1;
+    cameraOnRef.current = false;
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
+    if (videoRef.current) videoRef.current.srcObject = null;
     setLiveCamera(false);
   }
 
   async function startCamera() {
+    const requestId = ++cameraRequestRef.current;
     setCameraError("");
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setCameraError("This browser cannot open a live camera. Use Use phone camera app below.");
-      return;
-    }
+    setLiveCamera(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" } },
-        audio: false,
-      });
+      const stream = await requestCameraStream();
+      if (requestId !== cameraRequestRef.current) {
+        stream.getTracks().forEach((track) => track.stop());
+        return;
+      }
       streamRef.current = stream;
-      setLiveCamera(true);
-    } catch {
-      setCameraError(
-        "Camera permission was blocked. Tap Allow, or use Use phone camera app."
-      );
+      cameraOnRef.current = true;
+      const attach = () => {
+        if (videoRef.current && streamRef.current) {
+          attachVideoStream(videoRef.current, streamRef.current);
+        }
+      };
+      attach();
+      requestAnimationFrame(attach);
+    } catch (error) {
+      if (requestId !== cameraRequestRef.current) return;
+      cameraOnRef.current = false;
+      setLiveCamera(false);
+      const name = error instanceof DOMException ? error.name : "";
+      if (error instanceof Error && error.message === "unsupported") {
+        setCameraError("This browser cannot open a live camera. Use Take photo below.");
+      } else if (name === "NotFoundError" || name === "DevicesNotFoundError") {
+        setCameraError("No camera found on this device. Choose a photo from files.");
+      } else {
+        setCameraError("Camera permission was blocked. Tap Allow, or use Take photo.");
+      }
     }
   }
 
@@ -200,20 +269,21 @@ export function PhotoGoniometer({
           <p className="rm-label">Step 1</p>
           <h2 className="mt-1 text-xl font-bold">Take a side-view photo</h2>
           <p className="mt-2 rm-body">
-            Tap Open live camera to see the lens in this page. On a phone you can also tap
-            Use phone camera app to open the real Camera app. Allow access if asked.
+            Tap Open camera. The preview stays on this page — it should not flash and close.
+            Allow access if asked, then tap Take picture.
           </p>
 
-          {liveCamera ? (
-            <div className="mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-black">
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className="max-h-80 w-full object-contain"
-              />
-              <div className="flex gap-3 p-3">
+          <div className="mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-black">
+            <video
+              ref={bindVideo}
+              autoPlay
+              playsInline
+              muted
+              controls={false}
+              className={liveCamera ? "max-h-80 w-full bg-black object-contain" : "hidden"}
+            />
+            {liveCamera ? (
+              <div className="flex gap-3 bg-background p-3">
                 <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={snapPhoto}>
                   Take picture
                 </button>
@@ -221,43 +291,48 @@ export function PhotoGoniometer({
                   Close camera
                 </button>
               </div>
-            </div>
-          ) : photoUrl ? (
-            <div className="mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-background">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photoUrl} alt="Uploaded side-view photo" className="max-h-80 w-full object-contain" />
-            </div>
-          ) : (
-            <div className="mt-5 flex h-40 items-center justify-center rounded-2xl border border-dashed border-[var(--border)] bg-background text-sm text-muted">
-              Camera preview will show here
-            </div>
-          )}
+            ) : photoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={photoUrl} alt="Uploaded side-view photo" className="max-h-80 w-full bg-background object-contain" />
+            ) : (
+              <div className="flex h-40 items-center justify-center bg-background text-sm text-muted">
+                Camera preview stays here after you tap Open camera
+              </div>
+            )}
+          </div>
 
           {cameraError && (
             <p className="mt-3 text-sm text-alert">{cameraError}</p>
           )}
 
           <div className="mt-5 flex flex-col gap-3">
-            <button
-              type="button"
-              className="rm-btn rm-btn-brand w-full"
-              onClick={() => void startCamera()}
-            >
-              Open live camera
-            </button>
-            <label className="rm-btn rm-btn-primary w-full cursor-pointer">
-              Use phone camera app
+            {!liveCamera && (
+              <button
+                type="button"
+                className="rm-btn rm-btn-brand w-full"
+                onClick={() => void startCamera()}
+              >
+                Open camera
+              </button>
+            )}
+            <div className="relative">
+              <div className="rm-btn rm-btn-primary pointer-events-none w-full">
+                Take photo
+              </div>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/*"
                 capture="environment"
-                className="sr-only"
+                className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                aria-label="Take photo"
                 onChange={(e) => {
                   onFile(e.target.files?.[0]);
-                  e.target.value = "";
+                  window.setTimeout(() => {
+                    e.target.value = "";
+                  }, 500);
                 }}
               />
-            </label>
+            </div>
             <button
               type="button"
               className="rm-btn rm-btn-ghost w-full"

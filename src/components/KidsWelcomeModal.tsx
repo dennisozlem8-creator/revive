@@ -20,9 +20,9 @@ export function KidsWelcomeModal({ onDismiss }: KidsWelcomeModalProps) {
       aria-labelledby="kids-welcome-title"
     >
       <div className="relative max-w-md text-center">
-        <div className="relative overflow-hidden rounded-3xl border-4 border-orange bg-gradient-to-b from-amber-100 via-white to-violet-100 p-8 shadow-lg">
+        <div className="relative overflow-hidden rounded-3xl border-4 border-orange-400 bg-gradient-to-b from-amber-100 via-white to-violet-100 p-8 shadow-[0_14px_0_#fb923c]">
           <p className="text-4xl" aria-hidden>
-            🎮⭐🏆
+            🎮⭐🏆🌈
           </p>
           <Image
             src="/kids/welcome-hero.svg"
@@ -32,19 +32,19 @@ export function KidsWelcomeModal({ onDismiss }: KidsWelcomeModalProps) {
             className="mx-auto mt-3 h-36 w-auto object-contain"
             priority
           />
-          <p className="mt-4 inline-flex rounded-full bg-purple/20 px-4 py-1 text-xs font-bold uppercase tracking-widest text-purple">
-            Mode activated
+          <p className="mt-4 inline-flex rounded-full bg-fuchsia-200 px-4 py-1 text-xs font-black uppercase tracking-widest text-fuchsia-800">
+            🎉 Mode activated
           </p>
-          <h2 id="kids-welcome-title" className="mt-3 text-3xl font-bold text-orange">
-            Welcome to Kids Quest!
+          <h2 id="kids-welcome-title" className="mt-3 text-3xl font-black text-orange-600">
+            Welcome to Kids Quest! 🗺️
           </h2>
-          <p className="mt-3 text-body">
-            Complete quests, unlock heroes, and earn XP — all while doing your exercises!
+          <p className="mt-3 font-bold text-violet-800">
+            Complete quests, unlock heroes, and earn XP — all while doing your exercises! ✨
           </p>
           <button
             type="button"
             onClick={handleEnter}
-            className="mt-8 w-full rounded-2xl bg-gradient-to-r from-orange via-gold to-purple py-4 text-lg font-bold text-white"
+            className="mt-8 w-full rounded-2xl bg-gradient-to-r from-orange-500 via-fuchsia-500 to-sky-500 py-4 text-lg font-black text-white shadow-[0_6px_0_#c2410c]"
           >
             Let&apos;s go! 🚀
           </button>
