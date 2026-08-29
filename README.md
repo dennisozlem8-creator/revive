@@ -1,6 +1,6 @@
 # Revive Motion
 
-Physical therapy web app for guided recovery, sensor ROM tests, Kids Quest, and photo-based knee-angle tracking.
+Physical therapy web app for guided recovery, sensor ROM tests, Kids Quest, and video knee-motion tracking.
 
 Live site: [https://www.revivemotion.ai](https://www.revivemotion.ai)  
 Source: [https://github.com/dennisozlem8-creator/revive](https://github.com/dennisozlem8-creator/revive)
