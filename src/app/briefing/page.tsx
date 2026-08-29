@@ -52,7 +52,7 @@ export default function BriefingPage() {
           <p className="rm-label">Daily check-in</p>
           <h2 className="mt-1 text-lg font-semibold">Photo Goniometer</h2>
           <p className="mt-2 text-sm text-body">
-            Under today&apos;s check-in: measure knee angle from a photo.
+            Under today&apos;s check-in: record a side-view video and measure how the knee moves.
           </p>
           <Link href="/goniometer" className="rm-btn rm-btn-brand mt-4 w-full">
             Open Photo Goniometer

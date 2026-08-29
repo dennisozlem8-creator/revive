@@ -148,8 +148,8 @@ export default function ChartsPage() {
           <section className="rm-card mt-6 p-6">
             <h2 className="font-semibold">Photo Goniometer</h2>
             <p className="mt-2 rm-body">
-              Measure knee angle from a side-view photo: mark hip, knee, and ankle, then
-              save the result to this progress graph.
+              Record a side-view video. The app tracks hip, knee, and ankle through the
+              movement, then saves the peak angle to this progress graph.
             </p>
             <Link href="/goniometer" className="rm-btn rm-btn-brand mt-6 inline-flex">
               Open photo tool

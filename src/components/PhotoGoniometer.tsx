@@ -15,15 +15,26 @@ import {
   saveMeasurement,
   type GoniometerMeasurement,
 } from "@/lib/goniometer";
+import {
+  analyzeVideoUrl,
+  detectVideoFrame,
+  getPoseLandmarker,
+  pickRecorderMime,
+  summarizeMovement,
+  type MovementSample,
+} from "@/lib/pose-goniometer";
 import { GoniometerProgressChart } from "./GoniometerProgressChart";
+import { MovementChart } from "./MovementChart";
 
-type Step = "upload" | "mark" | "review";
+type Step = "upload" | "mark" | "review" | "movement";
 
 const DOT_COLOR: Record<LandmarkId, string> = {
   hip: "#60a5fa",
   knee: "#10b981",
   ankle: "#f59e0b",
 };
+
+const MAX_RECORD_SEC = 12;
 
 function attachVideoStream(video: HTMLVideoElement, stream: MediaStream) {
   if (video.srcObject !== stream) {
@@ -78,6 +89,65 @@ function contentBox(img: HTMLImageElement) {
   };
 }
 
+function drawPose(
+  canvas: HTMLCanvasElement,
+  video: HTMLVideoElement,
+  sample: MovementSample | null,
+  liveAngle: number | null
+) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const w = video.clientWidth;
+  const h = video.clientHeight;
+  if (!w || !h) return;
+  canvas.width = w;
+  canvas.height = h;
+  ctx.clearRect(0, 0, w, h);
+  if (!video.videoWidth) return;
+  const scale = Math.min(w / video.videoWidth, h / video.videoHeight);
+  const dw = video.videoWidth * scale;
+  const dh = video.videoHeight * scale;
+  const left = (w - dw) / 2;
+  const top = (h - dh) / 2;
+  if (sample) {
+    const hx = left + sample.hip.x * dw;
+    const hy = top + sample.hip.y * dh;
+    const kx = left + sample.knee.x * dw;
+    const ky = top + sample.knee.y * dh;
+    const ax = left + sample.ankle.x * dw;
+    const ay = top + sample.ankle.y * dh;
+    ctx.lineWidth = 4;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#60a5fa";
+    ctx.beginPath();
+    ctx.moveTo(hx, hy);
+    ctx.lineTo(kx, ky);
+    ctx.stroke();
+    ctx.strokeStyle = "#f59e0b";
+    ctx.beginPath();
+    ctx.moveTo(kx, ky);
+    ctx.lineTo(ax, ay);
+    ctx.stroke();
+    for (const [x, y, color] of [
+      [hx, hy, "#60a5fa"],
+      [kx, ky, "#10b981"],
+      [ax, ay, "#f59e0b"],
+    ] as const) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  if (liveAngle != null) {
+    ctx.fillStyle = "rgba(27, 51, 72, 0.72)";
+    ctx.fillRect(12, 12, 118, 42);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "700 22px system-ui, sans-serif";
+    ctx.fillText(`${liveAngle}°`, 24, 42);
+  }
+}
+
 export function PhotoGoniometer({
   userEmail,
   goal,
@@ -88,21 +158,42 @@ export function PhotoGoniometer({
   const imgRef = useRef<HTMLImageElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const videoFileRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const overlayRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const cameraOnRef = useRef(false);
   const cameraRequestRef = useRef(0);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const samplesRef = useRef<MovementSample[]>([]);
+  const rafRef = useRef(0);
+  const recordStartedRef = useRef(0);
+  const recordingRef = useRef(false);
+  const preferLeftRef = useRef(false);
   const [overlay, setOverlay] = useState({ left: 0, top: 0, width: 100, height: 100 });
   const [step, setStep] = useState<Step>("upload");
   const [liveCamera, setLiveCamera] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [recordSec, setRecordSec] = useState(0);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analyzePct, setAnalyzePct] = useState(0);
   const [cameraError, setCameraError] = useState("");
+  const [trackerReady, setTrackerReady] = useState(false);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [points, setPoints] = useState<Partial<Record<LandmarkId, Point>>>({});
+  const [samples, setSamples] = useState<MovementSample[]>([]);
+  const [liveAngle, setLiveAngle] = useState<number | null>(null);
   const [exercise, setExercise] = useState(EXERCISE_OPTIONS[0]);
   const [joint, setJoint] = useState(JOINT_OPTIONS[0]);
   const [note, setNote] = useState("");
   const [saved, setSaved] = useState(false);
   const [rows, setRows] = useState<GoniometerMeasurement[]>([]);
+
+  const preferLeft = joint.toLowerCase().includes("left");
+  preferLeftRef.current = preferLeft;
+  const movement = useMemo(() => summarizeMovement(samples), [samples]);
 
   useEffect(() => {
     setRows(loadMeasurements(userEmail));
@@ -116,6 +207,14 @@ export function PhotoGoniometer({
 
   useEffect(() => {
     return () => {
+      if (videoUrl) URL.revokeObjectURL(videoUrl);
+    };
+  }, [videoUrl]);
+
+  useEffect(() => {
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      recorderRef.current?.stop();
       streamRef.current?.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
       cameraOnRef.current = false;
@@ -155,24 +254,44 @@ export function PhotoGoniometer({
   }
 
   const pending = nextLandmark(points);
-  const angle =
+  const photoAngle =
     points.hip && points.knee && points.ankle
       ? kneeAngleDegrees(points.hip, points.knee, points.ankle)
       : null;
 
-  function stopCamera() {
+  function stopTracks() {
     cameraRequestRef.current += 1;
     cameraOnRef.current = false;
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
     if (videoRef.current) videoRef.current.srcObject = null;
     setLiveCamera(false);
+    recordingRef.current = false;
+    setRecording(false);
+  }
+
+  function stopCamera() {
+    cancelAnimationFrame(rafRef.current);
+    if (recorderRef.current && recorderRef.current.state !== "inactive") {
+      recorderRef.current.stop();
+    }
+    stopTracks();
+  }
+
+  async function warmupTracker() {
+    try {
+      await getPoseLandmarker();
+      setTrackerReady(true);
+    } catch {
+      setTrackerReady(false);
+    }
   }
 
   async function startCamera() {
     const requestId = ++cameraRequestRef.current;
     setCameraError("");
     setLiveCamera(true);
+    void warmupTracker();
     try {
       const stream = await requestCameraStream();
       if (requestId !== cameraRequestRef.current) {
@@ -188,48 +307,164 @@ export function PhotoGoniometer({
       };
       attach();
       requestAnimationFrame(attach);
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(loopPose);
     } catch (error) {
       if (requestId !== cameraRequestRef.current) return;
       cameraOnRef.current = false;
       setLiveCamera(false);
       const name = error instanceof DOMException ? error.name : "";
       if (error instanceof Error && error.message === "unsupported") {
-        setCameraError("This browser cannot open a live camera. Use Take photo below.");
+        setCameraError("This browser cannot open a live camera. Choose a video from files.");
       } else if (name === "NotFoundError" || name === "DevicesNotFoundError") {
-        setCameraError("No camera found on this device. Choose a photo from files.");
+        setCameraError("No camera found on this device. Choose a video from files.");
       } else {
-        setCameraError("Camera permission was blocked. Tap Allow, or use Take photo.");
+        setCameraError("Camera permission was blocked. Tap Allow, or choose a video.");
       }
     }
   }
 
-  function snapPhoto() {
+  function loopPose() {
     const video = videoRef.current;
-    if (!video || !video.videoWidth) return;
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    ctx.drawImage(video, 0, 0);
-    canvas.toBlob((blob) => {
-      if (!blob) return;
-      onFile(new File([blob], "camera.jpg", { type: "image/jpeg" }));
-      stopCamera();
-    }, "image/jpeg", 0.92);
+    const canvas = overlayRef.current;
+    if (!video || !cameraOnRef.current) return;
+    void getPoseLandmarker()
+      .then((landmarker) => {
+        if (!cameraOnRef.current || !video.videoWidth) {
+          rafRef.current = requestAnimationFrame(loopPose);
+          return;
+        }
+        const elapsed = recordingRef.current
+          ? (performance.now() - recordStartedRef.current) / 1000
+          : 0;
+        const sample = detectVideoFrame(
+          landmarker,
+          video,
+          performance.now(),
+          preferLeftRef.current,
+          Number(elapsed.toFixed(2))
+        );
+        if (sample && recordingRef.current) {
+          samplesRef.current.push(sample);
+        }
+        if (sample) setLiveAngle(sample.angle);
+        if (canvas) drawPose(canvas, video, sample, sample?.angle ?? null);
+        if (recordingRef.current) {
+          const nextSec = Math.min(MAX_RECORD_SEC, Math.floor(elapsed));
+          setRecordSec(nextSec);
+          if (elapsed >= MAX_RECORD_SEC) {
+            stopRecording();
+            return;
+          }
+        }
+        rafRef.current = requestAnimationFrame(loopPose);
+      })
+      .catch(() => {
+        rafRef.current = requestAnimationFrame(loopPose);
+      });
   }
 
-  function onFile(file: File | undefined) {
-    if (!file) return;
-    if (!/^image\/(jpeg|png)$/i.test(file.type) && !file.type.startsWith("image/")) {
+  function startRecording() {
+    const stream = streamRef.current;
+    if (!stream) return;
+    setCameraError("");
+    samplesRef.current = [];
+    setSamples([]);
+    setSaved(false);
+    chunksRef.current = [];
+    recordStartedRef.current = performance.now();
+    setRecordSec(0);
+    recordingRef.current = true;
+    setRecording(true);
+    const mime = pickRecorderMime();
+    try {
+      const recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+      recorderRef.current = recorder;
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) chunksRef.current.push(event.data);
+      };
+      recorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: recorder.mimeType || "video/webm" });
+        if (videoUrl) URL.revokeObjectURL(videoUrl);
+        const url = URL.createObjectURL(blob);
+        setVideoUrl(url);
+        finishRecording(url);
+      };
+      recorder.start(200);
+    } catch {
+      setCameraError("This browser cannot record video. Choose a video from files.");
+      setRecording(false);
+    }
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(loopPose);
+  }
+
+  function stopRecording() {
+    recordingRef.current = false;
+    setRecording(false);
+    if (recorderRef.current && recorderRef.current.state !== "inactive") {
+      recorderRef.current.stop();
+    }
+  }
+
+  async function finishRecording(url: string) {
+    const liveSamples = samplesRef.current;
+    if (liveSamples.length >= 8) {
+      setSamples(liveSamples);
+      stopTracks();
+      setStep("movement");
       return;
     }
+    await runVideoAnalysis(url);
+  }
+
+  async function runVideoAnalysis(url: string) {
+    setAnalyzing(true);
+    setAnalyzePct(0);
+    setCameraError("");
+    try {
+      const found = await analyzeVideoUrl(url, preferLeft, setAnalyzePct);
+      if (found.length < 6) {
+        setCameraError(
+          "Could not see the hip, knee, and ankle clearly. Record from the side, with the whole leg in view."
+        );
+        setAnalyzing(false);
+        return;
+      }
+      setSamples(found);
+      stopTracks();
+      setStep("movement");
+    } catch (error) {
+      setCameraError(
+        error instanceof Error
+          ? error.message
+          : "Could not analyze that video. Try again from the side."
+      );
+    } finally {
+      setAnalyzing(false);
+    }
+  }
+
+  function onPhotoFile(file: File | undefined) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return;
     if (photoUrl) URL.revokeObjectURL(photoUrl);
     const url = URL.createObjectURL(file);
     setPhotoUrl(url);
     setPoints({});
     setSaved(false);
     setStep("upload");
+  }
+
+  function onVideoFile(file: File | undefined) {
+    if (!file) return;
+    if (!file.type.startsWith("video/")) return;
+    if (videoUrl) URL.revokeObjectURL(videoUrl);
+    const url = URL.createObjectURL(file);
+    setVideoUrl(url);
+    setSamples([]);
+    setSaved(false);
+    void runVideoAnalysis(url);
   }
 
   function handleClick(event: React.MouseEvent<HTMLImageElement>) {
@@ -241,20 +476,53 @@ export function PhotoGoniometer({
     setPoints((prev) => ({ ...prev, [pending]: { x, y } }));
   }
 
-  function saveResult() {
-    if (angle == null) return;
-    const row: GoniometerMeasurement = {
+  function savePhotoResult() {
+    if (photoAngle == null) return;
+    saveMeasurement({
       id: crypto.randomUUID(),
       userEmail,
       date: new Date().toISOString(),
       exercise,
       joint,
-      angle,
+      angle: photoAngle,
       note: note.trim(),
-    };
-    saveMeasurement(row);
+      source: "photo",
+    });
     setRows(loadMeasurements(userEmail));
     setSaved(true);
+  }
+
+  function saveVideoResult() {
+    if (!movement) return;
+    saveMeasurement({
+      id: crypto.randomUUID(),
+      userEmail,
+      date: new Date().toISOString(),
+      exercise,
+      joint,
+      angle: movement.peak,
+      note: note.trim(),
+      source: "video",
+      minAngle: movement.min,
+      range: movement.range,
+      durationSec: Number(movement.duration.toFixed(1)),
+    });
+    setRows(loadMeasurements(userEmail));
+    setSaved(true);
+  }
+
+  function resetCapture() {
+    if (photoUrl) URL.revokeObjectURL(photoUrl);
+    if (videoUrl) URL.revokeObjectURL(videoUrl);
+    setPhotoUrl(null);
+    setVideoUrl(null);
+    setPoints({});
+    setSamples([]);
+    setNote("");
+    setSaved(false);
+    setLiveAngle(null);
+    setCameraError("");
+    setStep("upload");
   }
 
   const filtered = useMemo(
@@ -267,13 +535,15 @@ export function PhotoGoniometer({
       {step === "upload" && (
         <section className="rm-card p-6">
           <p className="rm-label">Step 1</p>
-          <h2 className="mt-1 text-xl font-bold">Take a side-view photo</h2>
+          <h2 className="mt-1 text-xl font-bold">Record a side-view video</h2>
           <p className="mt-2 rm-body">
-            Tap Open camera. The preview stays on this page — it should not flash and close.
-            Allow access if asked, then tap Take picture.
+            Stand or sit sideways to the camera so the hip, knee, and ankle stay in view.
+            Tap Record movement, bend and straighten the knee, then tap Stop. The app
+            watches the video and graphs the angle. A still photo still works if you
+            prefer.
           </p>
 
-          <div className="mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-black">
+          <div className="relative mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-black">
             <video
               ref={bindVideo}
               autoPlay
@@ -282,20 +552,50 @@ export function PhotoGoniometer({
               controls={false}
               className={liveCamera ? "max-h-80 w-full bg-black object-contain" : "hidden"}
             />
+            <canvas
+              ref={overlayRef}
+              className={liveCamera ? "pointer-events-none absolute inset-0 h-full w-full" : "hidden"}
+            />
             {liveCamera ? (
-              <div className="flex gap-3 bg-background p-3">
-                <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={snapPhoto}>
-                  Take picture
-                </button>
-                <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={stopCamera}>
-                  Close camera
-                </button>
+              <div className="flex flex-col gap-3 bg-background p-3">
+                {recording && (
+                  <p className="text-center text-sm font-bold text-alert">
+                    Recording {recordSec}s / {MAX_RECORD_SEC}s
+                    {liveAngle != null ? ` · ${liveAngle}°` : ""}
+                  </p>
+                )}
+                <div className="flex gap-3">
+                  {recording ? (
+                    <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={stopRecording}>
+                      Stop and analyze
+                    </button>
+                  ) : (
+                    <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={startRecording}>
+                      Record movement
+                    </button>
+                  )}
+                  <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={stopCamera}>
+                    Close camera
+                  </button>
+                </div>
+                {trackerReady && (
+                  <p className="text-center text-xs text-muted">
+                    Movement tracker ready — lines appear when the leg is in view
+                  </p>
+                )}
               </div>
             ) : photoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={photoUrl} alt="Uploaded side-view photo" className="max-h-80 w-full bg-background object-contain" />
+            ) : videoUrl && analyzing ? (
+              <div className="flex h-40 flex-col items-center justify-center gap-2 bg-background px-6 text-sm text-muted">
+                <p>Watching the video and measuring the knee…</p>
+                <div className="h-2 w-full max-w-xs overflow-hidden rounded-full bg-surface-elevated">
+                  <div className="h-full bg-brand" style={{ width: `${analyzePct}%` }} />
+                </div>
+              </div>
             ) : (
-              <div className="flex h-40 items-center justify-center bg-background text-sm text-muted">
+              <div className="flex h-40 items-center justify-center bg-background px-6 text-center text-sm text-muted">
                 Camera preview stays here after you tap Open camera
               </div>
             )}
@@ -303,6 +603,10 @@ export function PhotoGoniometer({
 
           {cameraError && (
             <p className="mt-3 text-sm text-alert">{cameraError}</p>
+          )}
+
+          {analyzing && liveCamera && (
+            <p className="mt-3 text-sm text-muted">Watching the video and measuring the knee… {analyzePct}%</p>
           )}
 
           <div className="mt-5 flex flex-col gap-3">
@@ -315,18 +619,24 @@ export function PhotoGoniometer({
                 Open camera
               </button>
             )}
+            <button
+              type="button"
+              className="rm-btn rm-btn-primary w-full"
+              onClick={() => videoFileRef.current?.click()}
+            >
+              Choose video from files
+            </button>
             <div className="relative">
-              <div className="rm-btn rm-btn-primary pointer-events-none w-full">
-                Take photo
+              <div className="rm-btn rm-btn-ghost pointer-events-none w-full">
+                Still photo instead
               </div>
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/*"
-                capture="environment"
                 className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
-                aria-label="Take photo"
+                aria-label="Still photo instead"
                 onChange={(e) => {
-                  onFile(e.target.files?.[0]);
+                  onPhotoFile(e.target.files?.[0]);
                   window.setTimeout(() => {
                     e.target.value = "";
                   }, 500);
@@ -335,7 +645,7 @@ export function PhotoGoniometer({
             </div>
             <button
               type="button"
-              className="rm-btn rm-btn-ghost w-full"
+              className="text-sm font-medium text-brand-light"
               onClick={() => fileRef.current?.click()}
             >
               Choose photo from files
@@ -360,7 +670,7 @@ export function PhotoGoniometer({
                 className="rm-btn rm-btn-primary flex-1"
                 onClick={() => setStep("mark")}
               >
-                Continue
+                Mark points on photo
               </button>
             </div>
           )}
@@ -371,7 +681,17 @@ export function PhotoGoniometer({
             accept="image/*"
             className="hidden"
             onChange={(e) => {
-              onFile(e.target.files?.[0]);
+              onPhotoFile(e.target.files?.[0]);
+              e.target.value = "";
+            }}
+          />
+          <input
+            ref={videoFileRef}
+            type="file"
+            accept="video/*"
+            className="hidden"
+            onChange={(e) => {
+              onVideoFile(e.target.files?.[0]);
               e.target.value = "";
             }}
           />
@@ -474,7 +794,7 @@ export function PhotoGoniometer({
             <button
               type="button"
               className="rm-btn rm-btn-primary flex-1 disabled:opacity-40"
-              disabled={angle == null}
+              disabled={photoAngle == null}
               onClick={() => setStep("review")}
             >
               Confirm
@@ -483,82 +803,82 @@ export function PhotoGoniometer({
         </section>
       )}
 
-      {step === "review" && angle != null && (
+      {step === "review" && photoAngle != null && (
         <section className="rm-card p-6">
           <p className="rm-label">Step 3</p>
           <h2 className="mt-1 text-xl font-bold">Estimated knee angle</h2>
-          <p className="rm-display mt-4 text-correct">{angle}°</p>
+          <p className="rm-display mt-4 text-correct">{photoAngle}°</p>
           <p className="mt-2 text-sm text-muted">
             Estimated from your three landmarks. For progress tracking, not a medical diagnosis.
           </p>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <label className="block text-sm">
-              <span className="rm-label">Exercise</span>
-              <select
-                value={exercise}
-                onChange={(e) => setExercise(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
-              >
-                {EXERCISE_OPTIONS.map((option) => (
-                  <option key={option}>{option}</option>
-                ))}
-              </select>
-            </label>
-            <label className="block text-sm">
-              <span className="rm-label">Joint</span>
-              <select
-                value={joint}
-                onChange={(e) => setJoint(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
-              >
-                {JOINT_OPTIONS.map((option) => (
-                  <option key={option}>{option}</option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <label className="mt-4 block text-sm">
-            <span className="rm-label">Note (optional)</span>
-            <input
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Pain, swelling, or how it felt"
-              className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
-            />
-          </label>
-
+          {metaFields(exercise, setExercise, joint, setJoint, note, setNote)}
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              className="rm-btn rm-btn-ghost flex-1"
-              onClick={() => setStep("mark")}
-            >
+            <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={() => setStep("mark")}>
               Edit points
             </button>
             <button
               type="button"
               className="rm-btn rm-btn-primary flex-1 disabled:opacity-40"
               disabled={saved}
-              onClick={saveResult}
+              onClick={savePhotoResult}
             >
               {saved ? "Saved" : "Save result"}
             </button>
           </div>
-          <button
-            type="button"
-            className="rm-btn rm-btn-ghost mt-3 w-full"
-            onClick={() => {
-              if (photoUrl) URL.revokeObjectURL(photoUrl);
-              setPhotoUrl(null);
-              setPoints({});
-              setNote("");
-              setSaved(false);
-              setStep("upload");
-            }}
-          >
-            New photo
+          <button type="button" className="rm-btn rm-btn-ghost mt-3 w-full" onClick={resetCapture}>
+            New recording
           </button>
+        </section>
+      )}
+
+      {step === "movement" && movement && (
+        <section className="rm-card p-6">
+          <p className="rm-label">Movement result</p>
+          <h2 className="mt-1 text-xl font-bold">Knee motion from your video</h2>
+          <p className="mt-2 rm-body">
+            Peak is the highest angle in this clip. Min is the smallest. Range is how far the
+            joint traveled. For progress tracking, not a medical diagnosis.
+          </p>
+          {videoUrl && (
+            <video
+              src={videoUrl}
+              controls
+              playsInline
+              muted
+              className="mt-4 max-h-64 w-full rounded-2xl bg-black object-contain"
+            />
+          )}
+          <div className="mt-5 grid grid-cols-3 gap-3 text-center">
+            <div className="rounded-xl bg-background px-2 py-3">
+              <p className="rm-stat text-correct">{movement.peak}°</p>
+              <p className="rm-label mt-1">Peak</p>
+            </div>
+            <div className="rounded-xl bg-background px-2 py-3">
+              <p className="rm-stat">{movement.min}°</p>
+              <p className="rm-label mt-1">Min</p>
+            </div>
+            <div className="rounded-xl bg-background px-2 py-3">
+              <p className="rm-stat text-brand-light">{movement.range}°</p>
+              <p className="rm-label mt-1">Range</p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <MovementChart samples={samples} goal={goal} />
+          </div>
+          {metaFields(exercise, setExercise, joint, setJoint, note, setNote)}
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={resetCapture}>
+              Record again
+            </button>
+            <button
+              type="button"
+              className="rm-btn rm-btn-primary flex-1 disabled:opacity-40"
+              disabled={saved}
+              onClick={saveVideoResult}
+            >
+              {saved ? "Saved" : "Save peak angle"}
+            </button>
+          </div>
         </section>
       )}
 
@@ -583,9 +903,12 @@ export function PhotoGoniometer({
                   <div>
                     <p className="font-medium">
                       {row.angle}° · {row.exercise}
+                      {row.source === "video" ? " · video" : ""}
                     </p>
                     <p className="text-muted">
                       {new Date(row.date).toLocaleString()}
+                      {row.minAngle != null ? ` · min ${row.minAngle}°` : ""}
+                      {row.range != null ? ` · range ${row.range}°` : ""}
                       {row.note ? ` · ${row.note}` : ""}
                     </p>
                   </div>
@@ -605,5 +928,54 @@ export function PhotoGoniometer({
         )}
       </section>
     </div>
+  );
+}
+
+function metaFields(
+  exercise: string,
+  setExercise: (value: string) => void,
+  joint: string,
+  setJoint: (value: string) => void,
+  note: string,
+  setNote: (value: string) => void
+) {
+  return (
+    <>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <label className="block text-sm">
+          <span className="rm-label">Exercise</span>
+          <select
+            value={exercise}
+            onChange={(e) => setExercise(e.target.value)}
+            className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
+          >
+            {EXERCISE_OPTIONS.map((option) => (
+              <option key={option}>{option}</option>
+            ))}
+          </select>
+        </label>
+        <label className="block text-sm">
+          <span className="rm-label">Joint</span>
+          <select
+            value={joint}
+            onChange={(e) => setJoint(e.target.value)}
+            className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
+          >
+            {JOINT_OPTIONS.map((option) => (
+              <option key={option}>{option}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <label className="mt-4 block text-sm">
+        <span className="rm-label">Note (optional)</span>
+        <input
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Pain, swelling, or how it felt"
+          className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
+        />
+      </label>
+    </>
   );
 }

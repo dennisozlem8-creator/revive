@@ -15,6 +15,10 @@ export type GoniometerMeasurement = {
   joint: string;
   angle: number;
   note: string;
+  source?: "photo" | "video";
+  minAngle?: number;
+  range?: number;
+  durationSec?: number;
 };
 
 export const LANDMARK_ORDER: LandmarkId[] = ["hip", "knee", "ankle"];

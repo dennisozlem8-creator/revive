@@ -12,7 +12,7 @@ export function GoniometerProgressChart({
   if (measurements.length === 0) {
     return (
       <p className="rm-body">
-        Save a photo measurement to see your knee-angle progress over time.
+        Save a video or photo measurement to see your knee-angle progress over time.
       </p>
     );
   }

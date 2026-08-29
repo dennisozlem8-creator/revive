@@ -23,11 +23,11 @@ export default function GoniometerPage() {
     <div className="min-h-full rm-glow-patient pb-28 text-foreground">
       <Header linkHome />
       <main className="mx-auto max-w-lg px-6 pb-8">
-        <p className="rm-label">Photo tool</p>
+        <p className="rm-label">Movement tool</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Photo Goniometer</h1>
         <p className="mt-2 text-body">
-          Take a side-view photo, mark hip → knee → ankle, then save the estimated angle
-          and watch progress.
+          Record a side-view video of the knee bending. The app tracks hip, knee, and
+          ankle, graphs the motion, and saves the peak angle.
         </p>
 
         <div className="mt-6">

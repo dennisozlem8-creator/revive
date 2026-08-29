@@ -34,12 +34,12 @@ const faq: { keywords: string[]; answer: string }[] = [
   {
     keywords: ["rom", "range of motion", "sensor"],
     answer:
-      "ROM (range of motion) measures how far a joint can move. Wear your Revive Motion sensor during the test, or use the Photo Goniometer: take a side-view photo, mark hip → knee → ankle, and save the estimated angle. Review Charts for results.",
+      "ROM (range of motion) measures how far a joint can move. Wear your Revive Motion sensor during the test, or use the Photo Goniometer: record a side-view video of the knee bending so the app can graph the motion and save the peak angle. Review Charts for results.",
   },
   {
     keywords: ["goniometer", "photo", "angle", "hip", "mark"],
     answer:
-      "Open Photo Goniometer from your Dashboard or Charts. Upload a side-view photo, tap hip, then knee, then ankle. The app estimates the knee angle so you can track progress. It is not a medical diagnosis.",
+      "Open Photo Goniometer from your Dashboard or Charts. Record a side-view video of the knee moving. The app tracks hip, knee, and ankle, graphs the angle, and can save the peak. A still photo with tap-to-mark still works. It is not a medical diagnosis.",
   },
   {
     keywords: ["pain", "hurt", "sore"],
