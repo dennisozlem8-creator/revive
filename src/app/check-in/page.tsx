@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { PageHeroImage } from "@/components/PageHeroImage";
 import { PreBriefingFlow } from "@/components/PreBriefingFlow";
@@ -15,6 +16,17 @@ export default function CheckInPage() {
           className="mb-6"
         />
         <PreBriefingFlow />
+
+        <section className="rm-card mt-8 p-5">
+          <p className="rm-label">After check-in</p>
+          <h2 className="mt-1 text-lg font-semibold">Photo Goniometer</h2>
+          <p className="mt-2 text-sm text-body">
+            Take a side-view photo, mark hip, knee, and ankle, then save today&apos;s angle.
+          </p>
+          <Link href="/goniometer" className="rm-btn rm-btn-brand mt-4 w-full">
+            Open Photo Goniometer
+          </Link>
+        </section>
       </main>
     </div>
   );

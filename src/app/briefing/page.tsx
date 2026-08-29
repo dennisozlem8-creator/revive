@@ -48,6 +48,17 @@ export default function BriefingPage() {
           </p>
         )}
 
+        <section className="rm-card mt-4 p-5">
+          <p className="rm-label">Daily check-in</p>
+          <h2 className="mt-1 text-lg font-semibold">Photo Goniometer</h2>
+          <p className="mt-2 text-sm text-body">
+            Under today&apos;s check-in: measure knee angle from a photo.
+          </p>
+          <Link href="/goniometer" className="rm-btn rm-btn-brand mt-4 w-full">
+            Open Photo Goniometer
+          </Link>
+        </section>
+
         <section className="rm-card-elevated mt-8 p-6">
           <p className="rm-label text-brand-light">{t("todaysExercise", locale)}</p>
           <h2 className="mt-2 text-2xl font-bold">
@@ -86,11 +97,6 @@ export default function BriefingPage() {
         <p className="mt-5 text-center">
           <Link href="/library" className="text-sm font-medium text-brand-light hover:text-brand">
             {t("viewLibrary", locale)} →
-          </Link>
-        </p>
-        <p className="mt-3 text-center">
-          <Link href="/goniometer" className="text-sm font-medium text-brand-light hover:text-brand">
-            {t("photoGoniometer", locale)} →
           </Link>
         </p>
       </main>

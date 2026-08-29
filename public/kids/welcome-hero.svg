@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
-  <rect width="800" height="400" fill="#eef1f4"/>
-  <rect x="80" y="220" width="640" height="8" rx="4" fill="#3d5a73" opacity="0.25"/>
-  <circle cx="250" cy="150" r="36" fill="#3d5a73"/>
-  <path d="M250 186v70M230 210h40M220 300l30-44 30 44" stroke="#1c2430" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="550" cy="160" r="36" fill="#3d5a73"/>
-  <path d="M550 196v60M522 250h56M530 310l20-54 20 54" stroke="#1c2430" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="400" y="360" text-anchor="middle" fill="#1c2430" font-family="system-ui, sans-serif" font-size="22" font-weight="600">Kids Quest</text>
+  <rect width="800" height="400" fill="#d7ebf7"/>
+  <rect x="80" y="220" width="640" height="8" rx="4" fill="#4f90c6" opacity="0.35"/>
+  <circle cx="250" cy="150" r="36" fill="#4f90c6"/>
+  <path d="M250 186v70M230 210h40M220 300l30-44 30 44" stroke="#1b3348" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="550" cy="160" r="36" fill="#4f90c6"/>
+  <path d="M550 196v60M522 250h56M530 310l20-54 20 54" stroke="#1b3348" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="400" y="360" text-anchor="middle" fill="#1b3348" font-family="system-ui, sans-serif" font-size="22" font-weight="600">Kids Quest</text>
 </svg>

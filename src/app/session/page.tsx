@@ -14,6 +14,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { getFeedbackState } from "@/lib/feedback";
 import { areaIdForInjury, getSessionRecommendations } from "@/lib/session-results";
 import { t } from "@/lib/i18n";
+import { PeakBarChart, TestLiveCharts } from "@/components/TestLiveCharts";
 
 type Phase = "recording" | "exercises" | "report";
 
@@ -29,6 +30,8 @@ export default function SessionPage() {
   const [summary, setSummary] = useState<SessionSummary | null>(null);
   const [completedIds, setCompletedIds] = useState<string[]>([]);
   const [wave, setWave] = useState<number[]>(() => Array(24).fill(8));
+  const [emgWave, setEmgWave] = useState<number[]>(() => Array(24).fill(20));
+  const [hrWave, setHrWave] = useState<number[]>(() => Array(24).fill(70));
   const savedRef = useRef(false);
 
   const locale = user?.language ?? "en";
@@ -56,6 +59,8 @@ export default function SessionPage() {
       setEmg(Math.round(35 + Math.random() * 40));
       setHr(Math.round(68 + Math.random() * 18));
       setWave((prev) => [...prev.slice(1), Math.max(12, Math.sin(next * 0.08) * 40 + 50)]);
+      setEmgWave((prev) => [...prev.slice(1), Math.round(35 + Math.random() * 40)]);
+      setHrWave((prev) => [...prev.slice(1), Math.round(68 + Math.random() * 18)]);
       if (next >= target * 0.88) {
         setReps((r) => Math.min(targetReps, r + (Math.random() > 0.7 ? 1 : 0)));
       }
@@ -141,18 +146,22 @@ export default function SessionPage() {
         <div className="mt-6 space-y-4">
           <FeedbackBox state={feedback} angle={angle} target={target} locale={locale} />
 
-          <div className="rm-card p-4">
-            <div className="flex h-28 items-end gap-1">
-              {wave.map((h, i) => (
-                <div
-                  key={i}
-                  className="flex-1 rounded-t bg-gradient-to-t from-brand/30 to-brand-light/80 transition-all duration-300"
-                  style={{ height: `${h}%` }}
-                />
-              ))}
-            </div>
-            <p className="rm-label mt-2 text-center">Live angle waveform</p>
-          </div>
+          <TestLiveCharts
+            series={[
+              { label: "Live angle", values: wave, unit: "°", max: 100 },
+              { label: "Muscle effort (EMG)", values: emgWave, max: 100 },
+              { label: "Heart rate", values: hrWave, unit: " bpm", max: 120 },
+            ]}
+          />
+
+          <PeakBarChart
+            title="This test vs your plan"
+            bars={[
+              { label: "Live angle", value: angle, goal: target },
+              { label: "Baseline", value: user.baselineRom, goal: target },
+              { label: "Goal", value: target },
+            ]}
+          />
 
           <div className="grid grid-cols-3 gap-3">
             <StatTile value={`${reps}/${targetReps}`} label={t("reps", locale)} accent="correct" />

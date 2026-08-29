@@ -9,6 +9,7 @@ import {
   type DeviceSession,
 } from "@/lib/device-sensor";
 import { DeviceLineChart } from "./DeviceLineChart";
+import { PeakBarChart, TestLiveCharts } from "./TestLiveCharts";
 import { SensorHelp } from "./SensorHelp";
 
 type DeviceRecordingProps = {
@@ -140,10 +141,36 @@ export function DeviceRecording({ tests, areaId, onComplete }: DeviceRecordingPr
           )}
         </div>
 
-        <div className="w-full lg:max-w-md">
+        <div className="w-full space-y-3 lg:max-w-md">
           <DeviceLineChart
             readings={readings}
             activeMovementId={activeTest?.id}
+          />
+          <TestLiveCharts
+            series={[
+              {
+                label: "Angle samples",
+                values: readings.slice(-24).map((r) => r.angle),
+                unit: "°",
+                max: 140,
+              },
+              {
+                label: "Effort estimate",
+                values: readings.slice(-24).map((r) => Math.round(30 + r.angle * 0.4)),
+                max: 100,
+              },
+            ]}
+          />
+          <PeakBarChart
+            title="Peak angle by movement"
+            bars={tests.map((test) => ({
+              label: test.name,
+              value: Math.max(
+                0,
+                ...readings.filter((r) => r.movementId === test.id).map((r) => r.angle)
+              ),
+              goal: test.normalMin,
+            }))}
           />
         </div>
       </div>

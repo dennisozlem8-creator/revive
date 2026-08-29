@@ -66,7 +66,7 @@ export function DeviceLineChart({
         })}
         <polyline
           fill="none"
-          stroke="#60A5FA"
+          stroke="#4f90c6"
           strokeWidth="2.5"
           strokeLinejoin="round"
           strokeLinecap="round"
