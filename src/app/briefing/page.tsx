@@ -88,6 +88,11 @@ export default function BriefingPage() {
             {t("viewLibrary", locale)} →
           </Link>
         </p>
+        <p className="mt-3 text-center">
+          <Link href="/goniometer" className="text-sm font-medium text-brand-light hover:text-brand">
+            {t("photoGoniometer", locale)} →
+          </Link>
+        </p>
       </main>
       <BottomNav />
     </div>

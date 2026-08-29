@@ -42,9 +42,14 @@ export default function DashboardPage() {
           className="mt-6"
         />
 
-        <Link href="/shop" className="rm-btn rm-btn-brand mt-6 inline-flex">
-          🛒 Shop devices & braces
-        </Link>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <Link href="/goniometer" className="rm-btn rm-btn-brand inline-flex flex-1">
+            📐 Photo Goniometer
+          </Link>
+          <Link href="/shop" className="rm-btn rm-btn-ghost inline-flex flex-1">
+            🛒 Shop devices & braces
+          </Link>
+        </div>
 
         <section className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rm-card-elevated border-brand/30 p-6">

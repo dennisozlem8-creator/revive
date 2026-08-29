@@ -47,6 +47,8 @@ const copy = {
     alerts: "Alerts",
     moveBetter: "Move better, feel stronger",
     goToBriefing: "Go to today's briefing",
+    photoGoniometer: "Photo Goniometer",
+    photoTab: "Photo",
   },
   es: {
     home: "Inicio",
@@ -94,6 +96,8 @@ const copy = {
     alerts: "Alertas",
     moveBetter: "Muévete mejor, siéntete más fuerte",
     goToBriefing: "Ir al resumen de hoy",
+    photoGoniometer: "Goniómetro con foto",
+    photoTab: "Foto",
   },
 } as const;
 

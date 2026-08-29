@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { TabRow } from "@/components/ui/TabRow";
@@ -8,7 +9,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { calculateStreak } from "@/lib/streak";
 import { t } from "@/lib/i18n";
 
-type ChartTab = "rom" | "reps" | "pain";
+type ChartTab = "rom" | "reps" | "pain" | "photo";
 
 export default function ChartsPage() {
   const { user } = useAuth();
@@ -36,6 +37,7 @@ export default function ChartsPage() {
               { id: "rom" as const, label: t("romTab", locale) },
               { id: "reps" as const, label: t("repsTab", locale) },
               { id: "pain" as const, label: t("painTab", locale) },
+              { id: "photo" as const, label: t("photoTab", locale) },
             ]}
             active={tab}
             onChange={setTab}
@@ -139,6 +141,19 @@ export default function ChartsPage() {
               })}
             </div>
             <p className="mt-3 text-sm text-muted">Trend improves as ROM increases</p>
+          </section>
+        )}
+
+        {tab === "photo" && (
+          <section className="rm-card mt-6 p-6">
+            <h2 className="font-semibold">Photo Goniometer</h2>
+            <p className="mt-2 rm-body">
+              Measure knee angle from a side-view photo: mark hip, knee, and ankle, then
+              save the result to this progress graph.
+            </p>
+            <Link href="/goniometer" className="rm-btn rm-btn-brand mt-6 inline-flex">
+              Open photo tool
+            </Link>
           </section>
         )}
       </main>

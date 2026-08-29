@@ -17,6 +17,7 @@ Source documents in `/docs`:
 | 7 | RecoverAI Coach | `/recover-ai` | Done |
 | 8 | PT Remote Update | `/pt-update` | Done |
 | 9 | Exercise Library | `/library` | Done |
+| 10 | Photo Goniometer | `/goniometer` | Done |
 
 ## Design system (from Tutor Instructions)
 
