@@ -35,7 +35,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   return (
     <header
       className={`relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 sm:px-6 ${
-        isKids ? "border-b border-purple/20 py-3" : "py-6"
+        isKids ? "rounded-b-3xl border-b-4 border-orange-300 bg-gradient-to-r from-orange-400 via-fuchsia-400 to-sky-400 py-3" : "py-6"
       }`}
     >
       {linkHome ? (
@@ -45,10 +45,10 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
         >
           {isKids ? (
             <div className="flex items-center gap-3">
-              <Logo size={48} />
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow">🎮</span>
               <div className="hidden sm:block">
-                <p className="text-sm font-bold leading-tight text-foreground">Revive Motion</p>
-                <p className="text-xs font-medium uppercase tracking-wider text-muted">Kids Quest</p>
+                <p className="text-sm font-black leading-tight text-white drop-shadow">Kids Quest</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-white/90">Adventure mode</p>
               </div>
             </div>
           ) : (
@@ -58,10 +58,10 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
       ) : (
         isKids ? (
           <div className="flex items-center gap-3">
-            <Logo size={48} />
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow">🎮</span>
             <div className="hidden sm:block">
-                <p className="text-sm font-bold leading-tight text-foreground">Revive Motion</p>
-                <p className="text-xs font-medium uppercase tracking-wider text-muted">Kids Quest</p>
+                <p className="text-sm font-black leading-tight text-white drop-shadow">Kids Quest</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-white/90">Adventure mode</p>
             </div>
           </div>
         ) : (
@@ -70,15 +70,15 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
       )}
       <div className="flex items-center gap-2 sm:gap-3">
         {isKids && (
-          <span className="hidden rounded-md border border-[var(--border)] bg-surface px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-muted sm:inline-flex">
-            Kids
+          <span className="hidden rounded-full bg-white/95 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-orange-700 shadow sm:inline-flex">
+            ⭐ Kids
           </span>
         )}
         <LanguageToggle />
         {user?.role === "patient" && variant === "kids" && (
           <Link
             href="/briefing"
-            className="rounded-full border border-brand/40 bg-brand/10 px-4 py-2 text-sm font-bold text-brand-light transition hover:bg-brand/20"
+            className="rounded-full bg-white/90 px-4 py-2 text-sm font-black text-violet-800 shadow transition hover:bg-white"
           >
             ← Adult mode
           </Link>
@@ -92,9 +92,9 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
             )}
             <Link
               href="/kids"
-              className="inline-flex items-center rounded-md border border-[var(--border)] bg-surface px-3 py-1.5 text-sm font-medium text-foreground transition hover:bg-surface-elevated"
+              className="inline-flex items-center rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-3 py-1.5 text-sm font-black text-white shadow"
             >
-              {t("kidsQuest", locale)}
+              🎮 {t("kidsQuest", locale)}
             </Link>
           </>
         )}
@@ -107,7 +107,9 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
               type="button"
               onClick={logout}
               className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                isCaregiver
+                isKids
+                  ? "border-white/70 bg-white/80 font-black text-rose-800 hover:bg-white"
+                  : isCaregiver
                   ? "border-[#cbd5e1] text-[var(--caregiver-muted)] hover:bg-white"
                   : "border-[var(--border)] text-muted hover:text-foreground"
               }`}

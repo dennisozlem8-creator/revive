@@ -17,12 +17,12 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
   if (loading) {
     return (
       <div
-        className={`animate-pulse rounded-xl border border-[var(--border)] bg-surface px-5 py-8 text-center ${className}`}
+        className={`animate-pulse rounded-2xl border-2 border-orange/40 bg-orange/10 px-5 py-8 text-center ${className}`}
         aria-busy="true"
         aria-label="Loading Kids Quest"
       >
-        <div className="mx-auto h-24 w-48 rounded-lg bg-surface-elevated" />
-        <div className="mx-auto mt-4 h-5 w-40 rounded bg-surface-elevated" />
+        <div className="mx-auto h-24 w-48 rounded-lg bg-orange/20" />
+        <div className="mx-auto mt-4 h-5 w-40 rounded bg-orange/20" />
       </div>
     );
   }
@@ -33,23 +33,26 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
     return (
       <Link
         href={KIDS_HREF}
-        className={`block overflow-hidden rounded-xl border border-[var(--border)] bg-surface p-5 text-center transition hover:bg-surface-elevated ${className}`}
+        className={`block overflow-hidden rounded-2xl border-2 border-orange/60 bg-gradient-to-br from-amber-100 via-violet-100 to-sky-100 p-5 text-center ${className}`}
       >
+        <p className="text-3xl" aria-hidden>
+          🎮
+        </p>
         <Image
           src="/kids/welcome-hero.svg"
           alt=""
           width={240}
           height={120}
-          className="mx-auto h-20 w-auto object-contain sm:h-24"
+          className="mx-auto mt-2 h-20 w-auto object-contain sm:h-24"
         />
-        <p className="mt-3 text-base font-semibold text-foreground">Kids Quest</p>
-        <p className="mt-1 text-xs text-muted">
+        <p className="mt-3 text-lg font-black text-orange-600">🎮 Enter Kids Quest World</p>
+        <p className="mt-1 text-xs font-bold text-violet-700">
           {user
-            ? "Open the kids exercise games"
-            : "Try the kids games. Sign in later to save progress."}
+            ? "Switch to your colorful adventure mode"
+            : "Explore quests — sign in later to save progress"}
         </p>
-        <span className="mt-3 inline-flex rounded-md border border-[var(--border)] px-4 py-2 text-sm font-medium text-foreground">
-          Open Kids Quest
+        <span className="mt-3 inline-flex rounded-full bg-gradient-to-r from-orange to-purple px-5 py-2 text-sm font-bold text-white">
+          Go to Kids Quest →
         </span>
       </Link>
     );
@@ -59,10 +62,10 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
     return (
       <Link
         href={KIDS_HREF}
-        className={`inline-flex w-full flex-col items-center justify-center gap-1 rounded-md border border-[var(--border)] bg-surface px-6 py-3 text-sm font-medium text-foreground transition hover:bg-surface-elevated ${className}`}
+        className={`inline-flex w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 border-orange/50 bg-orange/15 px-6 py-3 text-sm font-bold text-orange ${className}`}
       >
-        Kids Quest
-        <span className="text-xs font-normal text-muted">Open the kids games</span>
+        <span>🎮 Kids Quest Mode</span>
+        <span className="text-xs font-medium text-purple">Tap to explore the quest world</span>
       </Link>
     );
   }
@@ -70,9 +73,9 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
   return (
     <Link
       href={KIDS_HREF}
-      className={`inline-flex w-full items-center justify-center rounded-md border border-[var(--border)] bg-surface px-6 py-3 text-sm font-medium text-foreground transition hover:bg-surface-elevated ${className}`}
+      className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-orange/50 bg-orange/15 px-6 py-3 text-sm font-bold text-orange ${className}`}
     >
-      Switch to Kids Quest
+      🎮 Switch to Kids Quest Mode
     </Link>
   );
 }

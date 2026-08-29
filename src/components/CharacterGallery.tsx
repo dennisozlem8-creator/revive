@@ -28,12 +28,12 @@ function CharacterCard({
       type="button"
       disabled={!unlocked}
       onClick={onSelect}
-      className={`relative flex flex-col items-center rounded-2xl border p-4 text-center transition ${
+      className={`relative flex flex-col items-center rounded-2xl border-4 p-4 text-center transition ${
         unlocked
           ? selected
-            ? "border-brand bg-brand/15"
-            : "border-[var(--border)] bg-surface hover:border-brand/40"
-          : "cursor-default border-white/10 bg-surface/30"
+            ? "border-orange-400 bg-gradient-to-br from-amber-100 to-orange-50 shadow-[0_6px_0_#fb923c]"
+            : "border-violet-200 bg-gradient-to-br from-white to-sky-50 hover:border-fuchsia-300"
+          : "cursor-default border-slate-200 bg-slate-50"
       } ${compact ? "p-3" : "p-4"}`}
     >
       <span
@@ -53,8 +53,8 @@ function CharacterCard({
         <p className="mt-1 text-xs text-muted/80">{character.unlockHint}</p>
       )}
       {selected && unlocked && (
-        <span className="absolute -right-1 -top-1 rounded-full bg-orange px-2 py-0.5 text-[10px] font-bold text-white">
-          Active
+        <span className="absolute -right-1 -top-1 rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-2 py-0.5 text-[10px] font-black text-white">
+          ⭐ Active
         </span>
       )}
     </button>
@@ -72,21 +72,21 @@ export function CharacterGallery({
 
   return (
     <section className="mt-6">
-      <div className="relative overflow-hidden rounded-2xl border border-orange/30">
+      <div className="relative overflow-hidden rounded-[1.6rem] border-4 border-amber-300">
         <Image
           src="/kids/hero-collection.svg"
           alt=""
           width={800}
           height={200}
-          className="h-16 w-full object-cover opacity-80 sm:h-20"
+          className="h-16 w-full object-cover sm:h-20"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0520] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-orange-900/70 to-transparent" />
         <div className="absolute bottom-3 left-4">
-          <h2 className="text-2xl font-bold text-orange">Hero Collection</h2>
-          <p className="text-sm text-muted">Unlock heroes by completing quests</p>
+          <h2 className="text-2xl font-black text-white drop-shadow">🦸 Hero Collection</h2>
+          <p className="text-sm font-bold text-amber-100">Unlock heroes by completing quests</p>
         </div>
-        <span className="absolute right-4 top-4 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-sm font-bold text-gold">
-          {unlockedCount}/{total}
+        <span className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1 text-sm font-black text-orange-600 shadow">
+          ⭐ {unlockedCount}/{total}
         </span>
       </div>
       <div

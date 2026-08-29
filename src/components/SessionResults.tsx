@@ -67,9 +67,9 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
         <h3 className="text-xl font-bold">Your exercises</h3>
         <Link
           href="/kids"
-          className="rounded-md border border-[var(--border)] bg-surface px-4 py-2 text-sm font-medium text-foreground"
+          className="rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow"
         >
-          Quest map
+          🗺️ Quest map
         </Link>
       </div>
 
@@ -106,15 +106,15 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
                       <p className="text-sm font-semibold text-foreground">{media.kidsQuest.title}</p>
                       <p className="text-xs text-muted">{media.kidsQuest.story}</p>
                       {questDone && (
-                        <p className="mt-1 text-xs font-semibold text-correct">Badge earned!</p>
+                        <p className="mt-1 text-xs font-semibold text-correct">🏅 Badge earned!</p>
                       )}
                     </div>
                     <button
                       type="button"
                       onClick={() => setQuestExercise(exercise)}
-                      className="rounded-md bg-brand px-5 py-3 text-sm font-medium text-foreground transition hover:opacity-90"
+                      className="rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-5 py-3 text-sm font-black text-white shadow transition hover:opacity-90"
                     >
-                      {questDone ? "Play again" : "Start quest"}
+                      {questDone ? "🔁 Play again" : "🎮 Start quest"}
                     </button>
                   </div>
                 </div>

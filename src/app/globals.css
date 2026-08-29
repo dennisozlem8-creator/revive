@@ -18,7 +18,7 @@
   --purple: #5a6f82;
   --gold: #7a6b45;
   --teal: #3d6f7a;
-  --kids-bg: #eaf5fc;
+  --kids-bg: #fff4e0;
   --caregiver-bg: #eef6fb;
   --caregiver-text: #1b3348;
   --caregiver-muted: #4d6478;
@@ -231,7 +231,7 @@ body {
 .rm-xp-fill {
   height: 100%;
   border-radius: 9999px;
-  background: var(--brand);
+  background: linear-gradient(90deg, #f59e0b, #fbbf24, #a78bfa);
   position: relative;
 }
 
@@ -256,7 +256,19 @@ body {
 }
 
 .rm-glow-kids {
-  background: var(--kids-bg);
+  --orange: #f97316;
+  --purple: #a855f7;
+  --gold: #f59e0b;
+  --correct: #16a34a;
+  --teal: #14b8a6;
+  --brand: #f97316;
+  --brand-light: #ea580c;
+  --brand-soft: rgba(249, 115, 22, 0.16);
+  background:
+    radial-gradient(ellipse 80% 40% at 10% 0%, rgba(251, 191, 36, 0.45), transparent 55%),
+    radial-gradient(ellipse 70% 40% at 90% 10%, rgba(167, 139, 250, 0.4), transparent 55%),
+    radial-gradient(ellipse 60% 30% at 50% 100%, rgba(56, 189, 248, 0.35), transparent 50%),
+    var(--kids-bg);
 }
 
 .rm-glow-caregiver {
@@ -313,10 +325,10 @@ body {
 @keyframes kids-badge-pulse {
   0%,
   100% {
-    opacity: 1;
+    transform: scale(1);
   }
   50% {
-    opacity: 0.85;
+    transform: scale(1.04);
   }
 }
 

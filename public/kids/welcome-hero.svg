@@ -1,9 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
-  <rect width="800" height="400" fill="#d7ebf7"/>
-  <rect x="80" y="220" width="640" height="8" rx="4" fill="#4f90c6" opacity="0.35"/>
-  <circle cx="250" cy="150" r="36" fill="#4f90c6"/>
-  <path d="M250 186v70M230 210h40M220 300l30-44 30 44" stroke="#1b3348" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="550" cy="160" r="36" fill="#4f90c6"/>
-  <path d="M550 196v60M522 250h56M530 310l20-54 20 54" stroke="#1b3348" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="400" y="360" text-anchor="middle" fill="#1b3348" font-family="system-ui, sans-serif" font-size="22" font-weight="600">Kids Quest</text>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="800" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff7ed"/>
+      <stop offset="0.45" stop-color="#fde68a"/>
+      <stop offset="1" stop-color="#c4b5fd"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" rx="28" fill="url(#sky)"/>
+  <circle cx="120" cy="90" r="46" fill="#fbbf24"/>
+  <circle cx="680" cy="70" r="18" fill="#fb7185"/>
+  <circle cx="720" cy="120" r="10" fill="#38bdf8"/>
+  <circle cx="90" cy="180" r="8" fill="#a78bfa"/>
+  <text x="70" y="70" font-size="36">⭐</text>
+  <text x="700" y="180" font-size="32">🌟</text>
+  <text x="400" y="80" text-anchor="middle" font-size="42">🎮</text>
+  <circle cx="250" cy="168" r="40" fill="#fb923c"/>
+  <path d="M250 208v64M222 236h56M214 316l36-44 36 44" stroke="#9a3412" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="228" y="182" font-size="32">🦸</text>
+  <circle cx="550" cy="176" r="40" fill="#a78bfa"/>
+  <path d="M550 216v56M520 268h60M528 324l22-52 22 52" stroke="#5b21b6" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="528" y="190" font-size="32">⚡</text>
+  <text x="400" y="368" text-anchor="middle" fill="#9a3412" font-family="system-ui, sans-serif" font-size="28" font-weight="800">Kids Quest</text>
 </svg>

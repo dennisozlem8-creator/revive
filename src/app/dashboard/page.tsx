@@ -114,9 +114,9 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/kids"
-              className="mt-4 inline-flex rounded-md border border-[var(--border)] bg-surface-elevated px-4 py-2 text-sm font-medium text-foreground hover:bg-background"
+              className="mt-4 inline-flex rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow hover:opacity-90"
             >
-              Continue Kids Quest
+              🎮 Continue Kids Quest
             </Link>
           </div>
         </section>

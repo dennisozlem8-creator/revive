@@ -76,9 +76,9 @@ export default function Home() {
           )}
           <Link
             href="/kids"
-            className="mt-4 inline-flex w-full max-w-sm items-center justify-center rounded-md border border-[var(--border)] bg-surface px-6 py-3 text-base font-medium text-foreground transition hover:bg-surface-elevated"
+            className="mt-4 inline-flex w-full max-w-sm items-center justify-center rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-6 py-3 text-base font-black text-white shadow"
           >
-            Kids Quest
+            🎮 Kids Quest
           </Link>
         </section>
 

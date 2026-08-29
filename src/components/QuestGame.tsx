@@ -104,11 +104,11 @@ export function QuestGame({
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border-2 border-purple/40 rm-glow-kids p-6">
+    <div className="overflow-hidden rounded-[2rem] border-4 border-orange-300 rm-glow-kids p-6 shadow-[0_10px_0_#fb923c]">
       <div className="flex items-start gap-4">
         <span className="text-6xl">{avatarEmoji}</span>
-        <div className="relative flex-1 rounded-2xl border-2 border-orange/50 bg-white/95 px-4 py-3 text-[var(--caregiver-text)]">
-          <p className="text-sm font-medium">{speech()}</p>
+        <div className="relative flex-1 rounded-2xl border-2 border-orange-300 bg-white px-4 py-3 text-orange-950">
+          <p className="text-sm font-black">{speech()}</p>
         </div>
       </div>
 
@@ -141,14 +141,14 @@ export function QuestGame({
           </svg>
         </div>
         <div className="flex-1">
-          <p className="font-bold text-foreground">
+          <p className="font-black text-orange-800">
             {connecting
-              ? "Connecting sensor…"
+              ? "🔌 Connecting sensor…"
               : connected
                 ? recording
-                  ? "Sensor recording"
-                  : "Sensor connected"
-                : "Sensor offline"}
+                  ? "📡 Sensor recording"
+                  : "✅ Sensor connected"
+                : "🎮 Sensor offline"}
           </p>
           <p className="text-xs text-muted">
             {connecting
@@ -165,7 +165,7 @@ export function QuestGame({
             type="button"
             disabled={connecting}
             onClick={handleConnect}
-            className="rounded-full bg-brand px-4 py-2 text-sm font-bold text-white disabled:opacity-60"
+            className="rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow disabled:opacity-60"
           >
             {connecting ? (
               <span className="inline-flex items-center gap-2">
@@ -173,7 +173,7 @@ export function QuestGame({
                 Connecting
               </span>
             ) : (
-              "Connect"
+              "Connect 🔌"
             )}
           </button>
         )}
@@ -195,12 +195,12 @@ export function QuestGame({
         />
         {celebrate && (
           <span className="absolute inset-0 flex items-center justify-center text-6xl animate-pulse-soft">
-            ★
+            ⭐
           </span>
         )}
       </div>
 
-      <h3 className="mt-4 text-center text-2xl font-bold text-orange">{media.kidsQuest.title}</h3>
+      <h3 className="mt-4 text-center text-2xl font-black text-orange-600">🎯 {media.kidsQuest.title}</h3>
       <p className="mt-1 text-center text-body">{media.kidsQuest.story}</p>
 
       {connected && (
@@ -226,19 +226,19 @@ export function QuestGame({
           </div>
 
           <div className="mt-3 grid grid-cols-3 gap-2 text-center text-sm">
-            <div className="rounded-lg bg-surface/80 py-2">
-              <p className="font-bold text-purple">{reading?.emg ?? "—"}</p>
-              <p className="text-xs text-muted">EMG</p>
+            <div className="rounded-lg bg-violet-100 py-2">
+              <p className="font-black text-violet-700">{reading?.emg ?? "—"}</p>
+              <p className="text-xs font-bold text-violet-800">💪 EMG</p>
             </div>
-            <div className="rounded-lg bg-surface/80 py-2">
-              <p className="font-bold text-orange">{reading?.hr ?? "—"}</p>
-              <p className="text-xs text-muted">BPM</p>
+            <div className="rounded-lg bg-orange-100 py-2">
+              <p className="font-black text-orange-600">{reading?.hr ?? "—"}</p>
+              <p className="text-xs font-bold text-orange-800">❤️ BPM</p>
             </div>
-            <div className="rounded-lg bg-surface/80 py-2">
-              <p className="font-bold text-gold">
+            <div className="rounded-lg bg-amber-100 py-2">
+              <p className="font-black text-amber-600">
                 {reps}/{target}
               </p>
-              <p className="text-xs text-muted">Reps</p>
+              <p className="text-xs font-bold text-amber-800">⭐ Reps</p>
             </div>
           </div>
 
@@ -254,13 +254,13 @@ export function QuestGame({
       {!connected ? null : done ? (
         <div className="mt-6 rounded-2xl border border-correct/40 bg-correct/15 p-5 text-center">
           <p className="text-4xl">{media.kidsQuest.reward}</p>
-          <p className="mt-2 text-lg font-bold text-correct">Quest complete! +50 XP</p>
+          <p className="mt-2 text-lg font-black text-lime-700">🎉 Quest complete! +50 XP</p>
           <button
             type="button"
             onClick={onComplete}
-            className="mt-4 rounded-full bg-brand px-6 py-3 text-sm font-bold text-white"
+            className="mt-4 rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-6 py-3 text-sm font-black text-white shadow-[0_4px_0_#c2410c]"
           >
-            Continue
+            Continue 🚀
           </button>
         </div>
       ) : !recording ? (
@@ -271,13 +271,13 @@ export function QuestGame({
             lastRepTickRef.current = -99;
             setRecording(true);
           }}
-          className="mt-6 w-full rounded-2xl bg-gradient-to-r from-purple to-brand py-5 text-lg font-bold text-white"
+          className="mt-6 w-full rounded-2xl bg-gradient-to-r from-orange-500 via-fuchsia-500 to-sky-500 py-5 text-lg font-black text-white shadow-[0_6px_0_#c2410c]"
         >
-          Start sensor quest
+          Start sensor quest 🎮
         </button>
       ) : (
         <p className="mt-4 text-center text-sm font-semibold text-brand-light animate-pulse-soft">
-          Sensor active. Do the exercise movement.
+          📡 Sensor active. Do the exercise movement!
         </p>
       )}
     </div>

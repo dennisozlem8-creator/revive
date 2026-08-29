@@ -13,9 +13,11 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
 
   return (
     <div
-      className={`rounded-xl border border-[var(--border)] bg-surface ${
-        variant === "compact" ? "p-3" : "p-4"
-      }`}
+      className={`rounded-xl border ${
+        isKids
+          ? "border-4 border-violet-200 bg-gradient-to-br from-violet-50 to-sky-50"
+          : "border-[var(--border)] bg-surface"
+      } ${variant === "compact" ? "p-3" : "p-4"}`}
     >
       <button
         type="button"
@@ -23,7 +25,7 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
         className="flex w-full items-center justify-between gap-2 text-left"
       >
         <span className="text-sm font-semibold text-foreground">
-          {isKids ? "Demo sensor" : "How sensor connection works"}
+          {isKids ? "🎮 Demo sensor mode" : "How sensor connection works"}
         </span>
         <span className="text-xs text-muted">{open ? "Hide" : "Show"}</span>
       </button>
@@ -42,9 +44,9 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
             sensors. Those drivers would replace the simulated readings you see here.
           </p>
           {isKids && (
-            <p className="text-orange">
-              In quest mode, move along with the on-screen exercise — reps count automatically from
-              the demo readings!
+            <p className="font-bold text-orange-700">
+              ✨ In quest mode, move along with the on-screen exercise — reps count automatically
+              from the demo readings!
             </p>
           )}
         </div>
