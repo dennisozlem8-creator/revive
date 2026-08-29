@@ -48,9 +48,12 @@ export function PhotoGoniometer({
   const imgRef = useRef<HTMLImageElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const cameraRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const [overlay, setOverlay] = useState({ left: 0, top: 0, width: 100, height: 100 });
   const [step, setStep] = useState<Step>("upload");
+  const [liveCamera, setLiveCamera] = useState(false);
+  const [cameraError, setCameraError] = useState("");
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [points, setPoints] = useState<Partial<Record<LandmarkId, Point>>>({});
   const [exercise, setExercise] = useState(EXERCISE_OPTIONS[0]);
@@ -68,6 +71,16 @@ export function PhotoGoniometer({
       if (photoUrl) URL.revokeObjectURL(photoUrl);
     };
   }, [photoUrl]);
+
+  useEffect(() => {
+    return () => stopCamera();
+  }, []);
+
+  useEffect(() => {
+    if (!liveCamera || !videoRef.current || !streamRef.current) return;
+    videoRef.current.srcObject = streamRef.current;
+    void videoRef.current.play();
+  }, [liveCamera]);
 
   useEffect(() => {
     const onResize = () => syncOverlay();
@@ -94,6 +107,48 @@ export function PhotoGoniometer({
     points.hip && points.knee && points.ankle
       ? kneeAngleDegrees(points.hip, points.knee, points.ankle)
       : null;
+
+  function stopCamera() {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    setLiveCamera(false);
+  }
+
+  async function startCamera() {
+    setCameraError("");
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraError("This browser cannot open a live camera. Use Use phone camera app below.");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+        audio: false,
+      });
+      streamRef.current = stream;
+      setLiveCamera(true);
+    } catch {
+      setCameraError(
+        "Camera permission was blocked. Tap Allow, or use Use phone camera app."
+      );
+    }
+  }
+
+  function snapPhoto() {
+    const video = videoRef.current;
+    if (!video || !video.videoWidth) return;
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0);
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      onFile(new File([blob], "camera.jpg", { type: "image/jpeg" }));
+      stopCamera();
+    }, "image/jpeg", 0.92);
+  }
 
   function onFile(file: File | undefined) {
     if (!file) return;
@@ -143,34 +198,69 @@ export function PhotoGoniometer({
       {step === "upload" && (
         <section className="rm-card p-6">
           <p className="rm-label">Step 1</p>
-          <h2 className="mt-1 text-xl font-bold">Camera or photo upload</h2>
+          <h2 className="mt-1 text-xl font-bold">Take a side-view photo</h2>
           <p className="mt-2 rm-body">
-            On a phone, tap Open camera. On a computer, that same button opens a file picker.
-            Use a side view of the leg. The photo stays on this device.
+            Tap Open live camera to see the lens in this page. On a phone you can also tap
+            Use phone camera app to open the real Camera app. Allow access if asked.
           </p>
 
-          {photoUrl ? (
+          {liveCamera ? (
+            <div className="mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-black">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="max-h-80 w-full object-contain"
+              />
+              <div className="flex gap-3 p-3">
+                <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={snapPhoto}>
+                  Take picture
+                </button>
+                <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={stopCamera}>
+                  Close camera
+                </button>
+              </div>
+            </div>
+          ) : photoUrl ? (
             <div className="mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-background">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={photoUrl} alt="Uploaded side-view photo" className="max-h-80 w-full object-contain" />
             </div>
           ) : (
-            <div className="mt-5 flex h-48 items-center justify-center rounded-2xl border border-dashed border-[var(--border)] bg-background text-sm text-muted">
-              No photo yet
+            <div className="mt-5 flex h-40 items-center justify-center rounded-2xl border border-dashed border-[var(--border)] bg-background text-sm text-muted">
+              Camera preview will show here
             </div>
           )}
 
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+          {cameraError && (
+            <p className="mt-3 text-sm text-alert">{cameraError}</p>
+          )}
+
+          <div className="mt-5 flex flex-col gap-3">
             <button
               type="button"
-              className="rm-btn rm-btn-brand flex-1"
-              onClick={() => cameraRef.current?.click()}
+              className="rm-btn rm-btn-brand w-full"
+              onClick={() => void startCamera()}
             >
-              Open camera
+              Open live camera
             </button>
+            <label className="rm-btn rm-btn-primary w-full cursor-pointer">
+              Use phone camera app
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="sr-only"
+                onChange={(e) => {
+                  onFile(e.target.files?.[0]);
+                  e.target.value = "";
+                }}
+              />
+            </label>
             <button
               type="button"
-              className="rm-btn rm-btn-ghost flex-1"
+              className="rm-btn rm-btn-ghost w-full"
               onClick={() => fileRef.current?.click()}
             >
               Choose photo from files
@@ -201,19 +291,14 @@ export function PhotoGoniometer({
           )}
 
           <input
-            ref={cameraRef}
-            type="file"
-            accept="image/jpeg,image/png"
-            capture="environment"
-            className="hidden"
-            onChange={(e) => onFile(e.target.files?.[0])}
-          />
-          <input
             ref={fileRef}
             type="file"
-            accept="image/jpeg,image/png"
+            accept="image/*"
             className="hidden"
-            onChange={(e) => onFile(e.target.files?.[0])}
+            onChange={(e) => {
+              onFile(e.target.files?.[0]);
+              e.target.value = "";
+            }}
           />
         </section>
       )}
