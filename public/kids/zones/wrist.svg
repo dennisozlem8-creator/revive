@@ -3,5 +3,4 @@
   <circle cx="80" cy="70" r="24" fill="#86efac"/>
   <circle cx="330" cy="90" r="18" fill="#f472b6"/>
   <circle cx="200" cy="160" r="70" fill="#ede9fe"/>
-  <text x="164" y="184" font-size="64">✋</text>
 </svg>

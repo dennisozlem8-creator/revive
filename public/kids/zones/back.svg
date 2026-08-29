@@ -2,5 +2,4 @@
   <rect width="400" height="300" fill="#93c5fd"/>
   <path d="M0 190 Q80 120 160 190 Q240 250 320 170 Q360 140 400 180 V300 H0 Z" fill="#38bdf8"/>
   <circle cx="320" cy="70" r="26" fill="#fde047"/>
-  <text x="164" y="160" font-size="64">🌊</text>
 </svg>

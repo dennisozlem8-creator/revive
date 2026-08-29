@@ -5,6 +5,7 @@ import { Logo } from "./Logo";
 import { LanguageToggle } from "./LanguageToggle";
 import { useAuth } from "./AuthProvider";
 import { t } from "@/lib/i18n";
+import { KidsIcon } from "@/components/KidsIcon";
 
 type HeaderProps = {
   linkHome?: boolean;
@@ -45,7 +46,9 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
         >
           {isKids ? (
             <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow">🎮</span>
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow">
+                <KidsIcon name="gamepad" size={40} />
+              </span>
               <div className="hidden sm:block">
                 <p className="text-sm font-black leading-tight text-white drop-shadow">Kids Quest</p>
                 <p className="text-xs font-bold uppercase tracking-wider text-white/90">Adventure mode</p>
@@ -58,7 +61,9 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
       ) : (
         isKids ? (
           <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow">🎮</span>
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow">
+              <KidsIcon name="gamepad" size={40} />
+            </span>
             <div className="hidden sm:block">
                 <p className="text-sm font-black leading-tight text-white drop-shadow">Kids Quest</p>
                 <p className="text-xs font-bold uppercase tracking-wider text-white/90">Adventure mode</p>
@@ -70,8 +75,8 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
       )}
       <div className="flex items-center gap-2 sm:gap-3">
         {isKids && (
-          <span className="hidden rounded-full bg-white/95 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-orange-700 shadow sm:inline-flex">
-            ⭐ Kids
+          <span className="hidden items-center gap-1 rounded-full bg-white/95 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-orange-700 shadow sm:inline-flex">
+            <KidsIcon name="star" size={14} /> Kids
           </span>
         )}
         <LanguageToggle />
@@ -92,9 +97,9 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
             )}
             <Link
               href="/kids"
-              className="inline-flex items-center rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-3 py-1.5 text-sm font-black text-white shadow"
+              className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-3 py-1.5 text-sm font-black text-white shadow"
             >
-              🎮 {t("kidsQuest", locale)}
+              <KidsIcon name="gamepad" size={18} /> {t("kidsQuest", locale)}
             </Link>
           </>
         )}

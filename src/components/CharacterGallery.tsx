@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { KIDS_CHARACTERS, type KidsCharacter } from "@/lib/kids-characters";
+import { KidsIcon, KidsIconTitle } from "@/components/KidsIcon";
 
 type CharacterGalleryProps = {
   unlockedIds: string[];
@@ -37,12 +38,10 @@ function CharacterCard({
       } ${compact ? "p-3" : "p-4"}`}
     >
       <span
-        className={`${compact ? "text-3xl" : "text-4xl"} transition ${
-          unlocked ? "" : "opacity-30 grayscale blur-[1px]"
-        }`}
+        className={`transition ${unlocked ? "" : "opacity-30 grayscale blur-[1px]"}`}
         aria-hidden
       >
-        {unlocked ? character.avatar : "❓"}
+        <KidsIcon name={unlocked ? character.avatar : "mystery"} size={compact ? 44 : 56} />
       </span>
       <p className={`mt-2 font-bold ${unlocked ? "text-foreground" : "text-muted"}`}>
         {unlocked ? character.name : "???"}
@@ -53,8 +52,9 @@ function CharacterCard({
         <p className="mt-1 text-xs text-muted/80">{character.unlockHint}</p>
       )}
       {selected && unlocked && (
-        <span className="absolute -right-1 -top-1 rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-2 py-0.5 text-[10px] font-black text-white">
-          ⭐ Active
+        <span className="absolute -right-1 -top-1 inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-2 py-0.5 text-[10px] font-black text-white">
+          <KidsIcon name="star" size={14} />
+          Active
         </span>
       )}
     </button>
@@ -82,11 +82,15 @@ export function CharacterGallery({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-orange-900/70 to-transparent" />
         <div className="absolute bottom-3 left-4">
-          <h2 className="text-2xl font-black text-white drop-shadow">🦸 Hero Collection</h2>
+          <h2 className="text-2xl font-black text-white drop-shadow">
+            <KidsIconTitle icon="hero" size={32} className="text-white">
+              Hero Collection
+            </KidsIconTitle>
+          </h2>
           <p className="text-sm font-bold text-amber-100">Unlock heroes by completing quests</p>
         </div>
-        <span className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1 text-sm font-black text-orange-600 shadow">
-          ⭐ {unlockedCount}/{total}
+        <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1 text-sm font-black text-orange-600 shadow">
+          <KidsIcon name="star" size={16} /> {unlockedCount}/{total}
         </span>
       </div>
       <div

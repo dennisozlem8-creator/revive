@@ -13,6 +13,7 @@ import {
 } from "@/lib/session-results";
 import type { Exercise } from "@/lib/assessments";
 import { getExerciseMedia } from "@/lib/exercise-media";
+import { KidsIcon } from "./KidsIcon";
 
 type SessionResultsProps = {
   summary: SessionSummary;
@@ -67,9 +68,10 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
         <h3 className="text-xl font-bold">Your exercises</h3>
         <Link
           href="/kids"
-          className="rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow"
+          className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow"
         >
-          🗺️ Quest map
+          <KidsIcon name="map" size={18} />
+          Quest map
         </Link>
       </div>
 
@@ -112,9 +114,10 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
                     <button
                       type="button"
                       onClick={() => setQuestExercise(exercise)}
-                      className="rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-5 py-3 text-sm font-black text-white shadow transition hover:opacity-90"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-5 py-3 text-sm font-black text-white shadow transition hover:opacity-90"
                     >
-                      {questDone ? "🔁 Play again" : "🎮 Start quest"}
+                      <KidsIcon name={questDone ? "sparkle" : "gamepad"} size={18} />
+                      {questDone ? "Play again" : "Start quest"}
                     </button>
                   </div>
                 </div>

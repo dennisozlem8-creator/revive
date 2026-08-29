@@ -3,6 +3,4 @@
   <ellipse cx="200" cy="230" rx="150" ry="40" fill="#22d3ee"/>
   <circle cx="70" cy="60" r="28" fill="#fde047"/>
   <path d="M40 210 Q120 140 200 210 Q280 140 360 210" stroke="#0ea5e9" stroke-width="10" fill="none"/>
-  <circle cx="200" cy="150" r="58" fill="#fff7ed"/>
-  <text x="164" y="172" font-size="64">🦶</text>
 </svg>

@@ -13,13 +13,15 @@ import {
 } from "@/lib/device-sensor";
 import { getFeedbackState } from "@/lib/feedback";
 import { SensorHelp } from "./SensorHelp";
+import { KidsIcon, KidsIconTitle } from "./KidsIcon";
+import type { KidsIconName } from "@/lib/kids-icons";
 
 type QuestGameProps = {
   exercise: Exercise;
   onComplete: () => void;
   onQuestComplete?: (questId: string) => void;
   targetAngle?: number;
-  avatarEmoji?: string;
+  avatarIcon?: KidsIconName;
 };
 
 const feedbackKidsLabel = {
@@ -34,7 +36,7 @@ export function QuestGame({
   onComplete,
   onQuestComplete,
   targetAngle = 90,
-  avatarEmoji = "🦸",
+  avatarIcon = "hero",
 }: QuestGameProps) {
   const media = getExerciseMedia(exercise.id, exercise.name);
   const kidsImage = getKidsExerciseImage(exercise.id, exercise.name);
@@ -106,7 +108,7 @@ export function QuestGame({
   return (
     <div className="overflow-hidden rounded-[2rem] border-4 border-orange-300 rm-glow-kids p-6 shadow-[0_10px_0_#fb923c]">
       <div className="flex items-start gap-4">
-        <span className="text-6xl">{avatarEmoji}</span>
+        <KidsIcon name={avatarIcon} size={72} />
         <div className="relative flex-1 rounded-2xl border-2 border-orange-300 bg-white px-4 py-3 text-orange-950">
           <p className="text-sm font-black">{speech()}</p>
         </div>
@@ -143,12 +145,12 @@ export function QuestGame({
         <div className="flex-1">
           <p className="font-black text-orange-800">
             {connecting
-              ? "🔌 Connecting sensor…"
+              ? "Connecting sensor…"
               : connected
                 ? recording
-                  ? "📡 Sensor recording"
-                  : "✅ Sensor connected"
-                : "🎮 Sensor offline"}
+                  ? "Sensor recording"
+                  : "Sensor connected"
+                : "Sensor offline"}
           </p>
           <p className="text-xs text-muted">
             {connecting
@@ -173,7 +175,7 @@ export function QuestGame({
                 Connecting
               </span>
             ) : (
-              "Connect 🔌"
+              "Connect"
             )}
           </button>
         )}
@@ -194,13 +196,17 @@ export function QuestGame({
           className="h-full w-full object-cover p-2"
         />
         {celebrate && (
-          <span className="absolute inset-0 flex items-center justify-center text-6xl animate-pulse-soft">
-            ⭐
+          <span className="absolute inset-0 flex items-center justify-center animate-pulse-soft">
+            <KidsIcon name="star" size={88} />
           </span>
         )}
       </div>
 
-      <h3 className="mt-4 text-center text-2xl font-black text-orange-600">🎯 {media.kidsQuest.title}</h3>
+      <h3 className="mt-4 text-center text-2xl font-black text-orange-600">
+        <KidsIconTitle icon="target" size={32} className="justify-center">
+          {media.kidsQuest.title}
+        </KidsIconTitle>
+      </h3>
       <p className="mt-1 text-center text-body">{media.kidsQuest.story}</p>
 
       {connected && (
@@ -228,17 +234,23 @@ export function QuestGame({
           <div className="mt-3 grid grid-cols-3 gap-2 text-center text-sm">
             <div className="rounded-lg bg-violet-100 py-2">
               <p className="font-black text-violet-700">{reading?.emg ?? "—"}</p>
-              <p className="text-xs font-bold text-violet-800">💪 EMG</p>
+              <p className="flex items-center justify-center gap-1 text-xs font-bold text-violet-800">
+                <KidsIcon name="bolt" size={14} /> EMG
+              </p>
             </div>
             <div className="rounded-lg bg-orange-100 py-2">
               <p className="font-black text-orange-600">{reading?.hr ?? "—"}</p>
-              <p className="text-xs font-bold text-orange-800">❤️ BPM</p>
+              <p className="flex items-center justify-center gap-1 text-xs font-bold text-orange-800">
+                <KidsIcon name="heart" size={14} /> BPM
+              </p>
             </div>
             <div className="rounded-lg bg-amber-100 py-2">
               <p className="font-black text-amber-600">
                 {reps}/{target}
               </p>
-              <p className="text-xs font-bold text-amber-800">⭐ Reps</p>
+              <p className="flex items-center justify-center gap-1 text-xs font-bold text-amber-800">
+                <KidsIcon name="star" size={14} /> Reps
+              </p>
             </div>
           </div>
 
@@ -254,13 +266,17 @@ export function QuestGame({
       {!connected ? null : done ? (
         <div className="mt-6 rounded-2xl border border-correct/40 bg-correct/15 p-5 text-center">
           <p className="text-4xl">{media.kidsQuest.reward}</p>
-          <p className="mt-2 text-lg font-black text-lime-700">🎉 Quest complete! +50 XP</p>
+          <p className="mt-2 inline-flex items-center justify-center gap-2 text-lg font-black text-lime-700">
+            <KidsIcon name="party" size={24} />
+            Quest complete! +50 XP
+          </p>
           <button
             type="button"
             onClick={onComplete}
-            className="mt-4 rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-6 py-3 text-sm font-black text-white shadow-[0_4px_0_#c2410c]"
+            className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-6 py-3 text-sm font-black text-white shadow-[0_4px_0_#c2410c]"
           >
-            Continue 🚀
+            Continue
+            <KidsIcon name="rocket" size={20} />
           </button>
         </div>
       ) : !recording ? (
@@ -273,11 +289,14 @@ export function QuestGame({
           }}
           className="mt-6 w-full rounded-2xl bg-gradient-to-r from-orange-500 via-fuchsia-500 to-sky-500 py-5 text-lg font-black text-white shadow-[0_6px_0_#c2410c]"
         >
-          Start sensor quest 🎮
+          <span className="inline-flex items-center justify-center gap-2">
+            Start sensor quest
+            <KidsIcon name="gamepad" size={24} />
+          </span>
         </button>
       ) : (
         <p className="mt-4 text-center text-sm font-semibold text-brand-light animate-pulse-soft">
-          📡 Sensor active. Do the exercise movement!
+          Sensor active. Do the exercise movement!
         </p>
       )}
     </div>

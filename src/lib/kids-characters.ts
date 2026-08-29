@@ -1,4 +1,5 @@
 import { getAssessment } from "./assessments";
+import type { KidsIconName } from "./kids-icons";
 
 export type UnlockCondition =
   | { type: "starter" }
@@ -9,7 +10,7 @@ export type UnlockCondition =
 export type KidsCharacter = {
   id: string;
   name: string;
-  avatar: string;
+  avatar: KidsIconName;
   trait: string;
   unlockCondition: UnlockCondition;
   unlockHint: string;
@@ -19,7 +20,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "hero-hank",
     name: "Hero Hank",
-    avatar: "🦸",
+    avatar: "hero",
     trait: "Brave & bouncy",
     unlockCondition: { type: "starter" },
     unlockHint: "Your starter hero!",
@@ -27,7 +28,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "spark-sam",
     name: "Spark Sam",
-    avatar: "⚡",
+    avatar: "bolt",
     trait: "Quick starter",
     unlockCondition: { type: "quests", count: 1 },
     unlockHint: "Complete your first quest",
@@ -35,7 +36,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "blaze-bella",
     name: "Blaze Bella",
-    avatar: "🔥",
+    avatar: "fire",
     trait: "Never gives up",
     unlockCondition: { type: "quests", count: 3 },
     unlockHint: "Complete 3 quests",
@@ -43,7 +44,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "streak-stella",
     name: "Streak Stella",
-    avatar: "⭐",
+    avatar: "star",
     trait: "Day-after-day hero",
     unlockCondition: { type: "streak", days: 3 },
     unlockHint: "Reach a 3-day streak",
@@ -51,7 +52,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "ankle-archie",
     name: "Ankle Archie",
-    avatar: "🦶",
+    avatar: "foot",
     trait: "Island explorer",
     unlockCondition: { type: "zone", zoneId: "ankle" },
     unlockHint: "Clear all Ankle Island quests",
@@ -59,7 +60,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "knee-kai",
     name: "Knee Kai",
-    avatar: "🦵",
+    avatar: "knee",
     trait: "Kingdom knight",
     unlockCondition: { type: "zone", zoneId: "knee" },
     unlockHint: "Clear all Knee Kingdom quests",
@@ -67,7 +68,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "back-ben",
     name: "Back Ben",
-    avatar: "🌊",
+    avatar: "wave",
     trait: "Bay buddy",
     unlockCondition: { type: "zone", zoneId: "lower-back" },
     unlockHint: "Clear all Back Bay quests",
@@ -75,7 +76,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "wrist-wren",
     name: "Wrist Wren",
-    avatar: "✋",
+    avatar: "hand",
     trait: "Woods wizard",
     unlockCondition: { type: "zone", zoneId: "wrist" },
     unlockHint: "Clear all Wrist Woods quests",
@@ -83,7 +84,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "meadow-mo",
     name: "Meadow Mo",
-    avatar: "🌟",
+    avatar: "sparkle",
     trait: "Mystery seeker",
     unlockCondition: { type: "zone", zoneId: "other" },
     unlockHint: "Clear all Mystery Meadow quests",
@@ -91,7 +92,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
   {
     id: "champion-cleo",
     name: "Champion Cleo",
-    avatar: "👑",
+    avatar: "crown",
     trait: "True adventurer",
     unlockCondition: { type: "quests", count: 5 },
     unlockHint: "Complete 5 quests",

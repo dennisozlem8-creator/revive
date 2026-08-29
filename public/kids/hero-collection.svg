@@ -9,11 +9,4 @@
   <rect width="800" height="200" fill="url(#heroes)"/>
   <circle cx="80" cy="40" r="28" fill="#fde68a" opacity="0.55"/>
   <circle cx="740" cy="160" r="36" fill="#fff" opacity="0.2"/>
-  <text x="70" y="118" font-size="48">🦸</text>
-  <text x="170" y="118" font-size="48">⚡</text>
-  <text x="270" y="118" font-size="48">🔥</text>
-  <text x="370" y="118" font-size="48">🌟</text>
-  <text x="470" y="118" font-size="48">🐉</text>
-  <text x="570" y="118" font-size="48">🦄</text>
-  <text x="670" y="118" font-size="48">🏆</text>
 </svg>

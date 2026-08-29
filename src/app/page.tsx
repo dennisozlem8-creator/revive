@@ -6,6 +6,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { bodyAreas } from "@/lib/body-areas";
 import { useAuth } from "@/components/AuthProvider";
 import { t } from "@/lib/i18n";
+import { KidsIcon } from "@/components/KidsIcon";
 
 const areaIcons: Record<string, React.ReactNode> = {
   ankle: (
@@ -76,9 +77,9 @@ export default function Home() {
           )}
           <Link
             href="/kids"
-            className="mt-4 inline-flex w-full max-w-sm items-center justify-center rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-6 py-3 text-base font-black text-white shadow"
+            className="mt-4 inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-6 py-3 text-base font-black text-white shadow"
           >
-            🎮 Kids Quest
+            <KidsIcon name="gamepad" size={22} /> Kids Quest
           </Link>
         </section>
 

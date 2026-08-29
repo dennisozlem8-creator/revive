@@ -10,6 +10,7 @@ import {
   getActivityDates,
   getLongestStreak,
 } from "@/lib/streak";
+import { KidsIcon } from "@/components/KidsIcon";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -114,9 +115,10 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/kids"
-              className="mt-4 inline-flex rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow hover:opacity-90"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow hover:opacity-90"
             >
-              🎮 Continue Kids Quest
+              <KidsIcon name="gamepad" size={18} />
+              Continue Kids Quest
             </Link>
           </div>
         </section>
