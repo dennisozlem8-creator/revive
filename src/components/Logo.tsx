@@ -13,31 +13,20 @@ export function Logo({ size = 56, showText = true, className = "" }: LogoProps) 
         viewBox="0 0 48 48"
         fill="none"
         aria-hidden
-        className="shrink-0 drop-shadow-[0_4px_12px_rgba(37,99,235,0.35)]"
+        className="shrink-0"
       >
-        <defs>
-          <linearGradient id="rm-bg" x1="8" y1="4" x2="40" y2="44">
-            <stop stopColor="#1D4ED8" />
-            <stop offset="1" stopColor="#2563EB" />
-          </linearGradient>
-          <linearGradient id="rm-arc" x1="12" y1="12" x2="36" y2="36">
-            <stop stopColor="#93C5FD" />
-            <stop offset="1" stopColor="#60A5FA" />
-          </linearGradient>
-        </defs>
-
-        <rect width="48" height="48" rx="14" fill="url(#rm-bg)" />
+        <rect width="48" height="48" rx="10" fill="#3d5a73" />
 
         <path
           d="M34 14a14 14 0 0 0-20 0"
-          stroke="url(#rm-arc)"
+          stroke="#c5d0da"
           strokeWidth="2.5"
           strokeLinecap="round"
           fill="none"
         />
         <path
           d="M14 34a14 14 0 0 0 20 0"
-          stroke="url(#rm-arc)"
+          stroke="#c5d0da"
           strokeWidth="2.5"
           strokeLinecap="round"
           fill="none"
@@ -65,7 +54,7 @@ export function Logo({ size = 56, showText = true, className = "" }: LogoProps) 
           strokeLinecap="round"
         />
 
-        <circle cx="34" cy="34" r="3" fill="#60A5FA" />
+        <circle cx="34" cy="34" r="3" fill="#8b9aab" />
         <circle cx="34" cy="34" r="1.2" fill="#EFF6FF" />
       </svg>
       {showText && (

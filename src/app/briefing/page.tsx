@@ -78,7 +78,7 @@ export default function BriefingPage() {
         <button
           type="button"
           onClick={() => router.push("/pain-check")}
-          className="rm-btn rm-btn-primary mt-8 w-full animate-pulse-soft"
+          className="rm-btn rm-btn-primary mt-8 w-full"
         >
           {t("startSession", locale)}
         </button>

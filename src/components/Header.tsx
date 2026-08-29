@@ -47,8 +47,8 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
             <div className="flex items-center gap-3">
               <Logo size={48} />
               <div className="hidden sm:block">
-                <p className="text-sm font-bold leading-tight text-orange">Revive Motion</p>
-                <p className="text-xs font-bold uppercase tracking-wider text-purple">Kids Quest</p>
+                <p className="text-sm font-bold leading-tight text-foreground">Revive Motion</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted">Kids Quest</p>
               </div>
             </div>
           ) : (
@@ -60,8 +60,8 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
           <div className="flex items-center gap-3">
             <Logo size={48} />
             <div className="hidden sm:block">
-              <p className="text-sm font-bold leading-tight text-orange">Revive Motion</p>
-              <p className="text-xs font-bold uppercase tracking-wider text-purple">Kids Quest</p>
+                <p className="text-sm font-bold leading-tight text-foreground">Revive Motion</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted">Kids Quest</p>
             </div>
           </div>
         ) : (
@@ -70,8 +70,8 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
       )}
       <div className="flex items-center gap-2 sm:gap-3">
         {isKids && (
-          <span className="hidden rounded-full border border-orange/50 bg-orange/15 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-orange sm:inline-flex animate-kids-badge-pulse">
-            Quest mode
+          <span className="hidden rounded-md border border-[var(--border)] bg-surface px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-muted sm:inline-flex">
+            Kids
           </span>
         )}
         <LanguageToggle />
@@ -92,9 +92,8 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
             )}
             <Link
               href="/kids"
-              className="inline-flex items-center gap-1.5 rounded-full border border-orange/50 bg-gradient-to-r from-orange/20 to-purple/20 px-4 py-2 text-sm font-bold text-orange shadow-[0_0_16px_rgba(245,158,11,0.15)] transition hover:shadow-[0_0_24px_rgba(245,158,11,0.3)]"
+              className="inline-flex items-center rounded-md border border-[var(--border)] bg-surface px-3 py-1.5 text-sm font-medium text-foreground transition hover:bg-surface-elevated"
             >
-              <span aria-hidden>🎮</span>
               {t("kidsQuest", locale)}
             </Link>
           </>

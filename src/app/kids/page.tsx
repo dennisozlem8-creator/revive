@@ -125,8 +125,8 @@ export default function KidsQuestPage() {
 
       {showToast && !showWelcome && (
         <div className="fixed left-0 right-0 top-2 z-[60] flex justify-center px-4 animate-kids-toast">
-          <div className="rounded-full border border-orange/50 bg-[#0a0520]/95 px-6 py-3 text-sm font-bold text-orange shadow-[0_0_24px_rgba(245,158,11,0.3)] backdrop-blur-sm">
-            🎮 Kids Quest Mode!
+          <div className="rounded-md border border-[var(--border)] bg-surface px-5 py-2 text-sm font-medium text-foreground">
+            Kids Quest
           </div>
         </div>
       )}
@@ -144,7 +144,7 @@ export default function KidsQuestPage() {
       <main className="relative z-10 mx-auto max-w-5xl px-4 pb-8 pt-2 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
-            <h1 className="text-2xl font-bold text-orange sm:text-3xl">Revive Motion Adventure</h1>
+            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Kids Quest</h1>
             <p className={`text-sm font-semibold ${level.color}`}>{level.name}</p>
           </div>
           <div className="flex gap-2 text-center">
@@ -166,8 +166,8 @@ export default function KidsQuestPage() {
         {showMap && (
           <>
             <section className="mt-3">
-              <h2 className="text-xl font-bold text-purple sm:text-2xl">Quest Map</h2>
-              <p className="mt-0.5 text-sm text-muted">Pick a zone and unlock new heroes!</p>
+              <h2 className="text-xl font-bold text-foreground sm:text-2xl">Quest map</h2>
+              <p className="mt-0.5 text-sm text-muted">Pick a zone to start a game.</p>
               <div className="mt-3 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
                 {questZones.map((zone) => (
                   <button
@@ -177,7 +177,7 @@ export default function KidsQuestPage() {
                       setSelectedArea(zone.id);
                       setSpeech(`Enter ${zone.name}! Pick a quest.`);
                     }}
-                    className="rm-card-elevated overflow-hidden border-purple/30 text-left transition hover:border-orange hover:shadow-[0_0_24px_rgba(245,158,11,0.2)]"
+                    className="rm-card-elevated overflow-hidden text-left transition hover:border-brand/40"
                   >
                     <Image
                       src={zone.image}
@@ -187,8 +187,7 @@ export default function KidsQuestPage() {
                       className="h-20 w-full object-cover sm:h-24"
                     />
                     <div className="p-4 sm:p-5">
-                      <span className="text-3xl sm:text-4xl">{zone.emoji}</span>
-                      <h2 className="mt-1 text-lg font-bold sm:mt-2 sm:text-xl">{zone.name}</h2>
+                      <h2 className="text-lg font-bold sm:text-xl">{zone.name}</h2>
                       <p className="mt-0.5 text-sm text-muted sm:mt-1">Enter the quest zone →</p>
                     </div>
                   </button>
@@ -204,11 +203,11 @@ export default function KidsQuestPage() {
           </>
         )}
 
-        <section className="rm-card mt-3 flex items-center gap-3 border-purple/30 p-3 sm:p-4">
+        <section className="rm-card mt-3 flex items-center gap-3 p-3 sm:p-4">
           <span className="text-4xl sm:text-5xl">{heroAvatar}</span>
-          <div className="relative flex-1 rounded-xl border-2 border-orange/50 bg-white/95 px-3 py-2 text-[var(--caregiver-text)] shadow-lg sm:px-4 sm:py-3">
+          <div className="relative flex-1 rounded-md border border-[var(--border)] bg-surface-elevated px-3 py-2 text-foreground sm:px-4 sm:py-3">
             <p className="text-sm font-medium sm:text-base">{speech}</p>
-            <div className="absolute -left-2 top-4 h-3 w-3 rotate-45 border-b-2 border-l-2 border-orange/50 bg-white/95 sm:top-5 sm:h-4 sm:w-4" />
+            <div className="absolute -left-2 top-4 h-3 w-3 rotate-45 border-b border-l border-[var(--border)] bg-surface-elevated sm:top-5 sm:h-4 sm:w-4" />
           </div>
         </section>
 
@@ -235,11 +234,13 @@ export default function KidsQuestPage() {
                       setActiveExerciseId(exercise.id);
                       setSpeech(done ? "Let's beat your best!" : "You can do it!");
                     }}
-                    className={`rm-card p-5 text-left transition hover:border-orange ${
-                      done ? "border-correct/40" : "border-purple/30"
+                    className={`rm-card p-5 text-left transition hover:border-brand/40 ${
+                      done ? "border-correct/40" : ""
                     }`}
                   >
-                    <span className="text-3xl">{done ? "✅" : "🎮"}</span>
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted">
+                      {done ? "Done" : "Quest"}
+                    </p>
                     <h3 className="mt-2 font-bold">{exercise.name}</h3>
                     <p className="mt-1 text-sm text-muted">{done ? "Play again!" : "Start quest"}</p>
                   </button>

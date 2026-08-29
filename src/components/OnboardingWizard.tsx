@@ -10,18 +10,18 @@ import { requestNotificationPermission } from "@/lib/notifications";
 
 const TOTAL_STEPS = 6;
 
-const injuries: { id: InjuryType; label: string; icon: string }[] = [
-  { id: "knee", label: "Knee", icon: "🦵" },
-  { id: "ankle", label: "Ankle", icon: "🦶" },
-  { id: "elbow", label: "Elbow", icon: "💪" },
-  { id: "wrist", label: "Wrist", icon: "✋" },
-  { id: "other", label: "Other", icon: "⭐" },
+const injuries: { id: InjuryType; label: string }[] = [
+  { id: "knee", label: "Knee" },
+  { id: "ankle", label: "Ankle" },
+  { id: "elbow", label: "Elbow" },
+  { id: "wrist", label: "Wrist" },
+  { id: "other", label: "Other" },
 ];
 
 const benefits = [
-  { icon: "📊", text: "Track every PT exercise automatically" },
-  { icon: "🔔", text: "Keep your caregiver informed" },
-  { icon: "⭐", text: "See your recovery improve daily" },
+  { text: "Track every PT exercise automatically" },
+  { text: "Keep your caregiver informed" },
+  { text: "See your recovery improve daily" },
 ];
 
 export function OnboardingWizard() {
@@ -84,7 +84,6 @@ export function OnboardingWizard() {
           <ul className="mt-6 space-y-3">
             {benefits.map((b) => (
               <li key={b.text} className="rm-card flex items-center gap-4 px-4 py-4">
-                <span className="text-2xl">{b.icon}</span>
                 <span className="text-base text-body">{b.text}</span>
               </li>
             ))}
@@ -131,7 +130,6 @@ export function OnboardingWizard() {
                   injuryType === i.id ? "border-brand bg-brand/15 text-brand-light" : ""
                 } ${i.id === "other" ? "sm:col-span-1" : ""}`}
               >
-                <span className="text-2xl">{i.icon}</span>
                 {i.label}
               </button>
             ))}
@@ -171,7 +169,6 @@ export function OnboardingWizard() {
               </>
             ) : (
               <>
-                <span className="text-5xl">📡</span>
                 <p className="mt-4 text-body">Wear your sensor, bend to max, then tap below.</p>
                 <button
                   type="button"

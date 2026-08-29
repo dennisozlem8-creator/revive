@@ -18,7 +18,7 @@ const defaultMedia = (name: string): ExerciseMedia => ({
     story: "Complete the movement to power up your hero!",
     gamePrompt: "Wear your sensor — reps count when you hit the right angle",
     reps: 10,
-    reward: "⭐ Star badge",
+    reward: "Star badge",
   },
 });
 
@@ -31,7 +31,7 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
       story: "Pump your ankle to fuel the rocket ship!",
       gamePrompt: "Tap each time you point and flex your foot",
       reps: 15,
-      reward: "🚀 Rocket badge",
+      reward: "Rocket badge",
     },
   },
   "calf-stretch": {

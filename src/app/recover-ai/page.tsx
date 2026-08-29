@@ -68,9 +68,9 @@ export default function RecoverAIPage() {
     <div className="min-h-full rm-glow-patient pb-28 text-foreground">
       <Header linkHome />
       <main className="mx-auto max-w-5xl px-6 pb-8">
-        <p className="rm-label text-purple">RecoverAI</p>
-        <h1 className="rm-title text-3xl text-white">{t("recoverAI", locale)}</h1>
-        <p className="mt-1 text-body">Personalized recovery intelligence</p>
+        <p className="rm-label">Coach</p>
+        <h1 className="rm-title text-3xl text-foreground">{t("recoverAI", locale)}</h1>
+        <p className="mt-1 text-body">Recovery notes and questions</p>
 
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <DonutMetric label="Compliance" value={87} display="87%" color="var(--brand)" />
@@ -82,7 +82,7 @@ export default function RecoverAIPage() {
         <div className="rm-card mt-6 px-4 py-4">
           <div className="mb-2 flex justify-between text-sm">
             <span className="text-muted">Recovery trajectory</span>
-            <span className="font-semibold text-purple">{trajectoryPct}%</span>
+            <span className="font-semibold text-foreground">{trajectoryPct}%</span>
           </div>
           <div className="rm-trajectory">
             <div className="rm-trajectory-fill" style={{ width: `${trajectoryPct}%` }} />
@@ -94,9 +94,9 @@ export default function RecoverAIPage() {
           </div>
         </div>
 
-        <section className="rm-card mt-6 overflow-hidden border-purple/30" style={{ background: "var(--ai-panel)" }}>
-          <div className="border-b border-purple/20 px-5 py-4">
-            <h2 className="font-semibold text-purple">Chat with RecoverAI</h2>
+        <section className="rm-card mt-6 overflow-hidden">
+          <div className="border-b border-[var(--border)] px-5 py-4">
+            <h2 className="font-semibold text-foreground">Chat with RecoverAI</h2>
             <p className="text-sm text-muted">Rehab-focused coaching — simulated responses, no API key needed</p>
           </div>
           <div className="max-h-72 space-y-3 overflow-y-auto p-4">

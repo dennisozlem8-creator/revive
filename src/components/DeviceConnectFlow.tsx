@@ -126,7 +126,7 @@ export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowPro
                   selectedId === d.id ? "border-brand bg-brand/15" : "hover:border-brand/40"
                 } disabled:opacity-60`}
               >
-                <span className="text-2xl">📡</span>
+                <span className="text-sm font-medium text-muted">Sensor</span>
                 <div className="flex-1">
                   <p className="font-semibold">{d.name}</p>
                   <p className="text-xs text-muted">

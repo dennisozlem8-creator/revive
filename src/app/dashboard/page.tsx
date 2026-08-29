@@ -44,10 +44,10 @@ export default function DashboardPage() {
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Link href="/goniometer" className="rm-btn rm-btn-brand inline-flex flex-1">
-            📐 Photo Goniometer
+            Photo Goniometer
           </Link>
           <Link href="/shop" className="rm-btn rm-btn-ghost inline-flex flex-1">
-            🛒 Shop devices & braces
+            Shop devices and braces
           </Link>
         </div>
 
@@ -114,9 +114,9 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/kids"
-              className="mt-4 inline-flex rounded-full bg-amber-400/20 px-4 py-2 text-sm font-medium text-amber-300 hover:bg-amber-400/30"
+              className="mt-4 inline-flex rounded-md border border-[var(--border)] bg-surface-elevated px-4 py-2 text-sm font-medium text-foreground hover:bg-background"
             >
-              🎮 Continue Kids Quest
+              Continue Kids Quest
             </Link>
           </div>
         </section>

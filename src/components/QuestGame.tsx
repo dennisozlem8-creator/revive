@@ -195,7 +195,7 @@ export function QuestGame({
         />
         {celebrate && (
           <span className="absolute inset-0 flex items-center justify-center text-6xl animate-pulse-soft">
-            ✨
+            ★
           </span>
         )}
       </div>
@@ -277,7 +277,7 @@ export function QuestGame({
         </button>
       ) : (
         <p className="mt-4 text-center text-sm font-semibold text-brand-light animate-pulse-soft">
-          📡 Sensor active — do the exercise movement!
+          Sensor active. Do the exercise movement.
         </p>
       )}
     </div>

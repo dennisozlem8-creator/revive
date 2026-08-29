@@ -6,17 +6,17 @@ import { useAuth } from "./AuthProvider";
 import { t } from "@/lib/i18n";
 
 const patientTabs = [
-  { href: "/briefing", key: "home" as const, icon: "🏠" },
-  { href: "/charts", key: "charts" as const, icon: "📊" },
-  { href: "/dashboard", key: "care" as const, icon: "💚" },
-  { href: "/recover-ai", key: "ai" as const, icon: "✨" },
+  { href: "/briefing", key: "home" as const },
+  { href: "/charts", key: "charts" as const },
+  { href: "/dashboard", key: "care" as const },
+  { href: "/recover-ai", key: "ai" as const },
 ];
 
 const doctorTabs = [
-  { href: "/doctor", key: "home" as const, icon: "🏠" },
-  { href: "/charts", key: "charts" as const, icon: "📊" },
-  { href: "/pt-update", key: "care" as const, icon: "👨‍⚕️" },
-  { href: "/recover-ai", key: "ai" as const, icon: "✨" },
+  { href: "/doctor", key: "home" as const },
+  { href: "/charts", key: "charts" as const },
+  { href: "/pt-update", key: "care" as const },
+  { href: "/recover-ai", key: "ai" as const },
 ];
 
 export function BottomNav() {
@@ -34,13 +34,12 @@ export function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex min-w-[4.5rem] flex-col items-center gap-0.5 rounded-xl px-3 py-2 text-xs font-semibold transition ${
+              className={`flex min-w-[4.5rem] items-center justify-center rounded-md px-3 py-2 text-xs font-semibold transition ${
                 active
-                  ? "bg-brand/15 text-brand-light"
-                  : "text-muted hover:text-brand-light"
+                  ? "bg-brand/15 text-foreground"
+                  : "text-muted hover:text-foreground"
               }`}
             >
-              <span className="text-xl">{tab.icon}</span>
               <span>{t(tab.key, locale)}</span>
             </Link>
           );

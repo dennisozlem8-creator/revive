@@ -8,17 +8,11 @@ export function KidsModeBanner() {
 
   return (
     <div
-      className="relative z-40 border-b border-purple/30 bg-gradient-to-r from-purple/25 via-orange/15 to-purple/25 px-4 py-1.5 text-center"
+      className="relative z-40 border-b border-[var(--border)] bg-surface px-4 py-1.5 text-center"
       role="status"
     >
-      <p className="text-sm font-bold tracking-wide text-orange animate-kids-badge-pulse">
-        <span aria-hidden className="mr-2">
-          🎮
-        </span>
-        Kids Quest Mode
-        <span aria-hidden className="ml-2">
-          ✨
-        </span>
+      <p className="text-sm font-medium tracking-wide text-foreground">
+        Kids Quest
       </p>
       {!user && (
         <p className="mt-1 text-xs text-muted">

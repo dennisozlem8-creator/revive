@@ -31,8 +31,8 @@ function CharacterCard({
       className={`relative flex flex-col items-center rounded-2xl border p-4 text-center transition ${
         unlocked
           ? selected
-            ? "border-orange bg-orange/15 shadow-[0_0_20px_rgba(245,158,11,0.25)]"
-            : "border-purple/30 bg-surface/60 hover:border-orange/50 hover:bg-surface/80"
+            ? "border-brand bg-brand/15"
+            : "border-[var(--border)] bg-surface hover:border-brand/40"
           : "cursor-default border-white/10 bg-surface/30"
       } ${compact ? "p-3" : "p-4"}`}
     >

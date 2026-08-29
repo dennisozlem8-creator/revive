@@ -65,20 +65,20 @@ export default function Home() {
                 {t("goToBriefing", locale)} →
               </Link>
               <Link href="/shop" className="rm-btn rm-btn-brand inline-flex w-full justify-center">
-                🛒 Shop devices & braces
+                Shop devices and braces
               </Link>
             </div>
           )}
           {!isPatient && (
             <Link href="/shop" className="rm-btn rm-btn-brand mt-8 inline-flex w-full max-w-sm justify-center">
-              🛒 Shop devices & braces
+              Shop devices and braces
             </Link>
           )}
           <Link
             href="/kids"
-            className="mt-4 inline-flex w-full max-w-sm items-center justify-center rounded-full border border-orange/40 bg-orange/10 px-6 py-4 text-base font-bold text-orange transition hover:bg-orange/20"
+            className="mt-4 inline-flex w-full max-w-sm items-center justify-center rounded-md border border-[var(--border)] bg-surface px-6 py-3 text-base font-medium text-foreground transition hover:bg-surface-elevated"
           >
-            🎮 Kids Quest Mode
+            Kids Quest
           </Link>
         </section>
 
@@ -88,7 +88,7 @@ export default function Home() {
               key={area.id}
               href={`/${area.id}`}
               style={{ animationDelay: `${index * 80}ms` }}
-              className="animate-fade-up rm-card group p-6 transition duration-300 hover:-translate-y-1 hover:border-brand/50 hover:shadow-[0_12px_40px_rgba(37,99,235,0.25)]"
+              className="animate-fade-up rm-card group p-6 transition hover:border-brand/40"
             >
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-brand-soft text-brand transition group-hover:bg-brand group-hover:text-white">
                 {areaIcons[area.id]}

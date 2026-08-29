@@ -13,17 +13,17 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
 
   return (
     <div
-      className={`rounded-xl border ${
-        isKids ? "border-purple/30 bg-purple/10" : "border-brand/25 bg-brand/5"
-      } ${variant === "compact" ? "p-3" : "p-4"}`}
+      className={`rounded-xl border border-[var(--border)] bg-surface ${
+        variant === "compact" ? "p-3" : "p-4"
+      }`}
     >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between gap-2 text-left"
       >
-        <span className={`text-sm font-semibold ${isKids ? "text-purple" : "text-brand-light"}`}>
-          {isKids ? "🎮 Demo sensor mode" : "📡 How sensor connection works"}
+        <span className="text-sm font-semibold text-foreground">
+          {isKids ? "Demo sensor" : "How sensor connection works"}
         </span>
         <span className="text-xs text-muted">{open ? "Hide" : "Show"}</span>
       </button>
