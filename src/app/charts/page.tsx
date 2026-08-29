@@ -26,7 +26,7 @@ export default function ChartsPage() {
     <div className="min-h-full rm-glow-patient pb-28 text-foreground">
       <Header linkHome />
       <main className="mx-auto max-w-5xl px-6 pb-8">
-        <h1 className="rm-title text-3xl text-white">{t("progressCharts", locale)}</h1>
+        <h1 className="rm-title text-3xl text-foreground">{t("progressCharts", locale)}</h1>
         <p className="mt-1 text-body">
           {sessions.length} sessions · {calculateStreak(user)} day streak
         </p>

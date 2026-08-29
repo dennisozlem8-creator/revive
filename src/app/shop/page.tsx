@@ -11,7 +11,7 @@ export default function ShopPage() {
       <Header linkHome />
       <main className="mx-auto max-w-5xl px-6 pb-8">
         <p className="rm-label text-brand-light">Revive Motion Shop</p>
-        <h1 className="rm-title text-3xl text-white">Recovery devices & braces</h1>
+        <h1 className="rm-title text-3xl text-foreground">Recovery devices & braces</h1>
         <p className="mt-2 text-body">
           Support braces designed to work with your Revive Motion sensor during rehab.
         </p>

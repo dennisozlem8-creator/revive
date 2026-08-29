@@ -89,7 +89,7 @@ export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowPro
           </svg>
         </div>
         <div className="flex-1">
-          <p className="font-semibold text-white">
+          <p className="font-semibold text-foreground">
             {phase === "idle" && "Find your Revive Motion device"}
             {phase === "scanning" && "Scanning for devices…"}
             {phase === "found" && "Select your device"}

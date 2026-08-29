@@ -33,7 +33,7 @@ export default function DashboardPage() {
     <div className="min-h-full rm-glow-patient pb-28 text-foreground">
       <Header linkHome />
       <main className="mx-auto max-w-5xl px-6 pb-8">
-        <h1 className="rm-title text-3xl text-white">Your Dashboard</h1>
+        <h1 className="rm-title text-3xl text-foreground">Your Dashboard</h1>
         <p className="mt-2 text-body">Track your recovery streak and progress.</p>
 
         <PageHeroImage

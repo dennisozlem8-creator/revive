@@ -16,7 +16,7 @@ export default function GoniometerPage() {
       <Header linkHome />
       <main className="mx-auto max-w-lg px-6 pb-8">
         <p className="rm-label">Photo tool</p>
-        <h1 className="rm-title mt-1 text-3xl text-white">Photo Goniometer</h1>
+        <h1 className="rm-title mt-1 text-3xl text-foreground">Photo Goniometer</h1>
         <p className="mt-2 text-body">
           Take a side-view photo, mark hip → knee → ankle, then save the estimated angle
           and watch progress.

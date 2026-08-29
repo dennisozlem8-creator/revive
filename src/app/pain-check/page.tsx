@@ -35,7 +35,7 @@ export default function PainCheckPage() {
     <div className="min-h-full rm-glow-patient pb-24 text-foreground">
       <Header linkHome />
       <main className="mx-auto max-w-lg px-6 pt-4 text-center">
-        <h1 className="rm-title text-3xl text-white">{t("beforeWeStart", locale)}</h1>
+        <h1 className="rm-title text-3xl text-foreground">{t("beforeWeStart", locale)}</h1>
         <p className="mt-3 text-lg text-body">{t("painQuestion", locale)}</p>
         <p className="mt-1 text-sm text-muted">{t("painScale", locale)}</p>
 

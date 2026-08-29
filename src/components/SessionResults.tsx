@@ -52,7 +52,7 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
     <div className="space-y-6">
       <section className="rm-card-elevated border-correct/30 p-6 text-center">
         <p className="text-4xl">🎉</p>
-        <h2 className="rm-title mt-2 text-2xl text-white">Session complete!</h2>
+        <h2 className="rm-title mt-2 text-2xl text-foreground">Session complete!</h2>
         <p className="mt-2 text-body">
           Based on your recording, here are your personalized exercises.
         </p>

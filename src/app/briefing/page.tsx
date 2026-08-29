@@ -33,7 +33,7 @@ export default function BriefingPage() {
         <p className="rm-label">
           {t("recoveryDay", locale)} {dayNum}
         </p>
-        <h1 className="rm-title mt-1 text-3xl text-white">{t("todaysBriefing", locale)}</h1>
+        <h1 className="rm-title mt-1 text-3xl text-foreground">{t("todaysBriefing", locale)}</h1>
         <p className="mt-1 text-body">Hi {user.name.split(" ")[0]} — ready when you are.</p>
 
         <PageHeroImage

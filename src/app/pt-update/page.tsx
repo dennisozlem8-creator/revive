@@ -50,7 +50,7 @@ export default function PTUpdatePage() {
       <Header linkHome variant="caregiver" />
       <main className="mx-auto max-w-2xl px-6 pb-8">
         <p className="text-sm font-bold uppercase tracking-widest text-teal">PT Portal</p>
-        <h1 className="rm-title mt-1 text-3xl text-white">Update Exercise Plan</h1>
+        <h1 className="rm-title mt-1 text-3xl text-foreground">Update Exercise Plan</h1>
         <p className="mt-1 text-body">Push a new prescription to your patient&apos;s briefing.</p>
 
         <select

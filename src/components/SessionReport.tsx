@@ -37,7 +37,7 @@ export function SessionReport({
     <div className="space-y-6">
       <section className="rm-card-elevated border-purple/30 p-6 text-center">
         <p className="text-4xl">📋</p>
-        <h2 className="rm-title mt-2 text-2xl text-white">Your session report</h2>
+        <h2 className="rm-title mt-2 text-2xl text-foreground">Your session report</h2>
         <p className="mt-2 text-body">Great work finishing today&apos;s program.</p>
       </section>
 

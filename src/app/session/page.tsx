@@ -127,7 +127,7 @@ export default function SessionPage() {
       <Header linkHome />
       <main className="mx-auto max-w-5xl px-6 pb-8">
         <p className="rm-label">{t("liveSession", locale)}</p>
-        <h1 className="rm-title mt-1 text-2xl text-white">
+        <h1 className="rm-title mt-1 text-2xl text-foreground">
           {user.ptPrescription?.exerciseName ?? "ROM sensor test"}
         </h1>
 

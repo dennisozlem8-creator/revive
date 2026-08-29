@@ -29,7 +29,7 @@ export default function LibraryPage() {
     <div className="min-h-full rm-glow-patient pb-28 text-foreground">
       <Header linkHome />
       <main className="mx-auto max-w-5xl px-6 pb-8">
-        <h1 className="rm-title text-3xl text-white">{t("exerciseLibrary", locale)}</h1>
+        <h1 className="rm-title text-3xl text-foreground">{t("exerciseLibrary", locale)}</h1>
         <p className="mt-1 capitalize text-body">
           {user.injuryType} · ROM {user.baselineRom}° → {user.targetRom}°
         </p>

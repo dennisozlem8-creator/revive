@@ -72,7 +72,7 @@ export function PreBriefingFlow() {
       <p className="rm-label text-brand-light">
         Daily check-in · {index + 1} of {questions.length}
       </p>
-      <h1 className="rm-title mt-2 text-2xl text-white">Before your briefing</h1>
+      <h1 className="rm-title mt-2 text-2xl text-foreground">Before your briefing</h1>
       <p className="mt-2 text-body">
         A few quick questions help personalize today&apos;s session.
       </p>

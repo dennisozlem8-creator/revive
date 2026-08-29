@@ -143,9 +143,10 @@ export function PhotoGoniometer({
       {step === "upload" && (
         <section className="rm-card p-6">
           <p className="rm-label">Step 1</p>
-          <h2 className="mt-1 text-xl font-bold">Take or upload a side-view photo</h2>
+          <h2 className="mt-1 text-xl font-bold">Camera or photo upload</h2>
           <p className="mt-2 rm-body">
-            Use a side view of the leg. JPG or PNG. The photo stays on this device.
+            On a phone, tap Open camera. On a computer, that same button opens a file picker.
+            Use a side view of the leg. The photo stays on this device.
           </p>
 
           {photoUrl ? (
@@ -165,14 +166,14 @@ export function PhotoGoniometer({
               className="rm-btn rm-btn-brand flex-1"
               onClick={() => cameraRef.current?.click()}
             >
-              Take photo
+              Open camera
             </button>
             <button
               type="button"
               className="rm-btn rm-btn-ghost flex-1"
               onClick={() => fileRef.current?.click()}
             >
-              Upload JPG / PNG
+              Choose photo from files
             </button>
           </div>
 

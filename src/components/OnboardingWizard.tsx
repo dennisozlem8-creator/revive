@@ -79,7 +79,7 @@ export function OnboardingWizard() {
 
       {step === 0 && (
         <>
-          <h1 className="rm-title mt-2 text-3xl text-white">Welcome to Revive Motion</h1>
+          <h1 className="rm-title mt-2 text-3xl text-foreground">Welcome to Revive Motion</h1>
           <p className="mt-3 text-body">Let&apos;s get you set up in a few minutes.</p>
           <ul className="mt-6 space-y-3">
             {benefits.map((b) => (
@@ -96,7 +96,7 @@ export function OnboardingWizard() {
 
       {step === 1 && (
         <>
-          <h2 className="rm-title text-2xl text-white">Create your 4-digit PIN</h2>
+          <h2 className="rm-title text-2xl text-foreground">Create your 4-digit PIN</h2>
           <input
             value={pin}
             onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
@@ -116,7 +116,7 @@ export function OnboardingWizard() {
 
       {step === 2 && (
         <>
-          <h2 className="rm-title text-2xl text-white">Choose your injury</h2>
+          <h2 className="rm-title text-2xl text-foreground">Choose your injury</h2>
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {injuries.map((i) => (
               <button
@@ -142,7 +142,7 @@ export function OnboardingWizard() {
 
       {step === 3 && (
         <>
-          <h2 className="rm-title text-2xl text-white">Baseline ROM test</h2>
+          <h2 className="rm-title text-2xl text-foreground">Baseline ROM test</h2>
           <p className="mt-2 text-body">
             Bend your joint to your current max. When ready, tap once — your sensor will measure it.
           </p>
@@ -194,7 +194,7 @@ export function OnboardingWizard() {
 
       {step === 4 && (
         <>
-          <h2 className="rm-title text-2xl text-white">Connect your device</h2>
+          <h2 className="rm-title text-2xl text-foreground">Connect your device</h2>
           <p className="mt-2 text-body">
             Find and pair your Revive Motion sensor so we can track ROM during exercises. This demo
             simulates Bluetooth scanning — no hardware required.
@@ -215,13 +215,13 @@ export function OnboardingWizard() {
 
       {step === 5 && (
         <>
-          <h2 className="rm-title text-2xl text-white">You&apos;re ready!</h2>
+          <h2 className="rm-title text-2xl text-foreground">You&apos;re ready!</h2>
           <p className="mt-2 text-body">Review your recovery plan and notification preferences.</p>
 
           {baselineRom !== null && (
             <div className="rm-card mt-6 border-correct/30 bg-correct/10 p-5">
               <p className="rm-label text-correct">Your recovery goal</p>
-              <p className="mt-2 text-lg font-bold text-white capitalize">{injuryType} rehab</p>
+              <p className="mt-2 text-lg font-bold text-foreground capitalize">{injuryType} rehab</p>
               <div className="mt-3 grid grid-cols-3 gap-2 text-center text-sm">
                 <div>
                   <p className="text-muted">Start</p>
