@@ -26,6 +26,7 @@ type PoseLandmarkerLike = {
     video: HTMLVideoElement,
     timestamp: number
   ) => { landmarks?: PoseLandmark[][] };
+  close?: () => void;
 };
 
 const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm";
@@ -102,7 +103,7 @@ export function sampleFromPose(
   const knee = landmarks[pick.knee];
   const ankle = landmarks[pick.ankle];
   if (!hip || !knee || !ankle) return null;
-  if (visibilityOf(hip) < 0.35 || visibilityOf(knee) < 0.35 || visibilityOf(ankle) < 0.35) {
+  if (visibilityOf(hip) < 0.2 || visibilityOf(knee) < 0.2 || visibilityOf(ankle) < 0.2) {
     return null;
   }
 
@@ -129,14 +130,141 @@ export function detectVideoFrame(
   return sampleFromPose(result.landmarks?.[0], preferLeft, time);
 }
 
-function waitForSeek(video: HTMLVideoElement) {
-  return new Promise<void>((resolve) => {
-    const done = () => {
-      video.removeEventListener("seeked", done);
-      resolve();
+function waitForMetadata(video: HTMLVideoElement, ms = 8000) {
+  if (video.readyState >= 1) return Promise.resolve();
+  return new Promise<void>((resolve, reject) => {
+    const finish = (ok: boolean) => {
+      video.removeEventListener("loadedmetadata", onReady);
+      video.removeEventListener("error", onError);
+      window.clearTimeout(timer);
+      if (ok) resolve();
+      else reject(new Error("Could not read that video."));
     };
-    video.addEventListener("seeked", done);
+    const onReady = () => finish(true);
+    const onError = () => finish(false);
+    const timer = window.setTimeout(() => finish(video.readyState >= 1), ms);
+    video.addEventListener("loadedmetadata", onReady);
+    video.addEventListener("error", onError);
   });
+}
+
+function prepareVideo(video: HTMLVideoElement) {
+  video.muted = true;
+  video.autoplay = false;
+  video.playsInline = true;
+  video.preload = "auto";
+  video.setAttribute("playsinline", "true");
+  video.setAttribute("webkit-playsinline", "true");
+}
+
+/**
+ * Play the clip and sample pose on real frames.
+ * Seeking MediaRecorder blobs often never fires `seeked`, which used to hang analysis.
+ * Uses a fresh VIDEO landmarker so live-camera timestamps cannot poison this pass.
+ */
+export async function analyzeVideoElement(
+  video: HTMLVideoElement,
+  preferLeft: boolean,
+  onProgress?: (pct: number) => void
+): Promise<MovementSample[]> {
+  prepareVideo(video);
+  // Start playback in the same tap when possible. Waiting for the model first
+  // drops the user gesture and Safari then refuses to play.
+  void video.play().catch(() => undefined);
+  const [landmarker] = await Promise.all([createLandmarker(), waitForMetadata(video)]);
+  const samples: MovementSample[] = [];
+  let stamp = Math.max(1, Math.floor(performance.now()));
+  const started = performance.now();
+  const maxMs = 14000;
+
+  const collect = () => {
+    const wall = (performance.now() - started) / 1000;
+    const time = Number.isFinite(video.currentTime) ? video.currentTime : wall;
+    try {
+      const sample = detectVideoFrame(
+        landmarker,
+        video,
+        stamp,
+        preferLeft,
+        Number(time.toFixed(2))
+      );
+      if (sample) samples.push(sample);
+    } catch {
+      /* keep going — one bad frame must not stop the clip */
+    }
+    stamp += 33;
+    const duration = video.duration;
+    if (Number.isFinite(duration) && duration > 0) {
+      onProgress?.(Math.min(99, Math.round((Math.min(time, duration) / duration) * 100)));
+    } else {
+      onProgress?.(Math.min(99, Math.round((wall / 12) * 100)));
+    }
+  };
+
+  try {
+    if (video.ended || video.paused) {
+      try {
+        video.currentTime = 0;
+      } catch {
+        /* some recorded clips cannot seek */
+      }
+      await video.play().catch(() => undefined);
+    }
+
+    await new Promise<void>((resolve) => {
+      let raf = 0;
+      let last = 0;
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        cancelAnimationFrame(raf);
+        window.clearTimeout(limit);
+        video.removeEventListener("ended", finish);
+        video.removeEventListener("error", finish);
+        try {
+          video.pause();
+        } catch {
+          /* ignore */
+        }
+        resolve();
+      };
+      const tick = () => {
+        const now = performance.now();
+        if (now - last >= 90) {
+          last = now;
+          if (video.readyState >= 2) collect();
+        }
+        const duration = video.duration;
+        if (
+          video.ended ||
+          (Number.isFinite(duration) && duration > 0 && video.currentTime >= Math.min(duration - 0.04, 12))
+        ) {
+          collect();
+          finish();
+          return;
+        }
+        raf = requestAnimationFrame(tick);
+      };
+      const limit = window.setTimeout(finish, maxMs);
+      video.addEventListener("ended", finish);
+      video.addEventListener("error", finish);
+      const play = video.play();
+      raf = requestAnimationFrame(tick);
+      if (play && typeof play.catch === "function") {
+        void play.catch(() => undefined);
+      }
+    });
+  } finally {
+    try {
+      landmarker.close?.();
+    } catch {
+      /* ignore */
+    }
+  }
+
+  onProgress?.(100);
+  return samples;
 }
 
 export async function analyzeVideoUrl(
@@ -144,39 +272,19 @@ export async function analyzeVideoUrl(
   preferLeft: boolean,
   onProgress?: (pct: number) => void
 ): Promise<MovementSample[]> {
-  const landmarker = await getPoseLandmarker();
   const video = document.createElement("video");
+  prepareVideo(video);
   video.src = url;
-  video.muted = true;
-  video.playsInline = true;
-  video.preload = "auto";
-  await new Promise<void>((resolve, reject) => {
-    video.onloadedmetadata = () => resolve();
-    video.onerror = () => reject(new Error("Could not read that video."));
-  });
-
-  const duration = Math.min(video.duration || 0, 15);
-  if (!Number.isFinite(duration) || duration < 0.4) {
-    throw new Error("That video is too short. Record a few seconds of movement.");
+  video.style.cssText =
+    "position:fixed;left:0;top:0;width:240px;height:180px;opacity:0.01;pointer-events:none;z-index:-1";
+  document.body.appendChild(video);
+  try {
+    return await analyzeVideoElement(video, preferLeft, onProgress);
+  } finally {
+    video.removeAttribute("src");
+    video.load();
+    video.remove();
   }
-
-  const step = 1 / 8;
-  const samples: MovementSample[] = [];
-  let stamp = 1;
-  for (let t = 0; t <= duration; t += step) {
-    video.currentTime = t;
-    await waitForSeek(video);
-    try {
-      const sample = detectVideoFrame(landmarker, video, stamp, preferLeft, Number(t.toFixed(2)));
-      if (sample) samples.push(sample);
-    } catch {
-      /* skip a frame the tracker cannot read */
-    }
-    stamp += 16;
-    onProgress?.(Math.round((t / duration) * 100));
-  }
-  onProgress?.(100);
-  return samples;
 }
 
 export type PhotoPoseResult = {

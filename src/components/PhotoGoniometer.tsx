@@ -17,6 +17,7 @@ import {
 } from "@/lib/goniometer";
 import {
   analyzeImageUrl,
+  analyzeVideoElement,
   analyzeVideoUrl,
   detectVideoFrame,
   getPoseLandmarker,
@@ -161,7 +162,9 @@ export function PhotoGoniometer({
   const fileRef = useRef<HTMLInputElement>(null);
   const videoFileRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const playbackRef = useRef<HTMLVideoElement>(null);
   const overlayRef = useRef<HTMLCanvasElement>(null);
+  const videoUrlRef = useRef<string | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const cameraOnRef = useRef(false);
   const cameraRequestRef = useRef(0);
@@ -199,6 +202,7 @@ export function PhotoGoniometer({
 
   const preferLeft = joint.toLowerCase().includes("left");
   preferLeftRef.current = preferLeft;
+  videoUrlRef.current = videoUrl;
   const movement = useMemo(() => summarizeMovement(samples), [samples]);
 
   useEffect(() => {
@@ -429,25 +433,43 @@ export function PhotoGoniometer({
 
   async function runVideoAnalysis(url: string) {
     setAnalyzing(true);
-    setAnalyzePct(0);
+    setAnalyzePct(1);
     setCameraError("");
+    setSaveMessage("");
+    setStep("upload");
+    scrollToAnalysis();
+    const liveSamples = samplesRef.current;
+    if (liveSamples.length >= 3) {
+      setSamples(liveSamples);
+    }
+    const clip = playbackRef.current;
+    if (clip) {
+      clip.muted = true;
+      clip.playsInline = true;
+      clip.setAttribute("playsinline", "true");
+      void clip.play().catch(() => undefined);
+    }
     try {
-      const liveSamples = samplesRef.current;
-      const found =
-        liveSamples.length >= 8
-          ? liveSamples
-          : await analyzeVideoUrl(url, preferLeft, setAnalyzePct);
-      if (found.length < 6) {
+      const found = clip
+        ? await analyzeVideoElement(clip, preferLeft, setAnalyzePct)
+        : await analyzeVideoUrl(url, preferLeft, setAnalyzePct);
+      const result = found.length >= 4 ? found : liveSamples;
+      if (result.length < 4) {
         setCameraError(
-          "Could not see the hip, knee, and ankle clearly. Record from the side, with the whole leg in view."
+          "Could not see the hip, knee, and ankle clearly. Record from the side, with the whole leg in view, then tap Send to analysis again."
         );
-        setAnalyzing(false);
         return;
       }
-      setSamples(found);
-      setStep("upload");
+      setSamples(result);
+      setCameraError("");
       scrollToAnalysis();
     } catch (error) {
+      if (liveSamples.length >= 4) {
+        setSamples(liveSamples);
+        setCameraError("");
+        scrollToAnalysis();
+        return;
+      }
       setCameraError(
         error instanceof Error
           ? error.message
@@ -455,6 +477,7 @@ export function PhotoGoniometer({
       );
     } finally {
       setAnalyzing(false);
+      setAnalyzePct(100);
     }
   }
 
@@ -690,6 +713,7 @@ export function PhotoGoniometer({
               </div>
             ) : videoUrl && videoReady ? (
               <video
+                ref={playbackRef}
                 src={videoUrl}
                 controls
                 playsInline
@@ -785,13 +809,32 @@ export function PhotoGoniometer({
             </div>
           )}
 
+          {analyzing && (
+            <div className="mt-4 rounded-2xl border border-[var(--border)] bg-background px-4 py-4">
+              <p className="font-semibold">Analyzing your video… {analyzePct}%</p>
+              <p className="mt-1 text-sm text-muted">
+                Playing the clip and measuring the knee. Results appear below.
+              </p>
+              <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-elevated">
+                <div className="h-full bg-brand transition-[width]" style={{ width: `${analyzePct}%` }} />
+              </div>
+            </div>
+          )}
+
           {videoReady && videoUrl && !liveCamera && (
             <div className="mt-4 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
                 className="rm-btn rm-btn-primary flex-1 disabled:opacity-40"
                 disabled={analyzing}
-                onClick={() => void runVideoAnalysis(videoUrl)}
+                onClick={() => {
+                  const url = videoUrlRef.current ?? videoUrl;
+                  if (!url) {
+                    setCameraError("The video is not ready yet. Record again, then tap Send to analysis.");
+                    return;
+                  }
+                  void runVideoAnalysis(url);
+                }}
               >
                 {analyzing ? `Analyzing… ${analyzePct}%` : "Send to analysis"}
               </button>
@@ -944,9 +987,20 @@ export function PhotoGoniometer({
         </section>
       )}
 
-      {(photoAnalyzing || photoAngle != null || movement) && (
+      {(analyzing || photoAnalyzing || photoAngle != null || movement) && (
         <section ref={analysisRef} id="capture-analysis" className="rm-card p-6">
           <p className="rm-label">Analysis</p>
+          {analyzing && !movement && (
+            <>
+              <h2 className="mt-1 text-xl font-bold">Reading this video</h2>
+              <p className="mt-2 rm-body">
+                Measuring hip, knee, and ankle now. Peak, min, and range will show here.
+              </p>
+              <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-elevated">
+                <div className="h-full bg-brand transition-[width]" style={{ width: `${analyzePct}%` }} />
+              </div>
+            </>
+          )}
           {photoAnalyzing && (
             <>
               <h2 className="mt-1 text-xl font-bold">Reading this photo</h2>
