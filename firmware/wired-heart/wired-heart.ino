@@ -113,8 +113,22 @@ void setupSensor() {
   delay(80);
 }
 
+// The red LEDs only glow after these I2C writes. Try every common address
+// even when ping failed, so a flaky ACK can still turn the light on.
+void tryTurnLedsOn() {
+  const uint8_t tries[] = { 0x57, 0x5E, 0x55 };
+  const uint8_t saved = sensorAddr;
+  Serial.println("LED TRY");
+  for (uint8_t i = 0; i < 3; i++) {
+    sensorAddr = tries[i];
+    setupSensor();
+  }
+  sensorAddr = saved;
+}
+
 bool startSensor() {
   printScan();
+  tryTurnLedsOn();
   if (!findSensor()) {
     Serial.println("ERR no I2C. Push in VIN GND SCL->A5 SDA->A4. If the board has no VIN, use 3.3V.");
     return false;

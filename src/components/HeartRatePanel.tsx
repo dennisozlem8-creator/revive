@@ -296,7 +296,7 @@ function UsbSourceCard({
   const status = !proof.started && !proof.chip
     ? "USB is open. Waiting for the Elegoo to say MAX30102."
     : !proof.i2cOk && (proof.started || proof.chip)
-      ? "USB to the Elegoo is good. The MAX30102 is not answering. Push in VIN (or 3.3V), GND, SCL to A5, and SDA to A4. Try swapping SDA and SCL if those two look right."
+      ? "USB to the Elegoo is good. The MAX30102 is not answering, so the red LEDs stay off. Upload the latest sketch, unplug USB for 10 seconds, push VIN/GND/SCL/SDA in again, then Connect with USB. If a light comes back, we are close."
     : packetsOnly
       ? "USB packets are arriving, but there is no finger data yet. Cover both LEDs with one fingertip and keep still. Wiring: VIN→5V, GND→GND, SCL→A5, SDA→A4."
       : !fresh

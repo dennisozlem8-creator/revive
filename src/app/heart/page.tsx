@@ -116,6 +116,23 @@ export default function HeartSensorPage() {
         </section>
 
         <section className="rm-card mt-4 border-alert/30 p-5">
+          <h2 className="font-semibold">If the red light was on, then went off</h2>
+          <p className="mt-2 text-sm text-body">
+            That is a useful clue. The two red LEDs in the sensor window only turn on after the
+            Elegoo writes to the MAX30102 over I2C. If I2C stops, the light goes dark even when USB
+            still works. Chip ID 0 with no light means the chip is not answering right now.
+          </p>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
+            <li>On the Heart page, tap <strong className="text-foreground">Disconnect</strong>. Close Serial Monitor in Arduino IDE.</li>
+            <li>Upload the latest <code className="rounded bg-background px-1">firmware/wired-heart/wired-heart.ino</code>. This version tries to turn the LEDs on even when I2C looks failed.</li>
+            <li>Close Serial Monitor. Unplug USB for 10 seconds. Push VIN (or 3.3V), GND, SCL, and SDA in again. Plug USB back in.</li>
+            <li>Connect with USB. Watch the MAX30102 window.</li>
+            <li>Light comes back, but the page still says no I2C: power is good. Swap SDA and SCL, or push those two wires in harder.</li>
+            <li>Light stays off: VIN or GND is loose, or the power pin is on the wrong voltage. If the board has only a 3.3V pin, use Uno 3.3V, not 5V.</li>
+          </ol>
+        </section>
+
+        <section className="rm-card mt-4 border-alert/30 p-5">
           <h2 className="font-semibold">If it says no I2C</h2>
           <p className="mt-2 text-sm text-body">
             USB is working. The Elegoo cannot see the MAX30102. Chip ID 0 means the sensor has no
