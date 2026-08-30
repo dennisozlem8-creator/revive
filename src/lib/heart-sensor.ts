@@ -33,6 +33,7 @@ export type SerialHeartSample = {
   chipId?: number;
   i2cOk?: boolean;
   hello?: boolean;
+  noData?: boolean;
 };
 
 export type UsbHeartProof = {
@@ -89,10 +90,14 @@ export function applySerialSampleToProof(
   return next;
 }
 
+export function usbHasFingerData(proof: UsbHeartProof) {
+  return (proof.lastRaw ?? 0) >= 400;
+}
+
 export function usbSourceConfirmed(proof: UsbHeartProof, now = Date.now()) {
   const fresh = proof.lastPacketAt != null && now - proof.lastPacketAt < 2500;
   const named = (proof.chip ?? "").toUpperCase().includes("MAX30102") || proof.started;
-  return named && fresh && proof.packetCount > 0;
+  return named && fresh && usbHasFingerData(proof);
 }
 
 export function usbPortLabel(info?: { usbVendorId?: number }) {
@@ -157,6 +162,9 @@ export function parseSerialHeartLine(line: string): SerialHeartSample | null {
   const rawMatch = text.match(/^(?:RAW|ADC|SIG|VALUE)\s*[:=]?\s*(\d{1,8})$/i);
   if (rawMatch) {
     return { raw: Number(rawMatch[1]) };
+  }
+  if (/^NODATA\b/i.test(text)) {
+    return { noData: true };
   }
   if (/^ERR\b/i.test(text)) {
     return { error: text.replace(/^ERR\s*/i, "").trim() || text };

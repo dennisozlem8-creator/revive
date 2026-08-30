@@ -1,6 +1,7 @@
 /*
   Revive Motion — Elegoo Uno R3 + MAX30102
-  Wires: VIN->5V  GND->GND  SCL->A5  SDA->A4
+  Wires: VIN/VCC->5V  GND->GND  SCL->A5  SDA->A4
+  If the board has 3.3V and no VIN, use Uno 3.3V instead of 5V.
   After Upload: close Serial Monitor, then Chrome -> Connect with USB
 */
 
@@ -10,13 +11,14 @@ const uint8_t MAX_ADDR = 0x57;
 const int MIN_BPM = 40;
 const int MAX_BPM = 180;
 const unsigned long MIN_BEAT_MS = 320;
-const uint32_t FINGER_MIN_IR = 2000;
+const uint32_t FINGER_MIN = 400;
 
-uint32_t lastIr = 0;
+uint32_t lastSignal = 0;
 uint32_t recentMax = 0;
 uint32_t recentMin = 0xFFFFFFFFu;
 unsigned long lastBeatMs = 0;
 unsigned long windowStart = 0;
+unsigned long lastNoDataMs = 0;
 
 void writeReg(uint8_t reg, uint8_t value) {
   Wire.beginTransmission(MAX_ADDR);
@@ -28,27 +30,41 @@ void writeReg(uint8_t reg, uint8_t value) {
 uint8_t readReg(uint8_t reg) {
   Wire.beginTransmission(MAX_ADDR);
   Wire.write(reg);
-  Wire.endTransmission(false);
+  if (Wire.endTransmission() != 0) return 0;
   Wire.requestFrom(MAX_ADDR, (uint8_t)1);
   if (Wire.available()) return Wire.read();
   return 0;
 }
 
-uint32_t readIr() {
+bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
+  const uint8_t wr = readReg(0x04) & 0x1F;
+  const uint8_t rd = readReg(0x06) & 0x1F;
+  if (wr == rd) {
+    *redOut = 0;
+    *irOut = 0;
+    return false;
+  }
+
   Wire.beginTransmission(MAX_ADDR);
   Wire.write(0x07);
-  Wire.endTransmission(false);
+  if (Wire.endTransmission() != 0) {
+    *redOut = 0;
+    *irOut = 0;
+    return false;
+  }
   Wire.requestFrom(MAX_ADDR, (uint8_t)6);
+
   uint32_t red = 0;
   uint32_t ir = 0;
-  if (Wire.available() >= 6) {
+  if (Wire.available() >= 3) {
     red = ((uint32_t)Wire.read() << 16) | ((uint32_t)Wire.read() << 8) | Wire.read();
+  }
+  if (Wire.available() >= 3) {
     ir = ((uint32_t)Wire.read() << 16) | ((uint32_t)Wire.read() << 8) | Wire.read();
   }
-  red &= 0x03FFFF;
-  ir &= 0x03FFFF;
-  (void)red;
-  return ir;
+  *redOut = red & 0x03FFFF;
+  *irOut = ir & 0x03FFFF;
+  return true;
 }
 
 bool sensorAck() {
@@ -61,12 +77,13 @@ void setupSensor() {
   delay(100);
   writeReg(0x09, 0x03);
   writeReg(0x0A, 0x27);
-  writeReg(0x0C, 0x24);
-  writeReg(0x0D, 0x24);
+  writeReg(0x0C, 0x4F);
+  writeReg(0x0D, 0x4F);
   writeReg(0x08, 0x4F);
   writeReg(0x04, 0x00);
   writeReg(0x05, 0x00);
   writeReg(0x06, 0x00);
+  delay(80);
 }
 
 void setup() {
@@ -88,34 +105,43 @@ void setup() {
 }
 
 void loop() {
-  const uint32_t ir = readIr();
+  uint32_t red = 0;
+  uint32_t ir = 0;
+  const bool gotSample = readFifoSample(&red, &ir);
+  const uint32_t signal = ir >= red ? ir : red;
   const unsigned long now = millis();
 
-  Serial.print("RAW ");
-  Serial.println(ir);
+  if (gotSample) {
+    Serial.print("RAW ");
+    Serial.println(signal);
+  }
 
-  if (ir < FINGER_MIN_IR) {
-    lastIr = ir;
+  if (!gotSample || signal < FINGER_MIN) {
+    if (now - lastNoDataMs > 1000) {
+      lastNoDataMs = now;
+      Serial.println("NODATA cover both LEDs with a fingertip");
+    }
+    lastSignal = signal;
     delay(20);
     return;
   }
 
   if (now - windowStart > 1500) {
-    recentMax = ir;
-    recentMin = ir;
+    recentMax = signal;
+    recentMin = signal;
     windowStart = now;
   } else {
-    if (ir > recentMax) recentMax = ir;
-    if (ir < recentMin) recentMin = ir;
+    if (signal > recentMax) recentMax = signal;
+    if (signal < recentMin) recentMin = signal;
   }
 
   const uint32_t span = recentMax - recentMin;
   const uint32_t threshold = recentMin + (span * 6UL) / 10UL;
   const bool crossed =
-    lastIr <= threshold &&
-    ir > threshold &&
+    lastSignal <= threshold &&
+    signal > threshold &&
     (now - lastBeatMs) > MIN_BEAT_MS &&
-    span > 200;
+    span > 80;
 
   if (crossed) {
     if (lastBeatMs > 0) {
@@ -128,6 +154,6 @@ void loop() {
     lastBeatMs = now;
   }
 
-  lastIr = ir;
+  lastSignal = signal;
   delay(20);
 }

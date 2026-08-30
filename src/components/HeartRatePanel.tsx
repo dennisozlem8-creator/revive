@@ -5,6 +5,7 @@ import {
   heartRateBrowserHelp,
   requestUsbHeartPort,
   usbBlockReason,
+  usbHasFingerData,
   usbSourceConfirmed,
   type UsbHeartProof,
 } from "@/lib/heart-sensor";
@@ -124,7 +125,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
         </div>
       )}
 
-      {source === "usb" && rawHistory.some((v) => v > 0) && (
+      {source === "usb" && connected && (
         <div className="mt-4">
           <p className="rm-label">Wire signal</p>
           <div className="mt-2 flex h-16 items-end gap-0.5">
@@ -286,27 +287,28 @@ function UsbSourceCard({
 }) {
   const ageMs = proof.lastPacketAt != null ? now - proof.lastPacketAt : null;
   const fresh = ageMs != null && ageMs < 2500;
-  const fingerOn = (proof.lastRaw ?? 0) >= 2000;
+  const fingerOn = usbHasFingerData(proof);
+  const packetsOnly = (proof.started || proof.packetCount > 0) && !fingerOn;
   const chipKnown = proof.chipId === 21 ? "MAX30102 chip ID 21" : proof.chipId != null ? `chip ID ${proof.chipId}` : "waiting";
   const status = !proof.started && !proof.chip
     ? "USB is open. Waiting for the Elegoo to say MAX30102."
-    : !fresh
-      ? "MAX30102 handshake seen. Waiting for the next RAW line."
-      : !fingerOn
-        ? "MAX30102 is sending IR light. Rest a fingertip on the two LEDs."
+    : packetsOnly
+      ? "USB packets are arriving, but there is no finger data yet. Cover both LEDs with one fingertip and keep still. Wiring: VIN→5V, GND→GND, SCL→A5, SDA→A4."
+      : !fresh
+        ? "MAX30102 handshake seen. Waiting for the next RAW line."
         : proof.lastBpm
           ? "Confirmed. Beats are coming from the MAX30102 on the Elegoo Uno R3."
-          : "Finger is on the MAX30102. Counting beats.";
+          : "Finger data is live. Counting beats.";
 
   return (
     <div
       className={`mt-4 rounded-2xl border px-4 py-3 ${
-        confirmed ? "border-correct/40 bg-correct/10" : "border-[var(--border)] bg-background"
+        confirmed ? "border-correct/40 bg-correct/10" : packetsOnly ? "border-almost/40 bg-almost/10" : "border-[var(--border)] bg-background"
       }`}
     >
       <p className="text-xs font-bold uppercase tracking-wide text-muted">Data source</p>
       <p className={`mt-1 font-semibold ${confirmed ? "text-correct" : "text-foreground"}`}>
-        {confirmed ? "Yes — live MAX30102 data" : "Checking the MAX30102"}
+        {confirmed ? "Yes — live MAX30102 data" : packetsOnly ? "Packets yes — no heart data yet" : "Checking the MAX30102"}
       </p>
       <p className="mt-1 text-sm text-body">{status}</p>
       {!compact && (

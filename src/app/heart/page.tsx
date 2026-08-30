@@ -51,7 +51,8 @@ export default function HeartSensorPage() {
         <section className="rm-card mt-4 p-5">
           <h2 className="font-semibold">Wires: MAX30102 → Elegoo Uno R3</h2>
           <p className="mt-2 text-sm text-muted">
-            MAX30102 talks over I2C. Do not use A0. Use A4 and A5.
+            MAX30102 talks over I2C. Do not use A0. Use A4 and A5. If the app says packets but no
+            data, the USB cable is fine — cover both LEDs on the MAX30102 with a fingertip.
           </p>
           <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
             <table className="w-full text-left text-sm">
