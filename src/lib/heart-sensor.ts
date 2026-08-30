@@ -52,7 +52,7 @@ export function parseSerialHeartLine(line: string): SerialHeartSample | null {
     const bpm = Number(bpmMatch[1]);
     return bpm > 0 && bpm <= 250 ? { bpm } : null;
   }
-  const rawMatch = text.match(/^(?:RAW|ADC|SIG|VALUE)\s*[:=]?\s*(\d{1,4})$/i);
+  const rawMatch = text.match(/^(?:RAW|ADC|SIG|VALUE)\s*[:=]?\s*(\d{1,8})$/i);
   if (rawMatch) {
     return { raw: Number(rawMatch[1]) };
   }

@@ -99,16 +99,19 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
         <div className="mt-4">
           <p className="rm-label">Wire signal</p>
           <div className="mt-2 flex h-16 items-end gap-0.5">
-            {rawHistory.map((value, i) => (
-              <div
-                key={i}
-                className="flex-1 rounded-t bg-brand/70"
-                style={{
-                  height: `${Math.max(6, Math.min(100, (value / 1023) * 100))}%`,
-                  opacity: 0.35 + (i / Math.max(1, rawHistory.length)) * 0.65,
-                }}
-              />
-            ))}
+            {rawHistory.map((value, i) => {
+              const rawMax = Math.max(1, ...rawHistory);
+              return (
+                <div
+                  key={i}
+                  className="flex-1 rounded-t bg-brand/70"
+                  style={{
+                    height: `${Math.max(6, Math.min(100, (value / rawMax) * 100))}%`,
+                    opacity: 0.35 + (i / Math.max(1, rawHistory.length)) * 0.65,
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       )}
@@ -207,8 +210,8 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
 
       {!compact && (
         <p className="mt-3 text-xs text-muted">
-          Wired: Arduino + pulse sensor on pin A0, USB cable, then Connect with USB. Bluetooth:
-          Polar H9/H10, Wahoo TICKR, Coospo, Magene. Apple Watch usually will not work.
+          Wired: Elegoo Uno R3 + MAX30102 (VIN→5V, GND→GND, SCL→A5, SDA→A4), then Connect with USB.
+          Bluetooth: Polar H9/H10, Wahoo TICKR, Coospo, Magene.
         </p>
       )}
     </section>

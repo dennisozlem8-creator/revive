@@ -20,14 +20,11 @@ The estimate is for progress tracking, not a diagnosis. Video files are not stor
 
 A Bluetooth heart-rate strap **or** a wired Arduino pulse sensor can show live BPM.
 
-### Wired (USB)
+### Wired (Elegoo Uno R3 + MAX30102)
 
-1. Wire a pulse sensor: VCC → 5V, GND → GND, OUT → A0.
-2. Upload `firmware/wired-heart/wired-heart.ino` in Arduino IDE.
-3. Open Chrome or Edge on that computer. Go to **Heart sensor**.
-4. Tap **Connect with USB**, pick the Arduino, then **Record this session**.
-
-The board must print `BPM 74` and `RAW 512` lines at 115200 baud.
+1. VIN/VCC → 5V, GND → GND, SCL → A5, SDA → A4. Leave INT unconnected.
+2. Upload `firmware/wired-heart/wired-heart.ino` in Arduino IDE (Board: Arduino Uno). Close Serial Monitor.
+3. Open Chrome or Edge. Go to **Heart sensor**. Tap **Connect with USB**.
 
 ### Bluetooth strap
 

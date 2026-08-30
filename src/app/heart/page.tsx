@@ -33,55 +33,82 @@ export default function HeartSensorPage() {
         <p className="rm-label">Wired sensor</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Heart sensor</h1>
         <p className="mt-2 text-body">
-          A wired pulse sensor plus an Arduino can send live heart data into this app over a USB
-          cable. No extra phone app.
+          For an Elegoo Uno R3 and a MAX30102, you need Arduino IDE once to put the program on the
+          board. After that, a USB cable and Chrome or Edge are enough.
         </p>
 
         <section className="rm-card mt-6 p-5">
-          <h2 className="font-semibold">What to buy</h2>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>An Arduino Uno or Nano</li>
-            <li>A pulse sensor (PulseSensor, KY-039, or similar analog heart sensor)</li>
-            <li>Three jumper wires and a USB cable for the Arduino</li>
-          </ol>
+          <h2 className="font-semibold">Do I need Arduino IDE?</h2>
+          <p className="mt-2 text-sm text-body">
+            Yes, one time. Download Arduino IDE, upload the MAX30102 program, then close Serial
+            Monitor. After that you only plug USB into the computer and tap Connect with USB on this
+            page. You do not need a second phone app.
+          </p>
         </section>
 
         <section className="rm-card mt-4 p-5">
-          <h2 className="font-semibold">How to wire it</h2>
-          <ul className="mt-3 space-y-2 text-sm text-body">
-            <li>
-              <strong className="text-foreground">Sensor VCC</strong> → Arduino 5V
-            </li>
-            <li>
-              <strong className="text-foreground">Sensor GND</strong> → Arduino GND
-            </li>
-            <li>
-              <strong className="text-foreground">Sensor OUT / S</strong> → Arduino A0
-            </li>
-          </ul>
+          <h2 className="font-semibold">Wires: MAX30102 → Elegoo Uno R3</h2>
+          <p className="mt-2 text-sm text-muted">
+            MAX30102 talks over I2C. Do not use A0. Use A4 and A5.
+          </p>
+          <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-background">
+                <tr>
+                  <th className="px-3 py-2 font-semibold">MAX30102 pin</th>
+                  <th className="px-3 py-2 font-semibold">Elegoo Uno R3 pin</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-t border-[var(--border)]">
+                  <td className="px-3 py-2">VIN or VCC</td>
+                  <td className="px-3 py-2 font-medium">5V</td>
+                </tr>
+                <tr className="border-t border-[var(--border)] bg-background/60">
+                  <td className="px-3 py-2">GND</td>
+                  <td className="px-3 py-2 font-medium">GND</td>
+                </tr>
+                <tr className="border-t border-[var(--border)]">
+                  <td className="px-3 py-2">SCL</td>
+                  <td className="px-3 py-2 font-medium">A5 (or the pin labeled SCL)</td>
+                </tr>
+                <tr className="border-t border-[var(--border)] bg-background/60">
+                  <td className="px-3 py-2">SDA</td>
+                  <td className="px-3 py-2 font-medium">A4 (or the pin labeled SDA)</td>
+                </tr>
+                <tr className="border-t border-[var(--border)]">
+                  <td className="px-3 py-2">INT</td>
+                  <td className="px-3 py-2">Leave unconnected</td>
+                </tr>
+                <tr className="border-t border-[var(--border)] bg-background/60">
+                  <td className="px-3 py-2">IRD or RD</td>
+                  <td className="px-3 py-2">Leave unconnected</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <p className="mt-3 text-sm text-muted">
-            Clip or tape the sensor to a fingertip. Stay still for a few seconds so the pulse can
-            settle.
+            If the MAX30102 board has a pin named only <strong className="text-foreground">3.3V</strong>{" "}
+            and no VIN, use Uno <strong className="text-foreground">3.3V</strong> instead of 5V. Never
+            put 5V into a pin labeled 1.8V.
+          </p>
+          <p className="mt-2 text-sm text-body">
+            Rest a fingertip on the two LEDs on the MAX30102 and keep still.
           </p>
         </section>
 
         <section className="rm-card mt-4 p-5">
           <h2 className="font-semibold">Load the program</h2>
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>Install Arduino IDE on the same computer you will use for Revive Motion.</li>
+            <li>Install Arduino IDE from arduino.cc on this computer.</li>
             <li>
-              Open <code className="rounded bg-background px-1">firmware/wired-heart/wired-heart.ino</code>{" "}
-              from this project.
+              Open <code className="rounded bg-background px-1">firmware/wired-heart/wired-heart.ino</code>
+              .
             </li>
-            <li>Choose your board and the USB port, then click Upload.</li>
-            <li>Leave the USB cable plugged in. Open this page in Chrome or Edge.</li>
-            <li>Tap Connect with USB and pick the Arduino.</li>
+            <li>Tools → Board → Arduino Uno. Tools → Port → the Elegoo COM port.</li>
+            <li>Click Upload. Wait until it says Done uploading.</li>
+            <li>Close Serial Monitor, leave USB plugged in, then tap Connect with USB below.</li>
           </ol>
-          <p className="mt-3 text-sm text-muted">
-            The Arduino should print lines like <code className="rounded bg-background px-1">BPM 74</code>{" "}
-            and <code className="rounded bg-background px-1">RAW 512</code>. This site reads those
-            lines and graphs them. Tap Record this session, then Stop and save.
-          </p>
         </section>
 
         <div className="mt-6">
