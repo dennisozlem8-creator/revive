@@ -1,12 +1,13 @@
 type LogoProps = {
   size?: number;
   showText?: boolean;
+  stacked?: boolean;
   className?: string;
 };
 
-export function Logo({ size = 56, showText = true, className = "" }: LogoProps) {
+export function Logo({ size = 56, showText = true, stacked = false, className = "" }: LogoProps) {
   return (
-    <div className={`flex items-center gap-4 ${className}`}>
+    <div className={`flex items-center gap-4 ${stacked ? "flex-col text-center" : ""} ${className}`}>
       <svg
         width={size}
         height={size}
@@ -58,12 +59,15 @@ export function Logo({ size = 56, showText = true, className = "" }: LogoProps) 
         <circle cx="34" cy="34" r="1.2" fill="#EFF6FF" />
       </svg>
       {showText && (
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${stacked ? "items-center" : ""}`}>
           <span className="text-2xl font-semibold tracking-tight text-foreground">
             Revive Motion
           </span>
-          <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent-light">
-            Physical Therapy
+          <span className="text-xs font-medium uppercase tracking-[0.14em] text-accent-light">
+            Physical Therapy Assistance
+          </span>
+          <span className="mt-1 text-sm text-muted">
+            Equal recovery for every patient
           </span>
         </div>
       )}

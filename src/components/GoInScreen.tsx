@@ -51,7 +51,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
           onClick={() => setEntry(null)}
           className="mb-4 text-sm font-medium text-brand-light hover:text-brand"
         >
-          ← Back to who is going in
+          ← Back
         </button>
         <AuthForm key={entry} mode={mode} defaultRole={entry} />
         <ResetAppButton />
@@ -78,11 +78,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
 
   return (
     <>
-      <h1 className="text-center text-2xl font-semibold">Who is going in?</h1>
-      <p className="mt-2 text-center text-sm text-muted">
-        Choose Patient, Doctor, Caregiver, or Kids Quest.
-      </p>
-      <div className="mt-8 flex flex-col gap-3">
+      <div className="mt-2 flex flex-col gap-3">
         {entries.map((item) => (
           <button
             key={item.id}
