@@ -23,6 +23,7 @@ import {
   type KidsProgressData,
 } from "@/lib/kids-progress";
 import { KidsIcon, KidsIconTitle } from "@/components/KidsIcon";
+import { KidsAtmosphere } from "@/components/KidsAtmosphere";
 import type { KidsIconName } from "@/lib/kids-icons";
 
 const questZones: { id: string; icon: KidsIconName; name: string; image: string }[] = [
@@ -110,8 +111,9 @@ export default function KidsQuestPage() {
   const showMap = !selectedArea && !activeExercise;
 
   return (
-    <div className="relative min-h-full overflow-hidden rm-glow-kids pb-24 text-foreground">
-      <div className="rm-xp-track fixed left-0 right-0 top-0 z-50">
+    <div className="relative min-h-full overflow-hidden rm-glow-kids pb-24">
+      <KidsAtmosphere />
+      <div className="rm-xp-track fixed left-0 right-0 top-0 z-50 rounded-none">
         <div className="rm-xp-fill" style={{ width: `${xpPct}%` }} />
       </div>
 
@@ -127,10 +129,10 @@ export default function KidsQuestPage() {
 
       {showToast && !showWelcome && (
         <div className="fixed left-0 right-0 top-2 z-[60] flex justify-center px-4 animate-kids-toast">
-          <div className="inline-flex items-center gap-2 rounded-full border-4 border-amber-300 bg-gradient-to-r from-orange-400 via-fuchsia-400 to-sky-400 px-5 py-2 text-sm font-black text-white shadow-[0_6px_0_#c2410c]">
-            <KidsIcon name="gamepad" size={28} />
-            Kids Quest Mode!
-            <KidsIcon name="star" size={28} />
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/80 bg-white/90 px-5 py-2 text-sm font-bold text-amber-950 shadow-[0_10px_28px_rgba(40,24,8,0.18)] backdrop-blur">
+            <KidsIcon name="star" size={22} />
+            Kids Quest World
+            <KidsIcon name="sparkle" size={22} />
           </div>
         </div>
       )}
@@ -145,57 +147,67 @@ export default function KidsQuestPage() {
       <Header linkHome variant="kids" />
       <KidsModeBanner />
 
-      <main className="relative z-10 mx-auto max-w-5xl px-4 pb-8 pt-2 sm:px-6">
-        <div className="flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <h1 className="text-2xl font-black text-orange-600 sm:text-3xl">
-              <KidsIconTitle icon="gamepad" size={36}>
+      <main className="relative z-10 mx-auto max-w-5xl px-4 pb-8 pt-3 sm:px-6">
+        <section className="relative overflow-hidden rounded-[1.75rem] border border-amber-200/50 shadow-[0_22px_44px_rgba(40,24,8,0.18)]">
+          <Image
+            src="/kids/quest-map.svg"
+            alt=""
+            width={1200}
+            height={360}
+            className="h-44 w-full object-cover sm:h-52"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1a2848]/70 via-[#1a2848]/25 to-transparent" />
+          <div className="absolute inset-0 flex flex-col justify-end gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-200">Revive Motion</p>
+              <h1 className="mt-1 text-3xl font-bold tracking-tight text-amber-50 drop-shadow-md sm:text-4xl">
                 Kids Quest
-              </KidsIconTitle>
-            </h1>
-            <p className={`mt-1 flex items-center gap-1 text-sm font-black ${level.color}`}>
-              <KidsIcon name="star" size={20} />
-              {level.name}
-            </p>
+              </h1>
+              <p className="mt-1 flex items-center gap-1 text-sm font-semibold text-amber-100">
+                <KidsIcon name="star" size={18} />
+                {level.name}
+              </p>
+            </div>
+            <div className="flex gap-2 text-center">
+              <div className="rounded-2xl border border-white/40 bg-white/85 px-3 py-1.5 shadow-sm backdrop-blur">
+                <p className="flex items-center justify-center gap-1 text-lg font-bold leading-none text-amber-800">
+                  <KidsIcon name="sparkle" size={18} />
+                  {xp}
+                </p>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-amber-900/70">XP</p>
+              </div>
+              <div className="rounded-2xl border border-white/40 bg-white/85 px-3 py-1.5 shadow-sm backdrop-blur">
+                <p className="flex items-center justify-center gap-1 text-lg font-bold leading-none text-indigo-800">
+                  <KidsIcon name="fire" size={18} />
+                  {streak}
+                </p>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-indigo-900/70">Streak</p>
+              </div>
+              <div className="rounded-2xl border border-white/40 bg-white/85 px-3 py-1.5 shadow-sm backdrop-blur">
+                <p className="flex items-center justify-center gap-1 text-lg font-bold leading-none text-emerald-800">
+                  <KidsIcon name="target" size={18} />
+                  {questsDone}
+                </p>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-900/70">Quests</p>
+              </div>
+            </div>
           </div>
-          <div className="flex gap-2 text-center">
-            <div className="rounded-2xl border-4 border-amber-300 bg-gradient-to-br from-amber-100 to-orange-50 px-3 py-1.5 shadow-[0_4px_0_#f59e0b]">
-              <p className="flex items-center justify-center gap-1 text-lg font-black leading-none text-orange-600">
-                <KidsIcon name="sparkle" size={22} />
-                {xp}
-              </p>
-              <p className="text-[10px] font-black uppercase tracking-wide text-amber-800">XP</p>
-            </div>
-            <div className="rounded-2xl border-4 border-fuchsia-300 bg-gradient-to-br from-fuchsia-100 to-violet-50 px-3 py-1.5 shadow-[0_4px_0_#d946ef]">
-              <p className="flex items-center justify-center gap-1 text-lg font-black leading-none text-fuchsia-600">
-                <KidsIcon name="fire" size={22} />
-                {streak}
-              </p>
-              <p className="text-[10px] font-black uppercase tracking-wide text-fuchsia-800">Streak</p>
-            </div>
-            <div className="rounded-2xl border-4 border-lime-300 bg-gradient-to-br from-lime-100 to-emerald-50 px-3 py-1.5 shadow-[0_4px_0_#84cc16]">
-              <p className="flex items-center justify-center gap-1 text-lg font-black leading-none text-lime-700">
-                <KidsIcon name="target" size={22} />
-                {questsDone}
-              </p>
-              <p className="text-[10px] font-black uppercase tracking-wide text-lime-800">Quests</p>
-            </div>
-          </div>
-        </div>
+        </section>
 
         {showMap && (
           <>
-            <section className="mt-3">
-              <h2 className="text-xl font-black text-orange-700 sm:text-2xl">
+            <section className="mt-6">
+              <h2 className="kids-title-ink text-2xl sm:text-3xl">
                 <KidsIconTitle icon="map" size={34}>
                   Quest map
                 </KidsIconTitle>
               </h2>
-              <p className="mt-1 flex items-center gap-1 text-sm font-bold text-violet-700">
-                Pick a zone to start a game!
-                <KidsIcon name="rocket" size={22} />
+              <p className="mt-1 flex items-center gap-1 text-sm font-medium text-indigo-900/75">
+                Choose a kingdom and start your quest.
+                <KidsIcon name="rocket" size={20} />
               </p>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {questZones.map((zone) => (
                   <button
                     key={zone.id}
@@ -204,30 +216,26 @@ export default function KidsQuestPage() {
                       setSelectedArea(zone.id);
                       setSpeech(`Enter ${zone.name}! Pick a quest.`);
                     }}
-                    className="overflow-hidden rounded-[1.6rem] border-4 border-white bg-white text-left shadow-[0_8px_0_rgba(249,115,22,0.35)] transition hover:-translate-y-0.5"
+                    className="kids-zone text-left"
                   >
-                    <div className="relative">
+                    <div className="relative h-40 sm:h-48">
                       <Image
                         src={zone.image}
                         alt=""
-                        width={400}
-                        height={120}
-                        className="h-20 w-full object-cover sm:h-24"
+                        width={800}
+                        height={480}
+                        className="h-full w-full object-cover"
                       />
-                      <span className="absolute left-2 top-1 drop-shadow" aria-hidden>
-                        <KidsIcon name={zone.icon} size={52} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1a1840]/85 via-[#1a1840]/20 to-transparent" />
+                      <span className="absolute left-3 top-3 drop-shadow-lg" aria-hidden>
+                        <KidsIcon name={zone.icon} size={48} />
                       </span>
-                    </div>
-                    <div className="bg-gradient-to-br from-amber-50 to-sky-50 p-4 sm:p-5">
-                      <h2 className="text-lg font-black text-orange-800 sm:text-xl">
-                        <KidsIconTitle icon={zone.icon} size={28}>
+                      <div className="absolute bottom-0 p-4">
+                        <h2 className="text-xl font-bold tracking-tight text-amber-50 drop-shadow">
                           {zone.name}
-                        </KidsIconTitle>
-                      </h2>
-                      <p className="mt-1 flex items-center gap-1 text-sm font-bold text-fuchsia-700">
-                        Enter the quest zone
-                        <KidsIcon name="gamepad" size={20} />
-                      </p>
+                        </h2>
+                        <p className="mt-0.5 text-sm font-medium text-amber-100/90">Enter the quest zone</p>
+                      </div>
                     </div>
                   </button>
                 ))}
@@ -242,11 +250,11 @@ export default function KidsQuestPage() {
           </>
         )}
 
-        <section className="mt-3 flex items-center gap-3 rounded-[1.6rem] border-4 border-amber-300 bg-gradient-to-r from-amber-50 via-white to-sky-50 p-3 shadow-[0_8px_0_#f59e0b] sm:p-4">
+        <section className="kids-glass mt-5 flex items-center gap-3 p-3 sm:p-4">
           <KidsIcon name={heroAvatar} size={64} />
-          <div className="relative flex-1 rounded-2xl border-2 border-orange-200 bg-white px-3 py-2 text-orange-950 sm:px-4 sm:py-3">
-            <p className="text-sm font-black sm:text-base">{speech}</p>
-            <div className="absolute -left-2 top-4 h-3 w-3 rotate-45 border-b-2 border-l-2 border-orange-200 bg-white sm:top-5 sm:h-4 sm:w-4" />
+          <div className="relative flex-1 rounded-2xl border border-amber-200/80 bg-white/80 px-3 py-2 text-indigo-950 sm:px-4 sm:py-3">
+            <p className="text-sm font-semibold sm:text-base">{speech}</p>
+            <div className="absolute -left-2 top-4 h-3 w-3 rotate-45 border-b border-l border-amber-200/80 bg-white/80 sm:top-5 sm:h-4 sm:w-4" />
           </div>
         </section>
 
@@ -258,13 +266,13 @@ export default function KidsQuestPage() {
 
         {selectedArea && area && assessment && !activeExercise && (
           <section className="mt-4">
-            <button type="button" onClick={() => setSelectedArea(null)} className="text-sm font-black text-orange-600">
+            <button type="button" onClick={() => setSelectedArea(null)} className="text-sm font-bold text-amber-900">
               <span className="inline-flex items-center gap-1">
                 ← Back to quest map
                 <KidsIcon name="map" size={18} />
               </span>
             </button>
-            <h2 className="mt-4 text-2xl font-black text-orange-800">
+            <h2 className="kids-title-ink mt-4 text-2xl sm:text-3xl">
               <KidsIconTitle icon="target" size={32}>
                 {area.label} Quests
               </KidsIconTitle>
@@ -280,19 +288,19 @@ export default function KidsQuestPage() {
                       setActiveExerciseId(exercise.id);
                       setSpeech(done ? "Let's beat your best!" : "You can do it!");
                     }}
-                    className={`rounded-[1.5rem] border-4 p-5 text-left shadow-[0_6px_0_#fdba74] transition hover:-translate-y-0.5 ${
+                    className={`rounded-[1.5rem] border p-5 text-left shadow-[0_14px_28px_rgba(40,24,8,0.1)] transition hover:-translate-y-0.5 ${
                       done
-                        ? "border-lime-300 bg-gradient-to-br from-lime-50 to-emerald-50"
-                        : "border-orange-200 bg-gradient-to-br from-white to-amber-50"
+                        ? "border-emerald-300/80 bg-gradient-to-br from-emerald-50 to-white"
+                        : "border-amber-200/80 bg-gradient-to-br from-white to-amber-50/80"
                     }`}
                   >
-                    <p className="flex items-center gap-1 text-xs font-black uppercase tracking-wide text-violet-600">
+                    <p className="flex items-center gap-1 text-xs font-bold uppercase tracking-[0.14em] text-indigo-700">
                       <KidsIcon name={done ? "check" : "gamepad"} size={18} />
-                      {done ? "Done" : "Quest"}
+                      {done ? "Complete" : "Quest"}
                     </p>
-                    <h3 className="mt-2 font-black text-orange-950">{exercise.name}</h3>
-                    <p className="mt-1 flex items-center gap-1 text-sm font-bold text-fuchsia-700">
-                      {done ? "Play again!" : "Start quest"}
+                    <h3 className="mt-2 font-bold text-indigo-950">{exercise.name}</h3>
+                    <p className="mt-1 flex items-center gap-1 text-sm font-medium text-amber-800">
+                      {done ? "Play again" : "Start quest"}
                       <KidsIcon name={done ? "sparkle" : "rocket"} size={18} />
                     </p>
                   </button>
@@ -304,7 +312,7 @@ export default function KidsQuestPage() {
 
         {activeExercise && (
           <section className="mx-auto mt-4 max-w-lg">
-            <button type="button" onClick={() => setActiveExerciseId(null)} className="text-sm font-black text-orange-600">
+            <button type="button" onClick={() => setActiveExerciseId(null)} className="text-sm font-bold text-amber-900">
               <span className="inline-flex items-center gap-1">
                 ← Back to quests
                 <KidsIcon name="target" size={18} />
@@ -329,12 +337,12 @@ export default function KidsQuestPage() {
         <div className="mt-8 flex flex-col items-center gap-3">
           <Link
             href="/briefing"
-            className="rounded-full border-2 border-sky-300 bg-white px-8 py-3 text-sm font-black text-sky-800 shadow-[0_4px_0_#7dd3fc]"
+            className="rounded-full border border-amber-300/80 bg-white/85 px-8 py-3 text-sm font-bold text-indigo-900 shadow-[0_8px_20px_rgba(40,24,8,0.1)]"
           >
             Return to adult mode
           </Link>
-          <p className="flex items-center justify-center gap-1 text-xs font-black text-orange-800">
-            Your XP, stars, and heroes are saved!
+          <p className="flex items-center justify-center gap-1 text-xs font-semibold text-amber-900/80">
+            Your XP, stars, and heroes are saved.
             <KidsIcon name="star" size={16} />
           </p>
         </div>

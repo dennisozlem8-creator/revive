@@ -1,19 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
-  <rect width="800" height="400" fill="#0a0520"/>
-  <ellipse cx="400" cy="220" rx="300" ry="120" fill="#1a0a40" stroke="#8b5cf6" stroke-width="2" opacity="0.6"/>
-  <circle cx="200" cy="180" r="40" fill="#14b8a6" opacity="0.5"/>
-  <text x="180" y="192" font-family="system-ui" font-size="28">>�</text>
-  <circle cx="350" cy="150" r="40" fill="#f59e0b" opacity="0.5"/>
-  <text x="330" y="162" font-family="system-ui" font-size="28">>�</text>
-  <circle cx="500" cy="160" r="40" fill="#2563eb" opacity="0.5"/>
-  <text x="480" y="172" font-family="system-ui" font-size="28"><
-</text>
-  <circle cx="620" cy="190" r="40" fill="#8b5cf6" opacity="0.5"/>
-  <text x="600" y="202" font-family="system-ui" font-size="28"></text>
-  <circle cx="400" cy="120" r="35" fill="#fbbf24" opacity="0.5"/>
-  <text x="385" y="132" font-family="system-ui" font-size="24">P</text>
-  <path d="M200 180 Q275 140 350 150" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 4" opacity="0.5"/>
-  <path d="M350 150 Q425 130 500 160" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="6 4" opacity="0.5"/>
-  <path d="M500 160 Q560 170 620 190" stroke="#14b8a6" stroke-width="2" stroke-dasharray="6 4" opacity="0.5"/>
-  <text x="280" y="340" fill="#f59e0b" font-family="system-ui" font-size="24" font-weight="bold">Quest Map  Pick Your Zone!</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 420" fill="none">
+  <defs>
+    <linearGradient id="qm-sky" x1="700" y1="0" x2="700" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4a6fd4"/>
+      <stop offset="0.4" stop-color="#8ec8f0"/>
+      <stop offset="0.72" stop-color="#ffd4a8"/>
+      <stop offset="1" stop-color="#f0b878"/>
+    </linearGradient>
+    <radialGradient id="qm-sun" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(700 140) scale(200)">
+      <stop stop-color="#fff6c8"/>
+      <stop offset="0.4" stop-color="#ffc878"/>
+      <stop offset="1" stop-color="#ffc878" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1400" height="420" fill="url(#qm-sky)"/>
+  <circle cx="700" cy="140" r="200" fill="url(#qm-sun)"/>
+  <circle cx="700" cy="140" r="40" fill="#ffe7b0"/>
+  <g fill="#fff" opacity="0.86">
+    <path d="M90 70c22-26 60-22 78 8 22-12 50 4 46 28H66c-2-20 6-28 24-36z"/>
+    <path d="M1180 64c20-24 56-20 72 8 20-10 46 4 42 26H1158c0-18 6-26 22-34z"/>
+    <path d="M300 48c16-18 44-16 56 6 16-8 36 4 34 22H282c-2-14 6-22 18-28z" opacity="0.7"/>
+  </g>
+  <path d="M0 200c90-36 160-80 260-70 90 8 130 56 230 42 110-14 150-78 270-62 100 14 150 70 260 52 90-14 140-50 200-24 50 22 90 10 180 28v234H0z" fill="#6a88c8" opacity="0.28"/>
+  <path d="M0 270c110-40 200-8 310 10 120 20 180-40 310-18 140 24 210 58 360 22 100-24 170-8 260 18 50 12 100 4 160 12v116H0z" fill="#3d8a62"/>
+  <path d="M0 340c120-18 220 10 340 2 140-10 210-32 360-8 130 22 240 8 380-16 80-12 180 4 280 18 20 4 30 2 40 6v78H0z" fill="#2d6a48"/>
+  <ellipse cx="220" cy="300" rx="88" ry="26" fill="#1a9cc4" opacity="0.4"/>
+  <path d="M160 300c24-40 58-62 106-64 44 2 78 22 100 64-32 6-70 8-100 4-34 4-70 2-106-4z" fill="#5aaa4a"/>
+  <path d="M620 168h80v90H620z" fill="#efe0c4"/>
+  <path d="M638 128h44v40H638z" fill="#ead7b4"/>
+  <path d="M630 114h60l-8 14h-44z" fill="#e8c56b"/>
+  <path d="M660 92l6 22h-12z" fill="#c45a48"/>
+  <path d="M620 168 660 140 700 168H620z" fill="#f7ead0"/>
+  <path d="M980 210c0-60 34-100 78-100 16 42 6 84-20 116-18 6-38 2-58-16z" fill="#1c6a40"/>
+  <path d="M1180 250 1214 190 1248 250z" fill="#245034"/>
+  <g fill="#fff8d0">
+    <path d="M80 140 86 152 74 146h14l-12 8z" opacity="0.85"/>
+    <path d="M1320 150 1326 162 1314 156h14l-12 8z" opacity="0.8"/>
+  </g>
 </svg>

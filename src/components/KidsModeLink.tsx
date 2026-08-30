@@ -34,7 +34,7 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
     return (
       <Link
         href={KIDS_HREF}
-        className={`block overflow-hidden rounded-2xl border-2 border-orange/60 bg-gradient-to-br from-amber-100 via-violet-100 to-sky-100 p-5 text-center ${className}`}
+        className={`block overflow-hidden rounded-[1.75rem] border border-amber-300/80 bg-gradient-to-b from-white via-amber-50 to-sky-50 p-5 text-center shadow-[0_18px_36px_rgba(40,24,8,0.12)] ${className}`}
       >
         <span className="flex justify-center" aria-hidden>
           <KidsIcon name="gamepad" size={56} />
@@ -44,9 +44,9 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
           alt=""
           width={240}
           height={120}
-          className="mx-auto mt-2 h-20 w-auto object-contain sm:h-24"
+          className="mx-auto mt-2 h-24 w-auto object-cover sm:h-28"
         />
-        <p className="mt-3 inline-flex items-center justify-center gap-2 text-lg font-black text-orange-600">
+        <p className="mt-3 inline-flex items-center justify-center gap-2 text-lg font-bold text-amber-900">
           <KidsIcon name="gamepad" size={28} />
           Enter Kids Quest World
         </p>
@@ -55,7 +55,7 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
             ? "Switch to your colorful adventure mode"
             : "Explore quests — sign in later to save progress"}
         </p>
-        <span className="mt-3 inline-flex rounded-full bg-gradient-to-r from-orange to-purple px-5 py-2 text-sm font-bold text-white">
+        <span className="mt-3 inline-flex rounded-full bg-gradient-to-b from-amber-300 to-amber-500 px-5 py-2 text-sm font-bold text-amber-950 shadow">
           Go to Kids Quest →
         </span>
       </Link>

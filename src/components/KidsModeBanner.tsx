@@ -8,23 +8,20 @@ export function KidsModeBanner() {
   const { user } = useAuth();
 
   return (
-    <div
-      className="relative z-40 border-b-2 border-orange/40 bg-gradient-to-r from-orange/30 via-purple/25 to-sky-300/40 px-4 py-2 text-center"
-      role="status"
-    >
-      <p className="inline-flex items-center justify-center gap-2 text-sm font-bold tracking-wide text-orange animate-kids-badge-pulse">
-        <KidsIcon name="gamepad" size={22} />
-        Kids Quest Mode
-        <KidsIcon name="star" size={22} />
+    <div className="kids-ribbon relative z-40 px-4 py-2 text-center" role="status">
+      <p className="inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-wide animate-kids-badge-pulse">
+        <KidsIcon name="gamepad" size={20} />
+        Kids Quest World
+        <KidsIcon name="star" size={20} />
       </p>
       {!user && (
-        <p className="mt-1 inline-flex flex-wrap items-center justify-center gap-1 text-xs text-purple">
+        <p className="mt-1 inline-flex flex-wrap items-center justify-center gap-1 text-xs text-indigo-900/70">
           Playing as guest —{" "}
-          <Link href="/login" className="font-semibold text-brand hover:underline">
+          <Link href="/login" className="font-semibold text-amber-900 hover:underline">
             sign in
           </Link>{" "}
           or{" "}
-          <Link href="/register" className="font-semibold text-brand hover:underline">
+          <Link href="/register" className="font-semibold text-amber-900 hover:underline">
             create an account
           </Link>{" "}
           to save XP and heroes

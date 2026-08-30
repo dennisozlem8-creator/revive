@@ -1,24 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
   <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="800" y2="400" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#fff7ed"/>
-      <stop offset="0.45" stop-color="#fde68a"/>
-      <stop offset="1" stop-color="#c4b5fd"/>
+    <linearGradient id="wh-sky" x1="480" y1="0" x2="480" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3a5cb8"/>
+      <stop offset="0.32" stop-color="#7aa8e8"/>
+      <stop offset="0.62" stop-color="#ffc48a"/>
+      <stop offset="1" stop-color="#ffb070"/>
+    </linearGradient>
+    <radialGradient id="wh-sun" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(480 200) scale(220)">
+      <stop stop-color="#fff3c0"/>
+      <stop offset="0.4" stop-color="#ffc878"/>
+      <stop offset="1" stop-color="#ffc878" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="wh-gold" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#fff0c0"/>
+      <stop offset="1" stop-color="#e0a84a"/>
     </linearGradient>
   </defs>
-  <rect width="800" height="400" rx="28" fill="url(#sky)"/>
-  <circle cx="120" cy="90" r="46" fill="#fbbf24"/>
-  <circle cx="680" cy="70" r="18" fill="#fb7185"/>
-  <circle cx="720" cy="120" r="10" fill="#38bdf8"/>
-  <circle cx="90" cy="180" r="8" fill="#a78bfa"/>
-  <text x="70" y="70" font-size="36">⭐</text>
-  <text x="700" y="180" font-size="32">🌟</text>
-  <text x="400" y="80" text-anchor="middle" font-size="42">🎮</text>
-  <circle cx="250" cy="168" r="40" fill="#fb923c"/>
-  <path d="M250 208v64M222 236h56M214 316l36-44 36 44" stroke="#9a3412" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="228" y="182" font-size="32">🦸</text>
-  <circle cx="550" cy="176" r="40" fill="#a78bfa"/>
-  <path d="M550 216v56M520 268h60M528 324l22-52 22 52" stroke="#5b21b6" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="528" y="190" font-size="32">⚡</text>
-  <text x="400" y="368" text-anchor="middle" fill="#9a3412" font-family="system-ui, sans-serif" font-size="28" font-weight="800">Kids Quest</text>
+  <rect width="960" height="540" rx="36" fill="url(#wh-sky)"/>
+  <circle cx="480" cy="200" r="220" fill="url(#wh-sun)"/>
+  <circle cx="480" cy="188" r="48" fill="#ffe7b0"/>
+  <g fill="#fff" opacity="0.88">
+    <path d="M90 92c24-28 64-26 82 8 24-14 54 4 50 32H66c-4-22 6-32 24-40z"/>
+    <path d="M250 70c18-22 50-20 64 8 18-10 42 4 38 26H232c-2-16 6-26 18-34z" opacity="0.75"/>
+    <path d="M700 78c22-26 60-22 76 10 22-12 50 4 46 30H676c-2-20 6-30 24-40z"/>
+    <path d="M820 120c16-18 44-16 56 6 16-8 36 4 34 22H802c-2-14 6-22 18-28z" opacity="0.7"/>
+  </g>
+  <path d="M0 300c80-40 140-80 230-70 80 8 120 54 210 42 90-12 130-72 230-58 80 12 120 64 220 48 40-6 50-20 70-12v250H0z" fill="#6a88c8" opacity="0.35"/>
+  <path d="M0 360c90-36 160-8 250 8 90 16 140-40 240-22 110 20 160 56 270 24 70-20 120-8 200 16v154H0z" fill="#3d8a62"/>
+  <path d="M0 420c100-20 180 8 280 0 110-8 170-32 280-8 90 20 170 8 280-16 40-8 80 0 120 12v132H0z" fill="#2d6a48"/>
+  <path d="M430 210h100v120H430z" fill="#efe0c4"/>
+  <path d="M418 210h124v14H418z" fill="#d8c09a"/>
+  <path d="M452 150h56v60h-56z" fill="#ead7b4"/>
+  <path d="M444 132h72l-8 18h-56z" fill="url(#wh-gold)"/>
+  <path d="M480 96l8 36h-16z" fill="#c45a48"/>
+  <rect x="476" y="86" width="8" height="14" rx="2" fill="#e8c56b"/>
+  <path d="M430 210 480 168 530 210H430z" fill="#f7ead0"/>
+  <rect x="452" y="228" width="16" height="20" rx="2" fill="#6a88c8"/>
+  <rect x="492" y="228" width="16" height="20" rx="2" fill="#f0c878"/>
+  <rect x="468" y="268" width="24" height="40" rx="3" fill="#6a4830"/>
+  <ellipse cx="180" cy="390" rx="92" ry="28" fill="#1a9cc4" opacity="0.35"/>
+  <path d="M110 390c30-50 70-78 130-80 54 2 96 28 124 80-40 8-90 10-130 4-40 4-84 2-124-4z" fill="#5aaa4a"/>
+  <path d="M148 340c-2-32 12-54 30-54s22 28 12 54c-16 4-28 4-42 0z" fill="#2f7a3a"/>
+  <path d="M168 318c-20-6-34 8-36 20 16 2 28 0 36-20z" fill="#4e9a48"/>
+  <path d="M760 250c0-70 40-120 90-120 20 50 8 100-24 140-22 8-44 4-66-20z" fill="#1c6a40"/>
+  <path d="M790 360c8-80 6-130 0-170 28 14 50 60 56 120-6 40-24 80-56 50z" fill="#5a341c"/>
+  <g fill="#fff8d0">
+    <path d="M80 160 86 172 74 166h14l-12 8z" opacity="0.85"/>
+    <path d="M880 170 886 182 874 176h14l-12 8z" opacity="0.8"/>
+    <path d="M300 120 304 128 296 124h10l-8 6z"/>
+    <path d="M640 110 644 118 636 114h10l-8 6z"/>
+  </g>
+  <g>
+    <circle cx="300" cy="368" r="22" fill="#f0b070"/>
+    <path d="M300 390v36M284 408h32M278 448l22-22 22 22" stroke="#7a4a28" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M286 362c8-10 20-10 28 0" stroke="#5a341c" stroke-width="3" fill="none"/>
+    <circle cx="292" cy="366" r="2" fill="#3a2418"/>
+    <circle cx="308" cy="366" r="2" fill="#3a2418"/>
+    <path d="M294 374c6 6 12 6 18 0" stroke="#c45a48" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="660" cy="372" r="22" fill="#c8b0f0"/>
+    <path d="M660 394v34M644 412h32M638 450l22-22 22 22" stroke="#4a2870" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M646 366c8-10 20-10 28 0" stroke="#3a1860" stroke-width="3" fill="none"/>
+    <circle cx="652" cy="370" r="2" fill="#3a2418"/>
+    <circle cx="668" cy="370" r="2" fill="#3a2418"/>
+    <path d="M654 378c6 6 12 6 18 0" stroke="#7a40b0" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  <path d="M40 500h880" stroke="#e8c56b" stroke-width="4" opacity="0.35" stroke-linecap="round"/>
 </svg>

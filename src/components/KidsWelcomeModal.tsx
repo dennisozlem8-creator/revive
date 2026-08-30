@@ -16,49 +16,51 @@ export function KidsWelcomeModal({ onDismiss }: KidsWelcomeModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-purple/40 p-6 animate-kids-enter"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0c1840]/55 p-5 backdrop-blur-md animate-kids-enter"
       role="dialog"
       aria-labelledby="kids-welcome-title"
     >
-      <div className="relative max-w-md text-center">
-        <div className="relative overflow-hidden rounded-3xl border-4 border-orange-400 bg-gradient-to-b from-amber-100 via-white to-violet-100 p-8 shadow-[0_14px_0_#fb923c]">
-          <div className="flex items-center justify-center gap-2" aria-hidden>
-            <KidsIcon name="gamepad" size={48} />
-            <KidsIcon name="star" size={48} />
-            <KidsIcon name="trophy" size={48} />
-            <KidsIcon name="hero" size={48} />
+      <div className="relative w-full max-w-lg text-center">
+        <div className="kids-glass relative overflow-hidden p-0">
+          <div className="relative">
+            <Image
+              src="/kids/welcome-hero.svg"
+              alt=""
+              width={640}
+              height={360}
+              className="h-44 w-full object-cover sm:h-56"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#fff8ea] via-transparent to-transparent" />
+            <div className="absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-2" aria-hidden>
+              <KidsIcon name="star" size={28} />
+              <KidsIcon name="gamepad" size={32} />
+              <KidsIcon name="trophy" size={28} />
+            </div>
           </div>
-          <Image
-            src="/kids/welcome-hero.svg"
-            alt=""
-            width={320}
-            height={180}
-            className="mx-auto mt-3 h-36 w-auto object-contain"
-            priority
-          />
-          <p className="mt-4 inline-flex items-center gap-1 rounded-full bg-fuchsia-200 px-4 py-1 text-xs font-black uppercase tracking-widest text-fuchsia-800">
-            <KidsIcon name="party" size={16} />
-            Mode activated
-          </p>
-          <h2
-            id="kids-welcome-title"
-            className="mt-3 flex items-center justify-center gap-2 text-3xl font-black text-orange-600"
-          >
-            <KidsIcon name="map" size={36} />
-            Welcome to Kids Quest!
-          </h2>
-          <p className="mt-3 flex items-center justify-center gap-1 font-bold text-violet-800">
-            Complete quests, unlock heroes, and earn XP — all while doing your exercises!
-            <KidsIcon name="sparkle" size={20} />
-          </p>
-          <button
-            type="button"
-            onClick={handleEnter}
-            className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 via-fuchsia-500 to-sky-500 py-4 text-lg font-black text-white shadow-[0_6px_0_#c2410c]"
-          >
-            Let&apos;s go!
-            <KidsIcon name="rocket" size={28} />
-          </button>
+          <div className="px-7 pb-8 pt-2">
+            <p className="inline-flex items-center gap-1 rounded-full border border-amber-300/80 bg-amber-50 px-4 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-amber-800">
+              <KidsIcon name="party" size={16} />
+              Adventure unlocked
+            </p>
+            <h2
+              id="kids-welcome-title"
+              className="kids-title-ink mt-3 text-3xl sm:text-4xl"
+            >
+              Welcome to Kids Quest
+            </h2>
+            <p className="mt-3 font-medium text-indigo-900/80">
+              Cross the kingdoms, unlock heroes, and earn XP — all while doing your exercises.
+            </p>
+            <button
+              type="button"
+              onClick={handleEnter}
+              className="kids-cta mt-7 inline-flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-lg"
+            >
+              Begin the journey
+              <KidsIcon name="rocket" size={26} />
+            </button>
+          </div>
         </div>
       </div>
     </div>

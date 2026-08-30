@@ -29,12 +29,12 @@ function CharacterCard({
       type="button"
       disabled={!unlocked}
       onClick={onSelect}
-      className={`relative flex flex-col items-center rounded-2xl border-4 p-4 text-center transition ${
+      className={`relative flex flex-col items-center rounded-[1.35rem] border p-4 text-center transition ${
         unlocked
           ? selected
-            ? "border-orange-400 bg-gradient-to-br from-amber-100 to-orange-50 shadow-[0_6px_0_#fb923c]"
-            : "border-violet-200 bg-gradient-to-br from-white to-sky-50 hover:border-fuchsia-300"
-          : "cursor-default border-slate-200 bg-slate-50"
+            ? "border-amber-400 bg-gradient-to-b from-amber-50 to-white shadow-[0_0_0_1px_rgba(232,197,107,0.9),0_12px_28px_rgba(180,100,20,0.18)]"
+            : "border-amber-200/70 bg-gradient-to-b from-white/90 to-sky-50/80 hover:border-amber-300 hover:shadow-[0_10px_24px_rgba(40,24,8,0.1)]"
+          : "cursor-default border-slate-200/80 bg-white/50"
       } ${compact ? "p-3" : "p-4"}`}
     >
       <span
@@ -52,7 +52,7 @@ function CharacterCard({
         <p className="mt-1 text-xs text-muted/80">{character.unlockHint}</p>
       )}
       {selected && unlocked && (
-        <span className="absolute -right-1 -top-1 inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-2 py-0.5 text-[10px] font-black text-white">
+        <span className="absolute -right-1 -top-1 inline-flex items-center gap-0.5 rounded-full bg-gradient-to-b from-amber-300 to-amber-500 px-2 py-0.5 text-[10px] font-bold text-amber-950 shadow">
           <KidsIcon name="star" size={14} />
           Active
         </span>
@@ -72,24 +72,24 @@ export function CharacterGallery({
 
   return (
     <section className="mt-6">
-      <div className="relative overflow-hidden rounded-[1.6rem] border-4 border-amber-300">
+      <div className="relative overflow-hidden rounded-[1.75rem] border border-amber-200/60 shadow-[0_18px_36px_rgba(40,24,8,0.16)]">
         <Image
           src="/kids/hero-collection.svg"
           alt=""
           width={800}
           height={200}
-          className="h-16 w-full object-cover sm:h-20"
+          className="h-28 w-full object-cover sm:h-32"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-orange-900/70 to-transparent" />
-        <div className="absolute bottom-3 left-4">
-          <h2 className="text-2xl font-black text-white drop-shadow">
-            <KidsIconTitle icon="hero" size={32} className="text-white">
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1a2848]/80 via-[#1a2848]/20 to-transparent" />
+        <div className="absolute bottom-4 left-5">
+          <h2 className="text-2xl font-bold tracking-tight text-amber-50 drop-shadow-md">
+            <KidsIconTitle icon="hero" size={32} className="text-amber-50">
               Hero Collection
             </KidsIconTitle>
           </h2>
-          <p className="text-sm font-bold text-amber-100">Unlock heroes by completing quests</p>
+          <p className="text-sm font-medium text-amber-100/90">Unlock heroes by completing quests</p>
         </div>
-        <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1 text-sm font-black text-orange-600 shadow">
+        <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full border border-amber-200/70 bg-white/90 px-3 py-1 text-sm font-bold text-amber-900 shadow">
           <KidsIcon name="star" size={16} /> {unlockedCount}/{total}
         </span>
       </div>

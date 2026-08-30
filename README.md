@@ -5,6 +5,8 @@ Physical therapy web app for guided recovery, sensor ROM tests, Kids Quest, and 
 Live site: [https://www.revivemotion.ai](https://www.revivemotion.ai)  
 Source: [https://github.com/dennisozlem8-creator/revive](https://github.com/dennisozlem8-creator/revive)
 
+Kids Quest is a storybook adventure world for exercises, with original kingdoms and hero art. Adult clinic pages stay on the light clinic theme.
+
 ## Photo Goniometer
 
 Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo tab), or today’s briefing.

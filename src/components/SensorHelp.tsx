@@ -14,10 +14,10 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
 
   return (
     <div
-      className={`rounded-xl border ${
+      className={`${
         isKids
-          ? "border-4 border-violet-200 bg-gradient-to-br from-violet-50 to-sky-50"
-          : "border-[var(--border)] bg-surface"
+          ? "kids-glass"
+          : "rounded-xl border border-[var(--border)] bg-surface"
       } ${variant === "compact" ? "p-3" : "p-4"}`}
     >
       <button
@@ -56,7 +56,7 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
             cannot pair Bluetooth straps — use Chrome on Android or Chrome/Edge on a computer.
           </p>
           {isKids && (
-            <p className="flex items-start gap-2 font-bold text-orange-700">
+            <p className="flex items-start gap-2 font-semibold text-amber-900">
               <KidsIcon name="sparkle" size={18} className="mt-0.5" />
               <span>
                 In quest mode, move along with the on-screen exercise — reps count automatically

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { getCharacterById } from "@/lib/kids-characters";
-import { KidsIcon } from "@/components/KidsIcon";
+import { KidsIcon } from "./KidsIcon";
 
 type CharacterUnlockCelebrationProps = {
   characterIds: string[];
@@ -25,26 +25,26 @@ export function CharacterUnlockCelebration({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-fuchsia-900/40 p-6 backdrop-blur-sm animate-fade-up"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0c1840]/60 p-6 backdrop-blur-md animate-fade-up"
       onClick={onDismiss}
       role="dialog"
       aria-label="New hero unlocked"
     >
       <div
-        className="max-w-sm rounded-[2rem] border-4 border-amber-300 bg-gradient-to-br from-amber-50 via-white to-fuchsia-50 p-8 text-center shadow-[0_16px_0_#f59e0b]"
+        className="kids-glass max-w-sm p-8 text-center"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="flex items-center justify-center gap-2 text-sm font-black uppercase tracking-wide text-orange-600">
-          <KidsIcon name="party" size={24} />
-          New character!
+        <p className="flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-amber-800">
+          <KidsIcon name="party" size={22} />
+          New hero
         </p>
-        <span className="mt-4 flex justify-center">
-          <KidsIcon name={character.avatar} size={96} />
+        <span className="mt-5 flex justify-center drop-shadow-[0_8px_18px_rgba(180,100,20,0.35)]">
+          <KidsIcon name={character.avatar} size={104} />
         </span>
-        <h3 className="mt-4 text-2xl font-black text-orange-800">{character.name}</h3>
-        <p className="mt-1 font-bold text-violet-700">{character.trait}</p>
+        <h3 className="kids-title-ink mt-4 text-3xl">{character.name}</h3>
+        <p className="mt-1 font-medium text-indigo-900/75">{character.trait}</p>
         {characterIds.length > 1 && (
-          <p className="mt-2 flex items-center justify-center gap-1 text-sm font-black text-fuchsia-700">
+          <p className="mt-2 flex items-center justify-center gap-1 text-sm font-semibold text-amber-800">
             +{characterIds.length - 1} more unlocked!
             <KidsIcon name="star" size={18} />
           </p>
@@ -52,11 +52,11 @@ export function CharacterUnlockCelebration({
         <button
           type="button"
           onClick={onDismiss}
-          className="mt-6 rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-8 py-3 text-sm font-black text-white shadow-[0_5px_0_#c2410c]"
+          className="kids-cta mt-6 rounded-full px-8 py-3 text-sm"
         >
           <span className="inline-flex items-center justify-center gap-2">
-            Awesome!
-            <KidsIcon name="rocket" size={22} />
+            Awesome
+            <KidsIcon name="rocket" size={20} />
           </span>
         </button>
       </div>

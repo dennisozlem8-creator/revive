@@ -106,15 +106,15 @@ export function QuestGame({
   }
 
   return (
-    <div className="overflow-hidden rounded-[2rem] border-4 border-orange-300 rm-glow-kids p-6 shadow-[0_10px_0_#fb923c]">
+    <div className="kids-glass overflow-hidden p-6">
       <div className="flex items-start gap-4">
         <KidsIcon name={avatarIcon} size={72} />
-        <div className="relative flex-1 rounded-2xl border-2 border-orange-300 bg-white px-4 py-3 text-orange-950">
-          <p className="text-sm font-black">{speech()}</p>
+        <div className="relative flex-1 rounded-2xl border border-amber-200/80 bg-white/85 px-4 py-3 text-indigo-950">
+          <p className="text-sm font-semibold">{speech()}</p>
         </div>
       </div>
 
-      <div className="mt-5 flex items-center gap-4 rounded-xl border border-purple/30 bg-surface/80 p-4">
+      <div className="mt-5 flex items-center gap-4 rounded-2xl border border-amber-200/70 bg-white/70 p-4">
         <div
           className={`flex h-14 w-14 items-center justify-center rounded-xl ${
             connected ? "bg-brand/25" : connecting ? "bg-brand/15" : "bg-surface-elevated"
@@ -143,7 +143,7 @@ export function QuestGame({
           </svg>
         </div>
         <div className="flex-1">
-          <p className="font-black text-orange-800">
+          <p className="font-bold text-indigo-950">
             {connecting
               ? "Connecting sensor…"
               : connected
@@ -167,7 +167,7 @@ export function QuestGame({
             type="button"
             disabled={connecting}
             onClick={handleConnect}
-            className="rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow disabled:opacity-60"
+            className="kids-cta-magic rounded-full px-4 py-2 text-sm disabled:opacity-60"
           >
             {connecting ? (
               <span className="inline-flex items-center gap-2">
@@ -187,7 +187,7 @@ export function QuestGame({
         </div>
       )}
 
-      <div className="relative mx-auto mt-5 flex h-44 w-full max-w-sm items-center justify-center overflow-hidden rounded-2xl border border-purple/30 bg-surface-elevated/80">
+      <div className="relative mx-auto mt-5 flex h-48 w-full max-w-sm items-center justify-center overflow-hidden rounded-[1.5rem] border border-amber-200/70 bg-[#1a2848]/8 shadow-inner">
         <Image
           src={kidsImage}
           alt={exercise.name}
@@ -202,7 +202,7 @@ export function QuestGame({
         )}
       </div>
 
-      <h3 className="mt-4 text-center text-2xl font-black text-orange-600">
+      <h3 className="kids-title-ink mt-4 text-center text-2xl">
         <KidsIconTitle icon="target" size={32} className="justify-center">
           {media.kidsQuest.title}
         </KidsIconTitle>
@@ -264,16 +264,16 @@ export function QuestGame({
       )}
 
       {!connected ? null : done ? (
-        <div className="mt-6 rounded-2xl border border-correct/40 bg-correct/15 p-5 text-center">
+        <div className="mt-6 rounded-2xl border border-emerald-300/70 bg-emerald-50/80 p-5 text-center">
           <p className="text-4xl">{media.kidsQuest.reward}</p>
-          <p className="mt-2 inline-flex items-center justify-center gap-2 text-lg font-black text-lime-700">
+          <p className="mt-2 inline-flex items-center justify-center gap-2 text-lg font-bold text-emerald-800">
             <KidsIcon name="party" size={24} />
             Quest complete! +50 XP
           </p>
           <button
             type="button"
             onClick={onComplete}
-            className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-fuchsia-500 px-6 py-3 text-sm font-black text-white shadow-[0_4px_0_#c2410c]"
+            className="mt-4 inline-flex items-center justify-center gap-2 kids-cta rounded-full px-6 py-3 text-sm"
           >
             Continue
             <KidsIcon name="rocket" size={20} />
@@ -287,7 +287,7 @@ export function QuestGame({
             lastRepTickRef.current = -99;
             setRecording(true);
           }}
-          className="mt-6 w-full rounded-2xl bg-gradient-to-r from-orange-500 via-fuchsia-500 to-sky-500 py-5 text-lg font-black text-white shadow-[0_6px_0_#c2410c]"
+          className="kids-cta mt-6 w-full rounded-2xl py-5 text-lg"
         >
           <span className="inline-flex items-center justify-center gap-2">
             Start sensor quest

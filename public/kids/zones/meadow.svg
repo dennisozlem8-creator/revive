@@ -1,6 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
-  <rect width="400" height="300" fill="#86efac"/>
-  <ellipse cx="200" cy="240" rx="180" ry="46" fill="#4ade80"/>
-  <circle cx="80" cy="70" r="22" fill="#facc15"/>
-  <circle cx="320" cy="90" r="16" fill="#fb7185"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" fill="none">
+  <defs>
+    <linearGradient id="mm-sky" x1="400" y1="0" x2="400" y2="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7ec8ff"/>
+      <stop offset="0.45" stop-color="#c8e8ff"/>
+      <stop offset="0.78" stop-color="#ffe7c0"/>
+      <stop offset="1" stop-color="#f7d48a"/>
+    </linearGradient>
+    <radialGradient id="mm-sun" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(120 90) scale(100)">
+      <stop stop-color="#fff6c8"/>
+      <stop offset="0.45" stop-color="#ffd56a"/>
+      <stop offset="1" stop-color="#ffd56a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mm-hill" x1="400" y1="240" x2="400" y2="480" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b6e86a"/>
+      <stop offset="1" stop-color="#4e9a48"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="480" fill="url(#mm-sky)"/>
+  <circle cx="120" cy="90" r="100" fill="url(#mm-sun)"/>
+  <circle cx="120" cy="90" r="34" fill="#ffe7a0"/>
+  <path fill="none" stroke="#f0a0c8" stroke-width="10" stroke-linecap="round" opacity="0.7" d="M430 150c40-50 90-70 140-60"/>
+  <path fill="none" stroke="#f0d56a" stroke-width="10" stroke-linecap="round" opacity="0.75" d="M430 150c50-40 110-50 170-28"/>
+  <path fill="none" stroke="#7ad4a8" stroke-width="10" stroke-linecap="round" opacity="0.7" d="M430 150c46-20 110-18 170 10"/>
+  <path fill="none" stroke="#7eb8f0" stroke-width="10" stroke-linecap="round" opacity="0.7" d="M430 150c30 8 90 28 150 30"/>
+  <path fill="none" stroke="#b8a0f0" stroke-width="10" stroke-linecap="round" opacity="0.55" d="M430 150c18 24 70 50 140 56"/>
+  <path d="M0 250c80-50 150-30 230-8 70 20 110-40 190-28 90 14 130 60 220 30 70-24 110-8 160 16v220H0z" fill="#8ecf6a" opacity="0.55"/>
+  <path d="M0 300c90-40 160-8 240 10 90 20 130-36 220-16 100 22 150 50 250 18 40-12 70-4 90 10v158H0z" fill="url(#mm-hill)"/>
+  <path d="M0 370c80-20 160 8 250 0 100-8 150-28 250-6 90 20 160 8 250-16 20-6 40-2 50 8v124H0z" fill="#3d8244"/>
+  <path d="M560 290h70v70H560z" fill="#f4e2c0"/>
+  <path d="M548 290h94l-18-28H566z" fill="#c45a48"/>
+  <rect x="582" y="318" width="18" height="22" rx="2" fill="#6a88c8"/>
+  <rect x="608" y="332" width="14" height="28" rx="2" fill="#7a4a28"/>
+  <path d="M640 360 656 318 672 360z" fill="#2d6240"/>
+  <path d="M80 400 96 348 112 400z" fill="#2d6240"/>
+  <path d="M140 410 160 350 180 410z" fill="#3d8244"/>
+  <g>
+    <circle cx="200" cy="350" r="6" fill="#ff6aa8"/>
+    <circle cx="230" cy="368" r="5" fill="#ffd56a"/>
+    <circle cx="170" cy="372" r="5" fill="#c070ff"/>
+    <circle cx="320" cy="340" r="6" fill="#ff7a4a"/>
+    <circle cx="350" cy="360" r="5" fill="#fff0f8"/>
+    <circle cx="300" cy="372" r="5" fill="#7ad4ff"/>
+    <circle cx="430" cy="350" r="6" fill="#ff6aa8"/>
+    <circle cx="460" cy="372" r="5" fill="#ffd56a"/>
+    <circle cx="490" cy="348" r="5" fill="#a0ff88"/>
+    <circle cx="720" cy="360" r="6" fill="#ff6aa8"/>
+    <circle cx="750" cy="380" r="5" fill="#c070ff"/>
+    <circle cx="690" cy="384" r="5" fill="#ffd56a"/>
+  </g>
+  <g fill="#fff" opacity="0.9">
+    <path d="M220 70c16-20 44-18 56 6 16-10 36 2 34 22H204c0-14 6-22 16-28z"/>
+    <path d="M340 54c14-16 40-14 50 6 14-8 32 4 30 20H324c-2-12 6-20 16-26z" opacity="0.75"/>
+    <path d="M680 80c18-22 48-18 62 8 18-10 40 4 36 24H660c0-16 6-24 20-32z"/>
+  </g>
+  <g fill="#fff8d0">
+    <path d="M260 210c10-4 16 6 10 14-10 2-16-6-10-14z"/>
+    <path d="M280 206c8 4 4 12-4 12-8-2-6-12 4-12z" opacity="0.8"/>
+    <path d="M620 200c10-4 16 6 10 14-10 2-16-6-10-14z"/>
+    <path d="M640 196c8 4 4 12-4 12-8-2-6-12 4-12z" opacity="0.8"/>
+  </g>
 </svg>
