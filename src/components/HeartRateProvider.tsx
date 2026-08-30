@@ -35,6 +35,7 @@ type HeartRateContextValue = {
   history: number[];
   rawHistory: number[];
   error: string;
+  serialLog: string[];
   recording: boolean;
   recordCount: number;
   connect: (acceptAll?: boolean) => Promise<boolean>;
@@ -57,6 +58,7 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
   const [history, setHistory] = useState<number[]>(() => Array(HISTORY).fill(0));
   const [rawHistory, setRawHistory] = useState<number[]>(() => Array(HISTORY).fill(0));
   const [error, setError] = useState("");
+  const [serialLog, setSerialLog] = useState<string[]>([]);
   const [recording, setRecording] = useState(false);
   const [recordCount, setRecordCount] = useState(0);
   const connectionRef = useRef<HeartRateConnection | null>(null);
@@ -171,6 +173,9 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
         port,
         onBpm: ingestBpm,
         onRaw: ingestRaw,
+        onLine: (line) => {
+          setSerialLog((prev) => [...prev.slice(-7), line]);
+        },
         onErrorLine: (message) => {
           setError(message);
         },
@@ -184,6 +189,7 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
       setConnected(true);
       setHistory(Array(HISTORY).fill(0));
       setRawHistory(Array(HISTORY).fill(0));
+      setSerialLog([]);
       return true;
     } catch (err) {
       const name = err instanceof DOMException ? err.name : "";
@@ -261,6 +267,7 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
       history,
       rawHistory,
       error,
+      serialLog,
       recording,
       recordCount,
       connect,
@@ -280,6 +287,7 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
       history,
       rawHistory,
       error,
+      serialLog,
       recording,
       recordCount,
       connect,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { heartRateBrowserHelp, requestUsbHeartPort } from "@/lib/heart-sensor";
+import { heartRateBrowserHelp, requestUsbHeartPort, usbBlockReason } from "@/lib/heart-sensor";
 import { useAuth } from "./AuthProvider";
 import { useHeartRate } from "./HeartRateProvider";
 
@@ -23,6 +23,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
     history,
     rawHistory,
     error,
+    serialLog,
     recording,
     recordCount,
     connect,
@@ -32,7 +33,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
     stopAndSave,
   } = useHeartRate();
   const [saveMessage, setSaveMessage] = useState("");
-
+  const blocked = usbBlockReason();
   const live = connected && bpm != null && bpm > 0;
   const chart = live ? history.map((v) => (v > 0 ? v : bpm ?? 0)) : history;
   const canConnect = bluetoothSupported || usbSupported;
@@ -113,6 +114,18 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
               );
             })}
           </div>
+        </div>
+      )}
+
+      {blocked && !connected && (
+        <p className="mt-3 rounded-xl bg-alert/10 px-3 py-3 text-sm font-medium text-alert">{blocked}</p>
+      )}
+
+      {serialLog.length > 0 && (
+        <div className="mt-3 rounded-xl bg-background px-3 py-2 font-mono text-xs text-muted">
+          {serialLog.map((line, i) => (
+            <p key={`${line}-${i}`}>{line}</p>
+          ))}
         </div>
       )}
 

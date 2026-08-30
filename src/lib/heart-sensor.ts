@@ -79,6 +79,7 @@ type ConnectOptions = {
   onBpm: (bpm: number) => void;
   onRaw?: (raw: number) => void;
   onErrorLine?: (message: string) => void;
+  onLine?: (line: string) => void;
   onDisconnect: () => void;
 };
 
@@ -163,9 +164,7 @@ export async function connectHeartRateSensor(
 
 export function requestUsbHeartPort() {
   if (!navigator.serial?.requestPort) {
-    throw new Error(
-      "USB will not work on a phone — including Chrome on iPhone. Plug the Elegoo into a Windows or Mac computer, open Google Chrome or Edge on that computer, go to https://www.revivemotion.ai/heart, then tap Connect with USB. Do not press anything in Arduino IDE for this step."
-    );
+    throw new Error(usbBlockReason());
   }
   return navigator.serial.requestPort();
 }
@@ -214,8 +213,10 @@ export async function connectWiredHeartSensor(
         buffer += decoder.decode(result.value, { stream: true });
         let nl = buffer.indexOf("\n");
         while (nl >= 0) {
-          const sample = parseSerialHeartLine(buffer.slice(0, nl));
+          const line = buffer.slice(0, nl).replace(/\r$/, "").trim();
           buffer = buffer.slice(nl + 1);
+          if (line) options.onLine?.(line);
+          const sample = parseSerialHeartLine(line);
           if (sample?.bpm != null) options.onBpm(sample.bpm);
           if (sample?.raw != null) options.onRaw?.(sample.raw);
           if (sample?.error) options.onErrorLine?.(sample.error);
@@ -262,15 +263,30 @@ export async function connectWiredHeartSensor(
   };
 }
 
+export function usbBlockReason() {
+  if (typeof navigator === "undefined") return "";
+  if (usbHeartRateSupported()) return "";
+  const ua = navigator.userAgent;
+  const iPhone = /iPhone|iPad|iPod/i.test(ua);
+  const safari = /Safari/i.test(ua) && !/Chrome|CriOS|Edg|Firefox|Chromium/i.test(ua);
+  if (iPhone) {
+    return "You are on a phone. The Elegoo USB cable cannot connect here. Use the Mac or Windows computer where Arduino IDE is installed, and open Google Chrome — not this phone.";
+  }
+  if (safari) {
+    return "You are in Safari. Safari cannot talk to USB. On this same computer, open Google Chrome (the round red-yellow-green icon), go to https://www.revivemotion.ai/heart, then tap Connect with USB.";
+  }
+  return "This browser cannot use USB. Open Google Chrome or Microsoft Edge on the computer the Elegoo is plugged into.";
+}
+
 export function heartRateBrowserHelp() {
   if (typeof navigator === "undefined") return "";
-  const usb = usbHeartRateSupported();
-  const ble = bluetoothHeartRateSupported();
-  if (usb) {
-    return "Build a wired sensor with an Arduino, then plug the USB cable in and tap Connect with USB. A Bluetooth strap also works.";
+  const blocked = usbBlockReason();
+  if (blocked) return blocked;
+  if (usbHeartRateSupported()) {
+    return "Close Serial Monitor in Arduino IDE. Tap Connect with USB, then pick Arduino Uno in the Chrome list. Rest a finger on the MAX30102 lights.";
   }
-  if (ble) {
+  if (bluetoothHeartRateSupported()) {
     return "Put the strap on, wait a few seconds, then tap Connect. A Chrome window will ask which device to use.";
   }
-  return "USB needs a computer. Phone Chrome and Safari cannot talk to the Elegoo. Plug the board into a Windows or Mac PC, then open Chrome or Edge on that computer.";
+  return usbBlockReason();
 }

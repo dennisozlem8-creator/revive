@@ -1,25 +1,7 @@
 /*
   Revive Motion — Elegoo Uno R3 + MAX30102
-  ---------------------------------------
-  Wires (MAX30102 module  ->  Elegoo Uno R3):
-
-    VIN or VCC  ->  5V     (if your board only says 3.3V, use 3.3V instead)
-    GND         ->  GND
-    SCL         ->  A5     (or the pin labeled SCL)
-    SDA         ->  A4     (or the pin labeled SDA)
-    INT         ->  leave empty
-    IRD / RD    ->  leave empty
-
-  Arduino IDE (needed once):
-    1. Install Arduino IDE from arduino.cc
-    2. Open this file
-    3. Tools -> Board -> Arduino Uno
-    4. Tools -> Port -> the COM port for the Elegoo
-    5. Click Upload
-    6. CLOSE the Serial Monitor (Chrome cannot share the USB port)
-    7. In Revive Motion, tap Connect with USB
-
-  Put a fingertip on the MAX30102 LEDs and hold still.
+  Wires: VIN->5V  GND->GND  SCL->A5  SDA->A4
+  After Upload: close Serial Monitor, then Chrome -> Connect with USB
 */
 
 #include <Wire.h>
@@ -28,7 +10,7 @@ const uint8_t MAX_ADDR = 0x57;
 const int MIN_BPM = 40;
 const int MAX_BPM = 180;
 const unsigned long MIN_BEAT_MS = 320;
-const uint32_t FINGER_MIN_IR = 20000;
+const uint32_t FINGER_MIN_IR = 2000;
 
 uint32_t lastIr = 0;
 uint32_t recentMax = 0;
@@ -69,10 +51,9 @@ uint32_t readIr() {
   return ir;
 }
 
-bool sensorFound() {
+bool sensorAck() {
   Wire.beginTransmission(MAX_ADDR);
-  if (Wire.endTransmission() != 0) return false;
-  return readReg(0xFF) == 0x15;
+  return Wire.endTransmission() == 0;
 }
 
 void setupSensor() {
@@ -92,14 +73,13 @@ void setup() {
   Serial.begin(115200);
   Wire.begin();
   delay(50);
-  if (!sensorFound()) {
-    while (true) {
-      Serial.println("ERR MAX30102 not found. Check VIN->5V GND->GND SCL->A5 SDA->A4");
-      delay(2000);
-    }
+  Serial.print("ID ");
+  Serial.println(readReg(0xFF));
+  if (!sensorAck()) {
+    Serial.println("ERR no I2C. Check VIN GND SCL->A5 SDA->A4");
   }
   setupSensor();
-  Serial.println("MAX30102 ready");
+  Serial.println("MAX30102 start");
 }
 
 void loop() {
@@ -130,7 +110,7 @@ void loop() {
     lastIr <= threshold &&
     ir > threshold &&
     (now - lastBeatMs) > MIN_BEAT_MS &&
-    span > 400;
+    span > 200;
 
   if (crossed) {
     if (lastBeatMs > 0) {

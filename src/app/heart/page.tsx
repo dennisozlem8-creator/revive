@@ -33,8 +33,8 @@ export default function HeartSensorPage() {
         <p className="rm-label">Wired sensor</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Heart sensor</h1>
         <p className="mt-2 text-body">
-          For an Elegoo Uno R3 and a MAX30102, you need Arduino IDE once to put the program on the
-          board. After that, a USB cable and Chrome or Edge are enough.
+          For an Elegoo Uno R3 and a MAX30102, Arduino IDE is only for Upload. Connecting the app
+          happens in Google Chrome on the same computer — not Safari, not your phone.
         </p>
 
         <section className="rm-card mt-6 p-5">
@@ -114,7 +114,7 @@ export default function HeartSensorPage() {
         <section className="rm-card mt-4 border-alert/30 p-5">
           <h2 className="font-semibold">If Connect with USB does nothing</h2>
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>Use a computer, not an iPhone. Open Google Chrome or Edge (not Safari).</li>
+            <li>On a Mac, open Google Chrome. Do not use Safari. Safari cannot talk to USB.</li>
             <li>Plug the Elegoo USB cable into that same computer.</li>
             <li>Close Arduino Serial Monitor. Chrome cannot share the port with Arduino IDE.</li>
             <li>Tap Connect with USB. A Chrome window must open. Click the Arduino / USB Serial Device, then Connect.</li>
