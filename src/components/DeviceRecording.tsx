@@ -11,6 +11,8 @@ import {
 import { DeviceLineChart } from "./DeviceLineChart";
 import { PeakBarChart, TestLiveCharts } from "./TestLiveCharts";
 import { SensorHelp } from "./SensorHelp";
+import { HeartRatePanel } from "./HeartRatePanel";
+import { useHeartRate } from "./HeartRateProvider";
 
 type DeviceRecordingProps = {
   tests: RomTest[];
@@ -19,6 +21,7 @@ type DeviceRecordingProps = {
 };
 
 export function DeviceRecording({ tests, areaId, onComplete }: DeviceRecordingProps) {
+  const heart = useHeartRate();
   const [connected, setConnected] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -49,11 +52,15 @@ export function DeviceRecording({ tests, areaId, onComplete }: DeviceRecordingPr
     <section className="rounded-2xl border border-[var(--border)] bg-surface p-8">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <div className="flex-1">
-          <h2 className="text-2xl font-semibold">Revive Motion sensor</h2>
+          <h2 className="text-2xl font-semibold">Sensors</h2>
           <p className="mt-2 text-muted">
-            Wear your device on the affected area. The sensor records range of
-            motion in real time during each movement.
+            Pair a Bluetooth heart-rate strap for live BPM. Joint ROM recording below is still a
+            demo until a motion sensor is connected.
           </p>
+
+          <div className="mt-6">
+            <HeartRatePanel compact />
+          </div>
 
           <div className="mt-6 flex items-center gap-4 rounded-xl border border-[var(--border)] bg-background p-5">
             <div
@@ -142,6 +149,18 @@ export function DeviceRecording({ tests, areaId, onComplete }: DeviceRecordingPr
         </div>
 
         <div className="w-full space-y-3 lg:max-w-md">
+          {heart.connected && (
+            <TestLiveCharts
+              series={[
+                {
+                  label: "Heart rate (live)",
+                  values: heart.history,
+                  unit: " bpm",
+                  max: 160,
+                },
+              ]}
+            />
+          )}
           <DeviceLineChart
             readings={readings}
             activeMovementId={activeTest?.id}

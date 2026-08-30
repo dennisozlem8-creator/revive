@@ -15,11 +15,14 @@ import { getFeedbackState } from "@/lib/feedback";
 import { areaIdForInjury, getSessionRecommendations } from "@/lib/session-results";
 import { t } from "@/lib/i18n";
 import { PeakBarChart, TestLiveCharts } from "@/components/TestLiveCharts";
+import { HeartRatePanel } from "@/components/HeartRatePanel";
+import { useHeartRate } from "@/components/HeartRateProvider";
 
 type Phase = "recording" | "exercises" | "report";
 
 export default function SessionPage() {
   const { user, saveExerciseHistory, getPreviousExerciseIds } = useAuth();
+  const heart = useHeartRate();
   const router = useRouter();
   const [phase, setPhase] = useState<Phase>("recording");
   const [angle, setAngle] = useState(0);
@@ -57,16 +60,22 @@ export default function SessionPage() {
       const next = Math.min(target + 5, Math.round(40 + Math.random() * (target - 20)));
       setAngle(next);
       setEmg(Math.round(35 + Math.random() * 40));
-      setHr(Math.round(68 + Math.random() * 18));
+      if (heart.connected && heart.bpm) {
+        setHr(heart.bpm);
+        setHrWave((prev) => [...prev.slice(1), heart.bpm as number]);
+      } else {
+        const fake = Math.round(68 + Math.random() * 18);
+        setHr(fake);
+        setHrWave((prev) => [...prev.slice(1), fake]);
+      }
       setWave((prev) => [...prev.slice(1), Math.max(12, Math.sin(next * 0.08) * 40 + 50)]);
       setEmgWave((prev) => [...prev.slice(1), Math.round(35 + Math.random() * 40)]);
-      setHrWave((prev) => [...prev.slice(1), Math.round(68 + Math.random() * 18)]);
       if (next >= target * 0.88) {
         setReps((r) => Math.min(targetReps, r + (Math.random() > 0.7 ? 1 : 0)));
       }
     }, 800);
     return () => clearInterval(interval);
-  }, [recording, target, targetReps]);
+  }, [recording, target, targetReps, heart.connected, heart.bpm]);
 
   useEffect(() => {
     if (phase !== "report" || !user || !summary || exercises.length === 0 || savedRef.current) {
@@ -144,13 +153,20 @@ export default function SessionPage() {
         />
 
         <div className="mt-6 space-y-4">
+          <HeartRatePanel />
+
           <FeedbackBox state={feedback} angle={angle} target={target} locale={locale} />
 
           <TestLiveCharts
             series={[
               { label: "Live angle", values: wave, unit: "°", max: 100 },
               { label: "Muscle effort (EMG)", values: emgWave, max: 100 },
-              { label: "Heart rate", values: hrWave, unit: " bpm", max: 120 },
+              {
+                label: heart.connected ? "Heart rate (live)" : "Heart rate (demo)",
+                values: heart.connected && heart.history.some((v) => v > 0) ? heart.history : hrWave,
+                unit: " bpm",
+                max: 160,
+              },
             ]}
           />
 
@@ -165,8 +181,12 @@ export default function SessionPage() {
 
           <div className="grid grid-cols-3 gap-3">
             <StatTile value={`${reps}/${targetReps}`} label={t("reps", locale)} accent="correct" />
-            <StatTile value={emg} label="EMG" accent="purple" />
-            <StatTile value={hr} label="BPM" accent="orange" />
+            <StatTile value={emg} label="EMG (demo)" accent="purple" />
+            <StatTile
+              value={heart.connected && heart.bpm ? heart.bpm : hr}
+              label={heart.connected ? "BPM live" : "BPM demo"}
+              accent="orange"
+            />
           </div>
 
           <div className="rm-card px-4 py-4">

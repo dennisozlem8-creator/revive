@@ -16,6 +16,17 @@ Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo t
 
 The estimate is for progress tracking, not a diagnosis. Video files are not stored in the browser database.
 
+## Heart sensor (live Bluetooth)
+
+A Bluetooth heart-rate strap can show **live BPM** on Session, onboarding, and assessment screens.
+
+1. Open Chrome or Edge (not iPhone Safari).
+2. Wear the strap and wait until it wakes.
+3. Tap **Connect heart sensor**. Pick your device in the browser list.
+4. If it is missing, tap **My sensor is not listed**.
+
+Works with most BLE heart-rate straps (Polar H9/H10, Wahoo TICKR, Coospo, Magene, and similar). Apple Watch and many Fitbits do not share heart rate with a website. Joint ROM scan is still a demo.
+
 ## Run locally
 
 ```bash

@@ -196,8 +196,8 @@ export function OnboardingWizard() {
         <>
           <h2 className="rm-title text-2xl text-foreground">Connect your device</h2>
           <p className="mt-2 text-body">
-            Find and pair your Revive Motion sensor so we can track ROM during exercises. This demo
-            simulates Bluetooth scanning — no hardware required.
+            Pair a Bluetooth heart-rate strap to show live BPM on screen. Joint ROM still has a
+            demo sensor if you do not have a motion strap yet.
           </p>
           <div className="mt-6">
             <DeviceConnectFlow onConnected={() => setDeviceConnected(true)} />

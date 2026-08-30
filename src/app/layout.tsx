@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthGate } from "@/components/AuthGate";
 import { AuthProvider } from "@/components/AuthProvider";
+import { HeartRateProvider } from "@/components/HeartRateProvider";
 import { NotificationScheduler } from "@/components/NotificationScheduler";
 import { ChatAssistant } from "@/components/ChatAssistant";
 import "./globals.css";
@@ -33,11 +34,13 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>
-          <AuthGate>
-            {children}
-            <NotificationScheduler />
-            <ChatAssistant />
-          </AuthGate>
+          <HeartRateProvider>
+            <AuthGate>
+              {children}
+              <NotificationScheduler />
+              <ChatAssistant />
+            </AuthGate>
+          </HeartRateProvider>
         </AuthProvider>
       </body>
     </html>

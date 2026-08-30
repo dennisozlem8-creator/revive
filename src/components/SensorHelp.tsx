@@ -41,15 +41,19 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
       {open && (
         <div className="mt-3 space-y-2 text-sm text-body">
           <p>
-            <strong className="text-foreground">This app uses a simulated sensor.</strong> Tap Connect
-            or Scan — readings are generated in your browser for demo purposes. No Bluetooth pairing
-            happens yet.
+            <strong className="text-foreground">Heart rate can be live.</strong> Tap{" "}
+            <strong className="text-foreground">Connect heart sensor</strong> in Chrome or Edge.
+            Wear a Bluetooth heart-rate strap (Polar, Wahoo TICKR, Coospo, Magene, and similar).
+            Live BPM then replaces the fake heart numbers.
           </p>
           <p>
-            To connect real Revive Motion hardware later, a production app would use{" "}
-            <strong className="text-foreground">Web Bluetooth</strong> (wireless straps in Chrome or
-            Edge) or a <strong className="text-foreground">USB/serial bridge</strong> for wired
-            sensors. Those drivers would replace the simulated readings you see here.
+            <strong className="text-foreground">Joint ROM is still a demo.</strong> Scan / Connect
+            for the ankle or knee sensor still generates practice angles in the browser. Photo
+            Goniometer is the real knee-angle tool today.
+          </p>
+          <p>
+            Apple Watch and many Fitbits do not share heart rate with a website. iPhone Safari
+            cannot pair Bluetooth straps — use Chrome on Android or Chrome/Edge on a computer.
           </p>
           {isKids && (
             <p className="flex items-start gap-2 font-bold text-orange-700">

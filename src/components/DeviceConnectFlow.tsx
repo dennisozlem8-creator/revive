@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { SIMULATED_CONNECT_MS } from "@/lib/device-sensor";
+import { HeartRatePanel } from "./HeartRatePanel";
 import { SensorHelp } from "./SensorHelp";
+import { useHeartRate } from "./HeartRateProvider";
 
 type DeviceOption = {
   id: string;
@@ -23,9 +25,14 @@ type DeviceConnectFlowProps = {
 };
 
 export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowProps) {
+  const heart = useHeartRate();
   const [phase, setPhase] = useState<"idle" | "scanning" | "found" | "connecting" | "connected">("idle");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [visibleDevices, setVisibleDevices] = useState<DeviceOption[]>([]);
+
+  useEffect(() => {
+    if (heart.connected) onConnected();
+  }, [heart.connected, onConnected]);
 
   useEffect(() => {
     if (phase !== "scanning") return;
@@ -59,6 +66,8 @@ export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowPro
 
   return (
     <div className={compact ? "space-y-4" : "space-y-6"}>
+      <HeartRatePanel compact={compact} onConnected={onConnected} />
+
       <div className="rm-card flex items-center gap-4 px-5 py-5">
         <div
           className={`flex h-16 w-16 items-center justify-center rounded-2xl ${
@@ -90,14 +99,14 @@ export function DeviceConnectFlow({ onConnected, compact }: DeviceConnectFlowPro
         </div>
         <div className="flex-1">
           <p className="font-semibold text-foreground">
-            {phase === "idle" && "Find your Revive Motion device"}
+            {phase === "idle" && "Or use the demo joint sensor"}
             {phase === "scanning" && "Scanning for devices…"}
             {phase === "found" && "Select your device"}
             {phase === "connecting" && "Connecting…"}
             {phase === "connected" && "Device connected"}
           </p>
           <p className="text-sm text-muted">
-            {phase === "idle" && "Wear the sensor on your affected joint, then scan (demo mode)."}
+            {phase === "idle" && "Joint ROM is still demo. Heart rate above is the live reading."}
             {phase === "scanning" && "Looking for Bluetooth sensors within range"}
             {phase === "found" && "Tap a device below to pair"}
             {phase === "connecting" && `Pairing with ${device?.name ?? "sensor"}…`}

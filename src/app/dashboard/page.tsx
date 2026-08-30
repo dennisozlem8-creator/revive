@@ -47,6 +47,9 @@ export default function DashboardPage() {
           <Link href="/goniometer" className="rm-btn rm-btn-brand inline-flex flex-1">
             Photo Goniometer
           </Link>
+          <Link href="/session" className="rm-btn rm-btn-ghost inline-flex flex-1">
+            Connect heart sensor
+          </Link>
           <Link href="/shop" className="rm-btn rm-btn-ghost inline-flex flex-1">
             Shop devices and braces
           </Link>

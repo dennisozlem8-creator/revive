@@ -32,9 +32,9 @@ const faq: { keywords: string[]; answer: string }[] = [
       "Elbow rehab focuses on gradual loading and eccentric exercises. Use a brace during activity if recommended, and ice after sessions if swollen.",
   },
   {
-    keywords: ["rom", "range of motion", "sensor"],
+    keywords: ["rom", "range of motion", "sensor", "heart", "bpm", "polar", "bluetooth"],
     answer:
-      "ROM (range of motion) measures how far a joint can move. Wear your Revive Motion sensor during the test, or use the Photo Goniometer: record a side-view video of the knee bending so the app can graph the motion and save the peak angle. Review Charts for results.",
+      "Pair a Bluetooth heart-rate strap from Session or onboarding: tap Connect heart sensor in Chrome or Edge. Live BPM replaces the demo heart numbers. Polar H9/H10, Wahoo TICKR, Coospo, Magene, and similar straps work. Apple Watch and most Fitbits do not. Joint ROM is still a demo; use Photo Goniometer for a real knee angle.",
   },
   {
     keywords: ["goniometer", "photo", "angle", "hip", "mark"],
