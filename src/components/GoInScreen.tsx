@@ -14,10 +14,26 @@ const entries: {
   id: GoInRole;
   title: string;
   subtitle: string;
+  tileClass: string;
 }[] = [
-  { id: "patient", title: "Patient", subtitle: "Exercises and recovery at home" },
-  { id: "doctor", title: "Doctor", subtitle: "Monitor linked patients" },
-  { id: "caregiver", title: "Caregiver", subtitle: "Follow a family member’s progress" },
+  {
+    id: "patient",
+    title: "Patient",
+    subtitle: "Exercises and recovery at home",
+    tileClass: "border-[#b7d4e8] bg-[#e8f3fb] text-[#1b3348]",
+  },
+  {
+    id: "doctor",
+    title: "Doctor",
+    subtitle: "Monitor linked patients",
+    tileClass: "border-[#b7cfc0] bg-[#e7f1ea] text-[#2a4638]",
+  },
+  {
+    id: "caregiver",
+    title: "Caregiver",
+    subtitle: "Follow a family member’s progress",
+    tileClass: "border-[#d4c6b0] bg-[#f3eee6] text-[#4a3d32]",
+  },
 ];
 
 type GoInScreenProps = {
@@ -67,23 +83,20 @@ export function GoInScreen({ mode }: GoInScreenProps) {
         Choose Patient, Doctor, Caregiver, or Kids Quest.
       </p>
       <div className="mt-8 flex flex-col gap-3">
-        {entries.map((item, index) => (
+        {entries.map((item) => (
           <button
             key={item.id}
             type="button"
             onClick={() => setEntry(item.id)}
-            className="rounded-2xl border border-[var(--border)] bg-surface px-5 py-4 text-left transition hover:border-brand/40"
+            className={`rounded-2xl border px-5 py-4 text-left transition hover:brightness-[0.98] ${item.tileClass}`}
           >
-            <p className="text-[11px] font-bold uppercase tracking-widest text-brand-light">
-              {index + 1}
-            </p>
-            <p className="mt-1 text-lg font-bold">{item.title}</p>
-            <p className="mt-0.5 text-sm text-body">{item.subtitle}</p>
+            <p className="text-lg font-bold">{item.title}</p>
+            <p className="mt-0.5 text-sm opacity-80">{item.subtitle}</p>
           </button>
         ))}
         <Link
           href="/kids"
-          className="overflow-hidden rounded-2xl border border-amber-300/80 bg-gradient-to-b from-white via-amber-50 to-sky-50 text-left shadow-[0_12px_28px_rgba(40,24,8,0.1)]"
+          className="overflow-hidden rounded-2xl border border-[#c5bdd8] bg-[#ece7f4] text-left"
         >
           <div className="relative h-28">
             <Image
@@ -93,16 +106,13 @@ export function GoInScreen({ mode }: GoInScreenProps) {
               height={360}
               className="h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1a2848]/70 to-transparent" />
-            <p className="absolute left-5 top-3 text-[11px] font-bold uppercase tracking-widest text-amber-100">
-              4
-            </p>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#3d3558]/75 to-transparent" />
             <div className="absolute bottom-3 left-5 right-5">
-              <p className="flex items-center gap-2 text-lg font-bold text-amber-50">
+              <p className="flex items-center gap-2 text-lg font-bold text-[#f4f0ea]">
                 <KidsIcon name="gamepad" size={22} />
                 Kids Quest
               </p>
-              <p className="text-sm font-medium text-amber-100/90">Storybook adventure world</p>
+              <p className="text-sm font-medium text-[#ece6d8]">Storybook adventure world</p>
             </div>
           </div>
         </Link>
