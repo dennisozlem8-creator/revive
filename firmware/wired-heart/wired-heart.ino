@@ -131,8 +131,11 @@ bool startSensor() {
 
 void setup() {
   Serial.begin(115200);
+  pinMode(A4, INPUT_PULLUP);
+  pinMode(A5, INPUT_PULLUP);
   Wire.begin();
-  delay(200);
+  Wire.setClock(50000);
+  delay(300);
   Serial.println("HELLO MAX30102 ELEGOO_UNO_R3");
   Serial.println("SRC ELEGOO_UNO_R3");
   Serial.println("CHIP MAX30102");

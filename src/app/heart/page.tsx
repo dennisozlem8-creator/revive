@@ -34,9 +34,10 @@ export default function HeartSensorPage() {
         <h1 className="rm-title mt-1 text-3xl text-foreground">Heart sensor</h1>
         <p className="mt-2 text-body">
           For an Elegoo Uno R3 and a MAX30102, Arduino IDE is only for Upload. Connecting the app
-          happens in Google Chrome on the same computer — not Safari, not your phone. After USB
-          connects, this page must show a green confirmation that RAW and BPM lines are coming from
-          the MAX30102, not a demo number.
+          happens in Google Chrome on the same computer — not Safari, not your phone. A USB-C
+          laptop port is fine if you see HELLO or no I2C — that means the Elegoo USB link works.
+          After USB connects, this page must show a green confirmation that RAW and BPM lines are
+          coming from the MAX30102, not a demo number.
         </p>
 
         <section className="rm-card mt-6 p-5">
@@ -126,6 +127,7 @@ export default function HeartSensorPage() {
             <li>SCL → A5. SDA → A4. Not A0. If those two are already on A4 and A5, swap them.</li>
             <li>Leave INT empty.</li>
             <li>Tap Disconnect, unplug USB, push the four wires in again, plug USB back in, then Connect with USB.</li>
+            <li>USB-C on the laptop is not the I2C fault. If you see HELLO and chip ID 0, the cable is already talking. Fix power and SDA/SCL, or try a slower I2C upload of the latest sketch.</li>
           </ol>
         </section>
 
