@@ -161,10 +161,10 @@ export async function connectHeartRateSensor(
   };
 }
 
-export async function requestUsbHeartPort() {
+export function requestUsbHeartPort() {
   if (!navigator.serial?.requestPort) {
     throw new Error(
-      "This phone or browser cannot use USB. Plug the Elegoo into a Windows or Mac computer, open Google Chrome or Edge, go to revivemotion.ai/heart, then tap Connect with USB."
+      "USB will not work on a phone — including Chrome on iPhone. Plug the Elegoo into a Windows or Mac computer, open Google Chrome or Edge on that computer, go to https://www.revivemotion.ai/heart, then tap Connect with USB. Do not press anything in Arduino IDE for this step."
     );
   }
   return navigator.serial.requestPort();
@@ -272,5 +272,5 @@ export function heartRateBrowserHelp() {
   if (ble) {
     return "Put the strap on, wait a few seconds, then tap Connect. A Chrome window will ask which device to use.";
   }
-  return "Heart sensors need Chrome or Edge on a computer. iPhone Safari cannot talk to USB or Bluetooth straps.";
+  return "USB needs a computer. Phone Chrome and Safari cannot talk to the Elegoo. Plug the board into a Windows or Mac PC, then open Chrome or Edge on that computer.";
 }

@@ -126,8 +126,8 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
 
       {!canConnect && (
         <p className="mt-3 text-sm text-muted">
-          Open this site in <strong className="text-foreground">Chrome or Edge on a computer</strong> to
-          plug in a wired Arduino sensor. iPhone Safari cannot read USB.
+          Open this site on a Windows or Mac computer in <strong className="text-foreground">Chrome or Edge</strong>.
+          A phone — even Chrome on iPhone — cannot see the USB cable. Arduino IDE does not turn USB on for the phone.
         </p>
       )}
 
