@@ -115,6 +115,21 @@ export default function HeartSensorPage() {
         </section>
 
         <section className="rm-card mt-4 border-alert/30 p-5">
+          <h2 className="font-semibold">If Upload says Resource busy</h2>
+          <p className="mt-2 text-sm text-body">
+            The sketch is fine. The Elegoo USB port is already open in Chrome or Serial Monitor.
+            Arduino IDE cannot upload while something else is using <code className="rounded bg-background px-1">/dev/cu.usbmodem</code>.
+          </p>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
+            <li>On the Heart page, tap <strong className="text-foreground">Disconnect</strong>, or close that Chrome tab.</li>
+            <li>In Arduino IDE, close Serial Monitor.</li>
+            <li>Unplug the Elegoo USB cable, wait 3 seconds, plug it back in.</li>
+            <li>Tools → Port → choose the usbmodem port again.</li>
+            <li>Click Upload. After Done uploading, close Serial Monitor, then Connect with USB in Chrome.</li>
+          </ol>
+        </section>
+
+        <section className="rm-card mt-4 border-alert/30 p-5">
           <h2 className="font-semibold">If Connect with USB does nothing</h2>
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
             <li>On a Mac, open Google Chrome. Do not use Safari. Safari cannot talk to USB.</li>
