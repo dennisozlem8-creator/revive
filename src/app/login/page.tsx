@@ -1,8 +1,5 @@
-import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { AuthForm } from "@/components/AuthForm";
-import { KidsModeLink } from "@/components/KidsModeLink";
-import { ResetAppButton } from "@/components/ResetAppButton";
+import { GoInScreen } from "@/components/GoInScreen";
 
 export default function LoginPage() {
   return (
@@ -12,15 +9,7 @@ export default function LoginPage() {
         <div className="mb-10 flex justify-center">
           <Logo size={72} />
         </div>
-        <KidsModeLink variant="portal" className="mb-6" />
-        <AuthForm mode="login" />
-        <ResetAppButton />
-        <p className="mt-6 text-center text-sm text-muted">
-          No account?{" "}
-          <Link href="/register" className="font-medium text-brand-light hover:text-brand">
-            Create one
-          </Link>
-        </p>
+        <GoInScreen mode="login" />
       </main>
     </div>
   );

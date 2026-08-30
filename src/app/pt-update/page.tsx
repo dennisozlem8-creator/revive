@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { StatTile } from "@/components/ui/StatTile";
 import { useAuth } from "@/components/AuthProvider";
+import { isCareTeam } from "@/lib/users";
 import { calculateStreak } from "@/lib/streak";
 
 export default function PTUpdatePage() {
@@ -21,7 +22,7 @@ export default function PTUpdatePage() {
   const patients = getPatientsForDoctor();
   const patient = patients.find((p) => p.email === selectedEmail);
 
-  if (user?.role !== "doctor") {
+  if (!isCareTeam(user?.role)) {
     return (
       <div className="flex min-h-full items-center justify-center rm-glow-patient">
         <Link href="/" className="text-brand-light">

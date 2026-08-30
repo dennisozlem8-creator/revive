@@ -6,6 +6,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { getNotificationsForUser, markNotificationsRead } from "@/lib/notifications";
 import { calculateStreak } from "@/lib/streak";
 import { useEffect, useState } from "react";
+import { isCareTeam } from "@/lib/users";
 import type { AppNotification } from "@/lib/notifications";
 
 export default function DoctorDashboardPage() {
@@ -14,16 +15,16 @@ export default function DoctorDashboardPage() {
   const patients = getPatientsForDoctor();
 
   useEffect(() => {
-    if (user?.role === "doctor") {
+    if (isCareTeam(user?.role)) {
       setNotifications(getNotificationsForUser(user.email));
       markNotificationsRead(user.email);
     }
   }, [user]);
 
-  if (user?.role !== "doctor") {
+  if (!isCareTeam(user?.role)) {
     return (
       <div className="flex min-h-full flex-col items-center justify-center gap-4 rm-glow-patient p-6 text-center">
-        <p className="text-muted">This page is for doctors only.</p>
+        <p className="text-muted">This page is for doctors and caregivers.</p>
         <Link href="/" className="text-brand-light hover:text-brand">
           Go home
         </Link>
@@ -35,7 +36,9 @@ export default function DoctorDashboardPage() {
     <div className="relative min-h-full rm-glow-caregiver pb-24">
       <Header linkHome variant="caregiver" />
       <main className="mx-auto max-w-5xl px-6 pb-8">
-        <p className="text-xs font-bold uppercase tracking-widest text-teal">Caregiver Dashboard</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-teal">
+          {user?.role === "caregiver" ? "Caregiver Dashboard" : "Doctor Dashboard"}
+        </p>
         <h1 className="mt-1 text-3xl font-bold text-[var(--caregiver-text)]">Your Patients</h1>
         <p className="mt-2 text-[var(--caregiver-muted)]">
           Monitor recovery, streaks, and daily alerts.

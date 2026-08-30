@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { loadUsers, saveUsers, type User, type UserRole, type PTPrescription } from "@/lib/users";
+import { loadUsers, saveUsers, isCareTeam, type User, type UserRole, type PTPrescription } from "@/lib/users";
 import { logActivityToday } from "@/lib/streak";
 
 export type { ExerciseRecord, User, UserRole } from "@/lib/users";
@@ -194,7 +194,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const getPatientsForDoctor = useCallback(() => {
-    if (!user || user.role !== "doctor") return [];
+    if (!user || !isCareTeam(user.role)) return [];
     return loadUsers().filter(
       (u) => u.role === "patient" && u.doctorEmail === user.email
     );

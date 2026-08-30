@@ -6,6 +6,7 @@ import { LanguageToggle } from "./LanguageToggle";
 import { useAuth } from "./AuthProvider";
 import { t } from "@/lib/i18n";
 import { KidsIcon } from "@/components/KidsIcon";
+import { isCareTeam } from "@/lib/users";
 
 type HeaderProps = {
   linkHome?: boolean;
@@ -15,7 +16,7 @@ type HeaderProps = {
 export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   const { user, logout } = useAuth();
   const locale = user?.language ?? "en";
-  const isCaregiver = variant === "caregiver" || user?.role === "doctor";
+  const isCaregiver = variant === "caregiver" || isCareTeam(user?.role);
 
   const logo = (
     <div className="flex items-center gap-3">
@@ -41,7 +42,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
     >
       {linkHome ? (
         <Link
-          href={user?.role === "doctor" ? "/doctor" : isKids ? "/kids" : "/briefing"}
+          href={isCareTeam(user?.role) ? "/doctor" : isKids ? "/kids" : "/briefing"}
           className="transition hover:opacity-85"
         >
           {isKids ? (

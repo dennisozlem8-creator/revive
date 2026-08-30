@@ -10,7 +10,11 @@ export type PTPrescription = {
   updatedAt: string;
 };
 
-export type UserRole = "patient" | "doctor";
+export type UserRole = "patient" | "doctor" | "caregiver";
+
+export function isCareTeam(role?: UserRole | null) {
+  return role === "doctor" || role === "caregiver";
+}
 
 export type ExerciseRecord = {
   areaId: string;

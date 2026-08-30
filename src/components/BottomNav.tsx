@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "./AuthProvider";
 import { t } from "@/lib/i18n";
+import { isCareTeam } from "@/lib/users";
 
 const patientTabs = [
   { href: "/briefing", key: "home" as const },
@@ -23,7 +24,7 @@ export function BottomNav() {
   const { user } = useAuth();
   const pathname = usePathname();
   const locale = user?.language ?? "en";
-  const tabs = user?.role === "doctor" ? doctorTabs : patientTabs;
+  const tabs = isCareTeam(user?.role) ? doctorTabs : patientTabs;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--border)] bg-surface/95 backdrop-blur-md">

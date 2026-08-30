@@ -1,7 +1,5 @@
-import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { AuthForm } from "@/components/AuthForm";
-import { ResetAppButton } from "@/components/ResetAppButton";
+import { GoInScreen } from "@/components/GoInScreen";
 
 export default function RegisterPage() {
   return (
@@ -14,14 +12,7 @@ export default function RegisterPage() {
         <div className="mb-10 flex justify-center">
           <Logo size={72} />
         </div>
-        <AuthForm mode="register" />
-        <ResetAppButton />
-        <p className="mt-6 text-center text-sm text-muted">
-          Already have an account?{" "}
-          <Link href="/login" className="font-medium text-brand-light hover:text-brand">
-            Sign in
-          </Link>
-        </p>
+        <GoInScreen mode="register" />
       </main>
     </div>
   );
