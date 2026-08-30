@@ -51,8 +51,8 @@ export default function HeartSensorPage() {
         <section className="rm-card mt-4 p-5">
           <h2 className="font-semibold">Wires: MAX30102 → Elegoo Uno R3</h2>
           <p className="mt-2 text-sm text-muted">
-            MAX30102 talks over I2C. Do not use A0. Use A4 and A5. If the app says packets but no
-            data, the USB cable is fine — cover both LEDs on the MAX30102 with a fingertip.
+            MAX30102 talks over I2C. Do not use A0. Use A4 and A5. If the page says USB is good but
+            no I2C, the USB cable is fine — the four sensor wires are loose, unpowered, or swapped.
           </p>
           <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
             <table className="w-full text-left text-sm">
@@ -111,6 +111,21 @@ export default function HeartSensorPage() {
             <li>Tools → Board → Arduino Uno. Tools → Port → the Elegoo COM port.</li>
             <li>Click Upload. Wait until it says Done uploading.</li>
             <li>Close Serial Monitor, leave USB plugged in, then tap Connect with USB below.</li>
+          </ol>
+        </section>
+
+        <section className="rm-card mt-4 border-alert/30 p-5">
+          <h2 className="font-semibold">If it says no I2C</h2>
+          <p className="mt-2 text-sm text-body">
+            USB is working. The Elegoo cannot see the MAX30102. Chip ID 0 means the sensor has no
+            power or SDA/SCL is wrong.
+          </p>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
+            <li>VIN or VCC on the MAX30102 must go to Uno <strong className="text-foreground">5V</strong>. If there is no VIN, use Uno <strong className="text-foreground">3.3V</strong>. Do not put 5V into a pin labeled only 3.3V.</li>
+            <li>GND must go to GND. The red and black wires both have to click in.</li>
+            <li>SCL → A5. SDA → A4. Not A0. If those two are already on A4 and A5, swap them.</li>
+            <li>Leave INT empty.</li>
+            <li>Tap Disconnect, unplug USB, push the four wires in again, plug USB back in, then Connect with USB.</li>
           </ol>
         </section>
 

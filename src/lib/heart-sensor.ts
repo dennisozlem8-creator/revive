@@ -133,6 +133,13 @@ export function parseSerialHeartLine(line: string): SerialHeartSample | null {
   if (/^I2C\s+OK/i.test(text)) {
     return { i2cOk: true };
   }
+  if (/^SCAN\b/i.test(text)) {
+    const found = !/\bnone\b/i.test(text);
+    return found ? { i2cOk: true } : { error: "I2C scan found no chip. Check VIN and GND, then SCL to A5 and SDA to A4." };
+  }
+  if (/^ADDR\b/i.test(text)) {
+    return { i2cOk: true };
+  }
   if (/MAX30102 start/i.test(text)) {
     return { hello: true, chip: "MAX30102" };
   }

@@ -7,7 +7,7 @@
 
 #include <Wire.h>
 
-const uint8_t MAX_ADDR = 0x57;
+uint8_t sensorAddr = 0x57;
 const int MIN_BPM = 40;
 const int MAX_BPM = 180;
 const unsigned long MIN_BEAT_MS = 320;
@@ -19,21 +19,53 @@ uint32_t recentMin = 0xFFFFFFFFu;
 unsigned long lastBeatMs = 0;
 unsigned long windowStart = 0;
 unsigned long lastNoDataMs = 0;
+unsigned long lastScanMs = 0;
+bool i2cReady = false;
 
 void writeReg(uint8_t reg, uint8_t value) {
-  Wire.beginTransmission(MAX_ADDR);
+  Wire.beginTransmission(sensorAddr);
   Wire.write(reg);
   Wire.write(value);
   Wire.endTransmission();
 }
 
 uint8_t readReg(uint8_t reg) {
-  Wire.beginTransmission(MAX_ADDR);
+  Wire.beginTransmission(sensorAddr);
   Wire.write(reg);
   if (Wire.endTransmission() != 0) return 0;
-  Wire.requestFrom(MAX_ADDR, (uint8_t)1);
+  Wire.requestFrom(sensorAddr, (uint8_t)1);
   if (Wire.available()) return Wire.read();
   return 0;
+}
+
+bool ping(uint8_t addr) {
+  Wire.beginTransmission(addr);
+  return Wire.endTransmission() == 0;
+}
+
+void printScan() {
+  Serial.print("SCAN");
+  bool any = false;
+  for (uint8_t addr = 1; addr < 127; addr++) {
+    if (ping(addr)) {
+      Serial.print(" 0x");
+      Serial.print(addr, HEX);
+      any = true;
+    }
+  }
+  if (!any) Serial.print(" none");
+  Serial.println();
+}
+
+bool findSensor() {
+  const uint8_t tries[] = { 0x57, 0x5E, 0x55 };
+  for (uint8_t i = 0; i < 3; i++) {
+    if (ping(tries[i])) {
+      sensorAddr = tries[i];
+      return true;
+    }
+  }
+  return false;
 }
 
 bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
@@ -45,14 +77,14 @@ bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
     return false;
   }
 
-  Wire.beginTransmission(MAX_ADDR);
+  Wire.beginTransmission(sensorAddr);
   Wire.write(0x07);
   if (Wire.endTransmission() != 0) {
     *redOut = 0;
     *irOut = 0;
     return false;
   }
-  Wire.requestFrom(MAX_ADDR, (uint8_t)6);
+  Wire.requestFrom(sensorAddr, (uint8_t)6);
 
   uint32_t red = 0;
   uint32_t ir = 0;
@@ -65,11 +97,6 @@ bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
   *redOut = red & 0x03FFFF;
   *irOut = ir & 0x03FFFF;
   return true;
-}
-
-bool sensorAck() {
-  Wire.beginTransmission(MAX_ADDR);
-  return Wire.endTransmission() == 0;
 }
 
 void setupSensor() {
@@ -86,30 +113,50 @@ void setupSensor() {
   delay(80);
 }
 
+bool startSensor() {
+  printScan();
+  if (!findSensor()) {
+    Serial.println("ERR no I2C. Push in VIN GND SCL->A5 SDA->A4. If the board has no VIN, use 3.3V.");
+    return false;
+  }
+  Serial.print("ADDR 0x");
+  Serial.println(sensorAddr, HEX);
+  Serial.print("ID ");
+  Serial.println(readReg(0xFF));
+  Serial.println("I2C OK");
+  setupSensor();
+  Serial.println("MAX30102 start");
+  return true;
+}
+
 void setup() {
   Serial.begin(115200);
   Wire.begin();
-  delay(50);
+  delay(200);
   Serial.println("HELLO MAX30102 ELEGOO_UNO_R3");
   Serial.println("SRC ELEGOO_UNO_R3");
   Serial.println("CHIP MAX30102");
-  Serial.print("ID ");
-  Serial.println(readReg(0xFF));
-  if (!sensorAck()) {
-    Serial.println("ERR no I2C. Check VIN GND SCL->A5 SDA->A4");
-  } else {
-    Serial.println("I2C OK");
-  }
-  setupSensor();
-  Serial.println("MAX30102 start");
+  i2cReady = startSensor();
+  lastScanMs = millis();
 }
 
 void loop() {
+  const unsigned long now = millis();
+
+  if (!i2cReady) {
+    if (now - lastScanMs > 2000) {
+      lastScanMs = now;
+      Serial.println("RETRY I2C");
+      i2cReady = startSensor();
+    }
+    delay(20);
+    return;
+  }
+
   uint32_t red = 0;
   uint32_t ir = 0;
   const bool gotSample = readFifoSample(&red, &ir);
   const uint32_t signal = ir >= red ? ir : red;
-  const unsigned long now = millis();
 
   if (gotSample) {
     Serial.print("RAW ");

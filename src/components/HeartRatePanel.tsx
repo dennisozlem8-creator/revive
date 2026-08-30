@@ -159,7 +159,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
       )}
 
       {error && <p className="mt-3 text-sm text-alert">{error}</p>}
-      {saveMessage && <p className="mt-3 text-sm text-muted">{saveMessage}</p>}
+      {saveMessage && !connected && <p className="mt-3 text-sm text-muted">{saveMessage}</p>}
       {recording && (
         <p className="mt-3 text-sm font-semibold text-brand-light">
           Recording… {recordCount} beats saved in this clip
@@ -185,7 +185,10 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
                 try {
                   const port = await requestUsbHeartPort();
                   const ok = await connectUsb(port);
-                  if (ok) onConnected?.();
+                  if (ok) {
+                    setSaveMessage("");
+                    onConnected?.();
+                  }
                 } catch (err) {
                   const name = err instanceof DOMException ? err.name : "";
                   if (name === "NotFoundError" || name === "AbortError") {
@@ -292,6 +295,8 @@ function UsbSourceCard({
   const chipKnown = proof.chipId === 21 ? "MAX30102 chip ID 21" : proof.chipId != null ? `chip ID ${proof.chipId}` : "waiting";
   const status = !proof.started && !proof.chip
     ? "USB is open. Waiting for the Elegoo to say MAX30102."
+    : !proof.i2cOk && (proof.started || proof.chip)
+      ? "USB to the Elegoo is good. The MAX30102 is not answering. Push in VIN (or 3.3V), GND, SCL to A5, and SDA to A4. Try swapping SDA and SCL if those two look right."
     : packetsOnly
       ? "USB packets are arriving, but there is no finger data yet. Cover both LEDs with one fingertip and keep still. Wiring: VIN→5V, GND→GND, SCL→A5, SDA→A4."
       : !fresh
