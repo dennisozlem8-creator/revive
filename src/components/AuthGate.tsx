@@ -11,7 +11,7 @@ const CHECK_IN_PATH = "/check-in";
 /** Patient paths reachable without completing onboarding */
 const ONBOARDING_EXEMPT = [ONBOARDING_PATH, "/kids"];
 /** Patient paths reachable without completing daily check-in */
-const CHECK_IN_EXEMPT = [CHECK_IN_PATH, ONBOARDING_PATH, "/kids", "/goniometer"];
+const CHECK_IN_EXEMPT = [CHECK_IN_PATH, ONBOARDING_PATH, "/kids", "/goniometer", "/heart"];
 
 function patientNeedsCheckIn(lastCheckInDate?: string) {
   return lastCheckInDate !== todayDateString();

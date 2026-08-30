@@ -41,10 +41,10 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
       {open && (
         <div className="mt-3 space-y-2 text-sm text-body">
           <p>
-            <strong className="text-foreground">Heart rate can be live.</strong> Tap{" "}
-            <strong className="text-foreground">Connect heart sensor</strong> in Chrome or Edge.
-            Wear a Bluetooth heart-rate strap (Polar, Wahoo TICKR, Coospo, Magene, and similar).
-            Live BPM then replaces the fake heart numbers.
+            <strong className="text-foreground">Heart rate can be live.</strong> For a wired sensor,
+            build an Arduino pulse circuit, plug in USB, and tap <strong className="text-foreground">Connect with USB</strong>{" "}
+            in Chrome or Edge. A Bluetooth strap also works. Live BPM then replaces the fake heart
+            numbers. Recordings save on this device.
           </p>
           <p>
             <strong className="text-foreground">Joint ROM is still a demo.</strong> Scan / Connect

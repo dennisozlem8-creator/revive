@@ -16,16 +16,22 @@ Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo t
 
 The estimate is for progress tracking, not a diagnosis. Video files are not stored in the browser database.
 
-## Heart sensor (live Bluetooth)
+## Heart sensor (live Bluetooth or USB)
 
-A Bluetooth heart-rate strap can show **live BPM** on Session, onboarding, and assessment screens.
+A Bluetooth heart-rate strap **or** a wired Arduino pulse sensor can show live BPM.
 
-1. Open Chrome or Edge (not iPhone Safari).
-2. Wear the strap and wait until it wakes.
-3. Tap **Connect heart sensor**. Pick your device in the browser list.
-4. If it is missing, tap **My sensor is not listed**.
+### Wired (USB)
 
-Works with most BLE heart-rate straps (Polar H9/H10, Wahoo TICKR, Coospo, Magene, and similar). Apple Watch and many Fitbits do not share heart rate with a website. Joint ROM scan is still a demo.
+1. Wire a pulse sensor: VCC → 5V, GND → GND, OUT → A0.
+2. Upload `firmware/wired-heart/wired-heart.ino` in Arduino IDE.
+3. Open Chrome or Edge on that computer. Go to **Heart sensor**.
+4. Tap **Connect with USB**, pick the Arduino, then **Record this session**.
+
+The board must print `BPM 74` and `RAW 512` lines at 115200 baud.
+
+### Bluetooth strap
+
+Polar H9/H10, Wahoo TICKR, Coospo, Magene, and similar BLE heart-rate straps. Apple Watch and many Fitbits do not share heart rate with a website. Joint ROM scan is still a demo.
 
 ## Run locally
 

@@ -34,7 +34,7 @@ const faq: { keywords: string[]; answer: string }[] = [
   {
     keywords: ["rom", "range of motion", "sensor", "heart", "bpm", "polar", "bluetooth"],
     answer:
-      "Pair a Bluetooth heart-rate strap from Session or onboarding: tap Connect heart sensor in Chrome or Edge. Live BPM replaces the demo heart numbers. Polar H9/H10, Wahoo TICKR, Coospo, Magene, and similar straps work. Apple Watch and most Fitbits do not. Joint ROM is still a demo; use Photo Goniometer for a real knee angle.",
+      "Pair a Bluetooth heart-rate strap, or plug in a wired Arduino pulse sensor over USB. Open Heart sensor, tap Connect with USB, then Record this session. Polar H9/H10, Wahoo TICKR, Coospo, Magene work over Bluetooth. Apple Watch usually does not. Joint ROM is still a demo; use Photo Goniometer for a real knee angle.",
   },
   {
     keywords: ["goniometer", "photo", "angle", "hip", "mark"],

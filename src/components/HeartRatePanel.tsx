@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { heartRateBrowserHelp } from "@/lib/heart-sensor";
+import { useAuth } from "./AuthProvider";
 import { useHeartRate } from "./HeartRateProvider";
 
 type HeartRatePanelProps = {
@@ -9,24 +11,31 @@ type HeartRatePanelProps = {
 };
 
 export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
+  const { user } = useAuth();
   const {
-    supported,
+    bluetoothSupported,
+    usbSupported,
     connecting,
     connected,
+    source,
     deviceName,
     bpm,
     history,
+    rawHistory,
     error,
+    recording,
+    recordCount,
     connect,
+    connectUsb,
     disconnect,
+    startRecording,
+    stopAndSave,
   } = useHeartRate();
-
-  async function handleConnect(acceptAll = false) {
-    return connect(acceptAll);
-  }
+  const [saveMessage, setSaveMessage] = useState("");
 
   const live = connected && bpm != null && bpm > 0;
   const chart = live ? history.map((v) => (v > 0 ? v : bpm ?? 0)) : history;
+  const canConnect = bluetoothSupported || usbSupported;
 
   return (
     <section className={`rm-card ${compact ? "p-4" : "p-5"}`}>
@@ -48,7 +57,9 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
             {connecting
               ? "Looking for your heart sensor…"
               : live
-                ? "Heart sensor live"
+                ? source === "usb"
+                  ? "Wired heart sensor live"
+                  : "Heart sensor live"
                 : connected
                   ? "Heart sensor connected — waiting for a beat"
                   : "Connect a heart sensor"}
@@ -57,7 +68,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
             {live
               ? `${deviceName} · live beats per minute`
               : connected
-                ? `${deviceName} · wear the strap so it can send a pulse`
+                ? `${deviceName} · keep the sensor on the finger or chest`
                 : heartRateBrowserHelp()}
           </p>
         </div>
@@ -84,52 +95,120 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
         </div>
       )}
 
-      {error && <p className="mt-3 text-sm text-alert">{error}</p>}
+      {source === "usb" && rawHistory.some((v) => v > 0) && (
+        <div className="mt-4">
+          <p className="rm-label">Wire signal</p>
+          <div className="mt-2 flex h-16 items-end gap-0.5">
+            {rawHistory.map((value, i) => (
+              <div
+                key={i}
+                className="flex-1 rounded-t bg-brand/70"
+                style={{
+                  height: `${Math.max(6, Math.min(100, (value / 1023) * 100))}%`,
+                  opacity: 0.35 + (i / Math.max(1, rawHistory.length)) * 0.65,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
-      {!supported && (
-        <p className="mt-3 text-sm text-muted">
-          Open this site in <strong className="text-foreground">Chrome or Edge</strong> on a computer,
-          or Chrome on Android. iPhone Safari cannot pair a Bluetooth heart strap.
+      {error && <p className="mt-3 text-sm text-alert">{error}</p>}
+      {saveMessage && <p className="mt-3 text-sm text-muted">{saveMessage}</p>}
+      {recording && (
+        <p className="mt-3 text-sm font-semibold text-brand-light">
+          Recording… {recordCount} beats saved in this clip
         </p>
       )}
 
-      <div className={`mt-4 flex flex-col gap-2 ${compact ? "" : "sm:flex-row"}`}>
+      {!canConnect && (
+        <p className="mt-3 text-sm text-muted">
+          Open this site in <strong className="text-foreground">Chrome or Edge on a computer</strong> to
+          plug in a wired Arduino sensor. iPhone Safari cannot read USB.
+        </p>
+      )}
+
+      <div className={`mt-4 flex flex-col gap-2 ${compact ? "" : "sm:flex-row sm:flex-wrap"}`}>
         {!connected ? (
           <>
             <button
               type="button"
               className="rm-btn rm-btn-brand flex-1 disabled:opacity-40"
-              disabled={!supported || connecting}
+              disabled={!usbSupported || connecting}
               onClick={async () => {
-                const ok = await handleConnect(false);
+                setSaveMessage("");
+                const ok = await connectUsb();
                 if (ok) onConnected?.();
               }}
             >
-              {connecting ? "Connecting…" : "Connect heart sensor"}
+              {connecting ? "Connecting…" : "Connect with USB"}
             </button>
             <button
               type="button"
               className="rm-btn rm-btn-ghost flex-1 disabled:opacity-40"
-              disabled={!supported || connecting}
+              disabled={!bluetoothSupported || connecting}
               onClick={async () => {
-                const ok = await handleConnect(true);
+                setSaveMessage("");
+                const ok = await connect(false);
                 if (ok) onConnected?.();
               }}
             >
-              My sensor is not listed
+              Bluetooth strap
             </button>
+            {bluetoothSupported && (
+              <button
+                type="button"
+                className="text-sm font-medium text-brand-light"
+                disabled={connecting}
+                onClick={async () => {
+                  setSaveMessage("");
+                  const ok = await connect(true);
+                  if (ok) onConnected?.();
+                }}
+              >
+                Bluetooth sensor is not listed
+              </button>
+            )}
           </>
         ) : (
-          <button type="button" className="rm-btn rm-btn-ghost w-full" onClick={disconnect}>
-            Disconnect heart sensor
-          </button>
+          <>
+            {!recording ? (
+              <button
+                type="button"
+                className="rm-btn rm-btn-brand flex-1"
+                onClick={() => {
+                  setSaveMessage("");
+                  startRecording();
+                }}
+              >
+                Record this session
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="rm-btn rm-btn-primary flex-1"
+                onClick={() => {
+                  if (!user) {
+                    setSaveMessage("Sign in to save the recording on this device.");
+                    return;
+                  }
+                  setSaveMessage(stopAndSave(user.email));
+                }}
+              >
+                Stop and save
+              </button>
+            )}
+            <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={disconnect}>
+              Disconnect
+            </button>
+          </>
         )}
       </div>
 
       {!compact && (
         <p className="mt-3 text-xs text-muted">
-          Works with most Bluetooth heart-rate straps (Polar H9/H10, Wahoo TICKR, Coospo, Magene, and
-          similar). Apple Watch and many Fitbits do not share heart rate with a website.
+          Wired: Arduino + pulse sensor on pin A0, USB cable, then Connect with USB. Bluetooth:
+          Polar H9/H10, Wahoo TICKR, Coospo, Magene. Apple Watch usually will not work.
         </p>
       )}
     </section>

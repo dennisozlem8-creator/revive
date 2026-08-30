@@ -1,8 +1,13 @@
 export const HEART_RATE_SERVICE = "heart_rate";
 export const HEART_RATE_MEASUREMENT = "heart_rate_measurement";
+export const WIRED_HEART_BAUD = 115200;
 
 export function bluetoothHeartRateSupported() {
   return typeof navigator !== "undefined" && Boolean(navigator.bluetooth?.requestDevice);
+}
+
+export function usbHeartRateSupported() {
+  return typeof navigator !== "undefined" && Boolean(navigator.serial?.requestPort);
 }
 
 /** Bluetooth Heart Rate Measurement (0x2A37). */
@@ -19,14 +24,55 @@ export function parseHeartRateMeasurement(value: DataView): number | null {
   return bpm;
 }
 
+export type SerialHeartSample = {
+  bpm?: number;
+  raw?: number;
+};
+
+/** Lines from the Arduino sketch: `BPM 72`, `RAW 512`, or `{"bpm":72,"raw":512}`. */
+export function parseSerialHeartLine(line: string): SerialHeartSample | null {
+  const text = line.trim().replace(/\r$/, "");
+  if (!text) return null;
+  if (text.startsWith("{")) {
+    try {
+      const obj = JSON.parse(text) as { bpm?: unknown; raw?: unknown; hr?: unknown };
+      const bpmValue = obj.bpm ?? obj.hr;
+      const bpm = typeof bpmValue === "number" ? bpmValue : Number(bpmValue);
+      const raw = typeof obj.raw === "number" ? obj.raw : Number(obj.raw);
+      const sample: SerialHeartSample = {};
+      if (Number.isFinite(bpm) && bpm > 0 && bpm <= 250) sample.bpm = Math.round(bpm);
+      if (Number.isFinite(raw) && raw >= 0) sample.raw = Math.round(raw);
+      return sample.bpm != null || sample.raw != null ? sample : null;
+    } catch {
+      return null;
+    }
+  }
+  const bpmMatch = text.match(/^(?:BPM|HR|HEART)\s*[:=]?\s*(\d{1,3})$/i);
+  if (bpmMatch) {
+    const bpm = Number(bpmMatch[1]);
+    return bpm > 0 && bpm <= 250 ? { bpm } : null;
+  }
+  const rawMatch = text.match(/^(?:RAW|ADC|SIG|VALUE)\s*[:=]?\s*(\d{1,4})$/i);
+  if (rawMatch) {
+    return { raw: Number(rawMatch[1]) };
+  }
+  if (/^\d{1,3}$/.test(text)) {
+    const bpm = Number(text);
+    return bpm > 0 && bpm <= 250 ? { bpm } : null;
+  }
+  return null;
+}
+
 export type HeartRateConnection = {
   deviceName: string;
+  source: "bluetooth" | "usb";
   disconnect: () => void;
 };
 
 type ConnectOptions = {
   acceptAll?: boolean;
   onBpm: (bpm: number) => void;
+  onRaw?: (raw: number) => void;
   onDisconnect: () => void;
 };
 
@@ -91,6 +137,7 @@ export async function connectHeartRateSensor(
 
   return {
     deviceName: device.name?.trim() || "Heart sensor",
+    source: "bluetooth",
     disconnect: () => {
       characteristic.removeEventListener("characteristicvaluechanged", onValue);
       device.removeEventListener("gattserverdisconnected", onGone);
@@ -108,10 +155,96 @@ export async function connectHeartRateSensor(
   };
 }
 
+export async function connectWiredHeartSensor(
+  options: ConnectOptions
+): Promise<HeartRateConnection> {
+  if (!navigator.serial?.requestPort) {
+    throw new Error("USB sensors need Chrome or Edge on a computer. Plug the Arduino in with a USB cable, then try again.");
+  }
+
+  const port = await navigator.serial.requestPort();
+  await port.open({ baudRate: WIRED_HEART_BAUD });
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let stopped = false;
+  const reader = port.readable?.getReader();
+  if (!reader) {
+    await port.close().catch(() => undefined);
+    throw new Error("The USB port opened, but this browser could not read from it.");
+  }
+
+  const onGone = () => {
+    if (stopped) return;
+    stopped = true;
+    options.onDisconnect();
+  };
+  port.addEventListener("disconnect", onGone);
+
+  void (async () => {
+    try {
+      while (!stopped) {
+        const result = await reader.read();
+        if (result.done) break;
+        if (!result.value) continue;
+        buffer += decoder.decode(result.value, { stream: true });
+        let nl = buffer.indexOf("\n");
+        while (nl >= 0) {
+          const sample = parseSerialHeartLine(buffer.slice(0, nl));
+          buffer = buffer.slice(nl + 1);
+          if (sample?.bpm != null) options.onBpm(sample.bpm);
+          if (sample?.raw != null) options.onRaw?.(sample.raw);
+          nl = buffer.indexOf("\n");
+        }
+      }
+    } catch {
+      /* port closed */
+    } finally {
+      try {
+        reader.releaseLock();
+      } catch {
+        /* ignore */
+      }
+      onGone();
+    }
+  })();
+
+  const info = port.getInfo?.() ?? {};
+  const label =
+    info.usbVendorId != null
+      ? `USB heart sensor (${info.usbVendorId.toString(16)})`
+      : "USB heart sensor";
+
+  return {
+    deviceName: label,
+    source: "usb",
+    disconnect: () => {
+      stopped = true;
+      port.removeEventListener("disconnect", onGone);
+      void (async () => {
+        try {
+          await reader.cancel();
+        } catch {
+          /* ignore */
+        }
+        try {
+          await port.close();
+        } catch {
+          /* ignore */
+        }
+      })();
+    },
+  };
+}
+
 export function heartRateBrowserHelp() {
   if (typeof navigator === "undefined") return "";
-  if (!navigator.bluetooth) {
-    return "Heart sensors need Chrome or Edge. Safari on iPhone cannot pair Bluetooth straps in the browser.";
+  const usb = usbHeartRateSupported();
+  const ble = bluetoothHeartRateSupported();
+  if (usb) {
+    return "Build a wired sensor with an Arduino, then plug the USB cable in and tap Connect with USB. A Bluetooth strap also works.";
   }
-  return "Put the strap on, wait a few seconds, then tap Connect. A Chrome window will ask which device to use.";
+  if (ble) {
+    return "Put the strap on, wait a few seconds, then tap Connect. A Chrome window will ask which device to use.";
+  }
+  return "Heart sensors need Chrome or Edge on a computer. iPhone Safari cannot talk to USB or Bluetooth straps.";
 }
