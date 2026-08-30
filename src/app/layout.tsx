@@ -25,7 +25,8 @@ const kidsDisplay = Fredoka({
 
 export const metadata: Metadata = {
   title: "Revive Motion",
-  description: "Physical therapy assistance. Equal recovery for every patient.",
+  description:
+    "Physical Therapy Assistance. Equal recovery for every patient, regardless of income, language, or location.",
 };
 
 export default function RootLayout({

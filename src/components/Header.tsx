@@ -25,11 +25,11 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
         <p className={`text-sm font-bold leading-tight ${isCaregiver ? "text-[var(--caregiver-text)]" : "text-foreground"}`}>
           Revive Motion
         </p>
-        <p className={`text-xs ${isCaregiver ? "text-[var(--caregiver-muted)]" : "text-muted"}`}>
+        <p className={`text-xs font-medium ${isCaregiver ? "text-[var(--caregiver-muted)]" : "text-muted"}`}>
           Physical Therapy Assistance
         </p>
-        <p className={`text-[11px] ${isCaregiver ? "text-[var(--caregiver-muted)]" : "text-muted"}`}>
-          Equal recovery for every patient
+        <p className={`max-w-[16rem] text-[11px] leading-snug ${isCaregiver ? "text-[var(--caregiver-muted)]" : "text-muted"}`}>
+          Equal recovery for every patient, regardless of income, language, or location
         </p>
       </div>
     </div>

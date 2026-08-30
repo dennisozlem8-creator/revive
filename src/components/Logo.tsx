@@ -63,11 +63,11 @@ export function Logo({ size = 56, showText = true, stacked = false, className = 
           <span className="text-2xl font-semibold tracking-tight text-foreground">
             Revive Motion
           </span>
-          <span className="text-xs font-medium uppercase tracking-[0.14em] text-accent-light">
+          <span className="text-sm font-medium text-accent-light">
             Physical Therapy Assistance
           </span>
-          <span className="mt-1 text-sm text-muted">
-            Equal recovery for every patient
+          <span className="mt-1 max-w-sm text-sm leading-snug text-muted">
+            Equal recovery for every patient, regardless of income, language, or location
           </span>
         </div>
       )}
