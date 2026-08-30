@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { heartRateBrowserHelp } from "@/lib/heart-sensor";
+import { heartRateBrowserHelp, requestUsbHeartPort } from "@/lib/heart-sensor";
 import { useAuth } from "./AuthProvider";
 import { useHeartRate } from "./HeartRateProvider";
 
@@ -137,11 +137,24 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
             <button
               type="button"
               className="rm-btn rm-btn-brand flex-1 disabled:opacity-40"
-              disabled={!usbSupported || connecting}
+              disabled={connecting}
               onClick={async () => {
                 setSaveMessage("");
-                const ok = await connectUsb();
-                if (ok) onConnected?.();
+                try {
+                  const port = await requestUsbHeartPort();
+                  const ok = await connectUsb(port);
+                  if (ok) onConnected?.();
+                } catch (err) {
+                  const name = err instanceof DOMException ? err.name : "";
+                  if (name === "NotFoundError" || name === "AbortError") {
+                    setSaveMessage(
+                      "No USB device was chosen. Plug in the Elegoo, close Arduino Serial Monitor, tap Connect with USB, then click the Arduino / USB Serial Device in the Chrome window."
+                    );
+                    return;
+                  }
+                  const ok = await connectUsb();
+                  if (ok) onConnected?.();
+                }
               }}
             >
               {connecting ? "Connecting…" : "Connect with USB"}
@@ -149,7 +162,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
             <button
               type="button"
               className="rm-btn rm-btn-ghost flex-1 disabled:opacity-40"
-              disabled={!bluetoothSupported || connecting}
+              disabled={connecting}
               onClick={async () => {
                 setSaveMessage("");
                 const ok = await connect(false);

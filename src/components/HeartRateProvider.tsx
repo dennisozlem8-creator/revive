@@ -38,7 +38,7 @@ type HeartRateContextValue = {
   recording: boolean;
   recordCount: number;
   connect: (acceptAll?: boolean) => Promise<boolean>;
-  connectUsb: () => Promise<boolean>;
+  connectUsb: (port?: SerialPort) => Promise<boolean>;
   disconnect: () => void;
   startRecording: () => void;
   stopAndSave: (userEmail: string) => string;
@@ -162,14 +162,18 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
     [handleGone, ingestBpm]
   );
 
-  const connectUsb = useCallback(async () => {
+  const connectUsb = useCallback(async (port?: SerialPort) => {
     setError("");
     setConnecting(true);
     try {
       connectionRef.current?.disconnect();
       const connection = await connectWiredHeartSensor({
+        port,
         onBpm: ingestBpm,
         onRaw: ingestRaw,
+        onErrorLine: (message) => {
+          setError(message);
+        },
         onDisconnect: handleGone,
       });
       connectionRef.current = connection;

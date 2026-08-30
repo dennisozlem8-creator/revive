@@ -93,9 +93,9 @@ void setup() {
   Wire.begin();
   delay(50);
   if (!sensorFound()) {
-    Serial.println("ERR MAX30102 not found. Check VIN GND SCL=A5 SDA=A4");
     while (true) {
-      delay(1000);
+      Serial.println("ERR MAX30102 not found. Check VIN->5V GND->GND SCL->A5 SDA->A4");
+      delay(2000);
     }
   }
   setupSensor();

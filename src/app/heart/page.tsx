@@ -111,6 +111,17 @@ export default function HeartSensorPage() {
           </ol>
         </section>
 
+        <section className="rm-card mt-4 border-alert/30 p-5">
+          <h2 className="font-semibold">If Connect with USB does nothing</h2>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
+            <li>Use a computer, not an iPhone. Open Google Chrome or Edge (not Safari).</li>
+            <li>Plug the Elegoo USB cable into that same computer.</li>
+            <li>Close Arduino Serial Monitor. Chrome cannot share the port with Arduino IDE.</li>
+            <li>Tap Connect with USB. A Chrome window must open. Click the Arduino / USB Serial Device, then Connect.</li>
+            <li>Do not tap Bluetooth strap. The MAX30102 is wired, not a Polar belt.</li>
+          </ol>
+        </section>
+
         <div className="mt-6">
           <HeartRatePanel />
         </div>

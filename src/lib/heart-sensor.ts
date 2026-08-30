@@ -27,6 +27,7 @@ export function parseHeartRateMeasurement(value: DataView): number | null {
 export type SerialHeartSample = {
   bpm?: number;
   raw?: number;
+  error?: string;
 };
 
 /** Lines from the Arduino sketch: `BPM 72`, `RAW 512`, or `{"bpm":72,"raw":512}`. */
@@ -56,6 +57,9 @@ export function parseSerialHeartLine(line: string): SerialHeartSample | null {
   if (rawMatch) {
     return { raw: Number(rawMatch[1]) };
   }
+  if (/^ERR\b/i.test(text)) {
+    return { error: text.replace(/^ERR\s*/i, "").trim() || text };
+  }
   if (/^\d{1,3}$/.test(text)) {
     const bpm = Number(text);
     return bpm > 0 && bpm <= 250 ? { bpm } : null;
@@ -71,8 +75,10 @@ export type HeartRateConnection = {
 
 type ConnectOptions = {
   acceptAll?: boolean;
+  port?: SerialPort;
   onBpm: (bpm: number) => void;
   onRaw?: (raw: number) => void;
+  onErrorLine?: (message: string) => void;
   onDisconnect: () => void;
 };
 
@@ -155,15 +161,34 @@ export async function connectHeartRateSensor(
   };
 }
 
+export async function requestUsbHeartPort() {
+  if (!navigator.serial?.requestPort) {
+    throw new Error(
+      "This phone or browser cannot use USB. Plug the Elegoo into a Windows or Mac computer, open Google Chrome or Edge, go to revivemotion.ai/heart, then tap Connect with USB."
+    );
+  }
+  return navigator.serial.requestPort();
+}
+
 export async function connectWiredHeartSensor(
   options: ConnectOptions
 ): Promise<HeartRateConnection> {
-  if (!navigator.serial?.requestPort) {
-    throw new Error("USB sensors need Chrome or Edge on a computer. Plug the Arduino in with a USB cable, then try again.");
+  const port = options.port ?? (await requestUsbHeartPort());
+  try {
+    await port.open({ baudRate: WIRED_HEART_BAUD });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    const name = error instanceof DOMException ? error.name : "";
+    if (name === "InvalidStateError") {
+      /* already open from a previous try */
+    } else if (name === "NetworkError" || /failed to open/i.test(message)) {
+      throw new Error(
+        "Chrome could not open the USB port. Close Arduino Serial Monitor and Arduino IDE, unplug the Elegoo, plug it back in, then tap Connect with USB again. Pick the Arduino / USB Serial Device in the Chrome list."
+      );
+    } else {
+      throw error;
+    }
   }
-
-  const port = await navigator.serial.requestPort();
-  await port.open({ baudRate: WIRED_HEART_BAUD });
   const decoder = new TextDecoder();
   let buffer = "";
   let stopped = false;
@@ -193,6 +218,7 @@ export async function connectWiredHeartSensor(
           buffer = buffer.slice(nl + 1);
           if (sample?.bpm != null) options.onBpm(sample.bpm);
           if (sample?.raw != null) options.onRaw?.(sample.raw);
+          if (sample?.error) options.onErrorLine?.(sample.error);
           nl = buffer.indexOf("\n");
         }
       }
