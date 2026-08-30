@@ -10,11 +10,15 @@ import {
   useState,
 } from "react";
 import {
+  applySerialSampleToProof,
   bluetoothHeartRateSupported,
   connectHeartRateSensor,
   connectWiredHeartSensor,
+  EMPTY_USB_PROOF,
+  parseSerialHeartLine,
   usbHeartRateSupported,
   type HeartRateConnection,
+  type UsbHeartProof,
 } from "@/lib/heart-sensor";
 import {
   saveHeartRecording,
@@ -36,6 +40,7 @@ type HeartRateContextValue = {
   rawHistory: number[];
   error: string;
   serialLog: string[];
+  usbProof: UsbHeartProof;
   recording: boolean;
   recordCount: number;
   connect: (acceptAll?: boolean) => Promise<boolean>;
@@ -59,6 +64,7 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
   const [rawHistory, setRawHistory] = useState<number[]>(() => Array(HISTORY).fill(0));
   const [error, setError] = useState("");
   const [serialLog, setSerialLog] = useState<string[]>([]);
+  const [usbProof, setUsbProof] = useState<UsbHeartProof>(EMPTY_USB_PROOF);
   const [recording, setRecording] = useState(false);
   const [recordCount, setRecordCount] = useState(0);
   const connectionRef = useRef<HeartRateConnection | null>(null);
@@ -104,6 +110,7 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
     setDeviceName("");
     deviceNameRef.current = "";
     setBpm(null);
+    setUsbProof(EMPTY_USB_PROOF);
     setConnecting(false);
     setRecording(false);
   }, []);
@@ -117,6 +124,7 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
     setDeviceName("");
     deviceNameRef.current = "";
     setBpm(null);
+    setUsbProof(EMPTY_USB_PROOF);
     setConnecting(false);
     setRecording(false);
     setError("The heart sensor disconnected. Plug it in or tap Connect to pair it again.");
@@ -169,12 +177,25 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
     setConnecting(true);
     try {
       connectionRef.current?.disconnect();
+      setUsbProof(EMPTY_USB_PROOF);
+      setSerialLog([]);
       const connection = await connectWiredHeartSensor({
         port,
         onBpm: ingestBpm,
         onRaw: ingestRaw,
         onLine: (line) => {
           setSerialLog((prev) => [...prev.slice(-7), line]);
+          const sample = parseSerialHeartLine(line);
+          if (!sample) return;
+          setUsbProof((prev) => {
+            const next = applySerialSampleToProof(prev, sample);
+            if (next.board || next.chip) {
+              const name = [next.board ?? "Elegoo Uno R3", next.chip ?? "MAX30102"].join(" · ");
+              setDeviceName(name);
+              deviceNameRef.current = name;
+            }
+            return next;
+          });
         },
         onErrorLine: (message) => {
           setError(message);
@@ -182,14 +203,15 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
         onDisconnect: handleGone,
       });
       connectionRef.current = connection;
-      setDeviceName(connection.deviceName);
-      deviceNameRef.current = connection.deviceName;
+      if (!/MAX30102/i.test(deviceNameRef.current)) {
+        setDeviceName(connection.deviceName);
+        deviceNameRef.current = connection.deviceName;
+      }
       setSource("usb");
       sourceRef.current = "usb";
       setConnected(true);
       setHistory(Array(HISTORY).fill(0));
       setRawHistory(Array(HISTORY).fill(0));
-      setSerialLog([]);
       return true;
     } catch (err) {
       const name = err instanceof DOMException ? err.name : "";
@@ -268,6 +290,7 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
       rawHistory,
       error,
       serialLog,
+      usbProof,
       recording,
       recordCount,
       connect,
@@ -288,6 +311,7 @@ export function HeartRateProvider({ children }: { children: React.ReactNode }) {
       rawHistory,
       error,
       serialLog,
+      usbProof,
       recording,
       recordCount,
       connect,

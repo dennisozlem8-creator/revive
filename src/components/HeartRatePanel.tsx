@@ -1,7 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { heartRateBrowserHelp, requestUsbHeartPort, usbBlockReason } from "@/lib/heart-sensor";
+import { useEffect, useState } from "react";
+import {
+  heartRateBrowserHelp,
+  requestUsbHeartPort,
+  usbBlockReason,
+  usbSourceConfirmed,
+  type UsbHeartProof,
+} from "@/lib/heart-sensor";
 import { useAuth } from "./AuthProvider";
 import { useHeartRate } from "./HeartRateProvider";
 
@@ -24,6 +30,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
     rawHistory,
     error,
     serialLog,
+    usbProof,
     recording,
     recordCount,
     connect,
@@ -33,8 +40,16 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
     stopAndSave,
   } = useHeartRate();
   const [saveMessage, setSaveMessage] = useState("");
+  const [now, setNow] = useState(() => Date.now());
   const blocked = usbBlockReason();
   const live = connected && bpm != null && bpm > 0;
+  const confirmed = source === "usb" && usbSourceConfirmed(usbProof, now);
+
+  useEffect(() => {
+    if (source !== "usb" || !connected) return;
+    const tick = window.setInterval(() => setNow(Date.now()), 500);
+    return () => window.clearInterval(tick);
+  }, [source, connected]);
   const chart = live ? history.map((v) => (v > 0 ? v : bpm ?? 0)) : history;
   const canConnect = bluetoothSupported || usbSupported;
 
@@ -59,7 +74,9 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
               ? "Looking for your heart sensor…"
               : live
                 ? source === "usb"
-                  ? "Wired heart sensor live"
+                  ? confirmed
+                    ? "MAX30102 data confirmed"
+                    : "Wired heart sensor live"
                   : "Heart sensor live"
                 : connected
                   ? "Heart sensor connected — waiting for a beat"
@@ -67,7 +84,9 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
           </p>
           <p className="mt-1 text-sm text-muted">
             {live
-              ? `${deviceName} · live beats per minute`
+              ? source === "usb"
+                ? `${deviceName} · beats from the MAX30102 on the Elegoo Uno R3`
+                : `${deviceName} · live beats per minute`
               : connected
                 ? `${deviceName} · keep the sensor on the finger or chest`
                 : heartRateBrowserHelp()}
@@ -77,6 +96,15 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
           <p className="rm-display text-correct tabular-nums">{bpm}</p>
         ) : null}
       </div>
+
+      {source === "usb" && connected && (
+        <UsbSourceCard
+          proof={usbProof}
+          now={now}
+          confirmed={confirmed}
+          compact={compact}
+        />
+      )}
 
       {live && (
         <div className="mt-4">
@@ -237,9 +265,64 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
       {!compact && (
         <p className="mt-3 text-xs text-muted">
           Wired: Elegoo Uno R3 + MAX30102 (VIN→5V, GND→GND, SCL→A5, SDA→A4), then Connect with USB.
+          After connect, this page confirms live RAW and BPM lines from that MAX30102.
           Bluetooth: Polar H9/H10, Wahoo TICKR, Coospo, Magene.
         </p>
       )}
     </section>
+  );
+}
+
+function UsbSourceCard({
+  proof,
+  now,
+  confirmed,
+  compact,
+}: {
+  proof: UsbHeartProof;
+  now: number;
+  confirmed: boolean;
+  compact?: boolean;
+}) {
+  const ageMs = proof.lastPacketAt != null ? now - proof.lastPacketAt : null;
+  const fresh = ageMs != null && ageMs < 2500;
+  const fingerOn = (proof.lastRaw ?? 0) >= 2000;
+  const chipKnown = proof.chipId === 21 ? "MAX30102 chip ID 21" : proof.chipId != null ? `chip ID ${proof.chipId}` : "waiting";
+  const status = !proof.started && !proof.chip
+    ? "USB is open. Waiting for the Elegoo to say MAX30102."
+    : !fresh
+      ? "MAX30102 handshake seen. Waiting for the next RAW line."
+      : !fingerOn
+        ? "MAX30102 is sending IR light. Rest a fingertip on the two LEDs."
+        : proof.lastBpm
+          ? "Confirmed. Beats are coming from the MAX30102 on the Elegoo Uno R3."
+          : "Finger is on the MAX30102. Counting beats.";
+
+  return (
+    <div
+      className={`mt-4 rounded-2xl border px-4 py-3 ${
+        confirmed ? "border-correct/40 bg-correct/10" : "border-[var(--border)] bg-background"
+      }`}
+    >
+      <p className="text-xs font-bold uppercase tracking-wide text-muted">Data source</p>
+      <p className={`mt-1 font-semibold ${confirmed ? "text-correct" : "text-foreground"}`}>
+        {confirmed ? "Yes — live MAX30102 data" : "Checking the MAX30102"}
+      </p>
+      <p className="mt-1 text-sm text-body">{status}</p>
+      {!compact && (
+        <ul className="mt-3 space-y-1 text-sm text-body">
+          <li>Board: {proof.board ?? "Elegoo Uno R3 (USB open)"}</li>
+          <li>Sensor: {proof.chip ?? "waiting for CHIP MAX30102"}</li>
+          <li>I2C: {proof.i2cOk ? "OK (SDA A4, SCL A5)" : proof.started ? "not confirmed yet" : "waiting"}</li>
+          <li>Identity: {chipKnown}</li>
+          <li>
+            Live packets: {proof.packetCount} received
+            {fresh && ageMs != null ? ` · last ${ageMs < 800 ? "now" : `${(ageMs / 1000).toFixed(1)}s ago`}` : ""}
+            {proof.lastRaw != null ? ` · RAW ${proof.lastRaw}` : ""}
+            {proof.lastBpm != null ? ` · BPM ${proof.lastBpm}` : ""}
+          </li>
+        </ul>
+      )}
+    </div>
   );
 }

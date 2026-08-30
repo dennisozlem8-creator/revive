@@ -34,7 +34,9 @@ export default function HeartSensorPage() {
         <h1 className="rm-title mt-1 text-3xl text-foreground">Heart sensor</h1>
         <p className="mt-2 text-body">
           For an Elegoo Uno R3 and a MAX30102, Arduino IDE is only for Upload. Connecting the app
-          happens in Google Chrome on the same computer — not Safari, not your phone.
+          happens in Google Chrome on the same computer — not Safari, not your phone. After USB
+          connects, this page must show a green confirmation that RAW and BPM lines are coming from
+          the MAX30102, not a demo number.
         </p>
 
         <section className="rm-card mt-6 p-5">

@@ -28,12 +28,113 @@ export type SerialHeartSample = {
   bpm?: number;
   raw?: number;
   error?: string;
+  board?: string;
+  chip?: string;
+  chipId?: number;
+  i2cOk?: boolean;
+  hello?: boolean;
 };
 
-/** Lines from the Arduino sketch: `BPM 72`, `RAW 512`, or `{"bpm":72,"raw":512}`. */
+export type UsbHeartProof = {
+  board: string | null;
+  chip: string | null;
+  chipId: number | null;
+  i2cOk: boolean;
+  started: boolean;
+  lastRaw: number | null;
+  lastBpm: number | null;
+  lastPacketAt: number | null;
+  packetCount: number;
+};
+
+export const EMPTY_USB_PROOF: UsbHeartProof = {
+  board: null,
+  chip: null,
+  chipId: null,
+  i2cOk: false,
+  started: false,
+  lastRaw: null,
+  lastBpm: null,
+  lastPacketAt: null,
+  packetCount: 0,
+};
+
+const MAX30102_PART_ID = 21;
+
+export function applySerialSampleToProof(
+  proof: UsbHeartProof,
+  sample: SerialHeartSample,
+  now = Date.now()
+): UsbHeartProof {
+  const next = { ...proof };
+  if (sample.board) next.board = sample.board;
+  if (sample.chip) next.chip = sample.chip;
+  if (sample.chipId != null) next.chipId = sample.chipId;
+  if (sample.i2cOk) next.i2cOk = true;
+  if (sample.hello) {
+    next.started = true;
+    next.chip = next.chip ?? "MAX30102";
+    next.board = next.board ?? "Elegoo Uno R3";
+  }
+  if (sample.raw != null) {
+    next.lastRaw = sample.raw;
+    next.lastPacketAt = now;
+    next.packetCount += 1;
+  }
+  if (sample.bpm != null) {
+    next.lastBpm = sample.bpm;
+    next.lastPacketAt = now;
+    next.packetCount += 1;
+  }
+  return next;
+}
+
+export function usbSourceConfirmed(proof: UsbHeartProof, now = Date.now()) {
+  const fresh = proof.lastPacketAt != null && now - proof.lastPacketAt < 2500;
+  const named = (proof.chip ?? "").toUpperCase().includes("MAX30102") || proof.started;
+  return named && fresh && proof.packetCount > 0;
+}
+
+export function usbPortLabel(info?: { usbVendorId?: number }) {
+  const vid = info?.usbVendorId;
+  if (vid === 0x2341 || vid === 0x2a03) return "Elegoo Uno R3 (Arduino USB)";
+  if (vid === 0x1a86) return "Elegoo Uno R3 (CH340 USB)";
+  if (vid != null) return `USB board (${vid.toString(16)})`;
+  return "Elegoo Uno R3 (USB)";
+}
+
+function boardLabel(code: string) {
+  if (/ELEGOO/i.test(code)) return "Elegoo Uno R3";
+  return code.replace(/_/g, " ");
+}
+
+/** Lines from the Arduino sketch: `BPM 72`, `RAW 512`, `HELLO MAX30102 ELEGOO_UNO_R3`. */
 export function parseSerialHeartLine(line: string): SerialHeartSample | null {
   const text = line.trim().replace(/\r$/, "");
   if (!text) return null;
+  if (/^HELLO\b/i.test(text) && /MAX30102/i.test(text)) {
+    return {
+      hello: true,
+      chip: "MAX30102",
+      board: /ELEGOO/i.test(text) ? "Elegoo Uno R3" : undefined,
+    };
+  }
+  if (/^SRC\s+/i.test(text)) {
+    return { board: boardLabel(text.replace(/^SRC\s+/i, "").trim()) };
+  }
+  if (/^CHIP\s+/i.test(text)) {
+    return { chip: text.replace(/^CHIP\s+/i, "").trim() };
+  }
+  if (/^I2C\s+OK/i.test(text)) {
+    return { i2cOk: true };
+  }
+  if (/MAX30102 start/i.test(text)) {
+    return { hello: true, chip: "MAX30102" };
+  }
+  const idMatch = text.match(/^ID\s+(\d{1,3})$/i);
+  if (idMatch) {
+    return { chipId: Number(idMatch[1]), chip: Number(idMatch[1]) === MAX30102_PART_ID ? "MAX30102" : undefined };
+  }
   if (text.startsWith("{")) {
     try {
       const obj = JSON.parse(text) as { bpm?: unknown; raw?: unknown; hr?: unknown };
@@ -236,10 +337,7 @@ export async function connectWiredHeartSensor(
   })();
 
   const info = port.getInfo?.() ?? {};
-  const label =
-    info.usbVendorId != null
-      ? `USB heart sensor (${info.usbVendorId.toString(16)})`
-      : "USB heart sensor";
+  const label = usbPortLabel(info);
 
   return {
     deviceName: label,

@@ -27,6 +27,7 @@ A Bluetooth heart-rate strap **or** a wired Arduino pulse sensor can show live B
 1. VIN/VCC → 5V, GND → GND, SCL → A5, SDA → A4. Leave INT unconnected.
 2. Upload `firmware/wired-heart/wired-heart.ino` in Arduino IDE (Board: Arduino Uno). Close Serial Monitor.
 3. Open Chrome or Edge. Go to **Heart sensor**. Tap **Connect with USB**.
+4. The page confirms the Elegoo said `HELLO MAX30102 ELEGOO_UNO_R3` and then shows live `RAW` / `BPM` lines from that sensor.
 
 ### Bluetooth strap
 

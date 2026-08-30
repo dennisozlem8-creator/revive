@@ -73,10 +73,15 @@ void setup() {
   Serial.begin(115200);
   Wire.begin();
   delay(50);
+  Serial.println("HELLO MAX30102 ELEGOO_UNO_R3");
+  Serial.println("SRC ELEGOO_UNO_R3");
+  Serial.println("CHIP MAX30102");
   Serial.print("ID ");
   Serial.println(readReg(0xFF));
   if (!sensorAck()) {
     Serial.println("ERR no I2C. Check VIN GND SCL->A5 SDA->A4");
+  } else {
+    Serial.println("I2C OK");
   }
   setupSensor();
   Serial.println("MAX30102 start");
