@@ -40,7 +40,25 @@ export default function HeartSensorPage() {
           coming from the MAX30102, not a demo number.
         </p>
 
-        <section className="rm-card mt-6 p-5">
+        <section className="rm-card mt-6 border-alert/30 p-5">
+          <h2 className="font-semibold">Do this now to bring the MAX30102 back</h2>
+          <p className="mt-2 text-sm text-body">
+            USB already works. The chip is the part that went quiet. The new sketch unsticks I2C and
+            no longer forces 5V pull-ups first — those can keep a 3.3V MAX30102 dark after it once lit.
+          </p>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
+            <li>On this page, tap <strong className="text-foreground">Disconnect</strong>. Close Serial Monitor.</li>
+            <li>Open <code className="rounded bg-background px-1">firmware/wired-heart/wired-heart.ino</code>. Tools → Board → Arduino Uno. Upload.</li>
+            <li>Close Serial Monitor again. Unplug the USB cable for 10 seconds.</li>
+            <li>Use <strong className="text-foreground">one power wire only</strong>. If the red light was on and then died, move that wire from 5V to Uno <strong className="text-foreground">3.3V</strong> (into the MAX30102 VIN or 3.3V pin). Do not use 5V and 3.3V at the same time.</li>
+            <li>GND on the sensor must go to a GND pin on the Elegoo itself, not only a breadboard rail.</li>
+            <li>SCL → A5. SDA → A4. Push all four wires in until they click.</li>
+            <li>Plug USB back in. Connect with USB in Chrome. Watch the sensor window.</li>
+            <li>If there is still no light and the page says no I2C, swap only SDA and SCL, then unplug and Connect again.</li>
+          </ol>
+        </section>
+
+        <section className="rm-card mt-4 p-5">
           <h2 className="font-semibold">Do I need Arduino IDE?</h2>
           <p className="mt-2 text-sm text-body">
             Yes, one time. Download Arduino IDE, upload the MAX30102 program, then close Serial
@@ -92,9 +110,10 @@ export default function HeartSensorPage() {
             </table>
           </div>
           <p className="mt-3 text-sm text-muted">
-            If the MAX30102 board has a pin named only <strong className="text-foreground">3.3V</strong>{" "}
-            and no VIN, use Uno <strong className="text-foreground">3.3V</strong> instead of 5V. Never
-            put 5V into a pin labeled 1.8V.
+            Use only one power pin. If the board has VIN, try Uno 5V first. If the red light died,
+            or the pin is named only <strong className="text-foreground">3.3V</strong>, use Uno{" "}
+            <strong className="text-foreground">3.3V</strong>. Never put 5V into a pin labeled only
+            3.3V or 1.8V. Never wire both 5V and 3.3V.
           </p>
           <p className="mt-2 text-sm text-body">
             Rest a fingertip on the two LEDs on the MAX30102 and keep still.

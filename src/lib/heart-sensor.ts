@@ -91,7 +91,7 @@ export function applySerialSampleToProof(
 }
 
 export function usbHasFingerData(proof: UsbHeartProof) {
-  return (proof.lastRaw ?? 0) >= 400;
+  return (proof.lastRaw ?? 0) >= 250;
 }
 
 export function usbSourceConfirmed(proof: UsbHeartProof, now = Date.now()) {
@@ -132,6 +132,12 @@ export function parseSerialHeartLine(line: string): SerialHeartSample | null {
   }
   if (/^I2C\s+OK/i.test(text)) {
     return { i2cOk: true };
+  }
+  if (/^I2C\s+MODE\b/i.test(text)) {
+    return { hello: true, chip: "MAX30102" };
+  }
+  if (/^BUS RECOVER\b/i.test(text) || /^LED TRY\b/i.test(text) || /^RETRY I2C\b/i.test(text)) {
+    return { hello: true, chip: "MAX30102" };
   }
   if (/^SCAN\b/i.test(text)) {
     const found = !/\bnone\b/i.test(text);

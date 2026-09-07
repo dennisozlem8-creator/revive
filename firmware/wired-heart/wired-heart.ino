@@ -1,18 +1,28 @@
 /*
   Revive Motion — Elegoo Uno R3 + MAX30102
-  Wires: VIN/VCC->5V  GND->GND  SCL->A5  SDA->A4
-  If the board has 3.3V and no VIN, use Uno 3.3V instead of 5V.
+
+  Wires (one power wire only):
+    VIN or VCC -> Uno 5V   OR   3.3V -> Uno 3.3V if the board has no VIN
+    GND -> GND
+    SCL -> A5
+    SDA -> A4
+    INT / IRD / RD empty
+
+  If the red light was on once and then died, try Uno 3.3V instead of 5V.
+
   After Upload: close Serial Monitor, then Chrome -> Connect with USB
 */
 
 #include <Wire.h>
 
-uint8_t sensorAddr = 0x57;
+const int PIN_SDA = A4;
+const int PIN_SCL = A5;
 const int MIN_BPM = 40;
 const int MAX_BPM = 180;
 const unsigned long MIN_BEAT_MS = 320;
-const uint32_t FINGER_MIN = 400;
+const uint32_t FINGER_MIN = 250;
 
+uint8_t sensorAddr = 0x57;
 uint32_t lastSignal = 0;
 uint32_t recentMax = 0;
 uint32_t recentMin = 0xFFFFFFFFu;
@@ -20,7 +30,41 @@ unsigned long lastBeatMs = 0;
 unsigned long windowStart = 0;
 unsigned long lastNoDataMs = 0;
 unsigned long lastScanMs = 0;
+uint8_t fifoFailStreak = 0;
 bool i2cReady = false;
+bool lastBusOk = true;
+
+void recoverBus() {
+  Serial.println("BUS RECOVER");
+  Wire.end();
+  pinMode(PIN_SDA, INPUT_PULLUP);
+  pinMode(PIN_SCL, OUTPUT);
+  for (uint8_t i = 0; i < 9; i++) {
+    digitalWrite(PIN_SCL, HIGH);
+    delayMicroseconds(8);
+    digitalWrite(PIN_SCL, LOW);
+    delayMicroseconds(8);
+  }
+  pinMode(PIN_SDA, OUTPUT);
+  digitalWrite(PIN_SDA, LOW);
+  digitalWrite(PIN_SCL, HIGH);
+  delayMicroseconds(8);
+  digitalWrite(PIN_SDA, HIGH);
+  delayMicroseconds(8);
+  pinMode(PIN_SDA, INPUT_PULLUP);
+  pinMode(PIN_SCL, INPUT_PULLUP);
+}
+
+void beginWire(uint32_t hz, bool pullups) {
+  Wire.end();
+  pinMode(PIN_SDA, pullups ? INPUT_PULLUP : INPUT);
+  pinMode(PIN_SCL, pullups ? INPUT_PULLUP : INPUT);
+  Wire.begin();
+  Wire.setClock(hz);
+#if defined(WIRE_HAS_TIMEOUT)
+  Wire.setWireTimeout(3000, true);
+#endif
+}
 
 void writeReg(uint8_t reg, uint8_t value) {
   Wire.beginTransmission(sensorAddr);
@@ -58,8 +102,8 @@ void printScan() {
 }
 
 bool findSensor() {
-  const uint8_t tries[] = { 0x57, 0x5E, 0x55 };
-  for (uint8_t i = 0; i < 3; i++) {
+  const uint8_t tries[] = { 0x57, 0x5E, 0x55, 0x54 };
+  for (uint8_t i = 0; i < 4; i++) {
     if (ping(tries[i])) {
       sensorAddr = tries[i];
       return true;
@@ -68,10 +112,83 @@ bool findSensor() {
   return false;
 }
 
+void setupSensor() {
+  writeReg(0x09, 0x40);
+  unsigned long started = millis();
+  while (millis() - started < 200) {
+    if ((readReg(0x09) & 0x40) == 0) break;
+    delay(10);
+  }
+  writeReg(0x02, 0x00);
+  writeReg(0x03, 0x00);
+  writeReg(0x04, 0x00);
+  writeReg(0x05, 0x00);
+  writeReg(0x06, 0x00);
+  writeReg(0x08, 0x4F);
+  writeReg(0x09, 0x03);
+  writeReg(0x0A, 0x27);
+  writeReg(0x0C, 0x3F);
+  writeReg(0x0D, 0x3F);
+  delay(80);
+}
+
+void tryTurnLedsOn() {
+  const uint8_t saved = sensorAddr;
+  sensorAddr = 0x57;
+  Serial.println("LED TRY");
+  setupSensor();
+  sensorAddr = saved;
+}
+
+bool startSensor() {
+  recoverBus();
+
+  const uint32_t speeds[] = { 25000UL, 50000UL, 10000UL, 100000UL };
+  const bool pullModes[] = { false, true };
+
+  for (uint8_t p = 0; p < 2; p++) {
+    for (uint8_t s = 0; s < 4; s++) {
+      beginWire(speeds[s], pullModes[p]);
+      delay(40);
+      Serial.print("I2C MODE pullup=");
+      Serial.print(pullModes[p] ? "on" : "off");
+      Serial.print(" hz=");
+      Serial.println(speeds[s]);
+      printScan();
+      if (!findSensor()) continue;
+
+      Serial.print("ADDR 0x");
+      Serial.println(sensorAddr, HEX);
+      const uint8_t partId = readReg(0xFF);
+      Serial.print("ID ");
+      Serial.println(partId);
+      setupSensor();
+      Serial.println("I2C OK");
+      Serial.println("MAX30102 start");
+      fifoFailStreak = 0;
+      return true;
+    }
+  }
+
+  beginWire(25000UL, false);
+  tryTurnLedsOn();
+  Serial.println("ERR no I2C. One power wire only. Try Uno 3.3V if the light died. GND to GND. SCL->A5 SDA->A4. Then swap SDA and SCL.");
+  return false;
+}
+
 bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
+  Wire.beginTransmission(sensorAddr);
+  if (Wire.endTransmission() != 0) {
+    lastBusOk = false;
+    *redOut = 0;
+    *irOut = 0;
+    return false;
+  }
+
   const uint8_t wr = readReg(0x04) & 0x1F;
   const uint8_t rd = readReg(0x06) & 0x1F;
   if (wr == rd) {
+    lastBusOk = true;
     *redOut = 0;
     *irOut = 0;
     return false;
@@ -80,6 +197,7 @@ bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
   Wire.beginTransmission(sensorAddr);
   Wire.write(0x07);
   if (Wire.endTransmission() != 0) {
+    lastBusOk = false;
     *redOut = 0;
     *irOut = 0;
     return false;
@@ -96,60 +214,13 @@ bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
   }
   *redOut = red & 0x03FFFF;
   *irOut = ir & 0x03FFFF;
-  return true;
-}
-
-void setupSensor() {
-  writeReg(0x09, 0x40);
-  delay(100);
-  writeReg(0x09, 0x03);
-  writeReg(0x0A, 0x27);
-  writeReg(0x0C, 0x4F);
-  writeReg(0x0D, 0x4F);
-  writeReg(0x08, 0x4F);
-  writeReg(0x04, 0x00);
-  writeReg(0x05, 0x00);
-  writeReg(0x06, 0x00);
-  delay(80);
-}
-
-// The red LEDs only glow after these I2C writes. Try every common address
-// even when ping failed, so a flaky ACK can still turn the light on.
-void tryTurnLedsOn() {
-  const uint8_t tries[] = { 0x57, 0x5E, 0x55 };
-  const uint8_t saved = sensorAddr;
-  Serial.println("LED TRY");
-  for (uint8_t i = 0; i < 3; i++) {
-    sensorAddr = tries[i];
-    setupSensor();
-  }
-  sensorAddr = saved;
-}
-
-bool startSensor() {
-  printScan();
-  tryTurnLedsOn();
-  if (!findSensor()) {
-    Serial.println("ERR no I2C. Push in VIN GND SCL->A5 SDA->A4. If the board has no VIN, use 3.3V.");
-    return false;
-  }
-  Serial.print("ADDR 0x");
-  Serial.println(sensorAddr, HEX);
-  Serial.print("ID ");
-  Serial.println(readReg(0xFF));
-  Serial.println("I2C OK");
-  setupSensor();
-  Serial.println("MAX30102 start");
+  lastBusOk = true;
   return true;
 }
 
 void setup() {
   Serial.begin(115200);
-  pinMode(A4, INPUT_PULLUP);
-  pinMode(A5, INPUT_PULLUP);
-  Wire.begin();
-  Wire.setClock(50000);
-  delay(300);
+  delay(800);
   Serial.println("HELLO MAX30102 ELEGOO_UNO_R3");
   Serial.println("SRC ELEGOO_UNO_R3");
   Serial.println("CHIP MAX30102");
@@ -160,8 +231,17 @@ void setup() {
 void loop() {
   const unsigned long now = millis();
 
+  if (Serial.available()) {
+    String cmd = Serial.readStringUntil('\n');
+    cmd.trim();
+    if (cmd.equalsIgnoreCase("PING")) {
+      Serial.print("PONG ");
+      Serial.println(i2cReady ? sensorAddr : 0, HEX);
+    }
+  }
+
   if (!i2cReady) {
-    if (now - lastScanMs > 2000) {
+    if (now - lastScanMs > 3000) {
       lastScanMs = now;
       Serial.println("RETRY I2C");
       i2cReady = startSensor();
@@ -174,6 +254,19 @@ void loop() {
   uint32_t ir = 0;
   const bool gotSample = readFifoSample(&red, &ir);
   const uint32_t signal = ir >= red ? ir : red;
+
+  if (!lastBusOk) {
+    fifoFailStreak++;
+    if (fifoFailStreak >= 30) {
+      Serial.println("ERR I2C dropped. Recovering.");
+      i2cReady = false;
+      lastScanMs = 0;
+      fifoFailStreak = 0;
+      return;
+    }
+  } else {
+    fifoFailStreak = 0;
+  }
 
   if (gotSample) {
     Serial.print("RAW ");
