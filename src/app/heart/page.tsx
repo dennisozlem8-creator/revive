@@ -125,8 +125,9 @@ export default function HeartSensorPage() {
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
             <li>Install Arduino IDE from arduino.cc on this computer.</li>
             <li>
-              Open <code className="rounded bg-background px-1">firmware/wired-heart/wired-heart.ino</code>
-              .
+              File → Open <code className="rounded bg-background px-1">firmware/wired-heart/wired-heart.ino</code>.
+              Do not paste it into an old sketch named sketch_sep7a. If Upload says
+              redefinition of setup, File → New, delete everything, paste the program once, then Upload.
             </li>
             <li>Tools → Board → Arduino Uno. Tools → Port → the Elegoo COM port.</li>
             <li>Click Upload. Wait until it says Done uploading.</li>

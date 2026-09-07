@@ -1,6 +1,10 @@
 /*
   Revive Motion — Elegoo Uno R3 + MAX30102
 
+  Open THIS file only (File → Open → wired-heart.ino).
+  Do not paste it into an old sketch. That makes two setup() and two loop()
+  and Arduino says "redefinition of void setup()".
+
   Wires (one power wire only):
     VIN or VCC -> Uno 5V   OR   3.3V -> Uno 3.3V if the board has no VIN
     GND -> GND
