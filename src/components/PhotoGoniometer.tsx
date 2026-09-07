@@ -29,6 +29,8 @@ import { coachMovement, coachPhotoPose } from "@/lib/movement-coach";
 import { GoniometerProgressChart } from "./GoniometerProgressChart";
 import { MovementChart } from "./MovementChart";
 import { MovementCoachCard } from "./MovementCoachCard";
+import { PreExerciseSetup } from "./PreExerciseSetup";
+import { ProgressInsight } from "./ProgressInsight";
 
 type Step = "upload" | "mark";
 
@@ -212,8 +214,8 @@ export function PhotoGoniometer({
       ? kneeAngleDegrees(points.hip, points.knee, points.ankle)
       : null;
   const videoCoach = useMemo(
-    () => (samples.length >= 4 ? coachMovement(samples, exercise, joint, goal) : null),
-    [samples, exercise, joint, goal]
+    () => (samples.length >= 4 ? coachMovement(samples, exercise, joint, goal, rows) : null),
+    [samples, exercise, joint, goal, rows]
   );
   const photoCoach = useMemo(() => {
     if (photoAngle == null || !points.hip || !points.knee || !points.ankle) return null;
@@ -595,6 +597,10 @@ export function PhotoGoniometer({
       angle: photoAngle,
       note: note.trim() || photoCoach?.headline || "",
       source: "photo",
+      formScore: photoCoach?.formScore,
+      flags: photoCoach?.findings.filter((f) => f.severity !== "ok").map((f) => f.id),
+      nextAction: photoCoach?.progressNote ?? undefined,
+      detectedExercise: photoCoach?.detectedExercise,
     });
     setRows(loadMeasurements(userEmail));
     setSaved(true);
@@ -623,6 +629,10 @@ export function PhotoGoniometer({
       minAngle: summary.min,
       range: summary.range,
       durationSec: Number(summary.duration.toFixed(1)),
+      formScore: videoCoach?.formScore,
+      flags: videoCoach?.findings.filter((f) => f.severity !== "ok").map((f) => f.id),
+      nextAction: videoCoach?.progressNote ?? undefined,
+      detectedExercise: videoCoach?.detectedExercise,
     });
     setRows(loadMeasurements(userEmail));
     setSaved(true);
@@ -654,6 +664,37 @@ export function PhotoGoniometer({
 
   return (
     <div className="space-y-6">
+      <section className="rm-card p-5">
+        <p className="rm-label">Today&apos;s exercise</p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <label className="block text-sm">
+            <span className="rm-label">Exercise</span>
+            <select
+              value={exercise}
+              onChange={(e) => setExercise(e.target.value)}
+              className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
+            >
+              {EXERCISE_OPTIONS.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+          <label className="block text-sm">
+            <span className="rm-label">Joint</span>
+            <select
+              value={joint}
+              onChange={(e) => setJoint(e.target.value)}
+              className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
+            >
+              {JOINT_OPTIONS.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+      </section>
+      <PreExerciseSetup exercise={exercise} />
+      <ProgressInsight rows={rows} goal={goal} />
       {step === "upload" && (
         <section className="rm-card p-6">
           <p className="rm-label">Step 1</p>
@@ -1027,7 +1068,12 @@ export function PhotoGoniometer({
                 still. For progress tracking, not a medical diagnosis.
               </p>
               {photoCoach && (
-                <MovementCoachCard report={photoCoach} selectedExercise={exercise} />
+                <MovementCoachCard
+                  report={photoCoach}
+                  selectedExercise={exercise}
+                  history={rows}
+                  goal={goal}
+                />
               )}
               {photoUrl && points.hip && points.knee && points.ankle && (
                 <div className="relative mt-4 overflow-hidden rounded-2xl border border-[var(--border)] bg-background">
@@ -1082,7 +1128,12 @@ export function PhotoGoniometer({
                 />
               </div>
               {videoCoach && (
-                <MovementCoachCard report={videoCoach} selectedExercise={exercise} />
+                <MovementCoachCard
+                  report={videoCoach}
+                  selectedExercise={exercise}
+                  history={rows}
+                  goal={goal}
+                />
               )}
               {photoAngle == null && metaFields(exercise, setExercise, joint, setJoint, note, setNote)}
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">

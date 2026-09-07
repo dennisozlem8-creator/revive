@@ -10,6 +10,8 @@ import { useAuth } from "@/components/AuthProvider";
 import { calculateStreak } from "@/lib/streak";
 import { summarizeCheckIn } from "@/lib/pre-briefing-questions";
 import { t } from "@/lib/i18n";
+import { loadMeasurements } from "@/lib/goniometer";
+import { preExerciseSetup, progressSnapshot } from "@/lib/recovery-plan";
 
 export default function BriefingPage() {
   const { user } = useAuth();
@@ -25,6 +27,10 @@ export default function BriefingPage() {
   const checkInSummary = user.checkInAnswers
     ? summarizeCheckIn(user.checkInAnswers)
     : null;
+  const todayExercise = prescription?.exerciseName ?? "Heel Slide";
+  const setup = preExerciseSetup(todayExercise).slice(0, 4);
+  const clips = loadMeasurements(user.email);
+  const progress = progressSnapshot(clips, user.targetRom || 100);
 
   return (
     <div className="min-h-full rm-glow-patient pb-28 text-foreground">
@@ -49,14 +55,23 @@ export default function BriefingPage() {
         )}
 
         <section className="rm-card mt-4 p-5">
+          <p className="rm-label">Before you exercise</p>
+          <h2 className="mt-1 text-lg font-semibold">Do this setup first</h2>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
+            {setup.map((step) => (
+              <li key={step.title}>
+                <span className="font-semibold text-foreground">{step.title}.</span> {step.detail}
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="rm-card mt-4 p-5">
           <p className="rm-label">Daily check-in</p>
           <h2 className="mt-1 text-lg font-semibold">Photo Goniometer</h2>
-          <p className="mt-2 text-sm text-body">
-            Under today&apos;s check-in: record a side-view video. The movement coach measures
-            the knee and gives feedback on the exercise.
-          </p>
+          <p className="mt-2 text-sm text-body">{progress.headline}</p>
           <Link href="/goniometer" className="rm-btn rm-btn-brand mt-4 w-full">
-            Open Photo Goniometer
+            Record today&apos;s clip
           </Link>
         </section>
 

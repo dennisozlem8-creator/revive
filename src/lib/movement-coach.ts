@@ -1,4 +1,4 @@
-import { EXERCISE_OPTIONS, type Point } from "./goniometer";
+import { EXERCISE_OPTIONS, type GoniometerMeasurement, type Point } from "./goniometer";
 import { summarizeMovement, type MovementSample } from "./pose-goniometer";
 
 export type FindingSeverity = "ok" | "watch" | "unusual";
@@ -20,6 +20,8 @@ export type MovementCoachReport = {
   feedback: string[];
   unusualTimes: number[];
   trackingQuality: "good" | "fair" | "poor";
+  formScore: number;
+  progressNote: string | null;
 };
 
 type ExerciseId =
@@ -157,24 +159,57 @@ const EXERCISE_CUES: Record<ExerciseId, string[]> = {
   ],
 };
 
+function smoothSamples(samples: MovementSample[]): MovementSample[] {
+  return samples.map((sample, index, all) => {
+    if (index === 0 || index === all.length - 1) return sample;
+    const trio = [all[index - 1].angle, sample.angle, all[index + 1].angle].sort((a, b) => a - b);
+    return { ...sample, angle: trio[1] };
+  });
+}
+
+function formScoreFor(findings: MovementFinding[], quality: MovementCoachReport["trackingQuality"]) {
+  let score = 88;
+  if (quality === "fair") score -= 8;
+  if (quality === "poor") score -= 18;
+  for (const finding of findings) {
+    if (finding.severity === "unusual") score -= 14;
+    if (finding.severity === "watch") score -= 6;
+  }
+  return Math.max(20, Math.min(99, score));
+}
+
+function progressNoteFor(history: GoniometerMeasurement[], peak: number) {
+  const prior = history.filter((row) => row.source === "video" || row.minAngle != null);
+  if (prior.length === 0) {
+    return `This is the first saved motion clip. Peak ${peak}°. Record again in 1–2 days with the same camera spot.`;
+  }
+  const last = prior[prior.length - 1];
+  const delta = peak - last.angle;
+  if (delta >= 3) return `Peak is ${delta}° higher than the last clip (${last.angle}°). Keep the same slow count.`;
+  if (delta <= -3) return `Peak is ${Math.abs(delta)}° lower than last time (${last.angle}°). Repeat yesterday’s setup before adding range.`;
+  return `Peak is holding near ${last.angle}°. That is useful. Improve control before chasing more degrees.`;
+}
+
 export function coachMovement(
   samples: MovementSample[],
   selectedExercise: string,
   joint: string,
-  goal = 100
+  goal = 100,
+  history: GoniometerMeasurement[] = []
 ): MovementCoachReport | null {
-  const summary = summarizeMovement(samples);
-  if (!summary || samples.length < 4) return null;
+  const analyzed = smoothSamples(samples);
+  const summary = summarizeMovement(analyzed);
+  if (!summary || analyzed.length < 4) return null;
 
-  const angles = samples.map((sample) => sample.angle);
-  const inferred = inferExercise(samples);
+  const angles = analyzed.map((sample) => sample.angle);
+  const inferred = inferExercise(analyzed);
   const exercise = (
     EXERCISE_OPTIONS.includes(selectedExercise as ExerciseId)
       ? selectedExercise
       : inferred.exercise
   ) as ExerciseId;
-  const quality = trackingQuality(samples, summary.duration);
-  const vels = velocitySeries(samples);
+  const quality = trackingQuality(analyzed, summary.duration);
+  const vels = velocitySeries(analyzed);
   const findings: MovementFinding[] = [];
   const unusualTimes: number[] = [];
   const side = joint.toLowerCase().includes("left") ? "left" : "right";
@@ -243,7 +278,7 @@ export function coachMovement(
     });
   }
 
-  const hipTravel = span(samples.map((sample) => sample.hip.y));
+  const hipTravel = span(analyzed.map((sample) => sample.hip.y));
   if (hipTravel > 0.09 && summary.range >= 12) {
     findings.push({
       id: "hip-hike",
@@ -254,7 +289,7 @@ export function coachMovement(
     });
   }
 
-  const trunk = samples
+  const trunk = analyzed
     .filter((sample) => sample.shoulder)
     .map((sample) => (sample.shoulder?.x ?? 0) - sample.hip.x);
   if (trunk.length > 4 && span(trunk) > 0.12) {
@@ -267,7 +302,7 @@ export function coachMovement(
     });
   }
 
-  const oppositeHips = samples.filter((sample) => sample.oppositeHip);
+  const oppositeHips = analyzed.filter((sample) => sample.oppositeHip);
   if (oppositeHips.length > 4) {
     const hike = span(oppositeHips.map((sample) => Math.abs(sample.hip.y - (sample.oppositeHip?.y ?? sample.hip.y))));
     if (hike > 0.1) {
@@ -281,7 +316,7 @@ export function coachMovement(
     }
   }
 
-  const offsets = samples.map((sample) => kneeLineOffset(sample.hip, sample.knee, sample.ankle));
+  const offsets = analyzed.map((sample) => kneeLineOffset(sample.hip, sample.knee, sample.ankle));
   if (avg(offsets) > 0.08) {
     findings.push({
       id: "alignment",
@@ -306,10 +341,10 @@ export function coachMovement(
   }
 
   let freeze = 0;
-  let freezeStart = samples[0].time;
-  for (let i = 1; i < samples.length; i++) {
-    if (Math.abs(samples[i].angle - samples[i - 1].angle) < 2) {
-      freeze += samples[i].time - samples[i - 1].time;
+  let freezeStart = analyzed[0].time;
+  for (let i = 1; i < analyzed.length; i++) {
+    if (Math.abs(analyzed[i].angle - analyzed[i - 1].angle) < 2) {
+      freeze += analyzed[i].time - analyzed[i - 1].time;
     } else {
       if (freeze > 1.8 && summary.duration > 3) {
         unusualTimes.push(freezeStart);
@@ -322,7 +357,7 @@ export function coachMovement(
         });
       }
       freeze = 0;
-      freezeStart = samples[i].time;
+      freezeStart = analyzed[i].time;
     }
   }
 
@@ -389,6 +424,8 @@ export function coachMovement(
     feedback,
     unusualTimes: [...new Set(unusualTimes)].slice(0, 6),
     trackingQuality: quality,
+    formScore: formScoreFor(findings, quality),
+    progressNote: progressNoteFor(history, summary.peak),
   };
 }
 
@@ -447,5 +484,7 @@ export function coachPhotoPose(
     feedback: EXERCISE_CUES[exercise],
     unusualTimes: [],
     trackingQuality: "good",
+    formScore: offset > 0.08 ? 72 : 90,
+    progressNote: null,
   };
 }

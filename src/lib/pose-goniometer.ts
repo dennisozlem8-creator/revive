@@ -254,7 +254,7 @@ export async function analyzeVideoElement(
       };
       const tick = () => {
         const now = performance.now();
-        if (now - last >= 90) {
+        if (now - last >= 45) {
           last = now;
           if (video.readyState >= 2) collect();
         }

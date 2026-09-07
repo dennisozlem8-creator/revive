@@ -8,6 +8,8 @@ import { calculateStreak } from "@/lib/streak";
 import { useEffect, useState } from "react";
 import { isCareTeam } from "@/lib/users";
 import type { AppNotification } from "@/lib/notifications";
+import { loadMeasurements } from "@/lib/goniometer";
+import { doctorWatchLevel, progressSnapshot } from "@/lib/recovery-plan";
 
 export default function DoctorDashboardPage() {
   const { user, getPatientsForDoctor } = useAuth();
@@ -41,7 +43,7 @@ export default function DoctorDashboardPage() {
         </p>
         <h1 className="mt-1 text-3xl font-bold text-[var(--caregiver-text)]">Your Patients</h1>
         <p className="mt-2 text-[var(--caregiver-muted)]">
-          Monitor recovery, streaks, and daily alerts.
+          Monitor movement clips, form scores, and whether range is improving.
         </p>
 
         <Link
@@ -64,7 +66,10 @@ export default function DoctorDashboardPage() {
           ) : (
             <div className="divide-y divide-[#e2e8f0]">
               {patients.map((patient) => {
-                const onTrack = calculateStreak(patient) >= 2;
+                const clips = loadMeasurements(patient.email);
+                const watch = doctorWatchLevel(clips);
+                const progress = progressSnapshot(clips, patient.targetRom || 100);
+                const onTrack = watch.level === "on-track" && calculateStreak(patient) >= 1;
                 return (
                   <article key={patient.email} className="flex gap-4 px-6 py-4">
                     <div
@@ -77,25 +82,36 @@ export default function DoctorDashboardPage() {
                         <p className="text-sm text-[var(--caregiver-muted)]">{patient.email}</p>
                         <span
                           className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-bold ${
-                            onTrack ? "bg-correct/15 text-correct" : "bg-almost/15 text-almost"
+                            watch.level === "on-track" ? "bg-correct/15 text-correct" : "bg-almost/15 text-almost"
                           }`}
                         >
-                          {onTrack ? "ON TRACK" : "NEEDS ATTENTION"}
+                          {watch.label.toUpperCase()}
                         </span>
+                        <p className="mt-2 max-w-md text-sm text-[var(--caregiver-muted)]">{watch.detail}</p>
                       </div>
-                      <div className="flex gap-4 text-right text-sm">
-                        <div>
-                          <p className="text-2xl font-bold text-orange">{calculateStreak(patient)}</p>
-                          <p className="text-xs text-[var(--caregiver-muted)]">Streak</p>
+                      <div className="flex flex-col items-end gap-3 text-right text-sm">
+                        <div className="flex gap-4">
+                          <div>
+                            <p className="text-2xl font-bold text-orange">{calculateStreak(patient)}</p>
+                            <p className="text-xs text-[var(--caregiver-muted)]">Streak</p>
+                          </div>
+                          <div>
+                            <p className="text-2xl font-bold text-correct">
+                              {progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
+                            </p>
+                            <p className="text-xs text-[var(--caregiver-muted)]">Latest peak</p>
+                          </div>
+                          <div>
+                            <p className="text-2xl font-bold text-brand">{clips.length}</p>
+                            <p className="text-xs text-[var(--caregiver-muted)]">Clips</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-2xl font-bold text-correct">{patient.baselineRom + 30}°</p>
-                          <p className="text-xs text-[var(--caregiver-muted)]">ROM</p>
-                        </div>
-                        <div>
-                          <p className="text-2xl font-bold text-brand">{patient.exerciseHistory.length}</p>
-                          <p className="text-xs text-[var(--caregiver-muted)]">Sessions</p>
-                        </div>
+                        <Link
+                          href={`/doctor/patient?email=${encodeURIComponent(patient.email)}`}
+                          className="text-sm font-semibold text-brand-light hover:text-brand"
+                        >
+                          Review movement →
+                        </Link>
                       </div>
                     </div>
                   </article>

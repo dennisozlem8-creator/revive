@@ -8,6 +8,9 @@ import { TabRow } from "@/components/ui/TabRow";
 import { useAuth } from "@/components/AuthProvider";
 import { calculateStreak } from "@/lib/streak";
 import { t } from "@/lib/i18n";
+import { loadMeasurements } from "@/lib/goniometer";
+import { GoniometerProgressChart } from "@/components/GoniometerProgressChart";
+import { ProgressInsight } from "@/components/ProgressInsight";
 
 type ChartTab = "rom" | "reps" | "pain" | "photo";
 
@@ -145,17 +148,24 @@ export default function ChartsPage() {
         )}
 
         {tab === "photo" && (
-          <section className="rm-card mt-6 p-6">
-            <h2 className="font-semibold">Photo Goniometer</h2>
-            <p className="mt-2 rm-body">
-              Record a side-view video. The app tracks hip, knee, and ankle, then the
-              movement coach flags form issues and unusual motion before you save the peak
-              angle to this graph.
-            </p>
-            <Link href="/goniometer" className="rm-btn rm-btn-brand mt-6 inline-flex">
-              Open photo tool
-            </Link>
-          </section>
+          <div className="mt-6 space-y-4">
+            <ProgressInsight
+              rows={loadMeasurements(user.email)}
+              goal={user.targetRom || 100}
+            />
+            <section className="rm-card p-6">
+              <h2 className="font-semibold">Peak angle over time</h2>
+              <div className="mt-4">
+                <GoniometerProgressChart
+                  measurements={loadMeasurements(user.email)}
+                  goal={user.targetRom || 100}
+                />
+              </div>
+              <Link href="/goniometer" className="rm-btn rm-btn-brand mt-6 inline-flex">
+                Record a new clip
+              </Link>
+            </section>
+          </div>
         )}
       </main>
       <BottomNav />

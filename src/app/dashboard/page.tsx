@@ -11,6 +11,9 @@ import {
   getLongestStreak,
 } from "@/lib/streak";
 import { KidsIcon } from "@/components/KidsIcon";
+import { ProgressInsight } from "@/components/ProgressInsight";
+import { loadMeasurements } from "@/lib/goniometer";
+import { preExerciseSetup } from "@/lib/recovery-plan";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -29,19 +32,41 @@ export default function DashboardPage() {
   const longestStreak = getLongestStreak(user);
   const totalActiveDays = getActivityDates(user).length;
   const questsDone = Object.values(user.questProgress).filter(Boolean).length;
+  const clips = loadMeasurements(user.email);
+  const todayExercise = user.ptPrescription?.exerciseName ?? "Heel Slide";
+  const setup = preExerciseSetup(todayExercise).slice(0, 3);
 
   return (
     <div className="min-h-full rm-glow-patient pb-28 text-foreground">
       <Header linkHome />
       <main className="mx-auto max-w-5xl px-6 pb-8">
         <h1 className="rm-title text-3xl text-foreground">Your Dashboard</h1>
-        <p className="mt-2 text-body">Track your recovery streak and progress.</p>
+        <p className="mt-2 text-body">
+          Measure, follow the setup, then do today&apos;s dose. That is the fastest loop we can
+          show your clinician.
+        </p>
 
         <PageHeroImage
           src="/images/dashboard-hero.svg"
           alt="Recovery progress dashboard"
           className="mt-6"
         />
+
+        <section className="rm-card mt-6 p-5">
+          <p className="rm-label">Today&apos;s recovery loop</p>
+          <h2 className="mt-1 text-lg font-bold">1. Set up · 2. Record · 3. Do the sets</h2>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
+            {setup.map((step) => (
+              <li key={step.title}>
+                <span className="font-semibold text-foreground">{step.title}.</span> {step.detail}
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <div className="mt-6">
+          <ProgressInsight rows={clips} goal={user.targetRom || 100} />
+        </div>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Link href="/goniometer" className="rm-btn rm-btn-brand inline-flex flex-1">

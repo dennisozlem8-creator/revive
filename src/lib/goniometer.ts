@@ -19,6 +19,10 @@ export type GoniometerMeasurement = {
   minAngle?: number;
   range?: number;
   durationSec?: number;
+  formScore?: number;
+  flags?: string[];
+  nextAction?: string;
+  detectedExercise?: string;
 };
 
 export const LANDMARK_ORDER: LandmarkId[] = ["hip", "knee", "ankle"];
@@ -58,16 +62,19 @@ export function kneeAngleDegrees(hip: Point, knee: Point, ankle: Point): number 
   return Math.round((Math.acos(cos) * 180) / Math.PI);
 }
 
-export function loadMeasurements(userEmail: string): GoniometerMeasurement[] {
+export function loadAllMeasurements(): GoniometerMeasurement[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = JSON.parse(localStorage.getItem(GONIOMETER_KEY) ?? "[]") as GoniometerMeasurement[];
-    return raw
-      .filter((row) => row.userEmail === userEmail)
-      .sort((a, b) => a.date.localeCompare(b.date));
+    return JSON.parse(localStorage.getItem(GONIOMETER_KEY) ?? "[]") as GoniometerMeasurement[];
   } catch {
     return [];
   }
+}
+
+export function loadMeasurements(userEmail: string): GoniometerMeasurement[] {
+  return loadAllMeasurements()
+    .filter((row) => row.userEmail === userEmail)
+    .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export function saveMeasurement(row: GoniometerMeasurement) {
@@ -122,6 +129,10 @@ export async function persistMeasurement(row: GoniometerMeasurement): Promise<Pe
         min_angle: row.minAngle ?? null,
         range: row.range ?? null,
         duration_sec: row.durationSec ?? null,
+        form_score: row.formScore ?? null,
+        flags: row.flags ?? null,
+        next_action: row.nextAction ?? null,
+        detected_exercise: row.detectedExercise ?? null,
       });
     if (error) {
       return {

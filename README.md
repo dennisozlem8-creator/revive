@@ -11,9 +11,9 @@ Kids Quest is a storybook adventure world for exercises, with original kingdoms 
 
 Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo tab), or today’s briefing.
 
-1. Open the camera and take a side-view photo, or choose a photo from files. The app reads the hip, knee, and ankle and shows the angle at the bottom of that page.
-2. Or record a short side-view video, then tap **Analyze movement**. The movement coach measures the knee, looks for unusual motion on that part, names the exercise it thinks you did, and gives form feedback.
-3. Saved angles stay on this device. If Supabase is connected, a copy is also sent to the clinic database.
+1. Choose the exercise, then follow the **Before you record** checklist so the clip is usable.
+2. Take a side-view photo or record a short video and tap **Analyze movement**. The coach scores form, compares it to your last clip, and gives the next sets to do.
+3. Saved angles, form scores, and next actions stay on this device. Doctors on this device can open a patient and review the movement trend.
 4. You can still mark hip → knee → ankle by hand if the camera cannot see the leg.
 
 The estimate is for progress tracking, not a diagnosis. Video files are not stored in the browser database.

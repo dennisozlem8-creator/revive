@@ -39,7 +39,7 @@ const faq: { keywords: string[]; answer: string }[] = [
   {
     keywords: ["goniometer", "photo", "angle", "hip", "mark"],
     answer:
-      "Open Photo Goniometer from your Dashboard or Charts. Record a side-view video of the knee moving. The app tracks hip, knee, and ankle, graphs the angle, and the movement coach flags unusual motion and gives exercise feedback. A still photo with tap-to-mark still works. It is not a medical diagnosis.",
+      "Open Photo Goniometer. Check the setup list first, then record a side-view video. The coach scores form, tells you the next sets to do, and saves a trend your doctor can review. A still photo still works. It is not a medical diagnosis.",
   },
   {
     keywords: ["pain", "hurt", "sore"],

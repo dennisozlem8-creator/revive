@@ -26,9 +26,8 @@ export default function GoniometerPage() {
         <p className="rm-label">Movement tool</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Photo Goniometer</h1>
         <p className="mt-2 text-body">
-          Take a side-view photo for a knee angle, or record the exercise. The movement
-          coach measures the joint, looks for unusual motion on that part, and gives
-          feedback for the exercise you selected.
+          Check the setup list first, then record. The coach scores the motion, tells you
+          exactly what to do next, and saves a trend your doctor can review.
         </p>
 
         <div className="mt-6">
