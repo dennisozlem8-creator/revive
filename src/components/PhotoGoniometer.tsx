@@ -25,8 +25,10 @@ import {
   summarizeMovement,
   type MovementSample,
 } from "@/lib/pose-goniometer";
+import { coachMovement, coachPhotoPose } from "@/lib/movement-coach";
 import { GoniometerProgressChart } from "./GoniometerProgressChart";
 import { MovementChart } from "./MovementChart";
+import { MovementCoachCard } from "./MovementCoachCard";
 
 type Step = "upload" | "mark";
 
@@ -204,6 +206,19 @@ export function PhotoGoniometer({
   preferLeftRef.current = preferLeft;
   videoUrlRef.current = videoUrl;
   const movement = useMemo(() => summarizeMovement(samples), [samples]);
+  const pending = nextLandmark(points);
+  const photoAngle =
+    points.hip && points.knee && points.ankle
+      ? kneeAngleDegrees(points.hip, points.knee, points.ankle)
+      : null;
+  const videoCoach = useMemo(
+    () => (samples.length >= 4 ? coachMovement(samples, exercise, joint, goal) : null),
+    [samples, exercise, joint, goal]
+  );
+  const photoCoach = useMemo(() => {
+    if (photoAngle == null || !points.hip || !points.knee || !points.ankle) return null;
+    return coachPhotoPose(photoAngle, points.hip, points.knee, points.ankle, exercise, joint);
+  }, [photoAngle, points, exercise, joint]);
 
   useEffect(() => {
     setRows(loadMeasurements(userEmail));
@@ -262,12 +277,6 @@ export function PhotoGoniometer({
       height: (box.height / wr.height) * 100,
     });
   }
-
-  const pending = nextLandmark(points);
-  const photoAngle =
-    points.hip && points.knee && points.ankle
-      ? kneeAngleDegrees(points.hip, points.knee, points.ankle)
-      : null;
 
   function stopTracks() {
     cameraRequestRef.current += 1;
@@ -456,7 +465,7 @@ export function PhotoGoniometer({
       const result = found.length >= 4 ? found : liveSamples;
       if (result.length < 4) {
         setCameraError(
-          "Could not see the hip, knee, and ankle clearly. Record from the side, with the whole leg in view, then tap Send to analysis again."
+          "Could not see the hip, knee, and ankle clearly. Record from the side, with the whole leg in view, then tap Analyze movement again."
         );
         return;
       }
@@ -584,7 +593,7 @@ export function PhotoGoniometer({
       exercise,
       joint,
       angle: photoAngle,
-      note: note.trim(),
+      note: note.trim() || photoCoach?.headline || "",
       source: "photo",
     });
     setRows(loadMeasurements(userEmail));
@@ -609,7 +618,7 @@ export function PhotoGoniometer({
       exercise,
       joint,
       angle: summary.peak,
-      note: note.trim(),
+      note: note.trim() || videoCoach?.headline || "",
       source: "video",
       minAngle: summary.min,
       range: summary.range,
@@ -651,8 +660,9 @@ export function PhotoGoniometer({
           <h2 className="mt-1 text-xl font-bold">Record a side-view video or take a photo</h2>
           <p className="mt-2 rm-body">
             Stand or sit sideways so the hip, knee, and ankle stay in view. After a photo,
-            the angle appears at the bottom of this page. After a video, you choose whether
-            to send it to analysis or save it to records.
+            the angle appears below. After a video, send it to the movement coach. It measures
+            the knee, flags unusual motion on that part, and gives feedback for the exercise
+            you are doing.
           </p>
 
           <div className="relative mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-black">
@@ -813,7 +823,7 @@ export function PhotoGoniometer({
             <div className="mt-4 rounded-2xl border border-[var(--border)] bg-background px-4 py-4">
               <p className="font-semibold">Analyzing your video… {analyzePct}%</p>
               <p className="mt-1 text-sm text-muted">
-                Playing the clip and measuring the knee. Results appear below.
+                Measuring the knee and checking the motion for form issues and unusual spots.
               </p>
               <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-elevated">
                 <div className="h-full bg-brand transition-[width]" style={{ width: `${analyzePct}%` }} />
@@ -830,13 +840,13 @@ export function PhotoGoniometer({
                 onClick={() => {
                   const url = videoUrlRef.current ?? videoUrl;
                   if (!url) {
-                    setCameraError("The video is not ready yet. Record again, then tap Send to analysis.");
+                    setCameraError("The video is not ready yet. Record again, then tap Analyze movement.");
                     return;
                   }
                   void runVideoAnalysis(url);
                 }}
               >
-                {analyzing ? `Analyzing… ${analyzePct}%` : "Send to analysis"}
+                {analyzing ? `Analyzing… ${analyzePct}%` : "Analyze movement"}
               </button>
               <button
                 type="button"
@@ -994,7 +1004,8 @@ export function PhotoGoniometer({
             <>
               <h2 className="mt-1 text-xl font-bold">Reading this video</h2>
               <p className="mt-2 rm-body">
-                Measuring hip, knee, and ankle now. Peak, min, and range will show here.
+                Measuring hip, knee, and ankle, then the coach will flag form issues and
+                unusual motion.
               </p>
               <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-elevated">
                 <div className="h-full bg-brand transition-[width]" style={{ width: `${analyzePct}%` }} />
@@ -1012,8 +1023,12 @@ export function PhotoGoniometer({
               <h2 className="mt-1 text-xl font-bold">Photo analysis</h2>
               <p className="rm-display mt-4 text-correct">{photoAngle}°</p>
               <p className="mt-2 text-sm text-muted">
-                Estimated knee angle from this photo. For progress tracking, not a medical diagnosis.
+                Estimated knee angle from this photo. The coach below reads alignment on this
+                still. For progress tracking, not a medical diagnosis.
               </p>
+              {photoCoach && (
+                <MovementCoachCard report={photoCoach} selectedExercise={exercise} />
+              )}
               {photoUrl && points.hip && points.knee && points.ankle && (
                 <div className="relative mt-4 overflow-hidden rounded-2xl border border-[var(--border)] bg-background">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1043,7 +1058,7 @@ export function PhotoGoniometer({
               </h2>
               <p className="mt-2 rm-body">
                 Peak is the highest angle in this clip. Min is the smallest. Range is how far the
-                joint traveled.
+                joint traveled. Red rings on the graph mark unusual jumps the coach flagged.
               </p>
               <div className="mt-5 grid grid-cols-3 gap-3 text-center">
                 <div className="rounded-xl bg-background px-2 py-3">
@@ -1060,8 +1075,15 @@ export function PhotoGoniometer({
                 </div>
               </div>
               <div className="mt-4">
-                <MovementChart samples={samples} goal={goal} />
+                <MovementChart
+                  samples={samples}
+                  goal={goal}
+                  unusualTimes={videoCoach?.unusualTimes ?? []}
+                />
               </div>
+              {videoCoach && (
+                <MovementCoachCard report={videoCoach} selectedExercise={exercise} />
+              )}
               {photoAngle == null && metaFields(exercise, setExercise, joint, setJoint, note, setNote)}
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                 <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={resetCapture}>

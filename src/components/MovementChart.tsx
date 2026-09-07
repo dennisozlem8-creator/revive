@@ -3,9 +3,11 @@ import type { MovementSample } from "@/lib/pose-goniometer";
 export function MovementChart({
   samples,
   goal,
+  unusualTimes = [],
 }: {
   samples: MovementSample[];
   goal: number;
+  unusualTimes?: number[];
 }) {
   if (samples.length === 0) {
     return <p className="rm-body">No movement samples yet.</p>;
@@ -57,6 +59,22 @@ export function MovementChart({
           fill="var(--brand)"
         />
       ))}
+      {unusualTimes.map((time) => {
+        const nearest = samples.reduce((best, sample) =>
+          Math.abs(sample.time - time) < Math.abs(best.time - time) ? sample : best
+        );
+        return (
+          <circle
+            key={`flag-${time}`}
+            cx={xFor(nearest.time)}
+            cy={yFor(nearest.angle)}
+            r="6"
+            fill="none"
+            stroke="var(--alert)"
+            strokeWidth="2"
+          />
+        );
+      })}
       <text x={4} y={pad.top + 4} fill="var(--muted)" fontSize="10">
         {Math.round(maxY)}°
       </text>

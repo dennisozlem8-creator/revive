@@ -21,7 +21,8 @@ export default function CheckInPage() {
           <p className="rm-label">After check-in</p>
           <h2 className="mt-1 text-lg font-semibold">Photo Goniometer</h2>
           <p className="mt-2 text-sm text-body">
-            Record a side-view video so the app can watch the knee move and save today&apos;s peak angle.
+            Record a side-view video so the movement coach can watch the knee, flag unusual
+            motion, and save today&apos;s peak angle.
           </p>
           <Link href="/goniometer" className="rm-btn rm-btn-brand mt-4 w-full">
             Open Photo Goniometer

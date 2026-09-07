@@ -148,8 +148,9 @@ export default function ChartsPage() {
           <section className="rm-card mt-6 p-6">
             <h2 className="font-semibold">Photo Goniometer</h2>
             <p className="mt-2 rm-body">
-              Record a side-view video. The app tracks hip, knee, and ankle through the
-              movement, then saves the peak angle to this progress graph.
+              Record a side-view video. The app tracks hip, knee, and ankle, then the
+              movement coach flags form issues and unusual motion before you save the peak
+              angle to this graph.
             </p>
             <Link href="/goniometer" className="rm-btn rm-btn-brand mt-6 inline-flex">
               Open photo tool

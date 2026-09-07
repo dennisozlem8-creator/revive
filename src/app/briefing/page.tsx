@@ -52,7 +52,8 @@ export default function BriefingPage() {
           <p className="rm-label">Daily check-in</p>
           <h2 className="mt-1 text-lg font-semibold">Photo Goniometer</h2>
           <p className="mt-2 text-sm text-body">
-            Under today&apos;s check-in: record a side-view video and measure how the knee moves.
+            Under today&apos;s check-in: record a side-view video. The movement coach measures
+            the knee and gives feedback on the exercise.
           </p>
           <Link href="/goniometer" className="rm-btn rm-btn-brand mt-4 w-full">
             Open Photo Goniometer

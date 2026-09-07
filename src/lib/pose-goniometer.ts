@@ -6,6 +6,13 @@ export type MovementSample = {
   hip: Point;
   knee: Point;
   ankle: Point;
+  side?: "left" | "right";
+  oppositeHip?: Point;
+  oppositeKnee?: Point;
+  oppositeAnkle?: Point;
+  shoulder?: Point;
+  oppositeShoulder?: Point;
+  visibility?: number;
 };
 
 export type MovementSummary = {
@@ -110,13 +117,29 @@ export function sampleFromPose(
   const hipPoint = { x: hip.x, y: hip.y };
   const kneePoint = { x: knee.x, y: knee.y };
   const anklePoint = { x: ankle.x, y: ankle.y };
+  const other = pick === LEFT ? RIGHT : LEFT;
+  const sameShoulder = pick === LEFT ? landmarks[11] : landmarks[12];
+  const otherShoulder = pick === LEFT ? landmarks[12] : landmarks[11];
   return {
     time,
     angle: kneeAngleDegrees(hipPoint, kneePoint, anklePoint),
     hip: hipPoint,
     knee: kneePoint,
     ankle: anklePoint,
+    side: pick === LEFT ? "left" : "right",
+    oppositeHip: asPoint(landmarks[other.hip]),
+    oppositeKnee: asPoint(landmarks[other.knee]),
+    oppositeAnkle: asPoint(landmarks[other.ankle]),
+    shoulder: asPoint(sameShoulder),
+    oppositeShoulder: asPoint(otherShoulder),
+    visibility:
+      (visibilityOf(hip) + visibilityOf(knee) + visibilityOf(ankle)) / 3,
   };
+}
+
+function asPoint(landmark?: PoseLandmark): Point | undefined {
+  if (!landmark || visibilityOf(landmark) < 0.2) return undefined;
+  return { x: landmark.x, y: landmark.y };
 }
 
 export function detectVideoFrame(
