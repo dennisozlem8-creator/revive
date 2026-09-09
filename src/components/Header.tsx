@@ -20,11 +20,8 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
 
   const logo = (
     <div className="flex items-center gap-3">
-      <Logo size={48} showText={false} />
+      <Logo size={64} showText={false} />
       <div className="hidden sm:block">
-        <p className={`text-sm font-bold leading-tight ${isCaregiver ? "text-[var(--caregiver-text)]" : "text-foreground"}`}>
-          Revive Motion
-        </p>
         <p className={`text-xs font-medium ${isCaregiver ? "text-[var(--caregiver-muted)]" : "text-muted"}`}>
           Physical Therapy Assistance
         </p>
