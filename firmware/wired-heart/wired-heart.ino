@@ -6,13 +6,14 @@
   and Arduino says "redefinition of void setup()".
 
   Wires (one power wire only):
-    VIN or VCC -> Uno 5V   OR   3.3V -> Uno 3.3V if the board has no VIN
+    VIN or VCC -> Uno 3.3V first (safer). If no VIN pin, use the 3.3V pin.
+    Never put Uno 5V into a pin labeled only 3.3V.
     GND -> GND
     SCL -> A5
     SDA -> A4
     INT / IRD / RD empty
+    Leave the sensor 3.3V pin empty if you are already powering VIN.
 
-  If the red light was on once and then died, try Uno 3.3V instead of 5V.
   If I2C still fails, this sketch also tries SDA/SCL swapped in software.
 
   After Upload: close Serial Monitor, then Chrome -> Connect with USB
@@ -58,6 +59,10 @@ void sdaLow() {
 
 void sclHigh() {
   pinMode(sclPin, INPUT_PULLUP);
+  unsigned long started = micros();
+  while (digitalRead(sclPin) == LOW && (micros() - started) < 1000) {
+    /* clock stretch */
+  }
 }
 
 void sclLow() {
@@ -225,19 +230,20 @@ uint8_t readReg(uint8_t reg) {
   }
   Wire.beginTransmission(sensorAddr);
   Wire.write(reg);
-  if (Wire.endTransmission() != 0) return 0;
-  Wire.requestFrom(sensorAddr, (uint8_t)1);
+  if (Wire.endTransmission(false) != 0) return 0;
+  if (Wire.requestFrom(sensorAddr, (uint8_t)1) < 1) return 0;
   if (Wire.available()) return Wire.read();
   return 0;
 }
 
 void printScan() {
+  const uint8_t tries[] = { 0x57, 0x5E, 0x55, 0x54 };
   Serial.print("SCAN");
   bool any = false;
-  for (uint8_t addr = 1; addr < 127; addr++) {
-    if (ping(addr)) {
+  for (uint8_t i = 0; i < 4; i++) {
+    if (ping(tries[i])) {
       Serial.print(" 0x");
-      Serial.print(addr, HEX);
+      Serial.print(tries[i], HEX);
       any = true;
     }
   }
@@ -272,8 +278,8 @@ void setupSensor() {
   writeReg(0x08, 0x5F);
   writeReg(0x09, 0x03);
   writeReg(0x0A, 0x27);
-  writeReg(0x0C, 0x24);
-  writeReg(0x0D, 0x24);
+  writeReg(0x0C, 0x3F);
+  writeReg(0x0D, 0x3F);
   delay(80);
   writeReg(0x04, 0x00);
   writeReg(0x06, 0x00);
@@ -311,13 +317,13 @@ bool configureFoundSensor() {
 bool startSensor() {
   recoverBus();
 
-  const uint32_t speeds[] = { 25000UL, 50000UL, 10000UL, 100000UL };
+  const uint32_t speeds[] = { 50000UL, 100000UL, 25000UL };
   const bool pullModes[] = { false, true };
 
   for (uint8_t p = 0; p < 2; p++) {
-    for (uint8_t s = 0; s < 4; s++) {
+    for (uint8_t s = 0; s < 3; s++) {
       beginWire(speeds[s], pullModes[p]);
-      delay(40);
+      delay(30);
       Serial.print("I2C MODE pullup=");
       Serial.print(pullModes[p] ? "on" : "off");
       Serial.print(" hz=");
@@ -331,7 +337,7 @@ bool startSensor() {
 
   Serial.println("I2C SWAP try SDA=A5 SCL=A4");
   beginSoft(PIN_SCL, PIN_SDA);
-  delay(40);
+  delay(30);
   printScan();
   if (findSensor()) {
     Serial.println("I2C PINS SDA=A5 SCL=A4");
@@ -340,27 +346,20 @@ bool startSensor() {
 
   Serial.println("I2C SWAP try SDA=A4 SCL=A5 soft");
   beginSoft(PIN_SDA, PIN_SCL);
-  delay(40);
+  delay(30);
   printScan();
   if (findSensor()) {
     Serial.println("I2C PINS SDA=A4 SCL=A5");
     return configureFoundSensor();
   }
 
-  beginWire(25000UL, false);
+  beginWire(50000UL, false);
   tryTurnLedsOn();
-  Serial.println("ERR no I2C. One power wire only. Try Uno 3.3V if the light died. GND to GND. SCL->A5 SDA->A4.");
+  Serial.println("ERR no I2C. Power VIN from Uno 3.3V. Leave the sensor 3.3V pin empty. GND to GND. SCL->A5 SDA->A4.");
   return false;
 }
 
 bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
-  if (!ping(sensorAddr)) {
-    lastBusOk = false;
-    *redOut = 0;
-    *irOut = 0;
-    return false;
-  }
-
   const uint8_t wr = readReg(0x04) & 0x1F;
   const uint8_t rd = readReg(0x06) & 0x1F;
   if (wr == rd) {

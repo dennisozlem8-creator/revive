@@ -91,7 +91,7 @@ export function applySerialSampleToProof(
 }
 
 export function usbHasFingerData(proof: UsbHeartProof) {
-  return (proof.lastRaw ?? 0) >= 250;
+  return (proof.lastRaw ?? 0) >= 120;
 }
 
 export function usbSourceConfirmed(proof: UsbHeartProof, now = Date.now()) {

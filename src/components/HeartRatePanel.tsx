@@ -268,9 +268,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
 
       {!compact && (
         <p className="mt-3 text-xs text-muted">
-          Wired: Elegoo Uno R3 + MAX30102 (one power wire: VIN→5V, or 3.3V if the light died; GND→GND; SCL→A5; SDA→A4), then Connect with USB.
-          After connect, this page confirms live RAW and BPM lines from that MAX30102.
-          Bluetooth: Polar H9/H10, Wahoo TICKR, Coospo, Magene.
+          Wired: Elegoo Uno R3 + MAX30102. Power VIN from Uno 3.3V. Leave the sensor 3.3V pin empty. GND→GND, SCL→A5, SDA→A4. Never put 5V on a pin labeled only 3.3V.
         </p>
       )}
     </section>
@@ -296,7 +294,7 @@ function UsbSourceCard({
   const status = !proof.started && !proof.chip
     ? "USB is open. Waiting for the Elegoo to say MAX30102."
     : !proof.i2cOk && (proof.started || proof.chip)
-      ? "USB to the Elegoo is good. The MAX30102 is not answering. Upload this latest sketch, then use only one power wire. If the red light died before, move power from 5V to Uno 3.3V. Push GND, SCL to A5, and SDA to A4 in hard. Disconnect, unplug 10 seconds, plug back in, Connect with USB."
+      ? "USB to the Elegoo is good. The MAX30102 is not answering. Power the VIN pin from Uno 3.3V. Leave the sensor 3.3V pin empty. GND to GND, SCL to A5, SDA to A4. Upload the latest sketch, unplug 10 seconds, then Connect with USB."
     : packetsOnly
       ? "USB packets are arriving, but there is no finger data yet. Cover both LEDs with one fingertip and keep still. Wiring: VIN→5V, GND→GND, SCL→A5, SDA→A4."
       : !fresh
