@@ -23,12 +23,7 @@ export default function GoniometerPage() {
     <div className="min-h-full rm-glow-patient pb-28 text-foreground">
       <Header linkHome />
       <main className="mx-auto max-w-lg px-6 pb-8">
-        <p className="rm-label">Movement tool</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Photo Goniometer</h1>
-        <p className="mt-2 text-body">
-          Check the setup list first, then record. The coach scores the motion, tells you
-          exactly what to do next, and saves a trend your doctor can review.
-        </p>
 
         <div className="mt-6">
           <PhotoGoniometer userEmail={user.email} goal={user.targetRom || 100} />

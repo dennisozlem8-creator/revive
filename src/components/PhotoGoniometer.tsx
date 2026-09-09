@@ -29,8 +29,6 @@ import { coachMovement, coachPhotoPose } from "@/lib/movement-coach";
 import { GoniometerProgressChart } from "./GoniometerProgressChart";
 import { MovementChart } from "./MovementChart";
 import { MovementCoachCard } from "./MovementCoachCard";
-import { PreExerciseSetup } from "./PreExerciseSetup";
-import { ProgressInsight } from "./ProgressInsight";
 
 type Step = "upload" | "mark";
 
@@ -344,6 +342,12 @@ export function PhotoGoniometer({
       }
     }
   }
+
+  useEffect(() => {
+    void startCamera();
+    // Open the tool on the camera, not a wall of instructions.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function loopPose() {
     const video = videoRef.current;
@@ -664,49 +668,36 @@ export function PhotoGoniometer({
 
   return (
     <div className="space-y-6">
-      <section className="rm-card p-5">
-        <p className="rm-label">Today&apos;s exercise</p>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          <label className="block text-sm">
-            <span className="rm-label">Exercise</span>
-            <select
-              value={exercise}
-              onChange={(e) => setExercise(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
-            >
-              {EXERCISE_OPTIONS.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
-          </label>
-          <label className="block text-sm">
-            <span className="rm-label">Joint</span>
-            <select
-              value={joint}
-              onChange={(e) => setJoint(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
-            >
-              {JOINT_OPTIONS.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
-          </label>
-        </div>
-      </section>
-      <PreExerciseSetup exercise={exercise} />
-      <ProgressInsight rows={rows} goal={goal} />
       {step === "upload" && (
-        <section className="rm-card p-6">
-          <p className="rm-label">Step 1</p>
-          <h2 className="mt-1 text-xl font-bold">Record a side-view video or take a photo</h2>
-          <p className="mt-2 rm-body">
-            Stand or sit sideways so the hip, knee, and ankle stay in view. After a photo,
-            the angle appears below. After a video, send it to the movement coach. It measures
-            the knee, flags unusual motion on that part, and gives feedback for the exercise
-            you are doing.
-          </p>
+        <section className="rm-card p-5">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block text-sm">
+              <span className="rm-label">Exercise</span>
+              <select
+                value={exercise}
+                onChange={(e) => setExercise(e.target.value)}
+                className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
+              >
+                {EXERCISE_OPTIONS.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
+              </select>
+            </label>
+            <label className="block text-sm">
+              <span className="rm-label">Joint</span>
+              <select
+                value={joint}
+                onChange={(e) => setJoint(e.target.value)}
+                className="mt-2 w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3"
+              >
+                {JOINT_OPTIONS.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
+              </select>
+            </label>
+          </div>
 
-          <div className="relative mt-5 overflow-hidden rounded-2xl border border-[var(--border)] bg-black">
+          <div className="relative mt-4 overflow-hidden rounded-2xl border border-[var(--border)] bg-black">
             <video
               ref={bindVideo}
               autoPlay
@@ -780,7 +771,7 @@ export function PhotoGoniometer({
               </div>
             ) : (
               <div className="flex h-40 items-center justify-center bg-background px-6 text-center text-sm text-muted">
-                Camera preview stays here after you tap Open camera
+                Opening camera…
               </div>
             )}
           </div>
@@ -1044,10 +1035,6 @@ export function PhotoGoniometer({
           {analyzing && !movement && (
             <>
               <h2 className="mt-1 text-xl font-bold">Reading this video</h2>
-              <p className="mt-2 rm-body">
-                Measuring hip, knee, and ankle, then the coach will flag form issues and
-                unusual motion.
-              </p>
               <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-elevated">
                 <div className="h-full bg-brand transition-[width]" style={{ width: `${analyzePct}%` }} />
               </div>
@@ -1056,17 +1043,12 @@ export function PhotoGoniometer({
           {photoAnalyzing && (
             <>
               <h2 className="mt-1 text-xl font-bold">Reading this photo</h2>
-              <p className="mt-2 rm-body">Finding the hip, knee, and ankle. The angle will show here.</p>
             </>
           )}
           {!photoAnalyzing && photoAngle != null && (
             <>
               <h2 className="mt-1 text-xl font-bold">Photo analysis</h2>
               <p className="rm-display mt-4 text-correct">{photoAngle}°</p>
-              <p className="mt-2 text-sm text-muted">
-                Estimated knee angle from this photo. The coach below reads alignment on this
-                still. For progress tracking, not a medical diagnosis.
-              </p>
               {photoCoach && (
                 <MovementCoachCard
                   report={photoCoach}
@@ -1102,10 +1084,6 @@ export function PhotoGoniometer({
               <h2 className={`text-xl font-bold ${photoAngle != null ? "mt-8" : "mt-1"}`}>
                 Video analysis
               </h2>
-              <p className="mt-2 rm-body">
-                Peak is the highest angle in this clip. Min is the smallest. Range is how far the
-                joint traveled. Red rings on the graph mark unusual jumps the coach flagged.
-              </p>
               <div className="mt-5 grid grid-cols-3 gap-3 text-center">
                 <div className="rounded-xl bg-background px-2 py-3">
                   <p className="rm-stat text-correct">{movement.peak}°</p>
