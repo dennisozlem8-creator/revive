@@ -1,23 +1,7 @@
-/*
-  Revive Motion — Elegoo Uno R3 + MAX30102
-
-  Open THIS file only (File → Open → wired-heart.ino).
-  Do not paste it into an old sketch. That makes two setup() and two loop()
-  and Arduino says "redefinition of void setup()".
-
-  Wires (one power wire only):
-    VIN or VCC -> Uno 3.3V first (safer). If no VIN pin, use the 3.3V pin.
-    Never put Uno 5V into a pin labeled only 3.3V.
-    GND -> GND
-    SCL -> A5
-    SDA -> A4
-    INT / IRD / RD empty
-    Leave the sensor 3.3V pin empty if you are already powering VIN.
-
-  If I2C still fails, this sketch also tries SDA/SCL swapped in software.
-
-  After Upload: close Serial Monitor, then Chrome -> Connect with USB
-*/
+// Revive Motion — Elegoo Uno R3 + MAX30102
+// File → New. Delete everything. Paste this whole file once.
+// Do not paste into sketch_sep9a if that tab already has leftover text.
+// VIN -> Uno 3.3V. GND -> GND. SCL -> A5. SDA -> A4. INT empty.
 
 #include <Wire.h>
 
