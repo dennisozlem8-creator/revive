@@ -24,10 +24,10 @@ A Bluetooth heart-rate strap **or** a wired Arduino pulse sensor can show live B
 
 ### Wired (Elegoo Uno R3 + MAX30102)
 
-1. One power wire only: VIN/VCC → 5V, or 3.3V → 3.3V if the light died. GND → Uno GND. SCL → A5. SDA → A4. Leave INT unconnected. Upload the latest `wired-heart.ino` (it recovers a stuck I2C bus and tries without 5V pull-ups first). Then Disconnect, unplug 10 seconds, and Connect with USB.
-2. Upload `firmware/wired-heart/wired-heart.ino` in Arduino IDE (Board: Arduino Uno). Close Serial Monitor. If Upload says Resource busy, tap Disconnect on the Heart page (or close that Chrome tab), close Serial Monitor, unplug and replug the USB cable, then Upload again.
+1. One power wire only: VIN/VCC → 5V, or 3.3V → 3.3V if the light died. GND → Uno GND. SCL → A5. SDA → A4. Leave INT unconnected.
+2. Download `wired-heart.ino` from the Heart page (or open `firmware/wired-heart/wired-heart.ino`). Board: Arduino Uno. Upload, then close Serial Monitor. The sketch recovers a stuck I2C bus and will try SDA/SCL swapped if the first scan finds nothing.
 3. Open Chrome or Edge. Go to **Heart sensor**. Tap **Connect with USB**.
-4. The page confirms the Elegoo said `HELLO MAX30102 ELEGOO_UNO_R3` and then shows live `RAW` / `BPM` lines from that sensor.
+4. The page confirms `HELLO MAX30102 ELEGOO_UNO_R3`, then live `RAW` / `BPM` lines. Cover both LEDs with a fingertip.
 
 ### Bluetooth strap
 

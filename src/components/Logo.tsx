@@ -14,8 +14,12 @@ export function Logo({ size = 56, showText = true, stacked = false, className = 
         alt="Revive Motion.Ai"
         width={size}
         height={Math.round(size * 0.935)}
-        className="shrink-0 rounded-2xl object-cover shadow-[0_8px_24px_rgba(27,51,72,0.18)]"
-        style={stacked ? { width: size, height: "auto" } : { width: size, height: size }}
+        className="shrink-0 rounded-[1.25rem] object-cover shadow-[0_10px_28px_rgba(27,51,72,0.16)]"
+        style={
+          stacked
+            ? { width: size, height: "auto" }
+            : { width: size, height: Math.round(size * 0.935) }
+        }
       />
       {showText && (
         <div className={`flex flex-col ${stacked ? "items-center" : ""}`}>

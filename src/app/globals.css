@@ -72,6 +72,26 @@ body {
   line-height: 1.6;
 }
 
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary::after {
+  content: "Show";
+  float: right;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+details[open] > summary::after {
+  content: "Hide";
+}
+
 /* Typography scale (from tutor spec, tuned for web) */
 .rm-title {
   font-size: 1.375rem;

@@ -133,6 +133,14 @@ export function parseSerialHeartLine(line: string): SerialHeartSample | null {
   if (/^I2C\s+OK/i.test(text)) {
     return { i2cOk: true };
   }
+  if (/^I2C\s+PINS\b/i.test(text)) {
+    return { i2cOk: true, hello: true, chip: "MAX30102" };
+  }
+  if (/^PONG\b/i.test(text)) {
+    const hex = text.match(/PONG\s+([0-9A-Fa-f]+)/i);
+    const addr = hex ? Number.parseInt(hex[1], 16) : 0;
+    return { hello: true, chip: "MAX30102", i2cOk: addr > 0 };
+  }
   if (/^I2C\s+MODE\b/i.test(text)) {
     return { hello: true, chip: "MAX30102" };
   }
@@ -310,6 +318,11 @@ export async function connectWiredHeartSensor(
       throw error;
     }
   }
+  try {
+    await port.setSignals?.({ dataTerminalReady: true, requestToSend: false });
+  } catch {
+    /* some adapters ignore DTR */
+  }
   const decoder = new TextDecoder();
   let buffer = "";
   let stopped = false;
@@ -325,6 +338,25 @@ export async function connectWiredHeartSensor(
     options.onDisconnect();
   };
   port.addEventListener("disconnect", onGone);
+
+  const pingUsb = async () => {
+    if (stopped || !port.writable) return;
+    const writer = port.writable.getWriter();
+    try {
+      await writer.write(new TextEncoder().encode("PING\n"));
+    } catch {
+      /* ignore */
+    } finally {
+      try {
+        writer.releaseLock();
+      } catch {
+        /* ignore */
+      }
+    }
+  };
+  const pingTimer = setTimeout(() => {
+    void pingUsb();
+  }, 1600);
 
   void (async () => {
     try {
@@ -365,6 +397,7 @@ export async function connectWiredHeartSensor(
     source: "usb",
     disconnect: () => {
       stopped = true;
+      clearTimeout(pingTimer);
       port.removeEventListener("disconnect", onGone);
       void (async () => {
         try {

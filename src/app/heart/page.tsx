@@ -8,6 +8,15 @@ import { HeartRatePanel } from "@/components/HeartRatePanel";
 import { useAuth } from "@/components/AuthProvider";
 import { deleteHeartRecording, loadHeartRecordings, type HeartRecording } from "@/lib/heart-log";
 
+function HelpBlock({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <details className="rm-card mt-3 p-5">
+      <summary className="cursor-pointer font-semibold text-foreground">{title}</summary>
+      <div className="mt-3 space-y-2 text-sm text-body">{children}</div>
+    </details>
+  );
+}
+
 export default function HeartSensorPage() {
   const { user } = useAuth();
   const [rows, setRows] = useState<HeartRecording[]>([]);
@@ -33,170 +42,72 @@ export default function HeartSensorPage() {
         <p className="rm-label">Wired sensor</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Heart sensor</h1>
         <p className="mt-2 text-body">
-          For an Elegoo Uno R3 and a MAX30102, Arduino IDE is only for Upload. Connecting the app
-          happens in Google Chrome on the same computer — not Safari, not your phone. A USB-C
-          laptop port is fine if you see HELLO or no I2C — that means the Elegoo USB link works.
-          After USB connects, this page must show a green confirmation that RAW and BPM lines are
-          coming from the MAX30102, not a demo number.
+          Chrome on this computer. Close Serial Monitor, tap Connect with USB, then rest a finger on
+          the two lights.
         </p>
-
-        <section className="rm-card mt-6 border-alert/30 p-5">
-          <h2 className="font-semibold">Do this now to bring the MAX30102 back</h2>
-          <p className="mt-2 text-sm text-body">
-            USB already works. The chip is the part that went quiet. The new sketch unsticks I2C and
-            no longer forces 5V pull-ups first — those can keep a 3.3V MAX30102 dark after it once lit.
-          </p>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>On this page, tap <strong className="text-foreground">Disconnect</strong>. Close Serial Monitor.</li>
-            <li>Open <code className="rounded bg-background px-1">firmware/wired-heart/wired-heart.ino</code>. Tools → Board → Arduino Uno. Upload.</li>
-            <li>Close Serial Monitor again. Unplug the USB cable for 10 seconds.</li>
-            <li>Use <strong className="text-foreground">one power wire only</strong>. If the red light was on and then died, move that wire from 5V to Uno <strong className="text-foreground">3.3V</strong> (into the MAX30102 VIN or 3.3V pin). Do not use 5V and 3.3V at the same time.</li>
-            <li>GND on the sensor must go to a GND pin on the Elegoo itself, not only a breadboard rail.</li>
-            <li>SCL → A5. SDA → A4. Push all four wires in until they click.</li>
-            <li>Plug USB back in. Connect with USB in Chrome. Watch the sensor window.</li>
-            <li>If there is still no light and the page says no I2C, swap only SDA and SCL, then unplug and Connect again.</li>
-          </ol>
-        </section>
-
-        <section className="rm-card mt-4 p-5">
-          <h2 className="font-semibold">Do I need Arduino IDE?</h2>
-          <p className="mt-2 text-sm text-body">
-            Yes, one time. Download Arduino IDE, upload the MAX30102 program, then close Serial
-            Monitor. After that you only plug USB into the computer and tap Connect with USB on this
-            page. You do not need a second phone app.
-          </p>
-        </section>
-
-        <section className="rm-card mt-4 p-5">
-          <h2 className="font-semibold">Wires: MAX30102 → Elegoo Uno R3</h2>
-          <p className="mt-2 text-sm text-muted">
-            MAX30102 talks over I2C. Do not use A0. Use A4 and A5. If the page says USB is good but
-            no I2C, the USB cable is fine — the four sensor wires are loose, unpowered, or swapped.
-          </p>
-          <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-background">
-                <tr>
-                  <th className="px-3 py-2 font-semibold">MAX30102 pin</th>
-                  <th className="px-3 py-2 font-semibold">Elegoo Uno R3 pin</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-t border-[var(--border)]">
-                  <td className="px-3 py-2">VIN or VCC</td>
-                  <td className="px-3 py-2 font-medium">5V</td>
-                </tr>
-                <tr className="border-t border-[var(--border)] bg-background/60">
-                  <td className="px-3 py-2">GND</td>
-                  <td className="px-3 py-2 font-medium">GND</td>
-                </tr>
-                <tr className="border-t border-[var(--border)]">
-                  <td className="px-3 py-2">SCL</td>
-                  <td className="px-3 py-2 font-medium">A5 (or the pin labeled SCL)</td>
-                </tr>
-                <tr className="border-t border-[var(--border)] bg-background/60">
-                  <td className="px-3 py-2">SDA</td>
-                  <td className="px-3 py-2 font-medium">A4 (or the pin labeled SDA)</td>
-                </tr>
-                <tr className="border-t border-[var(--border)]">
-                  <td className="px-3 py-2">INT</td>
-                  <td className="px-3 py-2">Leave unconnected</td>
-                </tr>
-                <tr className="border-t border-[var(--border)] bg-background/60">
-                  <td className="px-3 py-2">IRD or RD</td>
-                  <td className="px-3 py-2">Leave unconnected</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-3 text-sm text-muted">
-            Use only one power pin. If the board has VIN, try Uno 5V first. If the red light died,
-            or the pin is named only <strong className="text-foreground">3.3V</strong>, use Uno{" "}
-            <strong className="text-foreground">3.3V</strong>. Never put 5V into a pin labeled only
-            3.3V or 1.8V. Never wire both 5V and 3.3V.
-          </p>
-          <p className="mt-2 text-sm text-body">
-            Rest a fingertip on the two LEDs on the MAX30102 and keep still.
-          </p>
-        </section>
-
-        <section className="rm-card mt-4 p-5">
-          <h2 className="font-semibold">Load the program</h2>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>Install Arduino IDE from arduino.cc on this computer.</li>
-            <li>
-              File → Open <code className="rounded bg-background px-1">firmware/wired-heart/wired-heart.ino</code>.
-              Do not paste it into an old sketch named sketch_sep7a. If Upload says
-              redefinition of setup, File → New, delete everything, paste the program once, then Upload.
-            </li>
-            <li>Tools → Board → Arduino Uno. Tools → Port → the Elegoo COM port.</li>
-            <li>Click Upload. Wait until it says Done uploading.</li>
-            <li>Close Serial Monitor, leave USB plugged in, then tap Connect with USB below.</li>
-          </ol>
-        </section>
-
-        <section className="rm-card mt-4 border-alert/30 p-5">
-          <h2 className="font-semibold">If the red light was on, then went off</h2>
-          <p className="mt-2 text-sm text-body">
-            That is a useful clue. The two red LEDs in the sensor window only turn on after the
-            Elegoo writes to the MAX30102 over I2C. If I2C stops, the light goes dark even when USB
-            still works. Chip ID 0 with no light means the chip is not answering right now.
-          </p>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>On the Heart page, tap <strong className="text-foreground">Disconnect</strong>. Close Serial Monitor in Arduino IDE.</li>
-            <li>Upload the latest <code className="rounded bg-background px-1">firmware/wired-heart/wired-heart.ino</code>. This version tries to turn the LEDs on even when I2C looks failed.</li>
-            <li>Close Serial Monitor. Unplug USB for 10 seconds. Push VIN (or 3.3V), GND, SCL, and SDA in again. Plug USB back in.</li>
-            <li>Connect with USB. Watch the MAX30102 window.</li>
-            <li>Light comes back, but the page still says no I2C: power is good. Swap SDA and SCL, or push those two wires in harder.</li>
-            <li>Light stays off: VIN or GND is loose, or the power pin is on the wrong voltage. If the board has only a 3.3V pin, use Uno 3.3V, not 5V.</li>
-          </ol>
-        </section>
-
-        <section className="rm-card mt-4 border-alert/30 p-5">
-          <h2 className="font-semibold">If it says no I2C</h2>
-          <p className="mt-2 text-sm text-body">
-            USB is working. The Elegoo cannot see the MAX30102. Chip ID 0 means the sensor has no
-            power or SDA/SCL is wrong.
-          </p>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>VIN or VCC on the MAX30102 must go to Uno <strong className="text-foreground">5V</strong>. If there is no VIN, use Uno <strong className="text-foreground">3.3V</strong>. Do not put 5V into a pin labeled only 3.3V.</li>
-            <li>GND must go to GND. The red and black wires both have to click in.</li>
-            <li>SCL → A5. SDA → A4. Not A0. If those two are already on A4 and A5, swap them.</li>
-            <li>Leave INT empty.</li>
-            <li>Tap Disconnect, unplug USB, push the four wires in again, plug USB back in, then Connect with USB.</li>
-            <li>USB-C on the laptop is not the I2C fault. If you see HELLO and chip ID 0, the cable is already talking. Fix power and SDA/SCL, or try a slower I2C upload of the latest sketch.</li>
-          </ol>
-        </section>
-
-        <section className="rm-card mt-4 border-alert/30 p-5">
-          <h2 className="font-semibold">If Upload says Resource busy</h2>
-          <p className="mt-2 text-sm text-body">
-            The sketch is fine. The Elegoo USB port is already open in Chrome or Serial Monitor.
-            Arduino IDE cannot upload while something else is using <code className="rounded bg-background px-1">/dev/cu.usbmodem</code>.
-          </p>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>On the Heart page, tap <strong className="text-foreground">Disconnect</strong>, or close that Chrome tab.</li>
-            <li>In Arduino IDE, close Serial Monitor.</li>
-            <li>Unplug the Elegoo USB cable, wait 3 seconds, plug it back in.</li>
-            <li>Tools → Port → choose the usbmodem port again.</li>
-            <li>Click Upload. After Done uploading, close Serial Monitor, then Connect with USB in Chrome.</li>
-          </ol>
-        </section>
-
-        <section className="rm-card mt-4 border-alert/30 p-5">
-          <h2 className="font-semibold">If Connect with USB does nothing</h2>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>On a Mac, open Google Chrome. Do not use Safari. Safari cannot talk to USB.</li>
-            <li>Plug the Elegoo USB cable into that same computer.</li>
-            <li>Close Arduino Serial Monitor. Chrome cannot share the port with Arduino IDE.</li>
-            <li>Tap Connect with USB. A Chrome window must open. Click the Arduino / USB Serial Device, then Connect.</li>
-            <li>Do not tap Bluetooth strap. The MAX30102 is wired, not a Polar belt.</li>
-          </ol>
-        </section>
 
         <div className="mt-6">
           <HeartRatePanel />
         </div>
+
+        <section className="rm-card mt-4 p-5">
+          <h2 className="font-semibold">Wires</h2>
+          <p className="mt-2 text-sm text-muted">
+            Four wires only. If the red light died, use Uno 3.3V instead of 5V.
+          </p>
+          <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)] bg-white">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/max30102-wiring.svg"
+              alt="MAX30102 VIN to 5V or 3.3V, GND to GND, SCL to A5, SDA to A4"
+              width={640}
+              height={280}
+              className="h-auto w-full"
+            />
+          </div>
+          <ol className="mt-4 list-decimal space-y-1 pl-5 text-sm text-body">
+            <li>VIN or VCC → 5V. If the light died, move that one wire to 3.3V.</li>
+            <li>GND → GND on the Elegoo board.</li>
+            <li>SCL → A5. SDA → A4. Leave INT empty.</li>
+          </ol>
+          <a
+            href="/firmware/wired-heart"
+            className="rm-btn rm-btn-ghost mt-4 inline-flex w-full justify-center"
+          >
+            Download wired-heart.ino
+          </a>
+        </section>
+
+        <HelpBlock title="Load the program in Arduino IDE">
+          <ol className="list-decimal space-y-2 pl-5">
+            <li>Download the file above. In Arduino IDE: File → Open that file. Do not paste it into an old sketch.</li>
+            <li>Tools → Board → Arduino Uno. Tools → Port → the Elegoo.</li>
+            <li>Upload. Wait for Done uploading. Close Serial Monitor.</li>
+            <li>Come back here and tap Connect with USB.</li>
+          </ol>
+        </HelpBlock>
+
+        <HelpBlock title="If USB works but there is no I2C">
+          <p>
+            The cable is fine. The four sensor wires are loose, on the wrong voltage, or SDA/SCL are
+            swapped. This sketch now tries the swap for you after you upload it.
+          </p>
+          <ol className="list-decimal space-y-2 pl-5">
+            <li>Disconnect on this page. Close Serial Monitor.</li>
+            <li>Upload the latest wired-heart.ino.</li>
+            <li>Unplug USB for 10 seconds. Push VIN, GND, SCL, and SDA in hard.</li>
+            <li>Plug in. Connect with USB. Cover both LEDs with a fingertip.</li>
+          </ol>
+        </HelpBlock>
+
+        <HelpBlock title="If Upload says Resource busy">
+          <p>Chrome or Serial Monitor is already using the port.</p>
+          <ol className="list-decimal space-y-2 pl-5">
+            <li>Tap Disconnect, or close this tab.</li>
+            <li>Close Serial Monitor.</li>
+            <li>Unplug USB, wait 3 seconds, plug it back in, then Upload.</li>
+          </ol>
+        </HelpBlock>
 
         <section className="rm-card mt-6 p-5">
           <h2 className="font-semibold">Saved recordings</h2>

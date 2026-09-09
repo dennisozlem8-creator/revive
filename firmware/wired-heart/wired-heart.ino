@@ -13,6 +13,7 @@
     INT / IRD / RD empty
 
   If the red light was on once and then died, try Uno 3.3V instead of 5V.
+  If I2C still fails, this sketch also tries SDA/SCL swapped in software.
 
   After Upload: close Serial Monitor, then Chrome -> Connect with USB
 */
@@ -24,9 +25,12 @@ const int PIN_SCL = A5;
 const int MIN_BPM = 40;
 const int MAX_BPM = 180;
 const unsigned long MIN_BEAT_MS = 320;
-const uint32_t FINGER_MIN = 250;
+const uint32_t FINGER_MIN = 120;
 
 uint8_t sensorAddr = 0x57;
+int sdaPin = PIN_SDA;
+int sclPin = PIN_SCL;
+bool useSoft = false;
 uint32_t lastSignal = 0;
 uint32_t recentMax = 0;
 uint32_t recentMin = 0xFFFFFFFFu;
@@ -34,9 +38,99 @@ unsigned long lastBeatMs = 0;
 unsigned long windowStart = 0;
 unsigned long lastNoDataMs = 0;
 unsigned long lastScanMs = 0;
+unsigned long lastHelloMs = 0;
 uint8_t fifoFailStreak = 0;
 bool i2cReady = false;
 bool lastBusOk = true;
+
+void i2cDelay() {
+  delayMicroseconds(20);
+}
+
+void sdaHigh() {
+  pinMode(sdaPin, INPUT_PULLUP);
+}
+
+void sdaLow() {
+  pinMode(sdaPin, OUTPUT);
+  digitalWrite(sdaPin, LOW);
+}
+
+void sclHigh() {
+  pinMode(sclPin, INPUT_PULLUP);
+}
+
+void sclLow() {
+  pinMode(sclPin, OUTPUT);
+  digitalWrite(sclPin, LOW);
+}
+
+int sdaRead() {
+  pinMode(sdaPin, INPUT_PULLUP);
+  return digitalRead(sdaPin);
+}
+
+void softStart() {
+  sdaHigh();
+  sclHigh();
+  i2cDelay();
+  sdaLow();
+  i2cDelay();
+  sclLow();
+  i2cDelay();
+}
+
+void softStop() {
+  sdaLow();
+  i2cDelay();
+  sclHigh();
+  i2cDelay();
+  sdaHigh();
+  i2cDelay();
+}
+
+bool softWriteByte(uint8_t value) {
+  for (uint8_t i = 0; i < 8; i++) {
+    if (value & 0x80) sdaHigh();
+    else sdaLow();
+    i2cDelay();
+    sclHigh();
+    i2cDelay();
+    sclLow();
+    i2cDelay();
+    value <<= 1;
+  }
+  sdaHigh();
+  i2cDelay();
+  sclHigh();
+  i2cDelay();
+  const bool ack = sdaRead() == LOW;
+  sclLow();
+  i2cDelay();
+  return ack;
+}
+
+uint8_t softReadByte(bool ack) {
+  uint8_t value = 0;
+  sdaHigh();
+  for (uint8_t i = 0; i < 8; i++) {
+    value <<= 1;
+    sclHigh();
+    i2cDelay();
+    if (sdaRead()) value |= 1;
+    sclLow();
+    i2cDelay();
+  }
+  if (ack) sdaLow();
+  else sdaHigh();
+  i2cDelay();
+  sclHigh();
+  i2cDelay();
+  sclLow();
+  i2cDelay();
+  sdaHigh();
+  return value;
+}
 
 void recoverBus() {
   Serial.println("BUS RECOVER");
@@ -60,6 +154,9 @@ void recoverBus() {
 }
 
 void beginWire(uint32_t hz, bool pullups) {
+  useSoft = false;
+  sdaPin = PIN_SDA;
+  sclPin = PIN_SCL;
   Wire.end();
   pinMode(PIN_SDA, pullups ? INPUT_PULLUP : INPUT);
   pinMode(PIN_SCL, pullups ? INPUT_PULLUP : INPUT);
@@ -70,7 +167,39 @@ void beginWire(uint32_t hz, bool pullups) {
 #endif
 }
 
+void beginSoft(int sda, int scl) {
+  useSoft = true;
+  sdaPin = sda;
+  sclPin = scl;
+  Wire.end();
+  sdaHigh();
+  sclHigh();
+  delay(20);
+}
+
+bool ping(uint8_t addr) {
+  if (useSoft) {
+    softStart();
+    const bool ack = softWriteByte((uint8_t)(addr << 1));
+    softStop();
+    return ack;
+  }
+  Wire.beginTransmission(addr);
+  return Wire.endTransmission() == 0;
+}
+
 void writeReg(uint8_t reg, uint8_t value) {
+  if (useSoft) {
+    softStart();
+    if (!softWriteByte((uint8_t)(sensorAddr << 1))) {
+      softStop();
+      return;
+    }
+    softWriteByte(reg);
+    softWriteByte(value);
+    softStop();
+    return;
+  }
   Wire.beginTransmission(sensorAddr);
   Wire.write(reg);
   Wire.write(value);
@@ -78,17 +207,28 @@ void writeReg(uint8_t reg, uint8_t value) {
 }
 
 uint8_t readReg(uint8_t reg) {
+  if (useSoft) {
+    softStart();
+    if (!softWriteByte((uint8_t)(sensorAddr << 1))) {
+      softStop();
+      return 0;
+    }
+    softWriteByte(reg);
+    softStart();
+    if (!softWriteByte((uint8_t)((sensorAddr << 1) | 1))) {
+      softStop();
+      return 0;
+    }
+    const uint8_t value = softReadByte(false);
+    softStop();
+    return value;
+  }
   Wire.beginTransmission(sensorAddr);
   Wire.write(reg);
   if (Wire.endTransmission() != 0) return 0;
   Wire.requestFrom(sensorAddr, (uint8_t)1);
   if (Wire.available()) return Wire.read();
   return 0;
-}
-
-bool ping(uint8_t addr) {
-  Wire.beginTransmission(addr);
-  return Wire.endTransmission() == 0;
 }
 
 void printScan() {
@@ -123,17 +263,20 @@ void setupSensor() {
     if ((readReg(0x09) & 0x40) == 0) break;
     delay(10);
   }
+  delay(50);
   writeReg(0x02, 0x00);
   writeReg(0x03, 0x00);
   writeReg(0x04, 0x00);
   writeReg(0x05, 0x00);
   writeReg(0x06, 0x00);
-  writeReg(0x08, 0x4F);
+  writeReg(0x08, 0x5F);
   writeReg(0x09, 0x03);
   writeReg(0x0A, 0x27);
-  writeReg(0x0C, 0x3F);
-  writeReg(0x0D, 0x3F);
+  writeReg(0x0C, 0x24);
+  writeReg(0x0D, 0x24);
   delay(80);
+  writeReg(0x04, 0x00);
+  writeReg(0x06, 0x00);
 }
 
 void tryTurnLedsOn() {
@@ -141,7 +284,28 @@ void tryTurnLedsOn() {
   sensorAddr = 0x57;
   Serial.println("LED TRY");
   setupSensor();
+  writeReg(0x0C, 0x3F);
+  writeReg(0x0D, 0x3F);
   sensorAddr = saved;
+}
+
+void printHello() {
+  Serial.println("HELLO MAX30102 ELEGOO_UNO_R3");
+  Serial.println("SRC ELEGOO_UNO_R3");
+  Serial.println("CHIP MAX30102");
+}
+
+bool configureFoundSensor() {
+  Serial.print("ADDR 0x");
+  Serial.println(sensorAddr, HEX);
+  const uint8_t partId = readReg(0xFF);
+  Serial.print("ID ");
+  Serial.println(partId);
+  setupSensor();
+  Serial.println("I2C OK");
+  Serial.println("MAX30102 start");
+  fifoFailStreak = 0;
+  return true;
 }
 
 bool startSensor() {
@@ -160,29 +324,37 @@ bool startSensor() {
       Serial.println(speeds[s]);
       printScan();
       if (!findSensor()) continue;
-
-      Serial.print("ADDR 0x");
-      Serial.println(sensorAddr, HEX);
-      const uint8_t partId = readReg(0xFF);
-      Serial.print("ID ");
-      Serial.println(partId);
-      setupSensor();
-      Serial.println("I2C OK");
-      Serial.println("MAX30102 start");
-      fifoFailStreak = 0;
-      return true;
+      Serial.println("I2C PINS SDA=A4 SCL=A5");
+      return configureFoundSensor();
     }
+  }
+
+  Serial.println("I2C SWAP try SDA=A5 SCL=A4");
+  beginSoft(PIN_SCL, PIN_SDA);
+  delay(40);
+  printScan();
+  if (findSensor()) {
+    Serial.println("I2C PINS SDA=A5 SCL=A4");
+    return configureFoundSensor();
+  }
+
+  Serial.println("I2C SWAP try SDA=A4 SCL=A5 soft");
+  beginSoft(PIN_SDA, PIN_SCL);
+  delay(40);
+  printScan();
+  if (findSensor()) {
+    Serial.println("I2C PINS SDA=A4 SCL=A5");
+    return configureFoundSensor();
   }
 
   beginWire(25000UL, false);
   tryTurnLedsOn();
-  Serial.println("ERR no I2C. One power wire only. Try Uno 3.3V if the light died. GND to GND. SCL->A5 SDA->A4. Then swap SDA and SCL.");
+  Serial.println("ERR no I2C. One power wire only. Try Uno 3.3V if the light died. GND to GND. SCL->A5 SDA->A4.");
   return false;
 }
 
 bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
-  Wire.beginTransmission(sensorAddr);
-  if (Wire.endTransmission() != 0) {
+  if (!ping(sensorAddr)) {
     lastBusOk = false;
     *redOut = 0;
     *irOut = 0;
@@ -196,6 +368,33 @@ bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
     *redOut = 0;
     *irOut = 0;
     return false;
+  }
+
+  if (useSoft) {
+    softStart();
+    if (!softWriteByte((uint8_t)(sensorAddr << 1))) {
+      lastBusOk = false;
+      *redOut = 0;
+      *irOut = 0;
+      softStop();
+      return false;
+    }
+    softWriteByte(0x07);
+    softStart();
+    if (!softWriteByte((uint8_t)((sensorAddr << 1) | 1))) {
+      lastBusOk = false;
+      *redOut = 0;
+      *irOut = 0;
+      softStop();
+      return false;
+    }
+    uint32_t red = ((uint32_t)softReadByte(true) << 16) | ((uint32_t)softReadByte(true) << 8) | softReadByte(true);
+    uint32_t ir = ((uint32_t)softReadByte(true) << 16) | ((uint32_t)softReadByte(true) << 8) | softReadByte(false);
+    softStop();
+    *redOut = red & 0x03FFFF;
+    *irOut = ir & 0x03FFFF;
+    lastBusOk = true;
+    return true;
   }
 
   Wire.beginTransmission(sensorAddr);
@@ -225,11 +424,10 @@ bool readFifoSample(uint32_t *redOut, uint32_t *irOut) {
 void setup() {
   Serial.begin(115200);
   delay(800);
-  Serial.println("HELLO MAX30102 ELEGOO_UNO_R3");
-  Serial.println("SRC ELEGOO_UNO_R3");
-  Serial.println("CHIP MAX30102");
+  printHello();
   i2cReady = startSensor();
   lastScanMs = millis();
+  lastHelloMs = millis();
 }
 
 void loop() {
@@ -239,9 +437,15 @@ void loop() {
     String cmd = Serial.readStringUntil('\n');
     cmd.trim();
     if (cmd.equalsIgnoreCase("PING")) {
+      printHello();
       Serial.print("PONG ");
       Serial.println(i2cReady ? sensorAddr : 0, HEX);
     }
+  }
+
+  if (!i2cReady && now - lastHelloMs > 4000) {
+    lastHelloMs = now;
+    printHello();
   }
 
   if (!i2cReady) {
@@ -275,6 +479,10 @@ void loop() {
   if (gotSample) {
     Serial.print("RAW ");
     Serial.println(signal);
+    if (signal > 0 && signal < 80) {
+      writeReg(0x0C, 0x3F);
+      writeReg(0x0D, 0x3F);
+    }
   }
 
   if (!gotSample || signal < FINGER_MIN) {
