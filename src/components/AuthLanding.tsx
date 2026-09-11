@@ -14,13 +14,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
       />
       <main className="relative z-10 mx-auto flex min-h-full w-full max-w-5xl flex-col justify-center gap-10 px-6 py-12 lg:flex-row lg:items-center lg:gap-16 lg:py-16">
         <section className="flex flex-col items-center text-center lg:w-[44%] lg:items-start lg:text-left">
-          <Logo size={168} showText={false} stacked />
-          <p className="mt-5 text-sm font-medium text-accent-light">Physical Therapy Assistance</p>
-          <p className="mt-2 max-w-sm text-sm leading-snug text-muted">
-            Equal recovery for every patient, regardless of income, language, or location
-          </p>
-          <p className="mt-5 hidden max-w-sm text-sm leading-relaxed text-body lg:block">
-            Guided exercises, a photo goniometer, and a wired heart sensor — then Go in as a
+          <Logo size={112} showText stacked className="lg:items-start lg:text-left" />
+          <p className="mt-6 max-w-md text-lg leading-8 text-foreground">
+            Guided exercises, a photo goniometer, and a wired heart sensor. Then go in as a
             patient, doctor, caregiver, or start Kids Quest.
           </p>
         </section>

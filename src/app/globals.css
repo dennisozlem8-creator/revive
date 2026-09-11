@@ -22,8 +22,8 @@
   --caregiver-bg: #eef6fb;
   --caregiver-text: #1b3348;
   --caregiver-muted: #4d6478;
-  --muted: #4d6478;
-  --body: #355067;
+  --muted: #2f4a60;
+  --body: #1b3348;
   --border: rgba(79, 144, 198, 0.22);
   --shadow: rgba(27, 51, 72, 0.06);
   --ai-panel: #ffffff;
@@ -68,8 +68,8 @@ body {
   min-height: 100%;
   background: var(--background);
   color: var(--foreground);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
 
 details > summary {

@@ -49,16 +49,16 @@ export default function Home() {
 
       <main className="relative z-10 mx-auto flex w-full max-w-5xl flex-col px-6 pb-8">
         <section className="animate-fade-up mx-auto max-w-2xl text-center">
-          <span className="inline-flex items-center rounded-full border border-brand/30 bg-brand-soft px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-light">
-            Recovery & Mobility
+          <span className="inline-flex items-center rounded-full border border-brand/30 bg-white px-4 py-2 text-sm font-bold text-brand-light">
+            Recovery and mobility
           </span>
-          <h1 className="mt-6 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+          <h1 className="mt-6 text-[2.15rem] font-bold leading-tight text-foreground sm:text-5xl">
             {t("moveBetter", locale)}
           </h1>
-          <p className="mt-4 text-lg text-body">
+          <p className="mt-5 text-xl leading-8 text-foreground">
             {isPatient
-              ? "Start today's session from your briefing, or explore a body area for a full assessment."
-              : "Select a body area for screening questions, sensor ROM testing, and personalized exercises."}
+              ? "Start today's session from your briefing, or open a body area for a full assessment."
+              : "Choose a body area for screening questions, movement tests, and exercises made for you."}
           </p>
           {isPatient && (
             <div className="mt-8 flex w-full max-w-sm flex-col gap-3 mx-auto">
@@ -94,9 +94,9 @@ export default function Home() {
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-brand-soft text-brand transition group-hover:bg-brand group-hover:text-white">
                 {areaIcons[area.id]}
               </div>
-              <h2 className="mt-5 text-lg font-bold">{area.label}</h2>
-              <p className="mt-2 flex-1 text-sm leading-6 text-body">{area.description}</p>
-              <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-light">
+              <h2 className="mt-5 text-xl font-bold text-foreground">{area.label}</h2>
+              <p className="mt-2 flex-1 text-base leading-7 text-foreground">{area.description}</p>
+              <span className="mt-5 inline-flex items-center gap-1 text-base font-semibold text-brand-light">
                 Start assessment →
               </span>
             </Link>

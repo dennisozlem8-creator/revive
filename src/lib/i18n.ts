@@ -45,7 +45,7 @@ const copy = {
     kidsQuest: "Kids Quest",
     dashboard: "Dashboard",
     alerts: "Alerts",
-    moveBetter: "Move better, feel stronger",
+    moveBetter: "Move better. Feel stronger.",
     goToBriefing: "Go to today's briefing",
     photoGoniometer: "Photo Goniometer",
     photoTab: "Photo",

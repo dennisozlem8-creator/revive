@@ -55,7 +55,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
         </button>
         <AuthForm key={entry} mode={mode} defaultRole={entry} />
         <ResetAppButton />
-        <p className="mt-6 text-center text-sm text-muted">
+        <p className="mt-6 text-center text-base text-foreground">
           {mode === "login" ? (
             <>
               No account?{" "}
@@ -86,8 +86,8 @@ export function GoInScreen({ mode }: GoInScreenProps) {
             onClick={() => setEntry(item.id)}
             className={`rounded-2xl border px-5 py-4 text-left transition hover:brightness-[0.98] ${item.tileClass}`}
           >
-            <p className="text-lg font-bold">{item.title}</p>
-            <p className="mt-0.5 text-sm opacity-80">{item.subtitle}</p>
+            <p className="text-xl font-bold">{item.title}</p>
+            <p className="mt-1 text-base leading-6 opacity-90">{item.subtitle}</p>
           </button>
         ))}
         <Link
@@ -104,17 +104,17 @@ export function GoInScreen({ mode }: GoInScreenProps) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#3d3558]/75 to-transparent" />
             <div className="absolute bottom-3 left-5 right-5">
-              <p className="flex items-center gap-2 text-lg font-bold text-[#f4f0ea]">
+              <p className="flex items-center gap-2 text-xl font-bold text-white">
                 <KidsIcon name="gamepad" size={22} />
                 Kids Quest
               </p>
-              <p className="text-sm font-medium text-[#ece6d8]">Storybook adventure world</p>
+              <p className="text-base font-medium text-white">Storybook adventure world</p>
             </div>
           </div>
         </Link>
       </div>
       <ResetAppButton />
-      <p className="mt-6 text-center text-sm text-muted">
+      <p className="mt-6 text-center text-base text-foreground">
         {mode === "login" ? (
           <>
             No account?{" "}
