@@ -42,8 +42,9 @@ export default function HeartSensorPage() {
         <p className="rm-label">Wired sensor</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Heart sensor</h1>
         <p className="mt-2 text-body">
-          I cannot see the physical chip from here. USB to the Elegoo is the part that already
-          works. The MAX30102 itself is quiet — usually power on the wrong pin, or SDA/SCL loose.
+          HELLO and SCAN lines mean the USB cable works. They are not heart data. Heart data is a
+          RAW number, then a BPM number. SCAN none means the chip is still quiet — usually VIN,
+          GND, SDA, or SCL.
         </p>
 
         <section className="rm-card mt-6 border-alert/30 p-5">

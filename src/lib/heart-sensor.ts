@@ -34,6 +34,7 @@ export type SerialHeartSample = {
   i2cOk?: boolean;
   hello?: boolean;
   noData?: boolean;
+  scan?: string;
 };
 
 export type UsbHeartProof = {
@@ -46,6 +47,8 @@ export type UsbHeartProof = {
   lastBpm: number | null;
   lastPacketAt: number | null;
   packetCount: number;
+  lastScan: string | null;
+  noData: boolean;
 };
 
 export const EMPTY_USB_PROOF: UsbHeartProof = {
@@ -58,6 +61,8 @@ export const EMPTY_USB_PROOF: UsbHeartProof = {
   lastBpm: null,
   lastPacketAt: null,
   packetCount: 0,
+  lastScan: null,
+  noData: false,
 };
 
 const MAX30102_PART_ID = 21;
@@ -77,15 +82,24 @@ export function applySerialSampleToProof(
     next.chip = next.chip ?? "MAX30102";
     next.board = next.board ?? "Elegoo Uno R3";
   }
+  if (sample.scan != null) {
+    next.lastScan = sample.scan;
+    next.started = true;
+  }
+  if (sample.noData) {
+    next.noData = true;
+  }
   if (sample.raw != null) {
     next.lastRaw = sample.raw;
     next.lastPacketAt = now;
     next.packetCount += 1;
+    next.noData = sample.raw < 120;
   }
   if (sample.bpm != null) {
     next.lastBpm = sample.bpm;
     next.lastPacketAt = now;
     next.packetCount += 1;
+    next.noData = false;
   }
   return next;
 }
@@ -149,7 +163,13 @@ export function parseSerialHeartLine(line: string): SerialHeartSample | null {
   }
   if (/^SCAN\b/i.test(text)) {
     const found = !/\bnone\b/i.test(text);
-    return found ? { i2cOk: true } : { error: "I2C scan found no chip. Check VIN and GND, then SCL to A5 and SDA to A4." };
+    return found
+      ? { i2cOk: true, scan: text, hello: true }
+      : {
+          hello: true,
+          scan: "none",
+          error: "I2C scan found no chip. Check VIN and GND, then SCL to A5 and SDA to A4.",
+        };
   }
   if (/^ADDR\b/i.test(text)) {
     return { i2cOk: true };

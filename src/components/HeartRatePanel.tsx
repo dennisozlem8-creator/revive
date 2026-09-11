@@ -152,8 +152,24 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
 
       {serialLog.length > 0 && (
         <div className="mt-3 rounded-xl bg-background px-3 py-2 font-mono text-xs text-muted">
+          <p className="mb-1 font-sans text-[11px] font-semibold uppercase tracking-wide text-muted">
+            USB log — look for SCAN and RAW
+          </p>
           {serialLog.map((line, i) => (
-            <p key={`${line}-${i}`}>{line}</p>
+            <p
+              key={`${line}-${i}`}
+              className={
+                /^SCAN\b/i.test(line)
+                  ? /\bnone\b/i.test(line)
+                    ? "font-semibold text-alert"
+                    : "font-semibold text-correct"
+                  : /^(RAW|BPM)\b/i.test(line)
+                    ? "font-semibold text-foreground"
+                    : undefined
+              }
+            >
+              {line}
+            </p>
           ))}
         </div>
       )}
@@ -289,20 +305,21 @@ function UsbSourceCard({
   const ageMs = proof.lastPacketAt != null ? now - proof.lastPacketAt : null;
   const fresh = ageMs != null && ageMs < 2500;
   const fingerOn = usbHasFingerData(proof);
-  const usbOnly = proof.started && !proof.i2cOk && proof.packetCount === 0;
+  const scanNone = (proof.lastScan ?? "").toLowerCase() === "none";
+  const usbOnly = proof.started && !proof.i2cOk;
   const waitingFinger = proof.i2cOk && !fingerOn;
   const chipKnown = proof.chipId === 21 ? "MAX30102 chip ID 21" : proof.chipId != null ? `chip ID ${proof.chipId}` : "waiting";
   const title = confirmed
     ? "Yes — live heart data"
-    : usbOnly
-      ? "USB yes — sensor not found"
+    : usbOnly || scanNone
+      ? "USB yes — no heart numbers"
       : waitingFinger
         ? "Sensor yes — put a finger on the lights"
         : "Checking the MAX30102";
   const status = !proof.started && !proof.chip
     ? "USB is open. Waiting for the Elegoo to say HELLO."
-    : usbOnly
-      ? "The cable is fine. SCAN none means the MAX30102 is not on the wires. VIN → Uno 3.3V. GND → GND. SCL → A5. SDA → A4."
+    : usbOnly || scanNone
+      ? "Those USB lines are the board talking, not a heartbeat. SCAN none means the MAX30102 is not on the wires. VIN → Uno 3.3V. GND → GND. SCL → A5. SDA → A4."
     : waitingFinger
       ? "The chip is talking. Cover both red lights with one fingertip and hold still for 10 seconds. Do not use the fingertip tip only — cover both windows."
       : !fresh
@@ -326,13 +343,29 @@ function UsbSourceCard({
         <ul className="mt-3 space-y-1 text-sm text-body">
           <li>Board: {proof.board ?? "Elegoo Uno R3 (USB open)"}</li>
           <li>Sensor: {proof.chip ?? "waiting for CHIP MAX30102"}</li>
-          <li>I2C: {proof.i2cOk ? "OK (SDA A4, SCL A5)" : proof.started ? "not confirmed yet" : "waiting"}</li>
+          <li>
+            I2C scan:{" "}
+            {proof.lastScan
+              ? proof.lastScan === "none"
+                ? "none — chip not found"
+                : proof.lastScan
+              : proof.started
+                ? "waiting"
+                : "waiting"}
+          </li>
+          <li>I2C: {proof.i2cOk ? "OK (SDA A4, SCL A5)" : proof.started ? "chip not found" : "waiting"}</li>
           <li>Identity: {chipKnown}</li>
           <li>
-            Live packets: {proof.packetCount} received
-            {fresh && ageMs != null ? ` · last ${ageMs < 800 ? "now" : `${(ageMs / 1000).toFixed(1)}s ago`}` : ""}
-            {proof.lastRaw != null ? ` · RAW ${proof.lastRaw}` : ""}
-            {proof.lastBpm != null ? ` · BPM ${proof.lastBpm}` : ""}
+            Heart numbers:{" "}
+            {proof.packetCount === 0
+              ? "none yet (USB messages are not heart data)"
+              : [
+                  fresh && ageMs != null ? (ageMs < 800 ? "now" : `${(ageMs / 1000).toFixed(1)}s ago`) : null,
+                  proof.lastRaw != null ? `RAW ${proof.lastRaw}` : null,
+                  proof.lastBpm != null ? `BPM ${proof.lastBpm}` : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ") || `${proof.packetCount} readings`}
           </li>
         </ul>
       )}
