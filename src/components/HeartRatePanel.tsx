@@ -289,29 +289,37 @@ function UsbSourceCard({
   const ageMs = proof.lastPacketAt != null ? now - proof.lastPacketAt : null;
   const fresh = ageMs != null && ageMs < 2500;
   const fingerOn = usbHasFingerData(proof);
-  const packetsOnly = (proof.started || proof.packetCount > 0) && !fingerOn;
+  const usbOnly = proof.started && !proof.i2cOk && proof.packetCount === 0;
+  const waitingFinger = proof.i2cOk && !fingerOn;
   const chipKnown = proof.chipId === 21 ? "MAX30102 chip ID 21" : proof.chipId != null ? `chip ID ${proof.chipId}` : "waiting";
+  const title = confirmed
+    ? "Yes — live heart data"
+    : usbOnly
+      ? "USB yes — sensor not found"
+      : waitingFinger
+        ? "Sensor yes — put a finger on the lights"
+        : "Checking the MAX30102";
   const status = !proof.started && !proof.chip
-    ? "USB is open. Waiting for the Elegoo to say MAX30102."
-    : !proof.i2cOk && (proof.started || proof.chip)
-      ? "USB to the Elegoo is good. The MAX30102 is not answering. Power the VIN pin from Uno 3.3V. Leave the sensor 3.3V pin empty. GND to GND, SCL to A5, SDA to A4. Upload the latest sketch, unplug 10 seconds, then Connect with USB."
-    : packetsOnly
-      ? "USB packets are arriving, but there is no finger data yet. Cover both LEDs with one fingertip and keep still. Wiring: VIN→5V, GND→GND, SCL→A5, SDA→A4."
+    ? "USB is open. Waiting for the Elegoo to say HELLO."
+    : usbOnly
+      ? "The cable is fine. SCAN none means the MAX30102 is not on the wires. VIN → Uno 3.3V. GND → GND. SCL → A5. SDA → A4."
+    : waitingFinger
+      ? "The chip is talking. Cover both red lights with one fingertip and hold still for 10 seconds. Do not use the fingertip tip only — cover both windows."
       : !fresh
-        ? "MAX30102 handshake seen. Waiting for the next RAW line."
+        ? "Waiting for the next RAW line."
         : proof.lastBpm
-          ? "Confirmed. Beats are coming from the MAX30102 on the Elegoo Uno R3."
+          ? "Beats are coming from the MAX30102."
           : "Finger data is live. Counting beats.";
 
   return (
     <div
       className={`mt-4 rounded-2xl border px-4 py-3 ${
-        confirmed ? "border-correct/40 bg-correct/10" : packetsOnly ? "border-almost/40 bg-almost/10" : "border-[var(--border)] bg-background"
+        confirmed ? "border-correct/40 bg-correct/10" : usbOnly || waitingFinger ? "border-almost/40 bg-almost/10" : "border-[var(--border)] bg-background"
       }`}
     >
       <p className="text-xs font-bold uppercase tracking-wide text-muted">Data source</p>
       <p className={`mt-1 font-semibold ${confirmed ? "text-correct" : "text-foreground"}`}>
-        {confirmed ? "Yes — live MAX30102 data" : packetsOnly ? "Packets yes — no heart data yet" : "Checking the MAX30102"}
+        {title}
       </p>
       <p className="mt-1 text-sm text-body">{status}</p>
       {!compact && (
