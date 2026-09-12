@@ -159,8 +159,8 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
             <p
               key={`${line}-${i}`}
               className={
-                /^SCAN\b/i.test(line)
-                  ? /\bnone\b/i.test(line)
+                /^SCAN\b/i.test(line) || /^ERR\b.*I2C/i.test(line)
+                  ? /\bnone\b/i.test(line) || /no I2C/i.test(line)
                     ? "font-semibold text-alert"
                     : "font-semibold text-correct"
                   : /^(RAW|BPM)\b/i.test(line)
@@ -284,7 +284,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
 
       {!compact && (
         <p className="mt-3 text-xs text-muted">
-          Wired: Elegoo Uno R3 + MAX30102. Power VIN from Uno 3.3V. Leave the sensor 3.3V pin empty. GND→GND, SCL→A5, SDA→A4. Never put 5V on a pin labeled only 3.3V.
+          Wired: Elegoo Uno R3 + MAX30102. If the power pin says VIN or VCC, use Uno 5V. Leave the sensor 3.3V pin empty. Never put 5V on a pin labeled only 3.3V. GND→GND, SCL→A5, SDA→A4.
         </p>
       )}
     </section>
@@ -312,14 +312,14 @@ function UsbSourceCard({
   const title = confirmed
     ? "Yes — live heart data"
     : usbOnly || scanNone
-      ? "USB yes — no heart numbers"
+      ? "No I2C — chip not found"
       : waitingFinger
         ? "Sensor yes — put a finger on the lights"
         : "Checking the MAX30102";
   const status = !proof.started && !proof.chip
     ? "USB is open. Waiting for the Elegoo to say HELLO."
     : usbOnly || scanNone
-      ? "Those USB lines are the board talking, not a heartbeat. SCAN none means the MAX30102 is not on the wires. VIN → Uno 3.3V. GND → GND. SCL → A5. SDA → A4."
+      ? "No I2C means the heart chip did not answer. USB is fine. If the power pin says VIN or VCC, move that wire to Uno 5V. Leave the 3.3V pin empty. GND → GND. SCL → A5. SDA → A4."
     : waitingFinger
       ? "The chip is talking. Cover both red lights with one fingertip and hold still for 10 seconds. Do not use the fingertip tip only — cover both windows."
       : !fresh

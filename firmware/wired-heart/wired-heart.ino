@@ -1,7 +1,8 @@
 // Revive Motion — Elegoo Uno R3 + MAX30102
 // File → New. Delete everything. Paste this whole file once.
 // Do not paste into sketch_sep9a if that tab already has leftover text.
-// VIN -> Uno 3.3V. GND -> GND. SCL -> A5. SDA -> A4. INT empty.
+// VIN / VCC -> Uno 5V. Leave the sensor 3.3V pin empty. Never 5V on a 3.3V pin.
+// GND -> GND. SCL -> A5. SDA -> A4. INT empty.
 
 #include <Wire.h>
 
@@ -339,7 +340,7 @@ bool startSensor() {
 
   beginWire(50000UL, false);
   tryTurnLedsOn();
-  Serial.println("ERR no I2C. Power VIN from Uno 3.3V. Leave the sensor 3.3V pin empty. GND to GND. SCL->A5 SDA->A4.");
+  Serial.println("ERR no I2C. If the pin says VIN or VCC, power it from Uno 5V. Leave the sensor 3.3V pin empty. Never 5V on a 3.3V pin. GND to GND. SCL->A5 SDA->A4.");
   return false;
 }
 

@@ -42,31 +42,30 @@ export default function HeartSensorPage() {
         <p className="rm-label">Wired sensor</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Heart sensor</h1>
         <p className="mt-2 text-body">
-          HELLO and SCAN lines mean the USB cable works. They are not heart data. Heart data is a
-          RAW number, then a BPM number. SCAN none means the chip is still quiet — usually VIN,
-          GND, SDA, or SCL.
+          <strong className="text-foreground">No I2C</strong> means the USB cable works and the
+          heart chip did not answer. That is a power or wire problem, not a website problem.
         </p>
 
         <section className="rm-card mt-6 border-alert/30 p-5">
-          <h2 className="font-semibold">Do this now</h2>
+          <h2 className="font-semibold">Do this now — no I2C</h2>
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
             <li>Unplug the USB cable. Close Serial Monitor. Tap Disconnect if this page is connected.</li>
             <li>
-              Power only the <strong className="text-foreground">VIN</strong> pin from Uno{" "}
-              <strong className="text-foreground">3.3V</strong>. Leave the sensor’s own 3.3V pin
-              empty. Do not put 5V on a pin labeled only 3.3V — that can kill the red lights.
+              Read the power pin name on the sensor. If it says <strong className="text-foreground">VIN</strong> or{" "}
+              <strong className="text-foreground">VCC</strong>, move that one wire to Uno{" "}
+              <strong className="text-foreground">5V</strong>. Leave the sensor’s own 3.3V pin empty.
+            </li>
+            <li>
+              If the pin says only <strong className="text-foreground">3.3V</strong>, keep it on Uno 3.3V.
+              Never put 5V on a pin labeled only 3.3V — that kills the red lights.
             </li>
             <li>GND → GND on the Elegoo board (not only a breadboard rail).</li>
-            <li>SCL → A5. SDA → A4. Push all four wires in until they click. Leave INT empty.</li>
-            <li>
-              Download <a className="font-medium text-brand-light underline" href="/firmware/wired-heart">wired-heart.ino</a>.
-              Arduino IDE → File → Open that file. Tools → Board → Arduino Uno. Upload. Close Serial Monitor.
-            </li>
-            <li>Plug USB back in. On this page tap Connect with USB. Pick the Arduino. Cover both LEDs with one fingertip.</li>
+            <li>SCL → A5. SDA → A4. Push all four wires in hard. Leave INT empty.</li>
+            <li>Plug USB back in. Refresh this page. Tap Connect with USB. Look for SCAN 0x57, not SCAN none.</li>
           </ol>
           <p className="mt-3 text-sm text-muted">
-            Good signs: SCAN shows 0x57, ID 21, then RAW numbers. If SCAN stays none after this, the
-            chip is unpowered or the SDA/SCL wires are in the wrong holes.
+            If the red lights already went on and then died, this chip is dead. A new MAX30102 is the
+            next step.
           </p>
         </section>
 
@@ -77,20 +76,20 @@ export default function HeartSensorPage() {
         <section className="rm-card mt-4 p-5">
           <h2 className="font-semibold">Wires</h2>
           <p className="mt-2 text-sm text-muted">
-            Four wires only. Power VIN from Uno 3.3V. Leave the sensor 3.3V pin empty.
+            Four wires only. VIN or VCC → Uno 5V. Leave the sensor 3.3V pin empty.
           </p>
           <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)] bg-white">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/max30102-wiring.svg"
-              alt="MAX30102 VIN to 5V or 3.3V, GND to GND, SCL to A5, SDA to A4"
+              alt="MAX30102 VIN to 5V, GND to GND, SCL to A5, SDA to A4"
               width={640}
               height={280}
               className="h-auto w-full"
             />
           </div>
           <ol className="mt-4 list-decimal space-y-1 pl-5 text-sm text-body">
-            <li>VIN or VCC → Uno 3.3V. Leave the sensor 3.3V pin empty.</li>
+            <li>VIN or VCC → Uno 5V. Leave the sensor 3.3V pin empty.</li>
             <li>GND → GND on the Elegoo board.</li>
             <li>SCL → A5. SDA → A4. Leave INT empty.</li>
           </ol>
@@ -113,14 +112,14 @@ export default function HeartSensorPage() {
 
         <HelpBlock title="If USB works but there is no I2C">
           <p>
-            The cable is fine. The four sensor wires are loose, on the wrong voltage, or SDA/SCL are
-            swapped. This sketch now tries the swap for you after you upload it.
+            The cable is fine. The chip did not answer. Most MAX30102 boards want 5V on the VIN pin,
+            not 3.3V. The sketch already tries SDA and SCL swapped.
           </p>
           <ol className="list-decimal space-y-2 pl-5">
             <li>Disconnect on this page. Close Serial Monitor.</li>
-            <li>Upload the latest wired-heart.ino.</li>
+            <li>Move VIN/VCC to Uno 5V. Leave the sensor 3.3V pin empty.</li>
             <li>Unplug USB for 10 seconds. Push VIN, GND, SCL, and SDA in hard.</li>
-            <li>Plug in. Connect with USB. Cover both LEDs with a fingertip.</li>
+            <li>Plug in. Connect with USB. If SCAN is still none and the lights stay off, the chip is dead.</li>
           </ol>
         </HelpBlock>
 

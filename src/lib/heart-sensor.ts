@@ -2,6 +2,9 @@ export const HEART_RATE_SERVICE = "heart_rate";
 export const HEART_RATE_MEASUREMENT = "heart_rate_measurement";
 export const WIRED_HEART_BAUD = 115200;
 
+export const NO_I2C_HELP =
+  "No I2C. USB is fine. The chip did not answer. If the power pin says VIN or VCC, move that one wire to Uno 5V. Leave the sensor 3.3V pin empty. Never put 5V on a pin labeled only 3.3V. GND → GND. SCL → A5. SDA → A4.";
+
 export function bluetoothHeartRateSupported() {
   return typeof navigator !== "undefined" && Boolean(navigator.bluetooth?.requestDevice);
 }
@@ -168,7 +171,7 @@ export function parseSerialHeartLine(line: string): SerialHeartSample | null {
       : {
           hello: true,
           scan: "none",
-          error: "I2C scan found no chip. Check VIN and GND, then SCL to A5 and SDA to A4.",
+          error: NO_I2C_HELP,
         };
   }
   if (/^ADDR\b/i.test(text)) {
@@ -208,6 +211,7 @@ export function parseSerialHeartLine(line: string): SerialHeartSample | null {
     return { noData: true };
   }
   if (/^ERR\b/i.test(text)) {
+    if (/no I2C/i.test(text)) return { hello: true, scan: "none", error: NO_I2C_HELP };
     return { error: text.replace(/^ERR\s*/i, "").trim() || text };
   }
   if (/^\d{1,3}$/.test(text)) {

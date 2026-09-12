@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" role="img" aria-labelledby="title desc">
   <title id="title">MAX30102 wiring to Elegoo Uno R3</title>
-  <desc id="desc">VIN to 5V or 3.3V, GND to GND, SCL to A5, SDA to A4</desc>
+  <desc id="desc">VIN to 5V, GND to GND, SCL to A5, SDA to A4. Leave the sensor 3.3V pin empty.</desc>
   <rect width="640" height="280" rx="24" fill="#f7fbfe"/>
   <rect x="28" y="36" width="210" height="208" rx="18" fill="#1b3348"/>
   <text x="133" y="78" text-anchor="middle" fill="#e8f3fb" font-family="system-ui,sans-serif" font-size="16" font-weight="700">MAX30102</text>
@@ -15,7 +15,7 @@
   <text x="507" y="78" text-anchor="middle" fill="#1b3348" font-family="system-ui,sans-serif" font-size="16" font-weight="700">Elegoo Uno R3</text>
   <text x="507" y="102" text-anchor="middle" fill="#4d6478" font-family="system-ui,sans-serif" font-size="12">power VIN only</text>
   <g font-family="system-ui,sans-serif" font-size="13" fill="#1b3348">
-    <text x="424" y="140">3.3V (into VIN)</text>
+    <text x="424" y="140">5V (into VIN)</text>
     <text x="424" y="168">GND</text>
     <text x="424" y="196">A5 / SCL</text>
     <text x="424" y="224">A4 / SDA</text>
