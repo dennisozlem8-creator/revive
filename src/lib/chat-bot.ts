@@ -37,6 +37,11 @@ const faq: { keywords: string[]; answer: string }[] = [
       "Pair a Bluetooth heart-rate strap, or plug in a wired Arduino pulse sensor over USB. Open Heart sensor, tap Connect with USB, then Record this session. Polar H9/H10, Wahoo TICKR, Coospo, Magene work over Bluetooth. Apple Watch usually does not. Joint ROM is still a demo; use Photo Goniometer for a real knee angle.",
   },
   {
+    keywords: ["myoware", "myo ware", "emg", "muscle", "env"],
+    answer:
+      "Open Muscle sensor. Wire MyoWare 2.0 VIN to Uno 5V, GND to GND, ENV to A0. Flip the power switch ON. Download wired-myoware.ino, upload it, close Serial Monitor, then tap Connect with USB and flex.",
+  },
+  {
     keywords: ["goniometer", "photo", "angle", "hip", "mark"],
     answer:
       "Open Photo Goniometer. Check the setup list first, then record a side-view video. The coach scores form, tells you the next sets to do, and saves a trend your doctor can review. A still photo still works. It is not a medical diagnosis.",

@@ -16,13 +16,16 @@ import { areaIdForInjury, getSessionRecommendations } from "@/lib/session-result
 import { t } from "@/lib/i18n";
 import { PeakBarChart, TestLiveCharts } from "@/components/TestLiveCharts";
 import { HeartRatePanel } from "@/components/HeartRatePanel";
+import { MyoWarePanel } from "@/components/MyoWarePanel";
 import { useHeartRate } from "@/components/HeartRateProvider";
+import { useMyoWare } from "@/components/MyoWareProvider";
 
 type Phase = "recording" | "exercises" | "report";
 
 export default function SessionPage() {
   const { user, saveExerciseHistory, getPreviousExerciseIds } = useAuth();
   const heart = useHeartRate();
+  const muscle = useMyoWare();
   const router = useRouter();
   const [phase, setPhase] = useState<Phase>("recording");
   const [angle, setAngle] = useState(0);
@@ -59,7 +62,8 @@ export default function SessionPage() {
     const interval = setInterval(() => {
       const next = Math.min(target + 5, Math.round(40 + Math.random() * (target - 20)));
       setAngle(next);
-      setEmg(Math.round(35 + Math.random() * 40));
+      const liveEmg = muscle.connected && muscle.emg != null ? muscle.emg : Math.round(35 + Math.random() * 40);
+      setEmg(liveEmg);
       if (heart.connected && heart.bpm) {
         setHr(heart.bpm);
         setHrWave((prev) => [...prev.slice(1), heart.bpm as number]);
@@ -69,13 +73,13 @@ export default function SessionPage() {
         setHrWave((prev) => [...prev.slice(1), fake]);
       }
       setWave((prev) => [...prev.slice(1), Math.max(12, Math.sin(next * 0.08) * 40 + 50)]);
-      setEmgWave((prev) => [...prev.slice(1), Math.round(35 + Math.random() * 40)]);
+      setEmgWave((prev) => [...prev.slice(1), liveEmg]);
       if (next >= target * 0.88) {
         setReps((r) => Math.min(targetReps, r + (Math.random() > 0.7 ? 1 : 0)));
       }
     }, 800);
     return () => clearInterval(interval);
-  }, [recording, target, targetReps, heart.connected, heart.bpm]);
+  }, [recording, target, targetReps, heart.connected, heart.bpm, muscle.connected, muscle.emg]);
 
   useEffect(() => {
     if (phase !== "report" || !user || !summary || exercises.length === 0 || savedRef.current) {
@@ -153,14 +157,19 @@ export default function SessionPage() {
         />
 
         <div className="mt-6 space-y-4">
-          <HeartRatePanel />
+          <MyoWarePanel />
+          <HeartRatePanel compact hideWired />
 
           <FeedbackBox state={feedback} angle={angle} target={target} locale={locale} />
 
           <TestLiveCharts
             series={[
               { label: "Live angle", values: wave, unit: "°", max: 100 },
-              { label: "Muscle effort (EMG)", values: emgWave, max: 100 },
+              {
+                label: muscle.connected ? "Muscle effort (MyoWare)" : "Muscle effort (demo)",
+                values: muscle.connected && muscle.history.some((v) => v > 0) ? muscle.history : emgWave,
+                max: 100,
+              },
               {
                 label: heart.connected ? "Heart rate (live)" : "Heart rate (demo)",
                 values: heart.connected && heart.history.some((v) => v > 0) ? heart.history : hrWave,
@@ -181,7 +190,11 @@ export default function SessionPage() {
 
           <div className="grid grid-cols-3 gap-3">
             <StatTile value={`${reps}/${targetReps}`} label={t("reps", locale)} accent="correct" />
-            <StatTile value={emg} label="EMG (demo)" accent="purple" />
+            <StatTile
+              value={muscle.connected && muscle.emg != null ? muscle.emg : emg}
+              label={muscle.connected ? "EMG live" : "EMG demo"}
+              accent="purple"
+            />
             <StatTile
               value={heart.connected && heart.bpm ? heart.bpm : hr}
               label={heart.connected ? "BPM live" : "BPM demo"}

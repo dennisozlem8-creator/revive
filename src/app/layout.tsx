@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Fredoka } from "next/font/google";
 import { AuthGate } from "@/components/AuthGate";
 import { AuthProvider } from "@/components/AuthProvider";
 import { HeartRateProvider } from "@/components/HeartRateProvider";
+import { MyoWareProvider } from "@/components/MyoWareProvider";
 import { NotificationScheduler } from "@/components/NotificationScheduler";
 import { ChatAssistant } from "@/components/ChatAssistant";
 import "./globals.css";
@@ -42,11 +43,13 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <AuthProvider>
           <HeartRateProvider>
-            <AuthGate>
-              {children}
-              <NotificationScheduler />
-              <ChatAssistant />
-            </AuthGate>
+            <MyoWareProvider>
+              <AuthGate>
+                {children}
+                <NotificationScheduler />
+                <ChatAssistant />
+              </AuthGate>
+            </MyoWareProvider>
           </HeartRateProvider>
         </AuthProvider>
       </body>

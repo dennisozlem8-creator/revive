@@ -18,6 +18,13 @@ Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo t
 
 The estimate is for progress tracking, not a diagnosis. Video files are not stored in the browser database.
 
+## MyoWare 2.0 (wired muscle / EMG)
+
+1. VIN → Uno 5V. GND → Uno GND. ENV → A0. Flip the MyoWare power switch ON. The VIN LED should stay lit.
+2. Snap electrodes: MID on the muscle belly, END along the muscle, REF on nearby bone.
+3. Download `wired-myoware.ino` from the Muscle page (or open `firmware/wired-myoware/wired-myoware.ino`). Board: Arduino Uno. Upload, then close Serial Monitor.
+4. Open Chrome or Edge. Go to **MyoWare 2.0** (`/muscle`). Tap **Connect with USB**. Flex. ENV should rise.
+
 ## Heart sensor (live Bluetooth or USB)
 
 A Bluetooth heart-rate strap **or** a wired Arduino pulse sensor can show live BPM.

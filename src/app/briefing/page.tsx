@@ -111,6 +111,11 @@ export default function BriefingPage() {
         </button>
 
         <p className="mt-5 text-center">
+          <Link href="/muscle" className="text-sm font-medium text-brand-light hover:text-brand">
+            Connect MyoWare 2.0 →
+          </Link>
+        </p>
+        <p className="mt-3 text-center">
           <Link href="/library" className="text-sm font-medium text-brand-light hover:text-brand">
             {t("viewLibrary", locale)} →
           </Link>

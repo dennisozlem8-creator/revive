@@ -14,10 +14,11 @@ import { useHeartRate } from "./HeartRateProvider";
 
 type HeartRatePanelProps = {
   compact?: boolean;
+  hideWired?: boolean;
   onConnected?: () => void;
 };
 
-export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
+export function HeartRatePanel({ compact, hideWired, onConnected }: HeartRatePanelProps) {
   const { user } = useAuth();
   const {
     bluetoothSupported,
@@ -192,6 +193,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
       <div className={`mt-4 flex flex-col gap-2 ${compact ? "" : "sm:flex-row sm:flex-wrap"}`}>
         {!connected ? (
           <>
+            {!hideWired && (
             <button
               type="button"
               className="rm-btn rm-btn-brand flex-1 disabled:opacity-40"
@@ -220,6 +222,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
             >
               {connecting ? "Connecting…" : "Connect with USB"}
             </button>
+            )}
             <button
               type="button"
               className="rm-btn rm-btn-ghost flex-1 disabled:opacity-40"
@@ -282,7 +285,7 @@ export function HeartRatePanel({ compact, onConnected }: HeartRatePanelProps) {
         )}
       </div>
 
-      {!compact && (
+      {!compact && !hideWired && (
         <p className="mt-3 text-xs text-muted">
           Wired: Elegoo Uno R3 + MAX30102. If the power pin says VIN or VCC, use Uno 5V. Leave the sensor 3.3V pin empty. Never put 5V on a pin labeled only 3.3V. GND→GND, SCL→A5, SDA→A4.
         </p>

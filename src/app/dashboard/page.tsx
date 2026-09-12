@@ -72,8 +72,8 @@ export default function DashboardPage() {
           <Link href="/goniometer" className="rm-btn rm-btn-brand inline-flex flex-1">
             Photo Goniometer
           </Link>
-          <Link href="/heart" className="rm-btn rm-btn-ghost inline-flex flex-1">
-            Connect heart sensor
+          <Link href="/muscle" className="rm-btn rm-btn-ghost inline-flex flex-1">
+            Connect MyoWare
           </Link>
           <Link href="/shop" className="rm-btn rm-btn-ghost inline-flex flex-1">
             Shop devices and braces

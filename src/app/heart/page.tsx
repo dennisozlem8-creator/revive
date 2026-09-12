@@ -41,6 +41,13 @@ export default function HeartSensorPage() {
       <main className="mx-auto max-w-lg px-6 pb-8">
         <p className="rm-label">Wired sensor</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">Heart sensor</h1>
+        <p className="mt-3 rounded-xl border border-brand/25 bg-brand/10 px-4 py-3 text-sm text-body">
+          Skipping the heart chip?{" "}
+          <Link href="/muscle" className="font-semibold text-brand-light underline">
+            Connect MyoWare 2.0
+          </Link>{" "}
+          instead. Three analog wires, no I2C.
+        </p>
         <p className="mt-2 text-body">
           <strong className="text-foreground">No I2C</strong> means the USB cable works and the
           heart chip did not answer. That is a power or wire problem, not a website problem.

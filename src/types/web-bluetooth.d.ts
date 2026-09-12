@@ -82,6 +82,7 @@ interface SerialPort extends EventTarget {
   open(options: { baudRate: number }): Promise<void>;
   close(): Promise<void>;
   getInfo(): SerialPortInfo;
+  setSignals?(signals: { dataTerminalReady?: boolean; requestToSend?: boolean }): Promise<void>;
 }
 
 interface Serial {
