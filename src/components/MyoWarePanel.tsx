@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { myoWareBrowserHelp, myoWareHasSignal, requestUsbMyoWarePort } from "@/lib/myoware-sensor";
-import { usbBlockReason } from "@/lib/heart-sensor";
 import { useAuth } from "./AuthProvider";
 import { useMyoWare } from "./MyoWareProvider";
 
@@ -14,8 +13,10 @@ export function MyoWarePanel({ compact }: MyoWarePanelProps) {
   const { user } = useAuth();
   const {
     usbSupported,
+    bluetoothSupported,
     connecting,
     connected,
+    source,
     deviceName,
     emg,
     env,
@@ -26,13 +27,14 @@ export function MyoWarePanel({ compact }: MyoWarePanelProps) {
     recording,
     recordCount,
     connectUsb,
+    connectBluetooth,
     disconnect,
     startRecording,
     stopAndSave,
   } = useMyoWare();
   const [saveMessage, setSaveMessage] = useState("");
   const [now, setNow] = useState(() => Date.now());
-  const blocked = usbBlockReason().replace("/heart", "/muscle");
+  const canConnect = usbSupported || bluetoothSupported;
   const live = connected && emg != null;
   const flexed = live && emg >= 12;
 
@@ -98,9 +100,13 @@ export function MyoWarePanel({ compact }: MyoWarePanelProps) {
             {flexed
               ? "Yes — ENV is changing with the muscle"
               : myoWareHasSignal(usbProof)
-                ? "USB yes — flex the muscle under the pads"
+                ? source === "bluetooth"
+                  ? "Bluetooth yes — flex the muscle under the pads"
+                  : "USB yes — flex the muscle under the pads"
                 : usbProof.started
-                  ? "USB yes — ENV is still near zero"
+                  ? source === "bluetooth"
+                    ? "Bluetooth yes — ENV is still near zero"
+                    : "USB yes — ENV is still near zero"
                   : "Waiting for HELLO MYOWARE"}
           </p>
           <p className="mt-1 text-sm text-body">
@@ -108,11 +114,13 @@ export function MyoWarePanel({ compact }: MyoWarePanelProps) {
               ? "Hold a 5-second squeeze, then rest. The number should rise, then fall."
               : myoWareHasSignal(usbProof)
                 ? "Pads: MID on the muscle belly, END along the muscle, REF on nearby bone. Then flex."
-                : "If ENV stays 0, the power switch is off, VIN is not on 5V, or ENV is not in A0."}
+                : source === "bluetooth"
+                  ? "If ENV stays 0, the Wireless Shield is not snapped on, POWER is off, or the pads are not on skin."
+                  : "If ENV stays 0, the power switch is off, VIN is not on 5V, or ENV is not in A0."}
           </p>
           {!compact && (
             <ul className="mt-3 space-y-1 text-sm text-body">
-              <li>Board: {usbProof.board ?? "Elegoo Uno R3"}</li>
+              <li>Board: {usbProof.board ?? (source === "bluetooth" ? "MyoWare Wireless Shield" : "Elegoo Uno R3")}</li>
               <li>Sensor: {usbProof.chip ?? "waiting for CHIP MYOWARE2"}</li>
               <li>
                 ENV: {env ?? "—"}
@@ -142,14 +150,10 @@ export function MyoWarePanel({ compact }: MyoWarePanelProps) {
         </div>
       )}
 
-      {blocked && !connected && (
-        <p className="mt-3 rounded-xl bg-alert/10 px-3 py-3 text-sm font-medium text-alert">{blocked}</p>
-      )}
-
       {serialLog.length > 0 && (
         <div className="mt-3 rounded-xl bg-background px-3 py-2 font-mono text-xs text-muted">
           <p className="mb-1 font-sans text-[11px] font-semibold uppercase tracking-wide text-muted">
-            USB log — look for HELLO MYOWARE and ENV
+            Sensor log — look for HELLO MYOWARE and ENV
           </p>
           {serialLog.map((line, i) => (
             <p
@@ -172,35 +176,48 @@ export function MyoWarePanel({ compact }: MyoWarePanelProps) {
         </p>
       )}
 
-      {!usbSupported && (
+      {!canConnect && (
         <p className="mt-3 text-sm text-muted">
           Open this site on a Windows or Mac computer in <strong className="text-foreground">Chrome or Edge</strong>.
-          A phone cannot see the USB cable.
+          Safari and iPhone cannot pair the Wireless Shield with this website.
         </p>
       )}
 
       <div className={`mt-4 flex flex-col gap-2 ${compact ? "" : "sm:flex-row sm:flex-wrap"}`}>
         {!connected ? (
-          <button
-            type="button"
-            className="rm-btn rm-btn-brand flex-1 disabled:opacity-40"
-            disabled={connecting || !usbSupported}
-            onClick={async () => {
-              setSaveMessage("");
-              if (!usbSupported) return;
-              try {
-                const port = await requestUsbMyoWarePort();
-                await connectUsb(port);
-              } catch (err) {
-                const name = err instanceof DOMException ? err.name : "";
-                if (name !== "NotFoundError" && name !== "AbortError") {
-                  await connectUsb();
+          <>
+            <button
+              type="button"
+              className="rm-btn rm-btn-brand flex-1 disabled:opacity-40"
+              disabled={connecting || !bluetoothSupported}
+              onClick={async () => {
+                setSaveMessage("");
+                await connectBluetooth();
+              }}
+            >
+              {connecting ? "Connecting…" : "Connect with Bluetooth"}
+            </button>
+            <button
+              type="button"
+              className="rm-btn rm-btn-ghost flex-1 disabled:opacity-40"
+              disabled={connecting || !usbSupported}
+              onClick={async () => {
+                setSaveMessage("");
+                if (!usbSupported) return;
+                try {
+                  const port = await requestUsbMyoWarePort();
+                  await connectUsb(port);
+                } catch (err) {
+                  const name = err instanceof DOMException ? err.name : "";
+                  if (name !== "NotFoundError" && name !== "AbortError") {
+                    await connectUsb();
+                  }
                 }
-              }
-            }}
-          >
-            {connecting ? "Connecting…" : "Connect with USB"}
-          </button>
+              }}
+            >
+              Connect with USB (Uno)
+            </button>
+          </>
         ) : (
           <>
             {!recording ? (
@@ -238,7 +255,8 @@ export function MyoWarePanel({ compact }: MyoWarePanelProps) {
 
       {!compact && (
         <p className="mt-3 text-xs text-muted">
-          Wired: Elegoo Uno R3 + MyoWare 2.0. VIN→5V, GND→GND, ENV→A0. Flip the sensor power switch ON.
+          Wireless: snap the Wireless Shield on the sensor, POWER SOURCE = VBAT, POWER ON, then Connect with Bluetooth.
+          Wired Uno: VIN→5V, GND→GND, ENV→A0.
         </p>
       )}
     </section>

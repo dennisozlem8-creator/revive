@@ -1,6 +1,10 @@
 import { usbBlockReason, usbHeartRateSupported, usbPortLabel } from "@/lib/heart-sensor";
 
 export const WIRED_MYOWARE_BAUD = 115200;
+export const MYOWARE_BLE_SERVICE = "ec3af789-2154-49f4-a9fc-bc6c88e9e930";
+export const MYOWARE_BLE_CHARACTERISTIC = "f3a56edf-8f1e-4533-93bf-5601b2e91308";
+export const NORDIC_UART_SERVICE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+export const NORDIC_UART_TX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
 export type SerialMyoWareSample = {
   env?: number;
@@ -41,7 +45,7 @@ export function applyMyoWareSampleToProof(
   if (sample.hello) {
     next.started = true;
     next.chip = next.chip ?? "MyoWare 2.0";
-    next.board = next.board ?? "Elegoo Uno R3";
+    next.board = next.board ?? sample.board ?? "MyoWare";
   }
   if (sample.env != null) {
     next.lastEnv = sample.env;
@@ -69,7 +73,7 @@ export function parseSerialMyoWareLine(line: string): SerialMyoWareSample | null
     return {
       hello: true,
       chip: "MyoWare 2.0",
-      board: /ELEGOO/i.test(text) ? "Elegoo Uno R3" : undefined,
+      board: /WIRELESS/i.test(text) ? "MyoWare Wireless Shield" : /ELEGOO/i.test(text) ? "Elegoo Uno R3" : undefined,
     };
   }
   if (/^SRC\s+/i.test(text)) {
@@ -83,13 +87,25 @@ export function parseSerialMyoWareLine(line: string): SerialMyoWareSample | null
   }
   const envMatch = text.match(/^(?:ENV|ADC)\s*[:=]?\s*(\d{1,4})$/i);
   if (envMatch) {
-    return { env: Number(envMatch[1]), hello: true };
+    const env = Number(envMatch[1]);
+    return { env, emg: envToEffort(env), hello: true };
   }
   const emgMatch = text.match(/^(?:EMG|EFFORT)\s*[:=]?\s*(\d{1,3})$/i);
   if (emgMatch) {
     return { emg: Math.min(100, Number(emgMatch[1])), hello: true };
   }
+  if (/^\d+(?:\.\d+)?$/.test(text)) {
+    const env = Math.round(Number(text));
+    if (env >= 0 && env <= 4095) {
+      return { env, emg: envToEffort(env), hello: true };
+    }
+  }
   return null;
+}
+
+function envToEffort(env: number) {
+  const emg = env > 1023 ? Math.round(env / 41) : Math.round(env / 10);
+  return Math.max(0, Math.min(100, emg));
 }
 
 export type MyoWareConnection = {
@@ -110,6 +126,98 @@ export function requestUsbMyoWarePort() {
     throw new Error(usbBlockReason().replace("/heart", "/muscle") || "This browser cannot use USB.");
   }
   return navigator.serial.requestPort();
+}
+
+export function bluetoothMyoWareSupported() {
+  return typeof navigator !== "undefined" && Boolean(navigator.bluetooth?.requestDevice);
+}
+
+export function ingestMyoWareText(
+  text: string,
+  onSample: (sample: SerialMyoWareSample) => void,
+  onLine?: (line: string) => void
+) {
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    onLine?.(trimmed);
+    const sample = parseSerialMyoWareLine(trimmed);
+    if (sample) onSample(sample);
+  }
+}
+
+export async function connectWirelessMyoWare(options: ConnectOptions): Promise<MyoWareConnection> {
+  if (!navigator.bluetooth?.requestDevice) {
+    throw new Error(
+      "This browser cannot use Bluetooth. Open Google Chrome or Microsoft Edge on a computer. Safari and iPhone cannot pair the Wireless Shield with this website."
+    );
+  }
+
+  const device = await navigator.bluetooth.requestDevice({
+    filters: [{ namePrefix: "MyoWare" }, { namePrefix: "ReviveMyoWare" }],
+    optionalServices: [MYOWARE_BLE_SERVICE, NORDIC_UART_SERVICE],
+  });
+
+  const server = await device.gatt?.connect();
+  if (!server) {
+    throw new Error("Bluetooth found the shield, but it would not open. Flip POWER OFF, wait 3 seconds, POWER ON, then try Connect with Bluetooth again.");
+  }
+
+  let characteristic: BluetoothRemoteGATTCharacteristic | null = null;
+  try {
+    const service = await server.getPrimaryService(MYOWARE_BLE_SERVICE);
+    characteristic = await service.getCharacteristic(MYOWARE_BLE_CHARACTERISTIC);
+  } catch {
+    try {
+      const service = await server.getPrimaryService(NORDIC_UART_SERVICE);
+      characteristic = await service.getCharacteristic(NORDIC_UART_TX);
+    } catch {
+      throw new Error(
+        "The Wireless Shield was found, but it is not sending muscle data. Upload wireless-myoware.ino with board ESP32 Dev Module, then POWER OFF, unplug USB, snap it onto the sensor, and POWER ON."
+      );
+    }
+  }
+
+  const decoder = new TextDecoder();
+  const onValue = (event: Event) => {
+    const target = event.target as BluetoothRemoteGATTCharacteristic | null;
+    const view = target?.value;
+    if (!view) return;
+    ingestMyoWareText(decoder.decode(view), (sample) => {
+      if (sample.env != null) options.onEnv?.(sample.env);
+      if (sample.emg != null) options.onEmg(sample.emg);
+    }, options.onLine);
+  };
+
+  const onGone = () => {
+    characteristic?.removeEventListener("characteristicvaluechanged", onValue);
+    device.removeEventListener("gattserverdisconnected", onGone);
+    options.onDisconnect();
+  };
+
+  characteristic.addEventListener("characteristicvaluechanged", onValue);
+  device.addEventListener("gattserverdisconnected", onGone);
+  await characteristic.startNotifications();
+
+  options.onLine?.("HELLO MYOWARE WIRELESS");
+
+  return {
+    deviceName: device.name?.trim() || "MyoWare Wireless Shield",
+    disconnect: () => {
+      characteristic?.removeEventListener("characteristicvaluechanged", onValue);
+      device.removeEventListener("gattserverdisconnected", onGone);
+      try {
+        characteristic?.stopNotifications().catch(() => undefined);
+      } catch {
+        /* ignore */
+      }
+      try {
+        device.gatt?.disconnect();
+      } catch {
+        /* ignore */
+      }
+    },
+  };
 }
 
 export async function connectWiredMyoWare(
@@ -227,6 +335,9 @@ export async function connectWiredMyoWare(
 
 export function myoWareBrowserHelp() {
   if (typeof navigator === "undefined") return "";
+  if (bluetoothMyoWareSupported()) {
+    return "Wireless: tap Connect with Bluetooth and pick MyoWareSensor1. Wired Uno: tap Connect with USB.";
+  }
   if (!usbHeartRateSupported()) {
     return usbBlockReason().replace("/heart", "/muscle");
   }

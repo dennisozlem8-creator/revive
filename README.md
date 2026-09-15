@@ -18,7 +18,17 @@ Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo t
 
 The estimate is for progress tracking, not a diagnosis. Video files are not stored in the browser database.
 
-## MyoWare 2.0 (wired muscle / EMG)
+## MyoWare 2.0 Wireless Shield
+
+Do not use the Elegoo Uno for this. The Wireless Shield is its own ESP32 board.
+
+1. USB into the **Wireless Shield**. POWER SOURCE = VBAT. POWER ON.
+2. Arduino IDE: install the **esp32** board package. Tools → Board → **ESP32 Dev Module**.
+3. Download `wireless-myoware.ino` from the Muscle page. File → Open. Upload. Close Serial Monitor.
+4. POWER OFF. Unplug USB. Snap the shield onto the muscle sensor. Pads: MID / END / REF.
+5. POWER ON. Chrome → `/muscle` → **Connect with Bluetooth** → MyoWareSensor1. Flex.
+
+## MyoWare 2.0 (wired Uno)
 
 1. VIN → Uno 5V. GND → Uno GND. ENV → A0. Flip the MyoWare power switch ON. The VIN LED should stay lit.
 2. Snap electrodes: MID on the muscle belly, END along the muscle, REF on nearby bone.

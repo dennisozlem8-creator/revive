@@ -39,39 +39,48 @@ export default function MuscleSensorPage() {
     <div className="min-h-full rm-glow-patient pb-28 text-foreground">
       <Header linkHome />
       <main className="mx-auto max-w-lg px-6 pb-8">
-        <p className="rm-label">Wired sensor</p>
+        <p className="rm-label">Muscle sensor</p>
         <h1 className="rm-title mt-1 text-3xl text-foreground">MyoWare 2.0</h1>
         <p className="mt-2 text-body">
-          This is analog, not I2C. Three wires. When you flex, the ENV number should rise.
+          Wireless uses the MyoWare Wireless Shield over Bluetooth. You do not use the Elegoo Uno
+          for this. USB into the shield is only to load the program once.
         </p>
 
         <section className="rm-card mt-6 border-brand/30 p-5">
-          <h2 className="font-semibold">Do this now</h2>
+          <h2 className="font-semibold">Wireless — do this now</h2>
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            <li>Unplug USB. Close Serial Monitor. Tap Disconnect on the Heart page if that tab is still open.</li>
+            <li>Leave the Elegoo Uno unplugged. The Wireless Shield has its own USB port and battery.</li>
+            <li>Unstack the Wireless Shield from the muscle sensor. Plug USB into the <strong className="text-foreground">Wireless Shield</strong>.</li>
             <li>
-              <strong className="text-foreground">VIN → Uno 5V</strong>.{" "}
-              <strong className="text-foreground">GND → GND</strong> on the Elegoo board.{" "}
-              <strong className="text-foreground">ENV → A0</strong>. Leave RAW, RECT, and INT empty.
+              Set <strong className="text-foreground">POWER SOURCE</strong> to{" "}
+              <strong className="text-foreground">VBAT</strong>. Flip <strong className="text-foreground">POWER ON</strong>.
             </li>
-            <li>Flip the MyoWare <strong className="text-foreground">power switch ON</strong>. The VIN LED should stay lit.</li>
             <li>
-              Snap three electrodes: <strong className="text-foreground">MID</strong> on the muscle belly,{" "}
-              <strong className="text-foreground">END</strong> along the muscle,{" "}
-              <strong className="text-foreground">REF</strong> on nearby bone (not on the same muscle).
+              Arduino IDE: Boards Manager → install <strong className="text-foreground">esp32</strong> by Espressif.
+              Tools → Board → <strong className="text-foreground">ESP32 Dev Module</strong>. Tools → Port → the shield.
             </li>
             <li>
               Download{" "}
-              <a className="font-medium text-brand-light underline" href="/firmware/wired-myoware">
-                wired-myoware.ino
+              <a className="font-medium text-brand-light underline" href="/firmware/wireless-myoware">
+                wireless-myoware.ino
               </a>
-              . Arduino IDE → File → Open that file. Tools → Board → Arduino Uno. Upload. Close Serial Monitor.
+              . File → Open that file. Upload. Wait for Done uploading. Close Serial Monitor.
             </li>
-            <li>Plug USB back in. On this page tap Connect with USB. Pick the Arduino. Flex the muscle.</li>
+            <li>Flip POWER OFF. Unplug USB. Snap the shield onto the muscle sensor (GND / REF only fit one way).</li>
+            <li>
+              Pads: <strong className="text-foreground">MID</strong> on the muscle,{" "}
+              <strong className="text-foreground">END</strong> along the muscle,{" "}
+              <strong className="text-foreground">REF</strong> on nearby bone.
+            </li>
+            <li>
+              POWER ON. The LED should blink. Chrome on a computer → this page →{" "}
+              <strong className="text-foreground">Connect with Bluetooth</strong> → pick{" "}
+              <strong className="text-foreground">MyoWareSensor1</strong>. Flex.
+            </li>
           </ol>
           <p className="mt-3 text-sm text-muted">
-            Good signs: HELLO MYOWARE, then ENV numbers that jump when you flex. If ENV stays 0, the
-            switch is off or ENV is not in A0.
+            Good signs: the LED stays on after Chrome connects, then ENV numbers jump when you flex.
+            Factory firmware waits for USB and will not work with this website — upload the file above.
           </p>
         </section>
 
@@ -80,8 +89,29 @@ export default function MuscleSensorPage() {
         </div>
 
         <section className="rm-card mt-4 p-5">
-          <h2 className="font-semibold">Wires</h2>
-          <p className="mt-2 text-sm text-muted">Three wires only. Power switch ON.</p>
+          <h2 className="font-semibold">Wireless stack</h2>
+          <p className="mt-2 text-sm text-muted">No jumper wires. The shield snaps onto the sensor.</p>
+          <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)] bg-white">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/myoware-wireless.svg"
+              alt="MyoWare Wireless Shield snapped onto the muscle sensor"
+              width={640}
+              height={280}
+              className="h-auto w-full"
+            />
+          </div>
+          <a
+            href="/firmware/wireless-myoware"
+            className="rm-btn rm-btn-ghost mt-4 inline-flex w-full justify-center"
+          >
+            Download wireless-myoware.ino
+          </a>
+        </section>
+
+        <section className="rm-card mt-4 p-5">
+          <h2 className="font-semibold">Wired Uno instead</h2>
+          <p className="mt-2 text-sm text-muted">Three wires only if you are not using the Wireless Shield.</p>
           <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)] bg-white">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -105,29 +135,30 @@ export default function MuscleSensorPage() {
           </a>
         </section>
 
-        <HelpBlock title="If you have a MyoWare Link Shield">
+        <HelpBlock title="If Bluetooth cannot find MyoWareSensor1">
           <ol className="list-decimal space-y-2 pl-5">
-            <li>Snap the shield onto the sensor. Align GND and REF so it only fits one way.</li>
-            <li>Set the OUTPUT switch to ENV. Do not flip that switch while power is on.</li>
-            <li>Power switch ON. Cable: VIN → 5V, GND → GND, signal → A0.</li>
+            <li>Use Chrome or Edge on a computer. Not Safari. Not iPhone.</li>
+            <li>POWER SOURCE = VBAT. POWER ON. LED should blink until Chrome connects.</li>
+            <li>Stay within a few feet. Do not leave USB plugged into the shield while using Bluetooth.</li>
+            <li>If Mac does not see a port when uploading, install the CH340 USB driver, then pick ESP32 Dev Module.</li>
           </ol>
         </HelpBlock>
 
         <HelpBlock title="If ENV stays 0">
           <ol className="list-decimal space-y-2 pl-5">
-            <li>The power switch must be ON. VIN LED stays lit.</li>
-            <li>ENV must be in A0, not A4 or A5 (those were for the heart chip).</li>
-            <li>Close Serial Monitor. Only this page can use the USB port.</li>
+            <li>The Wireless Shield POWER switch must be ON, or for wired Uno the sensor switch must be ON.</li>
+            <li>Wireless: the shield must be snapped onto the muscle sensor. Wired: ENV must be in A0, not A4 or A5.</li>
+            <li>Pads on clean skin: MID on the muscle, END along it, REF on bone.</li>
             <li>If the ENV LED stays on at rest, turn the GAIN screw a little counterclockwise.</li>
           </ol>
         </HelpBlock>
 
-        <HelpBlock title="Load the program in Arduino IDE">
+        <HelpBlock title="Load the wireless program in Arduino IDE">
           <ol className="list-decimal space-y-2 pl-5">
-            <li>Download the file above. File → Open that file. Do not paste it into an old sketch.</li>
-            <li>Tools → Board → Arduino Uno. Tools → Port → the Elegoo.</li>
-            <li>Upload. Wait for Done uploading. Close Serial Monitor.</li>
-            <li>Come back here and tap Connect with USB.</li>
+            <li>Download wireless-myoware.ino. File → Open that file. Do not paste it into an old sketch.</li>
+            <li>Tools → Board → ESP32 Dev Module. Tools → Port → the Wireless Shield (not the Elegoo).</li>
+            <li>Upload. Wait for Done uploading. Close Serial Monitor. POWER OFF. Unplug USB.</li>
+            <li>Snap onto the sensor, POWER ON, then Connect with Bluetooth.</li>
           </ol>
         </HelpBlock>
 
