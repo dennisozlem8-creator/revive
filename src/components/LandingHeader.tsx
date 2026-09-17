@@ -25,15 +25,15 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/85 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-3 sm:px-6">
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-3 transition hover:opacity-85"
+          className="flex min-w-0 shrink items-center gap-2 transition hover:opacity-85 sm:gap-3"
           aria-label="Revive Motion"
           onClick={() => setOpen(false)}
         >
-          <Logo size={40} showText={false} compact />
-          <span className="text-[1.05rem] font-semibold tracking-tight text-foreground">Revive Motion</span>
+          <Logo size={36} showText={false} compact />
+          <span className="truncate text-sm font-semibold tracking-tight text-foreground sm:text-[1.05rem]">Revive Motion</span>
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
@@ -52,17 +52,17 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <LanguageToggle labeled />
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <LanguageToggle />
           <a
             href="#go-in"
-            className="inline-flex h-10 items-center justify-center rounded-full bg-brand px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-light"
+            className="inline-flex h-9 items-center justify-center rounded-full bg-brand px-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-light sm:h-10 sm:px-4"
           >
             {cta}
           </a>
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] text-foreground lg:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] text-foreground sm:h-10 sm:w-10 lg:hidden"
             aria-expanded={open}
             aria-controls="landing-mobile-nav"
             onClick={() => setOpen((value) => !value)}

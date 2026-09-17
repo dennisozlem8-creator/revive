@@ -44,9 +44,9 @@ export function ChatAssistant() {
   }
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-[5.5rem] right-3 z-40 flex max-w-[calc(100vw-1.5rem)] flex-col items-end gap-3 sm:bottom-6 sm:right-5 print:hidden">
       {open && (
-        <div className="flex h-96 w-80 flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-surface shadow-[0_8px_40px_rgba(0,0,0,0.4)] sm:w-96">
+        <div className="flex h-[min(22rem,60vh)] w-[min(20rem,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-surface shadow-[0_8px_40px_rgba(0,0,0,0.4)] sm:h-96 sm:w-96">
           <div className="flex items-center justify-between border-b border-[var(--border)] bg-brand/10 px-4 py-3">
             <div>
               <p className="text-sm font-semibold">Revive Assistant</p>
@@ -101,10 +101,12 @@ export function ChatAssistant() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-brand text-2xl shadow-lg transition hover:bg-brand-light hover:scale-105"
+        className="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white shadow-lg transition hover:bg-brand-light hover:scale-105 sm:h-14 sm:w-14"
         aria-label="Open chat assistant"
       >
-        💬
+        <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+          <path d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v7A2.5 2.5 0 0 1 16.5 16H11l-4 3.2V16H7.5A2.5 2.5 0 0 1 5 13.5v-7Z" strokeLinejoin="round" />
+        </svg>
       </button>
     </div>
   );

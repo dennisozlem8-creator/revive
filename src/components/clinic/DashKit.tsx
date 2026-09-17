@@ -16,9 +16,9 @@ export function DashShell({
   wide?: boolean;
 }) {
   return (
-    <div className={`min-h-full ${nav ? "pb-28" : "pb-12"} ${caregiver ? "rm-glow-caregiver" : "rm-glow-patient"}`}>
+    <div className={`min-h-full overflow-x-hidden ${nav ? "pb-36 sm:pb-32" : "pb-12"} ${caregiver ? "rm-glow-caregiver" : "rm-glow-patient"}`}>
       <Header linkHome variant={caregiver ? "caregiver" : "patient"} />
-      <main className={`mx-auto w-full px-4 pb-8 sm:px-6 ${wide ? "max-w-6xl" : "max-w-2xl"}`}>{children}</main>
+      <main className={`mx-auto w-full px-4 pb-10 sm:px-6 ${wide ? "max-w-6xl" : "max-w-2xl"}`}>{children}</main>
       {nav ? <BottomNav /> : null}
     </div>
   );

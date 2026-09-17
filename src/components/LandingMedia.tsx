@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { SafePicture } from "@/components/SafePicture";
 
 export function PhotoFrame({
@@ -67,6 +68,45 @@ export function MpuAnglePhoto({
         className={`absolute inset-0 h-full w-full ${imgClassName}`}
       />
     </div>
+  );
+}
+
+/** Kids Quest promo: bots stay in a dedicated photo, caption sits below so nothing covers them. */
+export function KidsQuestPromo({
+  href = "/kids",
+  kicker,
+  title,
+  text,
+  cta,
+  className = "",
+}: {
+  href?: string;
+  kicker: string;
+  title: string;
+  text: string;
+  cta: string;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`rm-glow-kids block overflow-hidden rounded-[1.5rem] shadow-[0_12px_28px_rgba(36,48,86,0.12)] ${className}`}
+    >
+      <PhotoFrame
+        src="/images/landing-kids-quest.webp?v=5"
+        alt="Quest bots stretching on a green meadow."
+        className="h-44 sm:h-52"
+        imgClassName="object-cover object-[center_72%]"
+      />
+      <div className="kids-caption flex flex-col items-center gap-3 p-4 text-center sm:flex-row sm:items-end sm:justify-between sm:p-5 sm:text-left">
+        <div>
+          <p className="text-sm font-semibold text-[#5b6685]">{kicker}</p>
+          <p className="kids-wordmark mt-1 text-3xl leading-none sm:text-4xl">{title}</p>
+          <p className="mt-1 max-w-md text-base leading-6 text-[#5b6685]">{text}</p>
+        </div>
+        <span className="kids-cta h-11 min-h-0 shrink-0 rounded-full px-5 text-base">{cta}</span>
+      </div>
+    </Link>
   );
 }
 

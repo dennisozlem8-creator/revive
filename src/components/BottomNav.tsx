@@ -59,7 +59,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--border)] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md print:hidden">
-      <div className="mx-auto flex max-w-lg justify-around px-2 py-2">
+      <div className="mx-auto flex w-full max-w-lg items-stretch justify-between gap-1 px-1.5 py-1.5">
         {tabs.map((tab) => {
           const active = pathname === tab.href;
           const Icon = tab.icon;
@@ -67,7 +67,7 @@ export function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex min-w-[4.5rem] flex-col items-center gap-1 rounded-2xl px-3 py-2 text-[11px] font-semibold transition ${
+              className={`flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl px-1 py-2 text-center text-[11px] font-semibold transition ${
                 active ? "bg-[#e8f3fb] text-[#1b3348]" : "text-[#2f4a60] hover:text-[#1b3348]"
               }`}
             >

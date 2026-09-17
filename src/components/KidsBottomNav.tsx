@@ -48,7 +48,7 @@ export function KidsBottomNav({ screen, onMap, onBots }: KidsBottomNavProps) {
 
   return (
     <nav
-      className="kids-nav pointer-events-none fixed inset-x-0 bottom-0 z-50 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      className="kids-nav pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-4"
       aria-label="Kids Quest"
     >
       <div className="kids-nav-pill pointer-events-auto mx-auto flex max-w-md gap-1 rounded-full p-1.5">

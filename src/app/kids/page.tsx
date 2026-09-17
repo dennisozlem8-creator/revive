@@ -126,7 +126,7 @@ export default function KidsQuestPage() {
         : "map";
 
   return (
-    <div className="relative min-h-full overflow-hidden rm-glow-kids pb-28">
+    <div className="relative min-h-full overflow-x-hidden rm-glow-kids pb-36">
       <KidsAtmosphere />
       <div className="rm-xp-track fixed left-0 right-0 top-0 z-50 rounded-none">
         <div className="rm-xp-fill" style={{ width: `${xpPct}%` }} />
@@ -143,7 +143,7 @@ export default function KidsQuestPage() {
 
       <Header linkHome variant="kids" />
 
-      <main className="relative z-10 mx-auto max-w-5xl px-4 pb-6 pt-4 sm:px-6">
+      <main className="relative z-10 mx-auto max-w-5xl px-4 pb-12 pt-4 sm:px-6">
         {showHome && focus === "map" && (
           <>
             <section className="overflow-hidden rounded-[1.5rem] bg-white shadow-[0_10px_32px_rgba(36,48,86,0.08)]">
@@ -212,7 +212,7 @@ export default function KidsQuestPage() {
                         alt=""
                         width={800}
                         height={480}
-                        className="h-44 w-full object-cover sm:h-52"
+                        className="h-44 w-full object-cover object-[center_68%] sm:h-52"
                       />
                       <span className="absolute bottom-3 left-3 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_6px_16px_rgba(36,48,86,0.16)] ring-2 ring-white">
                         <KidsIcon name={zone.icon} size={48} />

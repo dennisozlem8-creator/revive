@@ -118,9 +118,9 @@ export function GoInScreen({ mode }: GoInScreenProps) {
           <SafePicture
             src="/images/landing-kids-quest.webp?v=5"
             alt=""
-            className="h-36 w-full object-cover object-[center_68%] sm:h-40"
+            className="h-40 w-full object-cover object-[center_72%] sm:h-44"
           />
-          <div className="kids-caption flex items-center justify-between gap-3 px-3 py-3 sm:px-4">
+          <div className="kids-caption flex flex-col items-center gap-2 px-3 py-3 text-center sm:flex-row sm:items-center sm:justify-between sm:px-4 sm:text-left">
             <span>
               <p className="text-sm font-semibold text-[#5b6685]">{t("stretchWithBots", locale)}</p>
               <p className="kids-wordmark mt-0.5 text-2xl leading-none">{t("kidsQuest", locale)}</p>

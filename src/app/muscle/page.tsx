@@ -46,7 +46,7 @@ export default function MuscleSensorPage() {
       <div className="mt-5">
         <MuscleLiveDemo />
       </div>
-      <PhotoFrame src="/images/landing-myoware.png?v=6" alt="" className="mt-6 h-40 rounded-[1.35rem] lg:hidden" />
+      <PhotoFrame src="/images/landing-myoware.png?v=6" alt="" className="mt-6 h-52 rounded-[1.35rem] lg:hidden" imgClassName="object-cover object-[center_40%]" />
 
       <div className="mt-6">
         <MyoWarePanel />

@@ -19,14 +19,14 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   const isCaregiver = variant === "caregiver" || isCareTeam(user?.role);
 
   const logo = (
-    <span className="flex items-center gap-3">
+    <span className="flex min-w-0 items-center gap-2 sm:gap-3">
       <Logo
-        size={40}
+        size={36}
         showText={false}
         compact
         className={isCaregiver ? "[&_span]:text-[var(--caregiver-text)]" : ""}
       />
-      <span className={`text-[1.05rem] font-semibold tracking-tight ${isCaregiver ? "text-[var(--caregiver-text)]" : "text-foreground"}`}>
+      <span className={`whitespace-nowrap text-sm font-semibold tracking-tight sm:text-[1.05rem] ${isCaregiver ? "text-[var(--caregiver-text)]" : "text-foreground"}`}>
         Revive Motion
       </span>
     </span>
@@ -47,7 +47,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
 
     return (
       <header className="kids-header relative z-10 w-full">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6">
           {linkHome ? (
             <Link href="/kids" className="transition hover:opacity-85">
               {kidsBrand}
@@ -57,7 +57,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
           )}
           <Link
             href={user ? "/briefing" : "/"}
-            className="rounded-full px-4 py-2 text-sm font-semibold text-[#5b6685] hover:bg-white"
+            className="shrink-0 rounded-full px-3 py-2 text-sm font-semibold text-[#5b6685] hover:bg-white"
           >
             Grown-ups
           </Link>
@@ -68,18 +68,18 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
 
   return (
       <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/90 backdrop-blur-xl print:hidden">
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
         {linkHome ? (
           <Link
             href={isCareTeam(user?.role) ? "/doctor" : "/briefing"}
-            className="transition hover:opacity-85"
+            className="min-w-0 transition hover:opacity-85"
           >
             {logo}
           </Link>
         ) : (
           logo
         )}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
           <LanguageToggle />
           {(!user || user.role === "patient") && (
             <>
@@ -90,7 +90,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
               )}
               <Link
                 href="/kids"
-                className="rm-kids-type inline-flex items-center rounded-full bg-[#f5c84a] px-3 py-1.5 text-sm font-bold text-[#243056] shadow-sm"
+                className="rm-kids-type inline-flex items-center rounded-full bg-[#f5c84a] px-2.5 py-1.5 text-xs font-bold text-[#243056] shadow-sm sm:px-3 sm:text-sm"
               >
                 {t("kidsQuest", locale)}
               </Link>

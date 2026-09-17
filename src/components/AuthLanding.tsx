@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
 import { ImpactBand } from "@/components/ImpactBand";
-import { JointMarks, MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame, PhotoGoniometerPhoto } from "@/components/LandingMedia";
+import { JointMarks, KidsQuestPromo, MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame, PhotoGoniometerPhoto } from "@/components/LandingMedia";
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
 import { SessionStack } from "@/components/SessionStack";
@@ -75,7 +75,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
   ];
 
   return (
-    <div className="min-h-full bg-background text-foreground">
+    <div className="min-h-full overflow-x-hidden bg-background text-foreground">
       <a
         href="#go-in"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:shadow"
@@ -99,23 +99,23 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             <p className="mt-2 max-w-xl text-sm font-semibold text-[#3d7eb4] sm:text-[0.95rem]">
               {t("fullSpanish", locale)}
             </p>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-3 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
               <a
                 href="#go-in"
-                className="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light sm:h-11 sm:flex-none sm:px-7"
+                className="inline-flex h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light sm:h-11 sm:px-7"
               >
                 {cta}
               </a>
-              <TryDemoButton className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:h-11 sm:flex-none sm:px-7" />
+              <TryDemoButton className="inline-flex h-11 items-center justify-center rounded-full border border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:px-7" />
               <a
                 href="#impact"
-                className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:h-11 sm:flex-none sm:px-7"
+                className="inline-flex h-11 items-center justify-center rounded-full border border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:px-7"
               >
                 {t("impactNav", locale)}
               </a>
               <a
                 href="#how-it-works"
-                className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-[#9dc4b0] bg-white/80 px-5 text-sm font-semibold text-[#2a4638] transition hover:bg-[#e7f1ea] sm:h-11 sm:flex-none sm:px-7"
+                className="inline-flex h-11 items-center justify-center rounded-full border border-[#9dc4b0] bg-white/80 px-5 text-sm font-semibold text-[#2a4638] transition hover:bg-[#e7f1ea] sm:px-7"
               >
                 {t("seeHow", locale)}
               </a>
@@ -339,22 +339,12 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 imgClassName="object-cover object-[center_62%]"
                 className="min-h-[14rem] sm:min-h-[16rem]"
               />
-              <Link
-                href="/kids"
-                className="rm-glow-kids relative block min-h-[14rem] overflow-hidden rounded-[1.5rem] shadow-[0_12px_28px_rgba(36,48,86,0.12)] sm:min-h-[16rem]"
-              >
-                <PhotoFrame src="/images/landing-kids-quest.webp?v=5" alt={t("stretchWithBots", locale)} className="absolute inset-0 h-full w-full" />
-                <div className="absolute inset-x-0 bottom-0 kids-caption flex items-end justify-between gap-3 p-4 sm:p-5">
-                  <div>
-                    <p className="text-sm font-semibold text-[#5b6685]">{t("stretchWithBots", locale)}</p>
-                    <p className="kids-wordmark mt-1 text-3xl sm:text-4xl">{t("kidsQuest", locale)}</p>
-                    <p className="mt-1 max-w-xs text-base leading-6 text-[#5b6685]">
-                      {t("botsAskYouStretch", locale)}
-                    </p>
-                  </div>
-                  <span className="kids-cta h-11 min-h-0 rounded-full px-5 text-lg">{t("open", locale)}</span>
-                </div>
-              </Link>
+              <KidsQuestPromo
+                kicker={t("stretchWithBots", locale)}
+                title={t("kidsQuest", locale)}
+                text={t("botsAskYouStretch", locale)}
+                cta={t("open", locale)}
+              />
             </div>
           </div>
         </section>
