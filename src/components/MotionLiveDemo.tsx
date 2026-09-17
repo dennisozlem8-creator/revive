@@ -123,13 +123,13 @@ export function MotionLiveDemo() {
             Same screen as a live ROM move. Strap the MPU-6050 above and below the joint when you have the hardware.
           </p>
         </div>
-        <div className="relative hidden min-h-[28rem] overflow-hidden bg-[#cfe4f4] lg:block">
+        <div className="hidden bg-[#cfe4f4] lg:flex lg:items-center">
           <SafePicture
             src="/images/landing-mpu.png?v=8"
             alt="MPU-6050 modules strapped on the upper arm and wrist"
             width={864}
             height={1152}
-            className="absolute inset-0 h-full w-full object-cover object-[left_40%]"
+            className="block h-auto w-full"
           />
         </div>
       </div>
