@@ -21,7 +21,12 @@ export default function MotionSensorPage() {
       <div className="mt-5">
         <MotionLiveDemo />
       </div>
-      <PhotoFrame src="/images/landing-mpu.png?v=7" alt="" className="mt-6 h-40 rounded-[1.35rem] lg:hidden" />
+      <PhotoFrame
+        src="/images/landing-mpu.png?v=8"
+        alt="MPU-6050 modules on the upper arm and wrist"
+        className="mt-6 h-56 rounded-[1.35rem] sm:h-64 lg:hidden"
+        imgClassName="object-cover object-[left_42%]"
+      />
       <p className="mt-6 text-center text-sm text-[#2f4a60]">
         For progress tracking only. This is not a diagnosis.
       </p>

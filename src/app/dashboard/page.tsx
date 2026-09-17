@@ -87,10 +87,11 @@ export default function DashboardPage() {
         />
         <DashPhotoLink
           href="/motion"
-          src="/images/landing-mpu.png?v=7"
+          src="/images/landing-mpu.png?v=8"
           kicker="02 Coach"
           title="MPU-6050"
           text="Live angle while you move."
+          imgClassName="object-cover object-[left_40%]"
         />
         <DashPhotoLink
           href="/charts"

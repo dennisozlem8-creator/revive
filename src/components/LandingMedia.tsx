@@ -53,7 +53,7 @@ export function PhotoGoniometerPhoto({
 export function MpuAnglePhoto({
   className = "",
   alt = "MPU-6050 straps on the upper arm and wrist with a live elbow angle of 78 degrees.",
-  imgClassName = "object-cover object-center",
+  imgClassName = "object-cover object-[left_42%]",
 }: {
   className?: string;
   alt?: string;
@@ -62,7 +62,7 @@ export function MpuAnglePhoto({
   return (
     <div className={`relative overflow-hidden bg-[#d7e8f6] ${className}`}>
       <SafePicture
-        src="/images/landing-mpu.png?v=7"
+        src="/images/landing-mpu.png?v=8"
         alt={alt}
         className={`absolute inset-0 h-full w-full ${imgClassName}`}
       />

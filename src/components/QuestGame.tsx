@@ -49,7 +49,7 @@ const measures: { id: MeasureId; kicker: string; name: string; line: string; ima
     kicker: "MPU-6050",
     name: "Motion",
     line: "Strap the sensor. Live angle. The bots count.",
-    image: "/images/landing-mpu.png?v=7",
+    image: "/images/landing-mpu.png?v=8",
   },
   {
     id: "muscle",

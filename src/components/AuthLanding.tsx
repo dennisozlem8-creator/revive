@@ -260,7 +260,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 <PhonePreview title={t("previewSession", locale)}>
                   <div className="flex h-full flex-col">
                     <div className="relative h-[7.5rem] sm:h-40">
-                      <MpuAnglePhoto alt="" className="absolute inset-0 h-full w-full" imgClassName="object-cover object-[center_20%]" />
+                      <MpuAnglePhoto alt="" className="absolute inset-0 h-full w-full" imgClassName="object-cover object-[left_40%]" />
                       <span className="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-[#1b3348]">
                         {t("previewLive", locale)}
                       </span>

@@ -75,7 +75,7 @@ export function MotionLiveDemo() {
 
   return (
     <section className="overflow-hidden rounded-[1.5rem] bg-white shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
-      <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_16rem]">
+      <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(24rem,32rem)]">
         <div className="p-5 sm:p-6">
           <p className="text-sm font-semibold text-[#2f4a60]">MPU-6050 · live angle</p>
           <h2 className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">Watch the joint move</h2>
@@ -123,13 +123,15 @@ export function MotionLiveDemo() {
             Same screen as a live ROM move. Strap the MPU-6050 above and below the joint when you have the hardware.
           </p>
         </div>
-        <SafePicture
-          src="/images/landing-mpu.png?v=7"
-          alt="MPU-6050 straps on the arm with a live joint angle"
-          width={640}
-          height={800}
-          className="hidden h-full min-h-[22rem] w-full object-cover object-center lg:block"
-        />
+        <div className="relative hidden min-h-[28rem] overflow-hidden bg-[#cfe4f4] lg:block">
+          <SafePicture
+            src="/images/landing-mpu.png?v=8"
+            alt="MPU-6050 modules strapped on the upper arm and wrist"
+            width={864}
+            height={1152}
+            className="absolute inset-0 h-full w-full object-cover object-[left_40%]"
+          />
+        </div>
       </div>
     </section>
   );

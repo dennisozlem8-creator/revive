@@ -131,7 +131,7 @@ export default function Home() {
             />
             <DashPhotoLink
               href="/session"
-              src="/images/landing-mpu.png?v=7"
+              src="/images/landing-mpu.png?v=8"
               kicker="03 Coach"
               title="Live session"
               text="Run today’s ROM test and exercises."
