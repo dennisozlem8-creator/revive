@@ -78,21 +78,21 @@ export function GoInScreen({ mode }: GoInScreenProps) {
 
   return (
     <>
-      <div className="mt-2 flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         {entries.map((item) => (
           <button
             key={item.id}
             type="button"
             onClick={() => setEntry(item.id)}
-            className={`rounded-2xl border px-5 py-4 text-left transition hover:brightness-[0.98] ${item.tileClass}`}
+            className={`min-h-[4.5rem] rounded-2xl border px-5 py-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${item.tileClass}`}
           >
-            <p className="text-xl font-bold">{item.title}</p>
-            <p className="mt-1 text-base leading-6 opacity-90">{item.subtitle}</p>
+            <p className="text-lg font-bold">{item.title}</p>
+            <p className="mt-1 text-sm leading-6 opacity-90">{item.subtitle}</p>
           </button>
         ))}
         <Link
           href="/kids"
-          className="overflow-hidden rounded-2xl border border-[#c5bdd8] bg-[#ece7f4] text-left"
+          className="overflow-hidden rounded-2xl border border-[#c5bdd8] bg-[#ece7f4] text-left transition hover:-translate-y-0.5 hover:shadow-md"
         >
           <div className="relative h-28">
             <Image
@@ -102,13 +102,13 @@ export function GoInScreen({ mode }: GoInScreenProps) {
               height={360}
               className="h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#3d3558]/75 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#3d3558]/80 to-transparent" />
             <div className="absolute bottom-3 left-5 right-5">
-              <p className="flex items-center gap-2 text-xl font-bold text-white">
+              <p className="flex items-center gap-2 text-lg font-bold text-white">
                 <KidsIcon name="gamepad" size={22} />
                 Kids Quest
               </p>
-              <p className="text-base font-medium text-white">Storybook adventure world</p>
+              <p className="text-sm font-medium text-white">Storybook adventure world</p>
             </div>
           </div>
         </Link>

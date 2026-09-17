@@ -6,6 +6,7 @@ import { useAuth } from "./AuthProvider";
 import { todayDateString } from "@/lib/streak";
 
 const PUBLIC_PATHS = ["/login", "/register", "/kids"];
+const LOGGED_OUT_OK = [...PUBLIC_PATHS, "/"];
 const ONBOARDING_PATH = "/onboarding";
 const CHECK_IN_PATH = "/check-in";
 /** Patient paths reachable without completing onboarding */
@@ -22,10 +23,11 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const isPublic = PUBLIC_PATHS.includes(pathname);
+  const loggedOutOk = LOGGED_OUT_OK.includes(pathname);
 
   useEffect(() => {
     if (loading) return;
-    if (!user && !isPublic) {
+    if (!user && !loggedOutOk) {
       router.replace("/login");
       return;
     }
@@ -47,7 +49,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     ) {
       router.replace(CHECK_IN_PATH);
     }
-  }, [user, loading, isPublic, pathname, router]);
+  }, [user, loading, isPublic, loggedOutOk, pathname, router]);
 
   if (loading) {
     return (
@@ -57,7 +59,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!user && !isPublic) return null;
+  if (!user && !loggedOutOk) return null;
 
   return <>{children}</>;
 }
