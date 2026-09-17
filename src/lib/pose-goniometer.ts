@@ -40,9 +40,6 @@ const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/w
 const MODEL_URL =
   "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task";
 
-const LEFT = { hip: 23, knee: 25, ankle: 27 };
-const RIGHT = { hip: 24, knee: 26, ankle: 28 };
-
 let landmarkerPromise: Promise<PoseLandmarkerLike> | null = null;
 
 export function summarizeMovement(samples: MovementSample[]): MovementSummary | null {
@@ -91,49 +88,45 @@ function visibilityOf(landmark?: PoseLandmark) {
 export function sampleFromPose(
   landmarks: PoseLandmark[] | undefined,
   preferLeft: boolean,
-  time: number
+  time: number,
+  joint: KidsJoint = "knee"
 ): MovementSample | null {
-  if (!landmarks || landmarks.length < 29) return null;
-  const first = preferLeft ? LEFT : RIGHT;
-  const second = preferLeft ? RIGHT : LEFT;
-  const pick =
-    visibilityOf(landmarks[first.hip]) +
-      visibilityOf(landmarks[first.knee]) +
-      visibilityOf(landmarks[first.ankle]) >=
-    visibilityOf(landmarks[second.hip]) +
-      visibilityOf(landmarks[second.knee]) +
-      visibilityOf(landmarks[second.ankle])
-      ? first
-      : second;
-
-  const hip = landmarks[pick.hip];
-  const knee = landmarks[pick.knee];
-  const ankle = landmarks[pick.ankle];
-  if (!hip || !knee || !ankle) return null;
-  if (visibilityOf(hip) < 0.2 || visibilityOf(knee) < 0.2 || visibilityOf(ankle) < 0.2) {
+  const needed = joint === "ankle" ? 33 : 17;
+  if (!landmarks || landmarks.length < needed) return null;
+  const triple = JOINT_TRIPLES[joint] ?? JOINT_TRIPLES.knee;
+  const first = preferLeft ? triple.left : triple.right;
+  const second = preferLeft ? triple.right : triple.left;
+  const score = (ids: [number, number, number]) =>
+    visibilityOf(landmarks[ids[0]]) + visibilityOf(landmarks[ids[1]]) + visibilityOf(landmarks[ids[2]]);
+  const pick = score(first) >= score(second) ? first : second;
+  const a = landmarks[pick[0]];
+  const b = landmarks[pick[1]];
+  const c = landmarks[pick[2]];
+  if (!a || !b || !c) return null;
+  if (visibilityOf(a) < 0.2 || visibilityOf(b) < 0.2 || visibilityOf(c) < 0.2) {
     return null;
   }
 
-  const hipPoint = { x: hip.x, y: hip.y };
-  const kneePoint = { x: knee.x, y: knee.y };
-  const anklePoint = { x: ankle.x, y: ankle.y };
-  const other = pick === LEFT ? RIGHT : LEFT;
-  const sameShoulder = pick === LEFT ? landmarks[11] : landmarks[12];
-  const otherShoulder = pick === LEFT ? landmarks[12] : landmarks[11];
+  const hipPoint = { x: a.x, y: a.y };
+  const kneePoint = { x: b.x, y: b.y };
+  const anklePoint = { x: c.x, y: c.y };
+  const other = pick === first ? second : first;
+  const leftSide = pick === triple.left;
+  const sameShoulder = leftSide ? landmarks[11] : landmarks[12];
+  const otherShoulder = leftSide ? landmarks[12] : landmarks[11];
   return {
     time,
     angle: kneeAngleDegrees(hipPoint, kneePoint, anklePoint),
     hip: hipPoint,
     knee: kneePoint,
     ankle: anklePoint,
-    side: pick === LEFT ? "left" : "right",
-    oppositeHip: asPoint(landmarks[other.hip]),
-    oppositeKnee: asPoint(landmarks[other.knee]),
-    oppositeAnkle: asPoint(landmarks[other.ankle]),
+    side: leftSide ? "left" : "right",
+    oppositeHip: asPoint(landmarks[other[0]]),
+    oppositeKnee: asPoint(landmarks[other[1]]),
+    oppositeAnkle: asPoint(landmarks[other[2]]),
     shoulder: asPoint(sameShoulder),
     oppositeShoulder: asPoint(otherShoulder),
-    visibility:
-      (visibilityOf(hip) + visibilityOf(knee) + visibilityOf(ankle)) / 3,
+    visibility: (visibilityOf(a) + visibilityOf(b) + visibilityOf(c)) / 3,
   };
 }
 
@@ -147,10 +140,11 @@ export function detectVideoFrame(
   video: HTMLVideoElement,
   timestamp: number,
   preferLeft: boolean,
-  time: number
+  time: number,
+  joint: KidsJoint = "knee"
 ): MovementSample | null {
   const result = landmarker.detectForVideo(video, timestamp);
-  return sampleFromPose(result.landmarks?.[0], preferLeft, time);
+  return sampleFromPose(result.landmarks?.[0], preferLeft, time, joint);
 }
 
 function waitForMetadata(video: HTMLVideoElement, ms = 8000) {
@@ -315,6 +309,29 @@ export type PhotoPoseResult = {
   hip: Point;
   knee: Point;
   ankle: Point;
+};
+
+export type KidsJoint = "knee" | "ankle" | "wrist" | "trunk";
+
+export function kidsJointForArea(areaId: string): KidsJoint {
+  if (areaId === "ankle") return "ankle";
+  if (areaId === "wrist") return "wrist";
+  if (areaId === "lower-back") return "trunk";
+  return "knee";
+}
+
+export function kidsJointLabels(joint: KidsJoint): [string, string, string] {
+  if (joint === "ankle") return ["Knee", "Ankle", "Toe"];
+  if (joint === "wrist") return ["Shoulder", "Elbow", "Wrist"];
+  if (joint === "trunk") return ["Shoulder", "Hip", "Knee"];
+  return ["Hip", "Knee", "Ankle"];
+}
+
+const JOINT_TRIPLES: Record<KidsJoint, { left: [number, number, number]; right: [number, number, number] }> = {
+  knee: { left: [23, 25, 27], right: [24, 26, 28] },
+  ankle: { left: [25, 27, 31], right: [26, 28, 32] },
+  wrist: { left: [11, 13, 15], right: [12, 14, 16] },
+  trunk: { left: [11, 23, 25], right: [12, 24, 26] },
 };
 
 async function createImageLandmarker() {

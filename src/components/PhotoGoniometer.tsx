@@ -1158,7 +1158,13 @@ export function PhotoGoniometer({
                   <div>
                     <p className="font-medium">
                       {row.angle}° · {row.exercise}
-                      {row.source === "video" ? " · video" : ""}
+                      {row.source === "video"
+                        ? " · video"
+                        : row.source === "motion"
+                          ? " · motion"
+                          : row.source === "muscle"
+                            ? " · muscle"
+                            : ""}
                     </p>
                     <p className="text-muted">
                       {new Date(row.date).toLocaleString()}

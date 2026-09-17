@@ -14,6 +14,34 @@ const DEFAULT: KidsProgressData = {
 
 export const EMPTY_QUEST_PROGRESS: Record<string, boolean> = {};
 
+const QUEST_LOG_KEY = "revive-motion-kids-quests";
+
+export type KidsQuestLog = {
+  questProgress: Record<string, boolean>;
+  stars: number;
+};
+
+export function loadKidsQuestLog(): KidsQuestLog {
+  if (typeof window === "undefined") return { questProgress: {}, stars: 0 };
+  try {
+    const raw = JSON.parse(localStorage.getItem(QUEST_LOG_KEY) ?? "{}") as Partial<KidsQuestLog>;
+    return {
+      questProgress: raw.questProgress ?? {},
+      stars: typeof raw.stars === "number" ? raw.stars : 0,
+    };
+  } catch {
+    return { questProgress: {}, stars: 0 };
+  }
+}
+
+export function completeKidsQuestLocal(questId: string, xp = 50): KidsQuestLog {
+  const log = loadKidsQuestLog();
+  if (!log.questProgress[questId]) log.stars += xp;
+  log.questProgress[questId] = true;
+  localStorage.setItem(QUEST_LOG_KEY, JSON.stringify(log));
+  return log;
+}
+
 export function loadKidsProgress(): KidsProgressData {
   if (typeof window === "undefined") return DEFAULT;
   try {

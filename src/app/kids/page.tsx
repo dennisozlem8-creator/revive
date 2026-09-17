@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Header } from "@/components/Header";
 import { QuestGame } from "@/components/QuestGame";
 import { CharacterGallery } from "@/components/CharacterGallery";
@@ -16,6 +16,7 @@ import { getKidsExerciseImage } from "@/lib/exercise-media";
 import {
   EMPTY_QUEST_PROGRESS,
   loadKidsProgress,
+  loadKidsQuestLog,
   saveKidsProgress,
   syncKidsProgress,
   type KidsProgressData,
@@ -43,7 +44,7 @@ const questZones: {
 const howSteps = [
   { n: "1", title: "Pick a world", text: "Tap a picture on the map." },
   { n: "2", title: "Start a stretch", text: "The bots ask. You stretch." },
-  { n: "3", title: "Count the stretch", text: "Photo, motion, or muscle." },
+  { n: "3", title: "Count the stretch", text: "Photo, motion, or muscle. Watch the live number." },
 ];
 
 const levels = [
@@ -65,6 +66,7 @@ export default function KidsQuestPage() {
   const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
   const [focus, setFocus] = useState<"map" | "bots">("map");
   const [kidsProgress, setKidsProgress] = useState<KidsProgressData>(() => loadKidsProgress());
+  const [guestLog, setGuestLog] = useState(() => loadKidsQuestLog());
   const [celebrateIds, setCelebrateIds] = useState<string[]>([]);
   const [showWelcome, setShowWelcome] = useState(false);
 
@@ -72,12 +74,15 @@ export default function KidsQuestPage() {
     if (!hasSeenKidsWelcome()) setShowWelcome(true);
   }, []);
 
-  const xp = user?.xp ?? 0;
+  const xp = user?.xp ?? guestLog.stars;
   const level = getLevel(xp);
   const xpPct = Math.min(100, (xp / 1000) * 100);
   const streak = user ? calculateStreak(user) : 0;
-  const questsDone = user ? Object.values(user.questProgress).filter(Boolean).length : 0;
-  const questProgress = user?.questProgress ?? EMPTY_QUEST_PROGRESS;
+  const questProgress = useMemo(
+    () => ({ ...guestLog.questProgress, ...(user?.questProgress ?? EMPTY_QUEST_PROGRESS) }),
+    [guestLog, user?.questProgress]
+  );
+  const questsDone = Object.values(questProgress).filter(Boolean).length;
   const selectedCharacter = getCharacterById(kidsProgress.selectedId);
   const heroAvatar = selectedCharacter?.avatar ?? "hero";
 
@@ -261,7 +266,7 @@ export default function KidsQuestPage() {
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {assessment.exercises.map((exercise) => {
-                const done = user?.questProgress[exercise.id];
+                const done = questProgress[exercise.id];
                 return (
                   <button
                     key={exercise.id}
@@ -296,11 +301,16 @@ export default function KidsQuestPage() {
             <div className="mt-4">
               <QuestGame
                 exercise={activeExercise}
+                areaId={selectedArea ?? "knee"}
                 targetAngle={user?.targetRom ?? 90}
                 avatarIcon={heroAvatar}
-                onQuestComplete={() => checkUnlocks()}
+                onQuestComplete={() => {
+                  setGuestLog(loadKidsQuestLog());
+                  checkUnlocks();
+                }}
                 onComplete={() => {
                   setActiveExerciseId(null);
+                  setGuestLog(loadKidsQuestLog());
                   checkUnlocks();
                 }}
               />

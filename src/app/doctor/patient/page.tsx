@@ -73,7 +73,13 @@ function PatientMovementView() {
                     <p className="font-medium">
                       {row.angle}° · {row.exercise}
                       {row.formScore != null ? ` · form ${row.formScore}` : ""}
-                      {row.source === "video" ? " · video" : " · photo"}
+                      {row.source === "video"
+                        ? " · video"
+                        : row.source === "motion"
+                          ? " · motion"
+                          : row.source === "muscle"
+                            ? " · muscle"
+                            : " · photo"}
                     </p>
                     <p className="text-muted">
                       {new Date(row.date).toLocaleString()}

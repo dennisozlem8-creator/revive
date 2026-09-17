@@ -15,7 +15,7 @@ export type GoniometerMeasurement = {
   joint: string;
   angle: number;
   note: string;
-  source?: "photo" | "video";
+  source?: "photo" | "video" | "motion" | "muscle";
   minAngle?: number;
   range?: number;
   durationSec?: number;
