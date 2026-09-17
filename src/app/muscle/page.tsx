@@ -42,7 +42,7 @@ export default function MuscleSensorPage() {
         title="MyoWare 2.0"
         text="Connect with Bluetooth or USB, then flex. Saved effort stays on this device."
       />
-      <PhotoFrame src="/images/landing-myoware.png?v=5" alt="" className="mt-5 h-40 rounded-[1.35rem]" imgClassName="object-contain bg-white p-4" />
+      <PhotoFrame src="/images/landing-myoware.png?v=6" alt="" className="mt-5 h-40 rounded-[1.35rem]" />
 
       <DashCard className="mt-6 p-5">
           <h2 className="font-semibold">Wireless — do this now</h2>

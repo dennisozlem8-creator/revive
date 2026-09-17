@@ -27,7 +27,7 @@ export default function GoniometerPage() {
         text="Take a side-view photo or clip. Tap hip, knee, then ankle if the camera cannot see the joint."
       />
       <PhotoFrame
-        src="/images/landing-photo-goniometer.png?v=1"
+        src="/images/landing-photo-goniometer.png?v=2"
         alt=""
         className="mt-5 h-36 rounded-[1.35rem] sm:h-44"
       />

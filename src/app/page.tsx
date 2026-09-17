@@ -111,22 +111,21 @@ export default function Home() {
           <div className="mt-4 grid gap-3 lg:grid-cols-3">
             <DashPhotoLink
               href="/goniometer"
-              src="/images/landing-photo-goniometer.png?v=1"
+              src="/images/landing-photo-goniometer.png?v=2"
               kicker="01 Measure"
               title="Photo Goniometer"
               text="Side-view photo or clip. The angle is saved."
             />
             <DashPhotoLink
               href="/muscle"
-              src="/images/landing-myoware.png?v=5"
+              src="/images/landing-myoware.png?v=6"
               kicker="02 Muscle"
               title="MyoWare 2.0"
               text="Connect Bluetooth or USB, then flex."
-              imgClassName="object-contain bg-white p-3"
             />
             <DashPhotoLink
               href="/session"
-              src="/images/landing-mpu.png?v=6"
+              src="/images/landing-mpu.png?v=7"
               kicker="03 Coach"
               title="Live session"
               text="Run today’s ROM test and exercises."

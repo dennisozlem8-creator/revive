@@ -42,21 +42,21 @@ const measures: { id: MeasureId; kicker: string; name: string; line: string; ima
     kicker: "Photo Goniometer",
     name: "Photo",
     line: "Live camera, or tap three points on a photo.",
-    image: "/images/landing-photo-goniometer.png?v=1",
+    image: "/images/landing-photo-goniometer.png?v=2",
   },
   {
     id: "motion",
     kicker: "MPU-6050",
     name: "Motion",
     line: "Strap the sensor. Live angle. The bots count.",
-    image: "/images/landing-mpu.png?v=6",
+    image: "/images/landing-mpu.png?v=7",
   },
   {
     id: "muscle",
     kicker: "MyoWare 2.0",
     name: "Muscle",
     line: "Flex. Bluetooth, USB, or practice.",
-    image: "/images/landing-myoware.png?v=5",
+    image: "/images/landing-myoware.png?v=6",
   },
 ];
 
@@ -283,7 +283,7 @@ export function QuestGame({
                   alt=""
                   width={240}
                   height={160}
-                  className={`h-24 w-28 shrink-0 object-cover ${item.id === "muscle" ? "object-contain bg-white p-1" : ""}`}
+                  className="h-24 w-28 shrink-0 object-cover"
                 />
                 <span className="flex flex-1 flex-col justify-center px-4 py-3">
                   <span className="text-sm font-semibold text-[#5b6685]">{item.kicker}</span>

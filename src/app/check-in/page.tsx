@@ -18,7 +18,7 @@ export default function CheckInPage() {
       <div className="mt-6">
         <DashPhotoLink
           href="/goniometer"
-          src="/images/landing-photo-goniometer.png?v=1"
+          src="/images/landing-photo-goniometer.png?v=2"
           kicker="After check-in"
           title="Photo Goniometer"
           text="Record a side-view clip so the coach can save today’s peak."

@@ -67,12 +67,12 @@ const ways: {
 }[] = [
   {
     title: "Photo",
-    text: "Phone camera. Tap hip, knee, then ankle. The angle is saved for the clinician.",
+    text: "Phone camera. Tap hip, knee, then ankle. A still reading, such as 92 deg, is saved for the clinician.",
     photo: true,
   },
   {
     title: "Motion sensor",
-    text: "MPU-6050 straps above and below the joint. Live angle while you move, such as 92 deg.",
+    text: "MPU-6050 straps above and below the joint. Live angle while you move, such as 78 deg.",
     mpu: true,
   },
   {
@@ -267,8 +267,8 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                       </span>
                     </div>
                     <div className="flex flex-1 flex-col px-3 py-3">
-                      <p className="rm-serif text-3xl font-semibold leading-none">92 deg</p>
-                      <p className="mt-1 text-sm text-muted">Hold, then the next rep</p>
+                      <p className="rm-serif text-3xl font-semibold leading-none">78 deg</p>
+                      <p className="mt-1 text-sm text-muted">Live motion, not the still photo</p>
                       <div className="mt-auto flex items-center gap-1.5 pt-3">
                         <span className="h-2 w-2 rounded-full bg-brand" />
                         <span className="h-2 w-2 rounded-full bg-brand" />
@@ -282,9 +282,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   <div className="flex h-full flex-col px-3 py-3">
                     <p className="text-xs font-semibold text-[#2f4a60]">This week</p>
                     <p className="mt-0.5 text-base font-semibold sm:text-lg">Range this week</p>
-                    <div className="mt-2 flex gap-2">
-                      <span className="rounded-full bg-[#e8f3fb] px-2.5 py-1 text-xs font-semibold text-[#1b3348]">Latest 92 deg</span>
-                      <span className="rounded-full bg-[#e7f1ea] px-2.5 py-1 text-xs font-semibold text-[#2a7a58]">Toward goal</span>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <span className="rounded-full bg-[#e8f3fb] px-2.5 py-1 text-xs font-semibold text-[#1b3348]">Photo 92 deg</span>
+                      <span className="rounded-full bg-[#e7f1ea] px-2.5 py-1 text-xs font-semibold text-[#2a7a58]">Live 78 deg</span>
                     </div>
                     <svg viewBox="0 0 200 90" className="mt-3 w-full flex-1" role="img" aria-label="Range of motion rising across the week">
                       <defs>

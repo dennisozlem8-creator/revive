@@ -28,10 +28,10 @@ export function PhotoFrame({
   );
 }
 
-/** Unique square Revive Motion photo-goniometer shot, composed to fill overlay cards. */
+/** Unique square photo-goniometer shot, composed to fill overlay cards. */
 export function PhotoGoniometerPhoto({
   className = "",
-  alt = "Revive Motion photo goniometer: navy polo, smartphone photographing a bent knee with a live 92 degree overlay.",
+  alt = "Navy polo, smartphone photographing a bent knee with a still 92 degree overlay.",
   imgClassName = "object-cover object-center",
 }: {
   className?: string;
@@ -41,7 +41,7 @@ export function PhotoGoniometerPhoto({
   return (
     <div className={`relative overflow-hidden bg-[#d7e8f6] ${className}`}>
       <SafePicture
-        src="/images/landing-photo-goniometer.png?v=1"
+        src="/images/landing-photo-goniometer.png?v=2"
         alt={alt}
         className={`absolute inset-0 h-full w-full ${imgClassName}`}
       />
@@ -49,10 +49,10 @@ export function PhotoGoniometerPhoto({
   );
 }
 
-/** Unique square Revive Motion MPU shot, composed to fill overlay cards. */
+/** Unique square MPU shot, composed to fill overlay cards. */
 export function MpuAnglePhoto({
   className = "",
-  alt = "Revive Motion MPU-6050 straps on the upper arm and wrist with a live elbow angle of 92 degrees.",
+  alt = "MPU-6050 straps on the upper arm and wrist with a live elbow angle of 78 degrees.",
   imgClassName = "object-cover object-center",
 }: {
   className?: string;
@@ -62,7 +62,7 @@ export function MpuAnglePhoto({
   return (
     <div className={`relative overflow-hidden bg-[#d7e8f6] ${className}`}>
       <SafePicture
-        src="/images/landing-mpu.png?v=6"
+        src="/images/landing-mpu.png?v=7"
         alt={alt}
         className={`absolute inset-0 h-full w-full ${imgClassName}`}
       />
@@ -70,20 +70,22 @@ export function MpuAnglePhoto({
   );
 }
 
-/** MyoWare arm shot: contain + padding so the elbow, pads, and shirt stay inside the frame. */
+/** MyoWare arm shot on the same light-blue studio as photo and motion. */
 export function MyoWarePhoto({
   className = "",
   alt = "MyoWare 2.0 muscle sensor with electrode pads on an upper arm.",
+  imgClassName = "object-cover object-center",
 }: {
   className?: string;
   alt?: string;
+  imgClassName?: string;
 }) {
   return (
-    <div className={`relative overflow-hidden bg-white ${className}`}>
+    <div className={`relative overflow-hidden bg-[#d7e8f6] ${className}`}>
       <SafePicture
-        src="/images/landing-myoware.png?v=5"
+        src="/images/landing-myoware.png?v=6"
         alt={alt}
-        className="absolute inset-0 h-full w-full object-contain p-1.5 sm:p-2.5"
+        className={`absolute inset-0 h-full w-full ${imgClassName}`}
       />
     </div>
   );

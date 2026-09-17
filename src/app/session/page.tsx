@@ -142,7 +142,7 @@ export default function SessionPage() {
       />
       <div className="mt-5">
         <DashHero
-          src="/images/landing-mpu.png?v=6"
+          src="/images/landing-mpu.png?v=7"
           kicker="03 Coach"
           title={recording ? "Recording now" : "Ready to record"}
           text={recording ? "Hold the pose. End the test when the peak looks honest." : "Connect MyoWare if you have it, then start the ROM test."}

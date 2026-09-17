@@ -82,18 +82,17 @@ export default function BriefingPage() {
       <div className="mt-6 grid gap-3 lg:grid-cols-3">
         <DashPhotoLink
           href="/goniometer"
-          src="/images/landing-photo-goniometer.png?v=1"
+          src="/images/landing-photo-goniometer.png?v=2"
           kicker="Measure"
           title="Record today’s clip"
           text={progress.headline}
         />
         <DashPhotoLink
           href="/muscle"
-          src="/images/landing-myoware.png?v=5"
+          src="/images/landing-myoware.png?v=6"
           kicker="Muscle"
           title="Connect MyoWare"
           text="Flex after Bluetooth or USB."
-          imgClassName="object-contain bg-white p-3"
         />
         <DashPhotoLink
           href="/check-in"

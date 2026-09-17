@@ -71,14 +71,14 @@ export default function DashboardPage() {
       <div className="mt-6 grid gap-3 lg:grid-cols-3">
         <DashPhotoLink
           href="/goniometer"
-          src="/images/landing-photo-goniometer.png?v=1"
+          src="/images/landing-photo-goniometer.png?v=2"
           kicker="01 Measure"
           title="Photo Goniometer"
           text="Take the side-view photo first."
         />
         <DashPhotoLink
           href="/session"
-          src="/images/landing-mpu.png?v=6"
+          src="/images/landing-mpu.png?v=7"
           kicker="02 Coach"
           title="Live session"
           text="Follow today’s ROM test."
