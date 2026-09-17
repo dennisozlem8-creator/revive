@@ -23,6 +23,7 @@ import { HeartRatePanel } from "@/components/HeartRatePanel";
 import { MyoWarePanel } from "@/components/MyoWarePanel";
 import { useHeartRate } from "@/components/HeartRateProvider";
 import { useMyoWare } from "@/components/MyoWareProvider";
+import { demoFlexAt } from "@/lib/muscle-demo";
 
 type Phase = "recording" | "exercises" | "report";
 
@@ -40,9 +41,10 @@ export default function SessionPage() {
   const [summary, setSummary] = useState<SessionSummary | null>(null);
   const [completedIds, setCompletedIds] = useState<string[]>([]);
   const [wave, setWave] = useState<number[]>(() => Array(24).fill(0));
-  const [emgWave, setEmgWave] = useState<number[]>(() => Array(24).fill(20));
+  const [emgWave, setEmgWave] = useState<number[]>(() => Array(24).fill(6));
   const [hrWave, setHrWave] = useState<number[]>(() => Array(24).fill(70));
   const savedRef = useRef(false);
+  const muscleClockRef = useRef(0);
 
   const locale = user?.language ?? "en";
   const target = user?.ptPrescription?.targetAngle ?? user?.targetRom ?? 90;
@@ -61,8 +63,6 @@ export default function SessionPage() {
     const interval = setInterval(() => {
       const next = Math.min(target + 5, Math.round(40 + Math.random() * (target - 20)));
       setAngle(next);
-      const liveEmg = muscle.connected && muscle.emg != null ? muscle.emg : Math.round(35 + Math.random() * 40);
-      setEmg(liveEmg);
       if (heart.connected && heart.bpm) {
         setHr(heart.bpm);
         setHrWave((prev) => [...prev.slice(1), heart.bpm as number]);
@@ -72,13 +72,28 @@ export default function SessionPage() {
         setHrWave((prev) => [...prev.slice(1), fake]);
       }
       setWave((prev) => [...prev.slice(1), next]);
-      setEmgWave((prev) => [...prev.slice(1), liveEmg]);
       if (next >= target * 0.88) {
         setReps((r) => Math.min(targetReps, r + (Math.random() > 0.7 ? 1 : 0)));
       }
     }, 800);
     return () => clearInterval(interval);
-  }, [recording, target, targetReps, heart.connected, heart.bpm, muscle.connected, muscle.emg]);
+  }, [recording, target, targetReps, heart.connected, heart.bpm]);
+
+  useEffect(() => {
+    if (!recording) return;
+    muscleClockRef.current = performance.now();
+    const interval = setInterval(() => {
+      if (muscle.connected && muscle.emg != null) {
+        setEmg(muscle.emg);
+        setEmgWave((prev) => [...prev.slice(1), muscle.emg as number]);
+        return;
+      }
+      const live = demoFlexAt(performance.now() - muscleClockRef.current);
+      setEmg(live.effort);
+      setEmgWave((prev) => [...prev.slice(1), live.effort]);
+    }, 80);
+    return () => clearInterval(interval);
+  }, [recording, muscle.connected, muscle.emg]);
 
   useEffect(() => {
     if (phase !== "report" || !user || !summary || exercises.length === 0 || savedRef.current) {

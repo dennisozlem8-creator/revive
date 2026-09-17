@@ -7,6 +7,7 @@ import { MyoWarePanel } from "@/components/MyoWarePanel";
 import { useAuth } from "@/components/AuthProvider";
 import { deleteMyoWareRecording, loadMyoWareRecordings, type MyoWareRecording } from "@/lib/myoware-log";
 import { PhotoFrame } from "@/components/LandingMedia";
+import { MuscleLiveDemo } from "@/components/MuscleLiveDemo";
 
 function HelpBlock({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -36,13 +37,16 @@ export default function MuscleSensorPage() {
   if (!user) return null;
 
   return (
-    <DashShell wide={false}>
+    <DashShell>
       <DashIntro
         kicker="Muscle sensor"
         title="MyoWare 2.0"
-        text="Connect with Bluetooth or USB, then flex. Saved effort stays on this device."
+        text="Connect with Bluetooth or USB, then flex. Or play a demo flex to see effort spike on this screen."
       />
-      <PhotoFrame src="/images/landing-myoware.png?v=6" alt="" className="mt-5 h-40 rounded-[1.35rem]" />
+      <div className="mt-5">
+        <MuscleLiveDemo />
+      </div>
+      <PhotoFrame src="/images/landing-myoware.png?v=6" alt="" className="mt-6 h-40 rounded-[1.35rem] lg:hidden" />
 
       <DashCard className="mt-6 p-5">
           <h2 className="font-semibold">Wireless — do this now</h2>
