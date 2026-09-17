@@ -607,7 +607,7 @@ const copy = {
     openMenu: "Abrir menú",
     closeMenu: "Cerrar menú",
     impactNav: "La necesidad",
-    impactTitle: "Los pacientes se van a casa a recuperarse.\nNadie sabe si mejoran.",
+    impactTitle: "Los pacientes se van a casa.\nNadie sabe si mejoran.",
     impactStat1: "50–70%",
     impactStat1Label: "nunca terminan la terapia en casa",
     impactStat2: "12,000",
