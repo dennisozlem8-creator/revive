@@ -10,7 +10,7 @@ import {
 } from "react";
 import { loadUsers, saveUsers, isCareTeam, type User, type UserRole, type PTPrescription } from "@/lib/users";
 import { seedDemoAccounts } from "@/lib/demo-account";
-import { loadDeviceLocale } from "@/lib/i18n";
+import { loadDeviceLocale, saveDeviceLocale, type Locale } from "@/lib/i18n";
 import { logActivityToday } from "@/lib/streak";
 
 export type { ExerciseRecord, User, UserRole } from "@/lib/users";
@@ -42,6 +42,8 @@ type AuthContextValue = {
   getPatientsForDoctor: () => User[];
   updateUser: (updates: Partial<User>) => void;
   setPatientPrescription: (patientEmail: string, prescription: PTPrescription) => void;
+  deviceLocale: Locale;
+  setDeviceLocale: (locale: Locale) => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -77,6 +79,7 @@ function normalizeUser(raw: Partial<User> & Pick<User, "email" | "password" | "n
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [deviceLocale, setDeviceLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
     const sessionEmail = localStorage.getItem(SESSION_KEY);
@@ -84,7 +87,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const found = loadUsers().find((u) => u.email === sessionEmail);
       setUser(found ? normalizeUser(found) : null);
     }
+    setDeviceLocaleState(loadDeviceLocale());
     setLoading(false);
+  }, []);
+
+  const setDeviceLocale = useCallback((locale: Locale) => {
+    saveDeviceLocale(locale);
+    setDeviceLocaleState(locale);
   }, []);
 
   const persistUser = useCallback((updated: User) => {
@@ -244,6 +253,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       getPatientsForDoctor,
       updateUser,
       setPatientPrescription,
+      deviceLocale,
+      setDeviceLocale,
     }),
     [
       user,
@@ -258,6 +269,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       getPatientsForDoctor,
       updateUser,
       setPatientPrescription,
+      deviceLocale,
+      setDeviceLocale,
     ]
   );
 

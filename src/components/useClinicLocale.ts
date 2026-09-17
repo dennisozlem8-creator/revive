@@ -1,31 +1,23 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useAuth } from "./AuthProvider";
-import { loadDeviceLocale, saveDeviceLocale, type Locale } from "@/lib/i18n";
+import type { Locale } from "@/lib/i18n";
 
 export function useClinicLocale() {
-  const { user, updateUser } = useAuth();
-  const [device, setDevice] = useState<Locale>("en");
+  const { user, updateUser, deviceLocale, setDeviceLocale } = useAuth();
+  const locale: Locale = user?.language ?? deviceLocale;
 
   useEffect(() => {
-    setDevice(loadDeviceLocale());
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.lang = user?.language ?? device;
-  }, [device, user?.language]);
-
-
-  const locale: Locale = user?.language ?? device;
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const setLocale = useCallback(
     (next: Locale) => {
-      saveDeviceLocale(next);
-      setDevice(next);
+      setDeviceLocale(next);
       if (user) updateUser({ language: next });
     },
-    [user, updateUser]
+    [user, updateUser, setDeviceLocale]
   );
 
   return { locale, setLocale };
