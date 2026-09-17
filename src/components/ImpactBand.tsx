@@ -19,21 +19,21 @@ export function ImpactBand({ locale }: { locale: Locale }) {
           alt=""
           className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1b3348] via-[#1b3348]/92 to-[#1b3348]/45" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#132536] via-transparent to-[#1b3348]/35" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1b3348] via-[#1b3348]/78 to-[#1b3348]/28" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#132536]/90 via-transparent to-[#1b3348]/20" />
 
         <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:py-12">
-          <h2 className="rm-serif max-w-3xl whitespace-pre-line text-[2.15rem] font-semibold leading-[0.94] tracking-tight text-white drop-shadow-[0_10px_28px_rgba(0,0,0,0.35)] sm:text-[3.45rem] lg:text-[4.25rem]">
+          <h2 className="rm-serif max-w-3xl whitespace-pre-line text-balance text-[1.9rem] font-semibold leading-[1.02] tracking-tight text-white drop-shadow-[0_10px_28px_rgba(0,0,0,0.45)] sm:text-[3.45rem] sm:leading-[0.94] lg:text-[4.25rem]">
             {t("impactTitle", locale)}
           </h2>
 
           <div className="mt-7 grid grid-cols-1 divide-y divide-white/20 border-y border-white/20 sm:mt-9 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {stats.map((stat) => (
               <article key={stat.value} className="py-4 sm:px-7 sm:py-5 first:sm:pl-0 last:sm:pr-0">
-                <p className="rm-serif text-[2.8rem] font-semibold leading-none tracking-tight text-white sm:text-[3.6rem] lg:text-[4.1rem]">
+                <p className="rm-serif text-[2.8rem] font-semibold leading-none tracking-tight text-white drop-shadow-[0_8px_18px_rgba(0,0,0,0.35)] sm:text-[3.6rem] lg:text-[4.1rem]">
                   {stat.value}
                 </p>
-                <p className="mt-2 max-w-[12rem] text-sm font-semibold leading-5 text-white/78 sm:text-[15px]">
+                <p className="mt-2 max-w-[12rem] text-sm font-semibold leading-5 text-white/80 sm:text-[15px]">
                   {stat.label}
                 </p>
               </article>
@@ -45,7 +45,7 @@ export function ImpactBand({ locale }: { locale: Locale }) {
               <p className="rm-serif text-[1.45rem] font-semibold leading-tight text-white sm:text-[1.7rem]">
                 {t("impactAnswerTitle", locale)}
               </p>
-              <p className="mt-1.5 text-[11px] leading-4 text-white/55">{t("impactSources", locale)}</p>
+              <p className="mt-1.5 text-[11px] leading-4 text-white/60">{t("impactSources", locale)}</p>
             </div>
             <TryDemoButton className="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-white px-7 text-sm font-semibold text-[#1b3348] shadow-[0_12px_28px_rgba(0,0,0,0.28)] transition hover:bg-[#e8f3fb]" />
           </div>
