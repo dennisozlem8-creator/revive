@@ -314,7 +314,7 @@ const copy = {
     impactStat2: "12,000",
     impactStat2Label: "too few therapists to check on them at home",
     impactStat3: "41M",
-    impactStat3Label: "left out when home therapy is English-only",
+    impactStat3Label: "Spanish speakers left out of English-only home therapy",
     impactAnswerTitle: "Home therapy, visible to the clinic.",
     impactAnswerText:
       "Patients photograph the session on a phone or laptop, or wear a muscle sensor. The clinician gets a one-page report. The whole app runs in English or Spanish.",
@@ -615,7 +615,7 @@ const copy = {
     impactStat2: "12,000",
     impactStat2Label: "terapeutas de menos para seguirlos en casa",
     impactStat3: "41M",
-    impactStat3Label: "quedan fuera si la terapia en casa es solo en inglés",
+    impactStat3Label: "hispanohablantes quedan fuera de la terapia solo en inglés",
     impactAnswerTitle: "Terapia en casa, visible para la clínica.",
     impactAnswerText:
       "Los pacientes fotografían la sesión en el teléfono o la computadora, o usan un sensor muscular. El clínico recibe un informe de una página. Toda la app funciona en inglés o en español.",
