@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
-import { JointMarks, PhonePreview, PhotoFrame, RomChart } from "@/components/LandingMedia";
+import { JointMarks, MpuAnglePhoto, PhonePreview, PhotoFrame, RomChart } from "@/components/LandingMedia";
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
 
@@ -47,11 +47,12 @@ const solutions = [
     title: "Motion sensor",
     subtitle: "MPU-6050 on the joint.",
     points: ["Live angle", "Hands-free", "During the session"],
-    src: "/images/landing-mpu.png",
-    alt: "MPU motion sensors on the upper arm and wrist with the joint angle marked.",
+    src: "/images/landing-mpu.png?v=4",
+    alt: "Revive Motion MPU-6050 straps with a live 92 degree elbow angle.",
     className: "border-[#c5c9e8] bg-[#eef0fb]",
     titleClass: "text-[#4a4f8a]",
     fit: "contain" as const,
+    mpu: true,
   },
   {
     title: "Muscle sensor",
@@ -126,12 +127,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">MPU-6050 and MyoWare</h2>
             <div className="mt-8 grid gap-5 lg:grid-cols-2">
               <article className="overflow-hidden rounded-[1.5rem] border border-[#c5c9e8] bg-[#eef0fb]">
-                <PhotoFrame
-                  src="/images/landing-mpu.png"
-                  alt="MPU motion sensors on the upper arm and wrist with the joint angle marked."
-                  fit="contain"
-                  className="h-72 sm:h-80"
-                />
+                <MpuAnglePhoto className="aspect-[4/3] min-h-[18rem] sm:min-h-[22rem]" />
                 <div className="p-5">
                   <h3 className="text-xl font-bold uppercase text-[#4a4f8a]">Motion sensor</h3>
                   <p className="mt-1 text-sm font-semibold">MPU-6050 on the joint. Live angle, hands-free.</p>
@@ -183,7 +179,11 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             <div className="mt-8 grid gap-5 lg:grid-cols-3">
               {solutions.map((item) => (
                 <article key={item.title} className={`overflow-hidden rounded-[1.5rem] border text-foreground ${item.className}`}>
-                  <PhotoFrame src={item.src} alt={item.alt} fit={item.fit} className="h-64 sm:h-72" />
+                  {"mpu" in item && item.mpu ? (
+                    <MpuAnglePhoto className="aspect-[4/3] min-h-[16rem] sm:min-h-[20rem]" />
+                  ) : (
+                    <PhotoFrame src={item.src} alt={item.alt} fit={item.fit} className="h-64 sm:h-72" />
+                  )}
                   <div className="p-5">
                     <h3 className={`text-xl font-bold uppercase ${item.titleClass}`}>{item.title}</h3>
                     <p className="mt-1 text-sm font-semibold">{item.subtitle}</p>
@@ -216,7 +216,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               </PhonePreview>
               <PhonePreview title="Session">
                 <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
-                  <PhotoFrame src="/images/landing-mpu.png" alt="" fit="contain" className="h-28" />
+                  <MpuAnglePhoto alt="" className="h-36" />
                   <div className="p-3">
                     <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-light">Live</p>
                     <p className="rm-serif mt-1 text-3xl font-semibold">92 deg</p>

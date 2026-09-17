@@ -26,6 +26,26 @@ export function PhotoFrame({
   );
 }
 
+/** Unique Revive Motion MPU shot: full 4:3 frame, padded so the live angle is never cropped. */
+export function MpuAnglePhoto({
+  className = "",
+  alt = "Revive Motion MPU-6050 straps on the upper arm and wrist with a live elbow angle of 92 degrees.",
+}: {
+  className?: string;
+  alt?: string;
+}) {
+  return (
+    <div className={`relative overflow-hidden bg-[#e8f3fb] ${className}`}>
+      <SafePicture
+        src="/images/landing-mpu.png?v=4"
+        alt={alt}
+        className="absolute inset-0 h-full w-full object-contain p-3 sm:p-5"
+      />
+      <div className="pointer-events-none absolute inset-3 rounded-xl ring-2 ring-[#4f90c6]/55 sm:inset-4" />
+    </div>
+  );
+}
+
 export function JointMarks({ className = "" }: { className?: string }) {
   return (
     <PhotoFrame src="/images/landing-leg-marks.webp" alt="Side view of a seated leg from hip to ankle." className={className}>

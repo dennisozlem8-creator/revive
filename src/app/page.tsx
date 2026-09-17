@@ -9,7 +9,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { t } from "@/lib/i18n";
 import { AuthLanding } from "@/components/AuthLanding";
 import { isCareTeam } from "@/lib/users";
-import { PhotoFrame } from "@/components/LandingMedia";
+import { MpuAnglePhoto, PhotoFrame } from "@/components/LandingMedia";
 
 const areaIcons: Record<string, ReactNode> = {
   ankle: (
@@ -125,7 +125,7 @@ export default function Home() {
                 </div>
               </Link>
               <Link href="/session" className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md">
-                <PhotoFrame src="/images/landing-mpu.png" alt="" fit="contain" className="h-28" />
+                <MpuAnglePhoto alt="" className="h-36" />
                 <div className="p-5">
                   <p className="rm-label text-brand-light">Session</p>
                   <h3 className="mt-2 text-lg font-semibold">Live recovery</h3>
