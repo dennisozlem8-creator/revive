@@ -17,7 +17,7 @@ type LandingHeaderProps = {
 
 export function LandingHeader({ mode }: LandingHeaderProps) {
   const [open, setOpen] = useState(false);
-  const cta = mode === "login" ? "Go in" : "Create account";
+  const cta = mode === "login" ? "Sign in" : "Create account";
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/85 backdrop-blur-xl">

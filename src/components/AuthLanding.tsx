@@ -110,7 +110,7 @@ function CycleStrip({ className = "" }: { className?: string }) {
 }
 
 export function AuthLanding({ mode }: AuthLandingProps) {
-  const cta = mode === "login" ? "Go in" : "Create an account";
+  const cta = mode === "login" ? "Sign in" : "Create an account";
 
   return (
     <div className="min-h-full bg-background text-foreground">

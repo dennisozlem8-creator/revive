@@ -73,14 +73,12 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="rm-serif text-2xl font-semibold">
-        {mode === "login" ? `Welcome back, ${roleCopy[role]}` : `Create a ${roleCopy[role]} account`}
+        {mode === "login" ? `${roleCopy[role]} sign in` : `Create a ${roleCopy[role].toLowerCase()} account`}
       </h1>
-      <p className="mt-2 text-sm text-muted">
-        {role === "patient"
-          ? "Sign in to access assessments, quests, and notifications."
-          : role === "doctor"
-            ? "Clinicians can monitor linked patients from the clinic dashboard."
-            : "Caregivers can follow a family member’s recovery progress."}
+      <p className="mt-2 text-sm leading-6 text-muted">
+        {mode === "login"
+          ? `Type the email and password for this ${roleCopy[role].toLowerCase()} account, then tap Sign in.`
+          : `Choose an email and password for this ${roleCopy[role].toLowerCase()} account.`}
       </p>
 
       <div className="mt-6 space-y-4">
@@ -159,7 +157,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
         type="submit"
         className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-full bg-brand text-sm font-medium text-white transition hover:bg-brand-light"
       >
-        {mode === "login" ? "Sign in" : "Create account"}
+        {mode === "login" ? `Sign in as a ${roleCopy[role].toLowerCase()}` : `Create ${roleCopy[role].toLowerCase()} account`}
       </button>
     </form>
   );
