@@ -66,3 +66,16 @@ export function logActivityToday(dates: string[] = []): string[] {
   if (dates.includes(today)) return dates;
   return [...dates, today];
 }
+
+export function lastDaysActive(user: User, n: number): { date: string; active: boolean }[] {
+  const dateSet = new Set(getActivityDates(user));
+  const days: { date: string; active: boolean }[] = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const cursor = new Date();
+    cursor.setHours(12, 0, 0, 0);
+    cursor.setDate(cursor.getDate() - i);
+    const key = cursor.toISOString().split("T")[0];
+    days.push({ date: key, active: dateSet.has(key) });
+  }
+  return days;
+}

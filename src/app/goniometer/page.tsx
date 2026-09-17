@@ -1,17 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { Header } from "@/components/Header";
-import { BottomNav } from "@/components/BottomNav";
+import { DashIntro, DashShell } from "@/components/clinic/DashKit";
 import { PhotoGoniometer } from "@/components/PhotoGoniometer";
 import { useAuth } from "@/components/AuthProvider";
+import { PhotoFrame } from "@/components/LandingMedia";
 
 export default function GoniometerPage() {
   const { user, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="flex min-h-full items-center justify-center text-muted">
+      <div className="flex min-h-full items-center justify-center text-[#2f4a60]">
         Loading camera…
       </div>
     );
@@ -20,26 +20,28 @@ export default function GoniometerPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-full rm-glow-patient pb-28 text-foreground">
-      <Header linkHome />
-      <main className="mx-auto max-w-lg px-6 pb-8">
-        <h1 className="rm-title mt-1 text-3xl text-foreground">Photo Goniometer</h1>
-
-        <div className="mt-6">
-          <PhotoGoniometer userEmail={user.email} goal={user.targetRom || 100} />
-        </div>
-
-        <p className="mt-8 text-center text-xs leading-relaxed text-muted">
-          Estimated angle for progress tracking only. This is not a medical diagnosis and
-          does not replace a physical therapist.
-        </p>
-        <p className="mt-4 text-center">
-          <Link href="/charts" className="text-sm font-medium text-brand-light hover:text-brand">
-            Back to charts →
-          </Link>
-        </p>
-      </main>
-      <BottomNav />
-    </div>
+    <DashShell wide={false}>
+      <DashIntro
+        kicker="Measure"
+        title="Photo Goniometer"
+        text="Take a side-view photo or clip. Tap hip, knee, then ankle if the camera cannot see the joint."
+      />
+      <PhotoFrame
+        src="/images/landing-photo-goniometer.png?v=1"
+        alt=""
+        className="mt-5 h-36 rounded-[1.35rem] sm:h-44"
+      />
+      <div className="mt-6">
+        <PhotoGoniometer userEmail={user.email} goal={user.targetRom || 100} />
+      </div>
+      <p className="mt-8 text-center text-sm leading-6 text-[#2f4a60]">
+        Estimated angle for progress tracking only. This is not a diagnosis and does not replace a physical therapist.
+      </p>
+      <p className="mt-4 text-center">
+        <Link href="/charts" className="text-sm font-semibold text-[#1b3348]">
+          Open progress charts →
+        </Link>
+      </p>
+    </DashShell>
   );
 }

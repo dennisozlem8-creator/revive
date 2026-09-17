@@ -4,18 +4,11 @@ type StatTileProps = {
   accent?: "brand" | "correct" | "orange" | "purple";
 };
 
-const accents = {
-  brand: "border-brand/30 text-brand-light",
-  correct: "border-correct/30 text-correct",
-  orange: "border-orange/30 text-orange",
-  purple: "border-purple/30 text-purple",
-};
-
-export function StatTile({ value, label, accent = "brand" }: StatTileProps) {
+export function StatTile({ value, label }: StatTileProps) {
   return (
-    <div className={`rm-card px-4 py-5 text-center ${accents[accent]} border`}>
-      <p className="rm-stat text-foreground">{value}</p>
-      <p className="rm-label mt-1">{label}</p>
-    </div>
+    <article className="rounded-[1.35rem] bg-white p-5 text-center shadow-[0_12px_28px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12">
+      <p className="rm-serif text-3xl font-semibold tabular-nums text-[#1b3348]">{value}</p>
+      <p className="mt-1 text-sm font-semibold text-[#2f4a60]">{label}</p>
+    </article>
   );
 }

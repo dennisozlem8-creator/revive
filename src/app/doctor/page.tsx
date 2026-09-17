@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { Header } from "@/components/Header";
+import { useEffect, useState } from "react";
+import { DashCard, DashEmpty, DashIntro, DashShell, DashStat } from "@/components/clinic/DashKit";
 import { useAuth } from "@/components/AuthProvider";
 import { getNotificationsForUser, markNotificationsRead } from "@/lib/notifications";
 import { calculateStreak } from "@/lib/streak";
-import { useEffect, useState } from "react";
 import { isCareTeam } from "@/lib/users";
 import type { AppNotification } from "@/lib/notifications";
 import { loadMeasurements } from "@/lib/goniometer";
 import { doctorWatchLevel, progressSnapshot } from "@/lib/recovery-plan";
+import { GoniometerProgressChart } from "@/components/GoniometerProgressChart";
 
 export default function DoctorDashboardPage() {
   const { user, getPatientsForDoctor } = useAuth();
@@ -25,118 +26,112 @@ export default function DoctorDashboardPage() {
 
   if (!isCareTeam(user?.role)) {
     return (
-      <div className="flex min-h-full flex-col items-center justify-center gap-4 rm-glow-patient p-6 text-center">
-        <p className="text-muted">This page is for doctors and caregivers.</p>
-        <Link href="/" className="text-brand-light hover:text-brand">
+      <div className="flex min-h-full flex-col items-center justify-center gap-4 p-6 text-center">
+        <p className="text-[#2f4a60]">This page is for doctors and caregivers.</p>
+        <Link href="/" className="font-semibold text-[#1b3348]">
           Go home
         </Link>
       </div>
     );
   }
 
+  const attention = patients.filter((patient) => doctorWatchLevel(loadMeasurements(patient.email)).level !== "on-track").length;
+  const clips = patients.reduce((sum, patient) => sum + loadMeasurements(patient.email).length, 0);
+
   return (
-    <div className="relative min-h-full rm-glow-caregiver pb-24">
-      <Header linkHome variant="caregiver" />
-      <main className="mx-auto max-w-5xl px-6 pb-8">
-        <p className="text-xs font-bold uppercase tracking-widest text-teal">
-          {user?.role === "caregiver" ? "Caregiver Dashboard" : "Doctor Dashboard"}
-        </p>
-        <h1 className="mt-1 text-3xl font-bold text-[var(--caregiver-text)]">Your Patients</h1>
-        <p className="mt-2 text-[var(--caregiver-muted)]">
-          Monitor movement clips, form scores, and whether range is improving.
-        </p>
+    <DashShell caregiver>
+      <DashIntro
+        kicker={user?.role === "caregiver" ? "Caregiver dashboard" : "Clinician dashboard"}
+        title="Your patients"
+        text="Review saved clips, form flags, and whether range is improving. Nothing here is invented."
+        action={
+          <Link href="/pt-update" className="rm-btn rm-btn-brand h-11 min-h-0 rounded-full px-6">
+            Push exercise update
+          </Link>
+        }
+      />
 
-        <Link
-          href="/pt-update"
-          className="rm-btn rm-btn-teal mt-6 inline-flex max-w-xs text-base"
-        >
-          Push exercise update →
-        </Link>
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <DashStat label="Patients" value={patients.length} hint="Linked to this account" />
+        <DashStat label="Need a look" value={attention} hint="Watch or attention flags" />
+        <DashStat label="Saved clips" value={clips} hint="Across the caseload" />
+      </div>
 
-        <section className="mt-8 overflow-hidden rounded-2xl border border-[#cbd5e1] bg-white shadow-sm">
-          <div className="border-b border-[#e2e8f0] px-6 py-4">
-            <h2 className="text-xl font-bold text-[var(--caregiver-text)]">
-              Patients ({patients.length})
-            </h2>
-          </div>
-          {patients.length === 0 ? (
-            <p className="p-6 text-sm text-[var(--caregiver-muted)]">
-              No patients linked yet.
-            </p>
-          ) : (
-            <div className="divide-y divide-[#e2e8f0]">
-              {patients.map((patient) => {
-                const clips = loadMeasurements(patient.email);
-                const watch = doctorWatchLevel(clips);
-                const progress = progressSnapshot(clips, patient.targetRom || 100);
-                const onTrack = watch.level === "on-track" && calculateStreak(patient) >= 1;
-                return (
-                  <article key={patient.email} className="flex gap-4 px-6 py-4">
-                    <div
-                      className="mt-1 w-1 shrink-0 rounded-full"
-                      style={{ background: onTrack ? "var(--correct)" : "var(--almost)" }}
-                    />
-                    <div className="flex flex-1 flex-wrap items-center justify-between gap-3">
+      <DashCard className="mt-6">
+        {patients.length === 0 ? (
+          <DashEmpty
+            title="No patients linked yet"
+            text="When a patient signs in with your clinic email on file, they appear here."
+            href="/"
+            action="Go home"
+          />
+        ) : (
+          <div className="divide-y divide-[#e8f3fb]">
+            {patients.map((patient) => {
+              const rows = loadMeasurements(patient.email);
+              const watch = doctorWatchLevel(rows);
+              const progress = progressSnapshot(rows, patient.targetRom || 100);
+              return (
+                <article key={patient.email} className="grid gap-4 p-5 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] sm:p-6">
+                  <div>
+                    <p
+                      className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+                        watch.level === "on-track" ? "bg-[#e7f1ea] text-[#2a7a58]" : "bg-[#f4efe4] text-[#7a6548]"
+                      }`}
+                    >
+                      {watch.label}
+                    </p>
+                    <h3 className="rm-serif mt-2 text-2xl font-semibold text-[#1b3348]">{patient.name}</h3>
+                    <p className="text-sm text-[#2f4a60]">{patient.email}</p>
+                    <p className="mt-2 max-w-md text-sm leading-6 text-[#2f4a60]">{watch.detail}</p>
+                    <div className="mt-4 flex flex-wrap gap-6">
                       <div>
-                        <h3 className="font-bold text-[var(--caregiver-text)]">{patient.name}</h3>
-                        <p className="text-sm text-[var(--caregiver-muted)]">{patient.email}</p>
-                        <span
-                          className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-bold ${
-                            watch.level === "on-track" ? "bg-correct/15 text-correct" : "bg-almost/15 text-almost"
-                          }`}
-                        >
-                          {watch.label.toUpperCase()}
-                        </span>
-                        <p className="mt-2 max-w-md text-sm text-[var(--caregiver-muted)]">{watch.detail}</p>
+                        <p className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">{calculateStreak(patient)}</p>
+                        <p className="text-sm text-[#2f4a60]">Streak</p>
                       </div>
-                      <div className="flex flex-col items-end gap-3 text-right text-sm">
-                        <div className="flex gap-4">
-                          <div>
-                            <p className="text-2xl font-bold text-orange">{calculateStreak(patient)}</p>
-                            <p className="text-xs text-[var(--caregiver-muted)]">Streak</p>
-                          </div>
-                          <div>
-                            <p className="text-2xl font-bold text-correct">
-                              {progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
-                            </p>
-                            <p className="text-xs text-[var(--caregiver-muted)]">Latest peak</p>
-                          </div>
-                          <div>
-                            <p className="text-2xl font-bold text-brand">{clips.length}</p>
-                            <p className="text-xs text-[var(--caregiver-muted)]">Clips</p>
-                          </div>
-                        </div>
-                        <Link
-                          href={`/doctor/patient?email=${encodeURIComponent(patient.email)}`}
-                          className="text-sm font-semibold text-brand-light hover:text-brand"
-                        >
-                          Review movement →
-                        </Link>
+                      <div>
+                        <p className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">
+                          {progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
+                        </p>
+                        <p className="text-sm text-[#2f4a60]">Latest peak</p>
+                      </div>
+                      <div>
+                        <p className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">{rows.length}</p>
+                        <p className="text-sm text-[#2f4a60]">Clips</p>
                       </div>
                     </div>
-                  </article>
-                );
-              })}
-            </div>
-          )}
-        </section>
-
-        <section className="mt-8 overflow-hidden rounded-2xl border border-[#cbd5e1] bg-white shadow-sm p-6">
-          <h2 className="text-xl font-bold text-[var(--caregiver-text)]">Daily notifications</h2>
-          <div className="mt-4 space-y-3">
-            {notifications.length === 0 ? (
-              <p className="text-sm text-[var(--caregiver-muted)]">No notifications yet.</p>
-            ) : (
-              notifications.slice(0, 10).map((n) => (
-                <div key={n.id} className="rounded-xl border border-[#e2e8f0] bg-[#f8fafc] px-4 py-3">
-                  <p className="font-semibold text-[var(--caregiver-text)]">{n.title}</p>
-                  <p className="mt-1 text-sm text-[var(--caregiver-muted)]">{n.message}</p>
-                </div>
-              ))
-            )}
+                    <Link
+                      href={`/doctor/patient?email=${encodeURIComponent(patient.email)}`}
+                      className="mt-4 inline-flex text-sm font-semibold text-[#1b3348]"
+                    >
+                      Review movement →
+                    </Link>
+                  </div>
+                  <div className="rounded-[1.15rem] bg-[#f7fbfe] p-3">
+                    <GoniometerProgressChart measurements={rows} goal={patient.targetRom || 100} />
+                  </div>
+                </article>
+              );
+            })}
           </div>
-        </section>
-      </main>
-    </div>
+        )}
+      </DashCard>
+
+      <DashCard className="mt-6 p-5 sm:p-6">
+        <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Daily notifications</h2>
+        {notifications.length === 0 ? (
+          <p className="mt-3 text-base text-[#2f4a60]">No notifications yet.</p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {notifications.slice(0, 10).map((note) => (
+              <div key={note.id} className="rounded-[1.1rem] bg-[#f7fbfe] px-4 py-3">
+                <p className="font-semibold text-[#1b3348]">{note.title}</p>
+                <p className="mt-1 text-sm text-[#2f4a60]">{note.message}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </DashCard>
+    </DashShell>
   );
 }

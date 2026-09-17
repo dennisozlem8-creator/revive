@@ -62,26 +62,20 @@ export function PreBriefingFlow() {
 
   return (
     <div className="mx-auto max-w-lg">
-      <div className="mb-6 h-2 overflow-hidden rounded-full bg-surface-elevated">
+      <div className="mb-6 h-2 overflow-hidden rounded-full bg-[#e8f3fb]">
         <div
-          className="h-full rounded-full bg-brand transition-all duration-300"
+          className="h-full rounded-full bg-[#4f90c6] transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
 
-      <p className="rm-label text-brand-light">
+      <p className="text-sm font-semibold text-[#2f4a60]">
         Daily check-in · {index + 1} of {questions.length}
       </p>
-      <h1 className="rm-title mt-2 text-2xl text-foreground">Before your briefing</h1>
-      <p className="mt-2 text-body">
-        A few quick questions help personalize today&apos;s session.
-      </p>
+      <h2 className="rm-serif mt-2 text-2xl font-semibold text-[#1b3348]">{current.text}</h2>
 
-      <section className="rm-card-elevated mt-8 p-6">
-        <h2 className="text-xl font-bold leading-snug">{current.text}</h2>
-
-        {current.type === "scale" && (
-          <div className="mt-8">
+      {current.type === "scale" && (
+        <div className="mt-8">
             <input
               type="range"
               min={1}
@@ -102,7 +96,7 @@ export function PreBriefingFlow() {
             <button
               type="button"
               onClick={() => submitAnswer(Number(answers[current.id] ?? 3))}
-              className="rm-btn rm-btn-brand mt-8 w-full"
+              className="rm-btn rm-btn-brand mt-8 w-full rounded-full"
             >
               Continue
             </button>
@@ -116,14 +110,13 @@ export function PreBriefingFlow() {
                 key={option}
                 type="button"
                 onClick={() => submitAnswer(option)}
-                className="rm-card flex min-h-[4rem] w-full items-center px-5 text-left text-base font-semibold transition hover:border-brand hover:bg-brand/10"
+                className="flex min-h-[4rem] w-full items-center rounded-[1.15rem] bg-[#f7fbfe] px-5 text-left text-base font-semibold text-[#1b3348] ring-1 ring-[#4f90c6]/12 transition hover:bg-[#e8f3fb]"
               >
                 {option}
               </button>
             ))}
           </div>
         )}
-      </section>
 
       {index > 0 && (
         <button

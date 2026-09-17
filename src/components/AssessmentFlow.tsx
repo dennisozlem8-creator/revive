@@ -109,19 +109,19 @@ export function AssessmentFlow({ areaId, areaLabel }: AssessmentFlowProps) {
       </div>
 
       {step === "intro" && (
-        <section className="rounded-2xl border border-[var(--border)] bg-surface p-8">
-          <h2 className="text-2xl font-semibold">Physical therapy assessment</h2>
-          <p className="mt-3 leading-7 text-muted">{assessment.intro}</p>
-          <ul className="mt-6 space-y-2 text-sm text-muted">
-            <li>• {assessment.questions.length} screening questions</li>
-            <li>• Wearable sensor ROM test with live charts</li>
-            <li>• Guided exercises with pictures after ROM test</li>
-            <li>• Session report when you finish</li>
+        <section className="rounded-[1.5rem] bg-white p-8 shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
+          <h2 className="rm-serif text-3xl font-semibold text-[#1b3348]">Physical therapy assessment</h2>
+          <p className="mt-3 leading-7 text-[#2f4a60]">{assessment.intro}</p>
+          <ul className="mt-6 space-y-2 text-base text-[#2f4a60]">
+            <li>{assessment.questions.length} screening questions</li>
+            <li>Wearable sensor ROM test with live charts</li>
+            <li>Guided exercises with pictures after ROM test</li>
+            <li>Session report when you finish</li>
           </ul>
           <button
             type="button"
             onClick={() => setStep("questions")}
-            className="mt-8 inline-flex h-11 items-center rounded-full bg-brand px-6 text-sm font-medium text-white transition hover:bg-brand-light"
+            className="rm-btn rm-btn-brand mt-8 inline-flex h-11 min-h-0 rounded-full px-6"
           >
             Begin assessment
           </button>
@@ -129,11 +129,11 @@ export function AssessmentFlow({ areaId, areaLabel }: AssessmentFlowProps) {
       )}
 
       {step === "questions" && currentQuestion && (
-        <section className="rounded-2xl border border-[var(--border)] bg-surface p-8">
-          <p className="text-sm font-medium text-brand-light">
+        <section className="rounded-[1.5rem] bg-white p-8 shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
+          <p className="text-sm font-semibold text-[#2f4a60]">
             Question {questionIndex + 1} of {assessment.questions.length}
           </p>
-          <h2 className="mt-3 text-xl font-semibold">{currentQuestion.text}</h2>
+          <h2 className="rm-serif mt-3 text-2xl font-semibold text-[#1b3348]">{currentQuestion.text}</h2>
 
           {currentQuestion.type === "scale" && (
             <div className="mt-8">
@@ -187,11 +187,10 @@ export function AssessmentFlow({ areaId, areaLabel }: AssessmentFlowProps) {
       )}
 
       {step === "test-tile" && (
-        <section className="rounded-2xl border border-[var(--border)] bg-surface p-8 text-center">
-          <h2 className="text-2xl font-semibold">Ready for your ROM test</h2>
-          <p className="mx-auto mt-3 max-w-lg text-muted">
-            Questions complete. Wear your Revive Motion sensor and tap below to
-            record range of motion data.
+        <section className="rounded-[1.5rem] bg-white p-8 text-center shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
+          <h2 className="rm-serif text-3xl font-semibold text-[#1b3348]">Ready for your ROM test</h2>
+          <p className="mx-auto mt-3 max-w-lg text-[#2f4a60]">
+            Questions complete. Wear your Revive Motion sensor and tap below to record range of motion data.
           </p>
           <button
             type="button"
@@ -222,8 +221,8 @@ export function AssessmentFlow({ areaId, areaLabel }: AssessmentFlowProps) {
 
       {step === "exercises" && deviceSession && (
         <div className="space-y-6">
-          <section className="rm-card border-correct/30 p-5 text-center">
-            <p className="text-sm font-semibold text-correct">ROM test complete — {areaLabel}</p>
+          <section className="rounded-[1.5rem] bg-white p-5 text-center shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
+            <p className="text-sm font-semibold text-[#3a7d62]">ROM test complete — {areaLabel}</p>
             <div className="mt-4">
               <RomChart tests={assessment.romTests} values={romValues} areaId={areaId} />
             </div>

@@ -9,9 +9,9 @@ export function PreExerciseSetup({ exercise }: { exercise: string }) {
   const checked = steps.filter((step) => done[step.title]).length;
 
   return (
-    <section className="rm-card border-brand/25 p-5">
-      <p className="rm-label">Before you record</p>
-      <h2 className="mt-1 text-lg font-bold">Setup for a usable clip</h2>
+    <section className="rounded-[1.5rem] bg-white p-5 shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
+      <p className="text-sm font-semibold text-[#2f4a60]">Before you record</p>
+      <h2 className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">Setup for a usable clip</h2>
       <p className="mt-2 text-sm text-body">
         Do these steps first. The coach can only measure what the camera sees, and your doctor
         can only trust a clip that used the same setup as last time.

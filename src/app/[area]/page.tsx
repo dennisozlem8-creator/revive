@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AssessmentFlow } from "@/components/AssessmentFlow";
 import { Header } from "@/components/Header";
+import { DashHero } from "@/components/clinic/DashKit";
 import { bodyAreas, getBodyArea } from "@/lib/body-areas";
 
 type AreaPageProps = {
@@ -35,31 +36,17 @@ export default async function AreaPage({ params }: AreaPageProps) {
   }
 
   return (
-    <div className="relative min-h-full overflow-hidden bg-background text-foreground">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(59,130,246,0.22),transparent_50%),radial-gradient(circle_at_80%_20%,rgba(37,99,235,0.15),transparent_40%)]"
-      />
-
+    <div className="relative min-h-full overflow-hidden rm-glow-patient pb-16 text-foreground">
       <Header linkHome />
 
-      <main className="relative z-10 mx-auto flex w-full max-w-5xl flex-col px-6 pb-24">
-        <Link
-          href="/"
-          className="inline-flex w-fit items-center gap-2 text-sm font-medium text-accent-light transition hover:text-accent"
-        >
+      <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-4 pb-24 sm:px-6">
+        <Link href="/" className="mt-4 inline-flex w-fit text-sm font-semibold text-[#1b3348] transition hover:opacity-80">
           ← Back to home
         </Link>
 
-        <section className="mt-8 max-w-2xl">
-          <span className="inline-flex items-center rounded-full bg-accent-soft px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-accent-light">
-            {area.label}
-          </span>
-          <h1 className="mt-6 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            {area.label} assessment
-          </h1>
-          <p className="mt-4 text-lg leading-8 text-muted">{area.description}</p>
-        </section>
+        <div className="mt-5">
+          <DashHero src={area.cover} kicker="Assessment" title={`${area.label} assessment`} text={area.description} />
+        </div>
 
         <AssessmentFlow areaId={areaId} areaLabel={area.label} />
       </main>

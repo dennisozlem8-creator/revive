@@ -56,12 +56,18 @@ export function GoniometerProgressChart({
           x={width - pad.right}
           y={goalY - 6}
           textAnchor="end"
-          fill="var(--correct)"
+          fill="#3a7d62"
           fontSize="11"
+          fontWeight="700"
         >
           Goal {goal}°
         </text>
-        <path d={path} fill="none" stroke="var(--brand-light)" strokeWidth="2.5" />
+        <path
+          d={`${path} L ${xFor(measurements.length - 1).toFixed(1)} ${height - pad.bottom} L ${xFor(0).toFixed(1)} ${height - pad.bottom} Z`}
+          fill="#4f90c6"
+          opacity="0.14"
+        />
+        <path d={path} fill="none" stroke="#4f90c6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
         {measurements.map((m, i) => (
           <g key={m.id}>
             <circle cx={xFor(i)} cy={yFor(m.angle)} r="5" fill="var(--brand)" />

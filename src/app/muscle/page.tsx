@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Header } from "@/components/Header";
-import { BottomNav } from "@/components/BottomNav";
+import { DashCard, DashEmpty, DashIntro, DashShell } from "@/components/clinic/DashKit";
 import { MyoWarePanel } from "@/components/MyoWarePanel";
 import { useAuth } from "@/components/AuthProvider";
 import { deleteMyoWareRecording, loadMyoWareRecordings, type MyoWareRecording } from "@/lib/myoware-log";
+import { PhotoFrame } from "@/components/LandingMedia";
 
 function HelpBlock({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <details className="rm-card mt-3 p-5">
-      <summary className="cursor-pointer font-semibold text-foreground">{title}</summary>
-      <div className="mt-3 space-y-2 text-sm text-body">{children}</div>
+    <details className="mt-3 overflow-hidden rounded-[1.35rem] bg-white p-5 shadow-[0_12px_28px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12">
+      <summary className="cursor-pointer font-semibold text-[#1b3348]">{title}</summary>
+      <div className="mt-3 space-y-2 text-sm leading-6 text-[#2f4a60]">{children}</div>
     </details>
   );
 }
@@ -36,17 +36,15 @@ export default function MuscleSensorPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-full rm-glow-patient pb-28 text-foreground">
-      <Header linkHome />
-      <main className="mx-auto max-w-lg px-6 pb-8">
-        <p className="rm-label">Muscle sensor</p>
-        <h1 className="rm-title mt-1 text-3xl text-foreground">MyoWare 2.0</h1>
-        <p className="mt-2 text-body">
-          Wireless uses the MyoWare Wireless Shield over Bluetooth. You do not use the Elegoo Uno
-          for this. USB into the shield is only to load the program once.
-        </p>
+    <DashShell wide={false}>
+      <DashIntro
+        kicker="Muscle sensor"
+        title="MyoWare 2.0"
+        text="Connect with Bluetooth or USB, then flex. Saved effort stays on this device."
+      />
+      <PhotoFrame src="/images/landing-myoware.png?v=5" alt="" className="mt-5 h-40 rounded-[1.35rem]" imgClassName="object-contain bg-white p-4" />
 
-        <section className="rm-card mt-6 border-brand/30 p-5">
+      <DashCard className="mt-6 p-5">
           <h2 className="font-semibold">Wireless — do this now</h2>
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
             <li>Leave the Elegoo Uno unplugged. The Wireless Shield has its own USB port and battery.</li>
@@ -82,15 +80,15 @@ export default function MuscleSensorPage() {
             Good signs: the LED stays on after Chrome connects, then ENV numbers jump when you flex.
             Factory firmware waits for USB and will not work with this website — upload the file above.
           </p>
-        </section>
+      </DashCard>
 
         <div className="mt-6">
           <MyoWarePanel />
         </div>
 
-        <section className="rm-card mt-4 p-5">
-          <h2 className="font-semibold">Wireless stack</h2>
-          <p className="mt-2 text-sm text-muted">No jumper wires. The shield snaps onto the sensor.</p>
+        <DashCard className="mt-4 p-5">
+          <h2 className="rm-serif text-xl font-semibold text-[#1b3348]">Wireless stack</h2>
+          <p className="mt-2 text-sm text-[#2f4a60]">No jumper wires. The shield snaps onto the sensor.</p>
           <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)] bg-white">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -107,11 +105,11 @@ export default function MuscleSensorPage() {
           >
             Download wireless-myoware.ino
           </a>
-        </section>
+        </DashCard>
 
-        <section className="rm-card mt-4 p-5">
-          <h2 className="font-semibold">Wired Uno instead</h2>
-          <p className="mt-2 text-sm text-muted">Three wires only if you are not using the Wireless Shield.</p>
+        <DashCard className="mt-4 p-5">
+          <h2 className="rm-serif text-xl font-semibold text-[#1b3348]">Wired Uno instead</h2>
+          <p className="mt-2 text-sm text-[#2f4a60]">Three wires only if you are not using the Wireless Shield.</p>
           <div className="mt-4 overflow-hidden rounded-xl border border-[var(--border)] bg-white">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -133,7 +131,7 @@ export default function MuscleSensorPage() {
           >
             Download wired-myoware.ino
           </a>
-        </section>
+        </DashCard>
 
         <HelpBlock title="If Bluetooth cannot find MyoWareSensor1">
           <ol className="list-decimal space-y-2 pl-5">
@@ -162,56 +160,56 @@ export default function MuscleSensorPage() {
           </ol>
         </HelpBlock>
 
-        <section className="rm-card mt-6 p-5">
-          <h2 className="font-semibold">Saved recordings</h2>
-          <p className="mt-1 text-sm text-muted">Stored on this device only.</p>
+        <DashCard className="mt-6">
           {rows.length === 0 ? (
-            <p className="mt-3 text-sm text-muted">No muscle recordings yet.</p>
+            <DashEmpty
+              title="No muscle recordings yet"
+              text="Connect MyoWare, flex, then save. Stored on this device only."
+              href="/session"
+              action="Use in a session"
+            />
           ) : (
-            <ul className="mt-4 space-y-2">
-              {rows
-                .slice()
-                .reverse()
-                .map((row) => (
-                  <li
-                    key={row.id}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-background px-4 py-3 text-sm"
-                  >
-                    <div>
-                      <p className="font-medium">
-                        {row.avgEmg}% avg · peak {row.maxEmg}%
-                      </p>
-                      <p className="text-muted">
-                        {new Date(row.date).toLocaleString()} · {row.durationSec}s · {row.samples.length}{" "}
-                        readings
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      className="text-xs text-alert hover:underline"
-                      onClick={() => {
-                        deleteMyoWareRecording(row.id);
-                        setRows(loadMyoWareRecordings(user.email));
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-            </ul>
+            <div className="p-5">
+              <h2 className="rm-serif text-xl font-semibold text-[#1b3348]">Saved recordings</h2>
+              <ul className="mt-4 space-y-2">
+                {rows
+                  .slice()
+                  .reverse()
+                  .map((row) => (
+                    <li key={row.id} className="flex items-center justify-between gap-3 rounded-[1.1rem] bg-[#f7fbfe] px-4 py-3 text-sm">
+                      <div>
+                        <p className="font-semibold text-[#1b3348]">
+                          {row.avgEmg}% avg · peak {row.maxEmg}%
+                        </p>
+                        <p className="text-[#2f4a60]">
+                          {new Date(row.date).toLocaleString()} · {row.durationSec}s · {row.samples.length} readings
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className="text-sm font-semibold text-[#9a4f4f]"
+                        onClick={() => {
+                          deleteMyoWareRecording(row.id);
+                          setRows(loadMyoWareRecordings(user.email));
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </div>
           )}
-        </section>
+        </DashCard>
 
         <p className="mt-6 text-center text-xs text-muted">
           For progress tracking only. This is not a medical EMG test or a diagnosis.
         </p>
         <p className="mt-4 text-center">
-          <Link href="/session" className="text-sm font-medium text-brand-light">
+          <Link href="/session" className="text-sm font-semibold text-[#1b3348]">
             Use this in a session →
           </Link>
         </p>
-      </main>
-      <BottomNav />
-    </div>
+    </DashShell>
   );
 }

@@ -9,6 +9,8 @@ Kids Quest is a physical therapy stretch world for kids — original 3D quest bo
 
 The public homepage shows one photo / motion / muscle section that explains each way to measure, plus hip/knee/ankle marks and a progress chart. Signed-in home is the recovery dashboard.
 
+Adult dashboards (home, briefing, care, charts, clinician, session, Photo Goniometer, MyoWare, library, RecoverAI, shop) use the same clinic shell: photo tiles, real rings and heatmaps, Measure · Coach · Report · Improve. Charts use saved clips only — no invented compliance or pain trends.
+
 ## Photo Goniometer
 
 Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo tab), or today’s briefing.

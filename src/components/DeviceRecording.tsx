@@ -49,13 +49,12 @@ export function DeviceRecording({ tests, areaId, onComplete }: DeviceRecordingPr
   const activeTest = tests[movementIndex];
 
   return (
-    <section className="rounded-2xl border border-[var(--border)] bg-surface p-8">
+    <section className="rounded-[1.5rem] bg-white p-6 shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12 sm:p-8">
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
         <div className="flex-1">
-          <h2 className="text-2xl font-semibold">Sensors</h2>
-          <p className="mt-2 text-muted">
-            Pair a Bluetooth heart-rate strap for live BPM. Joint ROM recording below is still a
-            demo until a motion sensor is connected.
+          <h2 className="rm-serif text-3xl font-semibold text-[#1b3348]">Sensors</h2>
+          <p className="mt-2 text-base leading-7 text-[#2f4a60]">
+            Pair a Bluetooth heart-rate strap for live BPM. Joint ROM recording below is still a demo until a motion sensor is connected.
           </p>
 
           <div className="mt-6">

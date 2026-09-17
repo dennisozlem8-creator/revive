@@ -64,7 +64,7 @@ export function OnboardingWizard() {
   }
 
   return (
-    <div className="rm-card-elevated mx-auto max-w-lg p-8">
+    <div className="rounded-[1.5rem] bg-white p-8 shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
       <div className="mb-6 flex gap-2">
         {Array.from({ length: TOTAL_STEPS }, (_, i) => (
           <div
@@ -79,7 +79,7 @@ export function OnboardingWizard() {
 
       {step === 0 && (
         <>
-          <h1 className="rm-title mt-2 text-3xl text-foreground">Welcome to Revive Motion</h1>
+          <h1 className="rm-serif mt-2 text-3xl font-semibold text-[#1b3348]">Welcome to Revive Motion</h1>
           <p className="mt-3 text-body">Let&apos;s get you set up in a few minutes.</p>
           <ul className="mt-6 space-y-3">
             {benefits.map((b) => (
@@ -96,7 +96,7 @@ export function OnboardingWizard() {
 
       {step === 1 && (
         <>
-          <h2 className="rm-title text-2xl text-foreground">Create your 4-digit PIN</h2>
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Create your 4-digit PIN</h2>
           <input
             value={pin}
             onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
@@ -116,7 +116,7 @@ export function OnboardingWizard() {
 
       {step === 2 && (
         <>
-          <h2 className="rm-title text-2xl text-foreground">Choose your injury</h2>
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Choose your injury</h2>
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {injuries.map((i) => (
               <button
@@ -142,7 +142,7 @@ export function OnboardingWizard() {
 
       {step === 3 && (
         <>
-          <h2 className="rm-title text-2xl text-foreground">Baseline ROM test</h2>
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Baseline ROM test</h2>
           <p className="mt-2 text-body">
             Bend your joint to your current max. When ready, tap once — your sensor will measure it.
           </p>
@@ -194,7 +194,7 @@ export function OnboardingWizard() {
 
       {step === 4 && (
         <>
-          <h2 className="rm-title text-2xl text-foreground">Connect your device</h2>
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Connect your device</h2>
           <p className="mt-2 text-body">
             Pair a Bluetooth heart-rate strap to show live BPM on screen. Joint ROM still has a
             demo sensor if you do not have a motion strap yet.
@@ -215,7 +215,7 @@ export function OnboardingWizard() {
 
       {step === 5 && (
         <>
-          <h2 className="rm-title text-2xl text-foreground">You&apos;re ready!</h2>
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">You&apos;re ready</h2>
           <p className="mt-2 text-body">Review your recovery plan and notification preferences.</p>
 
           {baselineRom !== null && (

@@ -1,18 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { Header } from "@/components/Header";
-import { PageHeroImage } from "@/components/PageHeroImage";
-import { useAuth } from "@/components/AuthProvider";
-import { BottomNav } from "@/components/BottomNav";
 import {
-  calculateStreak,
-  getActivityDates,
-  getLongestStreak,
-} from "@/lib/streak";
+  DashCard,
+  DashEmpty,
+  DashHeat,
+  DashIntro,
+  DashLoop,
+  DashPhotoLink,
+  DashRing,
+  DashShell,
+  DashStat,
+} from "@/components/clinic/DashKit";
+import { useAuth } from "@/components/AuthProvider";
+import { calculateStreak, getActivityDates, getLongestStreak, lastDaysActive } from "@/lib/streak";
 import { ProgressInsight } from "@/components/ProgressInsight";
 import { loadMeasurements } from "@/lib/goniometer";
-import { preExerciseSetup } from "@/lib/recovery-plan";
+import { preExerciseSetup, progressSnapshot } from "@/lib/recovery-plan";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -20,7 +24,7 @@ export default function DashboardPage() {
   if (!user || user.role !== "patient") {
     return (
       <div className="flex min-h-full items-center justify-center bg-background p-6">
-        <Link href="/" className="text-brand-light hover:text-brand">
+        <Link href="/" className="font-semibold text-[#1b3348]">
           Go home
         </Link>
       </div>
@@ -32,124 +36,130 @@ export default function DashboardPage() {
   const totalActiveDays = getActivityDates(user).length;
   const questsDone = Object.values(user.questProgress).filter(Boolean).length;
   const clips = loadMeasurements(user.email);
+  const progress = progressSnapshot(clips, user.targetRom || 100);
   const todayExercise = user.ptPrescription?.exerciseName ?? "Heel Slide";
   const setup = preExerciseSetup(todayExercise).slice(0, 3);
+  const heat = lastDaysActive(user, 28);
+  const goal = user.targetRom || 100;
 
   return (
-    <div className="min-h-full rm-glow-patient pb-28 text-foreground">
-      <Header linkHome />
-      <main className="mx-auto max-w-5xl px-6 pb-8">
-        <h1 className="rm-title text-3xl text-foreground">Your Dashboard</h1>
-        <p className="mt-2 text-body">
-          Measure, follow the setup, then do today&apos;s dose. That is the fastest loop we can
-          show your clinician.
-        </p>
+    <DashShell>
+      <DashIntro
+        kicker="Your dashboard"
+        title={`Today’s plan: ${todayExercise}`}
+        text="Measure, follow the setup, then do the sets. That loop is what your clinician can read."
+        action={
+          <Link href="/briefing" className="rm-btn rm-btn-brand h-11 min-h-0 rounded-full px-6">
+            Start briefing
+          </Link>
+        }
+      />
+      <DashLoop />
 
-        <PageHeroImage
-          src="/images/dashboard-hero.svg"
-          alt="Recovery progress dashboard"
-          className="mt-6"
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <DashRing
+          value={progress.latestPeak ?? 0}
+          max={goal}
+          label="Range vs goal"
+          display={progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
         />
+        <DashStat label="Current streak" value={streak} hint={streak > 0 ? "Keep going today" : "Complete a session to start"} />
+        <DashStat label="Longest streak" value={longestStreak} hint="Best run so far" />
+        <DashStat label="Active days" value={totalActiveDays} hint={`${clips.length} saved clips`} />
+      </div>
 
-        <section className="rm-card mt-6 p-5">
-          <p className="rm-label">Today&apos;s recovery loop</p>
-          <h2 className="mt-1 text-lg font-bold">1. Set up · 2. Record · 3. Do the sets</h2>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
-            {setup.map((step) => (
-              <li key={step.title}>
-                <span className="font-semibold text-foreground">{step.title}.</span> {step.detail}
+      <div className="mt-6 grid gap-3 lg:grid-cols-3">
+        <DashPhotoLink
+          href="/goniometer"
+          src="/images/landing-photo-goniometer.png?v=1"
+          kicker="01 Measure"
+          title="Photo Goniometer"
+          text="Take the side-view photo first."
+        />
+        <DashPhotoLink
+          href="/session"
+          src="/images/landing-mpu.png?v=6"
+          kicker="02 Coach"
+          title="Live session"
+          text="Follow today’s ROM test."
+        />
+        <DashPhotoLink
+          href="/charts"
+          src="/images/landing-exercise.webp"
+          kicker="03 Report"
+          title="Progress charts"
+          text="Show the trend, not a guess."
+        />
+      </div>
+
+      <div className="mt-6">
+        <ProgressInsight rows={clips} goal={goal} />
+      </div>
+
+      <div className="mt-6 grid gap-3 lg:grid-cols-2">
+        <DashCard className="p-5 sm:p-6">
+          <p className="text-sm font-semibold text-[#2f4a60]">Before you record</p>
+          <h2 className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">Set up · Record · Do the sets</h2>
+          <ol className="mt-4 space-y-3">
+            {setup.map((step, index) => (
+              <li key={step.title} className="flex gap-3">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e8f3fb] text-sm font-bold text-[#1b3348]">
+                  {index + 1}
+                </span>
+                <div>
+                  <p className="font-semibold text-[#1b3348]">{step.title}</p>
+                  <p className="mt-0.5 text-sm leading-6 text-[#2f4a60]">{step.detail}</p>
+                </div>
               </li>
             ))}
           </ol>
-        </section>
-
-        <div className="mt-6">
-          <ProgressInsight rows={clips} goal={user.targetRom || 100} />
-        </div>
-
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <Link href="/goniometer" className="rm-btn rm-btn-brand inline-flex flex-1">
-            Photo Goniometer
-          </Link>
-          <Link href="/muscle" className="rm-btn rm-btn-ghost inline-flex flex-1">
-            Connect MyoWare
-          </Link>
-          <Link href="/shop" className="rm-btn rm-btn-ghost inline-flex flex-1">
-            Shop devices and braces
-          </Link>
-        </div>
-
-        <section className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rm-card-elevated border-brand/30 p-6">
-            <p className="rm-label">Current streak</p>
-            <p className="mt-2 text-5xl font-bold text-brand-light">
-              {streak}
-              <span className="ml-2 text-lg font-medium text-muted">days</span>
-            </p>
-            <p className="mt-2 text-sm text-muted">
-              {streak > 0 ? "Keep it going today!" : "Complete an exercise to start"}
-            </p>
+        </DashCard>
+        <DashCard className="p-5 sm:p-6">
+          <p className="text-sm font-semibold text-[#2f4a60]">Last 28 days</p>
+          <h2 className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">Active days</h2>
+          <p className="mt-2 text-sm text-[#2f4a60]">Green means a session or clip was saved that day.</p>
+          <div className="mt-4">
+            <DashHeat days={heat} />
           </div>
-          <div className="rm-card p-6">
-            <p className="rm-label">Longest streak</p>
-            <p className="mt-2 text-4xl font-bold">{longestStreak}</p>
-          </div>
-          <div className="rm-card p-6">
-            <p className="rm-label">Active days</p>
-            <p className="mt-2 text-4xl font-bold">{totalActiveDays}</p>
-          </div>
-          <div className="rm-card border-orange/30 p-6">
-            <p className="rm-label">Total XP</p>
-            <p className="mt-2 text-4xl font-bold text-orange">{user.xp}</p>
-          </div>
-        </section>
+        </DashCard>
+      </div>
 
-        <section className="mt-8 grid gap-6 lg:grid-cols-2">
-          <div className="rm-card p-6">
-            <h2 className="text-xl font-bold">Recent activity</h2>
-            {user.exerciseHistory.length === 0 ? (
-              <p className="mt-4 text-sm text-muted">
-                No assessments yet.{" "}
-                <Link href="/" className="text-brand-light hover:text-brand">
-                  Start one →
-                </Link>
-              </p>
-            ) : (
+      <div className="mt-6 grid gap-3 lg:grid-cols-2">
+        <DashCard>
+          {user.exerciseHistory.length === 0 ? (
+            <DashEmpty
+              title="No sessions yet"
+              text="Finish today’s briefing to put the first assessment on this board."
+              href="/briefing"
+              action="Open briefing"
+            />
+          ) : (
+            <div className="p-5 sm:p-6">
+              <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Recent sessions</h2>
               <ul className="mt-4 space-y-2">
                 {user.exerciseHistory
                   .slice(-5)
                   .reverse()
                   .map((record, i) => (
-                    <li
-                      key={i}
-                      className="rounded-xl border border-[var(--border)] bg-background px-4 py-3 text-sm"
-                    >
-                      <span className="capitalize">{record.areaId.replace("-", " ")}</span>
-                      <span className="text-muted">
-                        {" "}
-                        · {new Date(record.completedAt).toLocaleDateString()}
-                      </span>
+                    <li key={`${record.completedAt}-${i}`} className="rounded-[1.1rem] bg-[#f7fbfe] px-4 py-3">
+                      <p className="font-semibold capitalize text-[#1b3348]">{record.areaId.replace("-", " ")}</p>
+                      <p className="text-sm text-[#2f4a60]">{new Date(record.completedAt).toLocaleDateString()}</p>
                     </li>
                   ))}
               </ul>
-            )}
-          </div>
-
-          <div className="rm-card p-6">
-            <h2 className="text-xl font-bold">Quest progress</h2>
-            <p className="mt-2 text-sm text-muted">
-              {questsDone} quest{questsDone !== 1 ? "s" : ""} completed
-            </p>
-            <Link
-              href="/kids"
-              className="rm-kids-type mt-4 inline-flex items-center rounded-full bg-[#f5c84a] px-4 py-2 text-sm font-bold text-[#243056] shadow-sm hover:opacity-90"
-            >
-              Continue Kids Quest
-            </Link>
-          </div>
-        </section>
-      </main>
-      <BottomNav />
-    </div>
+            </div>
+          )}
+        </DashCard>
+        <DashCard className="p-5 sm:p-6">
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Kids Quest</h2>
+          <p className="mt-2 text-base text-[#2f4a60]">
+            {questsDone} stretch{questsDone !== 1 ? "es" : ""} done. Stars stay on this device.
+          </p>
+          <Link href="/kids" className="kids-cta mt-5 inline-flex h-11 min-h-0 rounded-full px-5 text-base">
+            Continue Kids Quest
+          </Link>
+        </DashCard>
+      </div>
+    </DashShell>
   );
 }

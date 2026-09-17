@@ -1,34 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { Header } from "@/components/Header";
-import { PageHeroImage } from "@/components/PageHeroImage";
+import { DashCard, DashIntro, DashPhotoLink, DashShell } from "@/components/clinic/DashKit";
 import { PreBriefingFlow } from "@/components/PreBriefingFlow";
 
 export default function CheckInPage() {
   return (
-    <div className="min-h-full rm-glow-patient pb-12 text-foreground">
-      <Header linkHome />
-      <main className="mx-auto max-w-lg px-6 py-6">
-        <PageHeroImage
-          src="/images/check-in-hero.svg"
-          alt="Daily check-in"
-          className="mb-6"
-        />
+    <DashShell nav={false} wide={false}>
+      <DashIntro
+        kicker="Check-in"
+        title="How do you feel today?"
+        text="Pain and stiffness go with today’s plan. Then take the photo or start the session."
+      />
+      <DashCard className="mt-6 p-5 sm:p-6">
         <PreBriefingFlow />
-
-        <section className="rm-card mt-8 p-5">
-          <p className="rm-label">After check-in</p>
-          <h2 className="mt-1 text-lg font-semibold">Photo Goniometer</h2>
-          <p className="mt-2 text-sm text-body">
-            Record a side-view video so the movement coach can watch the knee, flag unusual
-            motion, and save today&apos;s peak angle.
-          </p>
-          <Link href="/goniometer" className="rm-btn rm-btn-brand mt-4 w-full">
-            Open Photo Goniometer
-          </Link>
-        </section>
-      </main>
-    </div>
+      </DashCard>
+      <div className="mt-6">
+        <DashPhotoLink
+          href="/goniometer"
+          src="/images/landing-photo-goniometer.png?v=1"
+          kicker="After check-in"
+          title="Photo Goniometer"
+          text="Record a side-view clip so the coach can save today’s peak."
+        />
+      </div>
+      <p className="mt-4 text-center">
+        <Link href="/briefing" className="text-sm font-semibold text-[#1b3348]">
+          Back to briefing →
+        </Link>
+      </p>
+    </DashShell>
   );
 }

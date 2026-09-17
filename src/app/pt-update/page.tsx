@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Header } from "@/components/Header";
-import { StatTile } from "@/components/ui/StatTile";
+import { DashCard, DashIntro, DashShell, DashStat } from "@/components/clinic/DashKit";
 import { useAuth } from "@/components/AuthProvider";
 import { isCareTeam } from "@/lib/users";
 import { calculateStreak } from "@/lib/streak";
+import { loadMeasurements } from "@/lib/goniometer";
+import { progressSnapshot } from "@/lib/recovery-plan";
 
 export default function PTUpdatePage() {
   const { user, getPatientsForDoctor, setPatientPrescription } = useAuth();
@@ -20,12 +21,14 @@ export default function PTUpdatePage() {
   const [sent, setSent] = useState(false);
 
   const patients = getPatientsForDoctor();
-  const patient = patients.find((p) => p.email === selectedEmail);
+  const patient = patients.find((row) => row.email === selectedEmail);
+  const clips = patient ? loadMeasurements(patient.email) : [];
+  const progress = patient ? progressSnapshot(clips, patient.targetRom || 100) : null;
 
   if (!isCareTeam(user?.role)) {
     return (
-      <div className="flex min-h-full items-center justify-center rm-glow-patient">
-        <Link href="/" className="text-brand-light">
+      <div className="flex min-h-full items-center justify-center">
+        <Link href="/" className="font-semibold text-[#1b3348]">
           Go home
         </Link>
       </div>
@@ -47,76 +50,75 @@ export default function PTUpdatePage() {
   }
 
   return (
-    <div className="min-h-full rm-glow-patient pb-24 text-foreground">
-      <Header linkHome variant="caregiver" />
-      <main className="mx-auto max-w-2xl px-6 pb-8">
-        <p className="text-sm font-bold uppercase tracking-widest text-teal">PT Portal</p>
-        <h1 className="rm-title mt-1 text-3xl text-foreground">Update Exercise Plan</h1>
-        <p className="mt-1 text-body">Push a new prescription to your patient&apos;s briefing.</p>
+    <DashShell caregiver wide={false}>
+      <DashIntro
+        kicker="Care plan"
+        title="Update the exercise plan"
+        text="Push a new prescription. The patient sees it on the next briefing."
+      />
 
-        <select
-          value={selectedEmail}
-          onChange={(e) => setSelectedEmail(e.target.value)}
-          className="rm-card mt-6 w-full px-4 py-4 text-base"
-        >
-          <option value="">Select patient</option>
-          {patients.map((p) => (
-            <option key={p.email} value={p.email}>
-              {p.name}
-            </option>
-          ))}
-        </select>
+      <select
+        value={selectedEmail}
+        onChange={(event) => setSelectedEmail(event.target.value)}
+        className="mt-6 w-full rounded-[1.15rem] bg-white px-4 py-4 text-base shadow-[0_12px_28px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12"
+      >
+        <option value="">Select patient</option>
+        {patients.map((row) => (
+          <option key={row.email} value={row.email}>
+            {row.name}
+          </option>
+        ))}
+      </select>
 
-        {patient && (
-          <div className="mt-4 grid grid-cols-3 gap-3">
-            <StatTile value="87%" label="Compliance" accent="brand" />
-            <StatTile value={`${patient.baselineRom + 30}°`} label="ROM" accent="correct" />
-            <StatTile value={calculateStreak(patient)} label="Streak" accent="orange" />
-          </div>
-        )}
-
-        <div className="rm-card-elevated mt-6 space-y-4 p-6">
-          <input
-            value={exerciseName}
-            onChange={(e) => setExerciseName(e.target.value)}
-            className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-4 text-base"
-            placeholder="Exercise name"
-          />
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {[
-              { label: "Sets", value: sets, set: setSets },
-              { label: "Reps", value: reps, set: setReps },
-              { label: "Hold (s)", value: hold, set: setHold },
-              { label: "Angle°", value: angle, set: setAngle },
-            ].map((field) => (
-              <div key={field.label}>
-                <label className="rm-label mb-1 block">{field.label}</label>
-                <input
-                  type="number"
-                  value={field.value}
-                  onChange={(e) => field.set(Number(e.target.value))}
-                  className="w-full rounded-xl border border-[var(--border)] bg-background px-3 py-3 text-center text-lg font-bold"
-                />
-              </div>
-            ))}
-          </div>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-4 text-base"
-            placeholder="Notes for patient"
-            rows={3}
-          />
-          <button type="button" onClick={pushUpdate} className="rm-btn rm-btn-teal w-full">
-            Push Update to Patient
-          </button>
-          {sent && (
-            <p className="text-center text-base font-semibold text-teal">
-              Plan updated! Patient sees this on next briefing.
-            </p>
-          )}
+      {patient && progress && (
+        <div className="mt-4 grid grid-cols-3 gap-3">
+          <DashStat label="Clips" value={clips.length} />
+          <DashStat label="Latest peak" value={progress.latestPeak != null ? `${progress.latestPeak}°` : "—"} />
+          <DashStat label="Streak" value={calculateStreak(patient)} />
         </div>
-      </main>
-    </div>
+      )}
+
+      <DashCard className="mt-6 space-y-4 p-6">
+        <input
+          value={exerciseName}
+          onChange={(event) => setExerciseName(event.target.value)}
+          className="w-full rounded-xl border border-[var(--border)] bg-[#f7fbfe] px-4 py-4 text-base"
+          placeholder="Exercise name"
+        />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            { label: "Sets", value: sets, set: setSets },
+            { label: "Reps", value: reps, set: setReps },
+            { label: "Hold (s)", value: hold, set: setHold },
+            { label: "Angle°", value: angle, set: setAngle },
+          ].map((field) => (
+            <div key={field.label}>
+              <label className="mb-1 block text-sm font-semibold text-[#2f4a60]">{field.label}</label>
+              <input
+                type="number"
+                value={field.value}
+                onChange={(event) => field.set(Number(event.target.value))}
+                className="w-full rounded-xl border border-[var(--border)] bg-[#f7fbfe] px-3 py-3 text-center text-lg font-bold"
+              />
+            </div>
+          ))}
+        </div>
+        <textarea
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
+          className="w-full rounded-xl border border-[var(--border)] bg-[#f7fbfe] px-4 py-4 text-base"
+          placeholder="Notes for patient"
+          rows={3}
+        />
+        <button type="button" onClick={pushUpdate} className="rm-btn rm-btn-brand w-full rounded-full">
+          Push update to patient
+        </button>
+        {sent ? (
+          <p className="text-center text-base font-semibold text-[#3a7d62]">
+            Plan updated. The patient sees this on the next briefing.
+          </p>
+        ) : null}
+      </DashCard>
+    </DashShell>
   );
 }

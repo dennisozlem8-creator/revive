@@ -2,11 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/Header";
-import { BottomNav } from "@/components/BottomNav";
-import { PageHeroImage } from "@/components/PageHeroImage";
+import {
+  DashCard,
+  DashHero,
+  DashIntro,
+  DashRing,
+  DashShell,
+  DashStat,
+} from "@/components/clinic/DashKit";
 import { FeedbackBox } from "@/components/ui/FeedbackBox";
-import { StatTile } from "@/components/ui/StatTile";
 import { ExerciseProgram } from "@/components/ExerciseProgram";
 import { SessionReport } from "@/components/SessionReport";
 import type { SessionSummary } from "@/lib/session-results";
@@ -49,12 +53,7 @@ export default function SessionPage() {
   const areaId = user ? areaIdForInjury(user.injuryType) : "wrist";
   const exercises = useMemo(() => {
     if (!user || !summary) return [];
-    return getSessionRecommendations(
-      areaId,
-      user,
-      summary.angle,
-      getPreviousExerciseIds(areaId)
-    );
+    return getSessionRecommendations(areaId, user, summary.angle, getPreviousExerciseIds(areaId));
   }, [user, areaId, summary, getPreviousExerciseIds]);
 
   useEffect(() => {
@@ -102,14 +101,13 @@ export default function SessionPage() {
 
   if (phase === "exercises" && summary) {
     return (
-      <div className="min-h-full rm-glow-patient pb-28 text-foreground">
-        <Header linkHome />
-        <main className="mx-auto max-w-2xl px-6 pb-8">
-          <section className="rm-card mb-6 border-correct/30 p-5 text-center">
-            <p className="text-sm font-semibold text-correct">ROM test complete</p>
-            <p className="mt-1 text-3xl font-bold">{summary.angle}°</p>
-            <p className="text-sm text-muted">Follow each exercise below in order</p>
-          </section>
+      <DashShell wide={false}>
+        <DashCard className="p-6 text-center">
+          <p className="text-sm font-semibold text-[#3a7d62]">ROM test complete</p>
+          <p className="rm-serif mt-1 text-5xl font-semibold tabular-nums text-[#1b3348]">{summary.angle}°</p>
+          <p className="mt-2 text-base text-[#2f4a60]">Follow each exercise below in order.</p>
+        </DashCard>
+        <div className="mt-6">
           <ExerciseProgram
             exercises={exercises}
             onComplete={(ids) => {
@@ -117,113 +115,107 @@ export default function SessionPage() {
               setPhase("report");
             }}
           />
-        </main>
-        <BottomNav />
-      </div>
+        </div>
+      </DashShell>
     );
   }
 
   if (phase === "report" && summary) {
     return (
-      <div className="min-h-full rm-glow-patient pb-28 text-foreground">
-        <Header linkHome />
-        <main className="mx-auto max-w-2xl px-6 pb-8">
-          <SessionReport
-            summary={summary}
-            exercises={exercises}
-            completedIds={completedIds}
-            onDone={() => router.push("/briefing")}
-          />
-        </main>
-        <BottomNav />
-      </div>
+      <DashShell wide={false}>
+        <SessionReport
+          summary={summary}
+          exercises={exercises}
+          completedIds={completedIds}
+          onDone={() => router.push("/briefing")}
+        />
+      </DashShell>
     );
   }
 
   return (
-    <div className="min-h-full rm-glow-patient pb-28 text-foreground">
-      <Header linkHome />
-      <main className="mx-auto max-w-5xl px-6 pb-8">
-        <p className="rm-label">{t("liveSession", locale)}</p>
-        <h1 className="rm-title mt-1 text-2xl text-foreground">
-          {user.ptPrescription?.exerciseName ?? "ROM sensor test"}
-        </h1>
+    <DashShell>
+      <DashIntro
+        kicker={t("liveSession", locale)}
+        title={user.ptPrescription?.exerciseName ?? "ROM sensor test"}
+        text="Live angle, muscle, and effort. MyoWare shows real numbers when connected. Heart stays off unless you pair a strap."
+      />
+      <div className="mt-5">
+        <DashHero
+          src="/images/landing-mpu.png?v=6"
+          kicker="03 Coach"
+          title={recording ? "Recording now" : "Ready to record"}
+          text={recording ? "Hold the pose. End the test when the peak looks honest." : "Connect MyoWare if you have it, then start the ROM test."}
+          imgClassName="object-cover object-center"
+        />
+      </div>
 
-        <PageHeroImage
-          src="/images/session-hero.svg"
-          alt="Live ROM session"
-          className="mt-4"
-          height={140}
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <DashRing value={angle} max={target} label="Live range vs goal" display={`${angle}°`} />
+        <DashStat label={t("reps", locale)} value={`${reps}/${targetReps}`} hint="Counted this test" />
+        <DashStat
+          label={muscle.connected ? "Muscle live" : "Muscle demo"}
+          value={muscle.connected && muscle.emg != null ? muscle.emg : emg}
+          hint={muscle.connected ? "MyoWare ENV" : "Connect for real numbers"}
+        />
+        <DashStat
+          label={heart.connected ? "Heart live" : "Heart demo"}
+          value={heart.connected && heart.bpm ? heart.bpm : hr}
+          hint={heart.connected ? "BPM from strap" : "Pair a strap to go live"}
+        />
+      </div>
+
+      <div className="mt-6 space-y-4">
+        <MyoWarePanel />
+        <HeartRatePanel compact hideWired />
+        <FeedbackBox state={feedback} angle={angle} target={target} locale={locale} />
+
+        <TestLiveCharts
+          series={[
+            { label: "Live angle", values: wave, unit: "°", max: 100 },
+            {
+              label: muscle.connected ? "Muscle effort (MyoWare)" : "Muscle effort (demo)",
+              values: muscle.connected && muscle.history.some((v) => v > 0) ? muscle.history : emgWave,
+              max: 100,
+            },
+            {
+              label: heart.connected ? "Heart rate (live)" : "Heart rate (demo)",
+              values: heart.connected && heart.history.some((v) => v > 0) ? heart.history : hrWave,
+              unit: " bpm",
+              max: 160,
+            },
+          ]}
         />
 
-        <div className="mt-6 space-y-4">
-          <MyoWarePanel />
-          <HeartRatePanel compact hideWired />
+        <PeakBarChart
+          title="This test vs your plan"
+          bars={[
+            { label: "Live angle", value: angle, goal: target },
+            { label: "Baseline", value: user.baselineRom, goal: target },
+            { label: "Goal", value: target },
+          ]}
+        />
 
-          <FeedbackBox state={feedback} angle={angle} target={target} locale={locale} />
-
-          <TestLiveCharts
-            series={[
-              { label: "Live angle", values: wave, unit: "°", max: 100 },
-              {
-                label: muscle.connected ? "Muscle effort (MyoWare)" : "Muscle effort (demo)",
-                values: muscle.connected && muscle.history.some((v) => v > 0) ? muscle.history : emgWave,
-                max: 100,
-              },
-              {
-                label: heart.connected ? "Heart rate (live)" : "Heart rate (demo)",
-                values: heart.connected && heart.history.some((v) => v > 0) ? heart.history : hrWave,
-                unit: " bpm",
-                max: 160,
-              },
-            ]}
-          />
-
-          <PeakBarChart
-            title="This test vs your plan"
-            bars={[
-              { label: "Live angle", value: angle, goal: target },
-              { label: "Baseline", value: user.baselineRom, goal: target },
-              { label: "Goal", value: target },
-            ]}
-          />
-
-          <div className="grid grid-cols-3 gap-3">
-            <StatTile value={`${reps}/${targetReps}`} label={t("reps", locale)} accent="correct" />
-            <StatTile
-              value={muscle.connected && muscle.emg != null ? muscle.emg : emg}
-              label={muscle.connected ? "EMG live" : "EMG demo"}
-              accent="purple"
-            />
-            <StatTile
-              value={heart.connected && heart.bpm ? heart.bpm : hr}
-              label={heart.connected ? "BPM live" : "BPM demo"}
-              accent="orange"
-            />
+        <DashCard className="px-5 py-4">
+          <div className="mb-2 flex justify-between text-sm">
+            <span className="font-semibold text-[#2f4a60]">ROM progress</span>
+            <span className="font-semibold tabular-nums text-[#1b3348]">{romPct}%</span>
           </div>
-
-          <div className="rm-card px-4 py-4">
-            <div className="mb-2 flex justify-between text-sm">
-              <span className="text-muted">ROM progress</span>
-              <span className="font-semibold text-brand-light">{romPct}%</span>
-            </div>
-            <div className="rm-trajectory">
-              <div className="rm-trajectory-fill" style={{ width: `${romPct}%` }} />
-            </div>
+          <div className="rm-trajectory">
+            <div className="rm-trajectory-fill" style={{ width: `${romPct}%` }} />
           </div>
+        </DashCard>
 
-          {!recording ? (
-            <button type="button" onClick={() => setRecording(true)} className="rm-btn rm-btn-brand w-full">
-              {t("startRecording", locale)}
-            </button>
-          ) : (
-            <button type="button" onClick={finishRecording} className="rm-btn rm-btn-primary w-full">
-              End ROM test & start exercises
-            </button>
-          )}
-        </div>
-      </main>
-      <BottomNav />
-    </div>
+        {!recording ? (
+          <button type="button" onClick={() => setRecording(true)} className="rm-btn rm-btn-brand w-full rounded-full">
+            {t("startRecording", locale)}
+          </button>
+        ) : (
+          <button type="button" onClick={finishRecording} className="rm-btn rm-btn-primary w-full rounded-full">
+            End ROM test and start exercises
+          </button>
+        )}
+      </div>
+    </DashShell>
   );
 }

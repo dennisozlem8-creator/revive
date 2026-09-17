@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useMemo } from "react";
-import { Header } from "@/components/Header";
+import { DashCard, DashEmpty, DashIntro, DashShell, DashStat } from "@/components/clinic/DashKit";
 import { useAuth } from "@/components/AuthProvider";
 import { GoniometerProgressChart } from "@/components/GoniometerProgressChart";
 import { ProgressInsight } from "@/components/ProgressInsight";
@@ -23,96 +23,110 @@ function PatientMovementView() {
   if (!isCareTeam(user?.role)) {
     return (
       <div className="flex min-h-full items-center justify-center p-6">
-        <Link href="/" className="text-brand-light">Go home</Link>
+        <Link href="/" className="font-semibold text-[#1b3348]">
+          Go home
+        </Link>
       </div>
     );
   }
 
   if (!patient) {
     return (
-      <div className="min-h-full rm-glow-caregiver p-6">
-        <Header linkHome variant="caregiver" />
-        <p className="mt-8 text-center text-sm text-[var(--caregiver-muted)]">Patient not found.</p>
-        <p className="mt-4 text-center">
-          <Link href="/doctor" className="text-brand-light">Back to patients</Link>
-        </p>
-      </div>
+      <DashShell caregiver>
+        <DashEmpty title="Patient not found" text="That email is not on your caseload." href="/doctor" action="Back to patients" />
+      </DashShell>
     );
   }
 
   return (
-    <div className="min-h-full rm-glow-caregiver pb-16">
-      <Header linkHome variant="caregiver" />
-      <main className="mx-auto max-w-3xl px-6 pb-10">
-        <p className="text-xs font-bold uppercase tracking-widest text-teal">Movement review</p>
-        <h1 className="mt-1 text-3xl font-bold text-[var(--caregiver-text)]">{patient.name}</h1>
-        <p className="mt-1 text-sm text-[var(--caregiver-muted)]">{patient.email}</p>
-        <p className={`mt-3 inline-block rounded-full px-3 py-1 text-xs font-bold ${
-          watch.level === "on-track" ? "bg-correct/15 text-correct" : "bg-almost/15 text-almost"
-        }`}>
-          {watch.label}
-        </p>
-        <p className="mt-3 text-sm text-body">{watch.detail}</p>
+    <DashShell caregiver wide>
+      <DashIntro
+        kicker="Movement review"
+        title={patient.name}
+        text={`${patient.email}. ${watch.detail}`}
+      />
+      <p
+        className={`mt-4 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+          watch.level === "on-track" ? "bg-[#e7f1ea] text-[#2a7a58]" : "bg-[#f4efe4] text-[#7a6548]"
+        }`}
+      >
+        {watch.label}
+      </p>
 
-        <div className="mt-6 space-y-4">
-          <ProgressInsight rows={rows} goal={goal} />
-          <section className="rm-card p-5">
-            <h2 className="font-semibold">Peak angle over time</h2>
-            <div className="mt-4">
-              <GoniometerProgressChart measurements={rows} goal={goal} />
-            </div>
-          </section>
-          <section className="rm-card p-5">
-            <h2 className="font-semibold">Saved clips</h2>
-            {rows.length === 0 ? (
-              <p className="mt-2 text-sm text-muted">No Photo Goniometer clips yet.</p>
-            ) : (
-              <ul className="mt-3 space-y-2">
-                {rows.slice().reverse().map((row) => (
-                  <li key={row.id} className="rounded-xl border border-[var(--border)] bg-background px-4 py-3 text-sm">
-                    <p className="font-medium">
-                      {row.angle}° · {row.exercise}
-                      {row.formScore != null ? ` · form ${row.formScore}` : ""}
-                      {row.source === "video"
-                        ? " · video"
-                        : row.source === "motion"
-                          ? " · motion"
-                          : row.source === "muscle"
-                            ? " · muscle"
-                            : " · photo"}
-                    </p>
-                    <p className="text-muted">
-                      {new Date(row.date).toLocaleString()}
-                      {row.minAngle != null ? ` · min ${row.minAngle}°` : ""}
-                      {row.range != null ? ` · range ${row.range}°` : ""}
-                    </p>
-                    {row.nextAction && <p className="mt-1 text-body">{row.nextAction}</p>}
-                    {row.flags && row.flags.length > 0 && (
-                      <p className="mt-1 text-xs text-almost">Flags: {row.flags.join(", ")}</p>
-                    )}
-                  </li>
-                ))}
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <DashStat label="Clips" value={rows.length} />
+        <DashStat label="Latest peak" value={rows.length ? `${rows[rows.length - 1].angle}°` : "—"} />
+        <DashStat label="Goal" value={`${goal}°`} />
+      </div>
+
+      <div className="mt-6 space-y-4">
+        <ProgressInsight rows={rows} goal={goal} />
+        <DashCard className="p-5 sm:p-6">
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Peak angle over time</h2>
+          <div className="mt-4">
+            <GoniometerProgressChart measurements={rows} goal={goal} />
+          </div>
+        </DashCard>
+        <DashCard>
+          {rows.length === 0 ? (
+            <DashEmpty
+              title="No clips yet"
+              text="When this patient saves a Photo Goniometer, motion, or muscle reading, it shows here."
+              href="/pt-update"
+              action="Send a plan"
+            />
+          ) : (
+            <div className="p-5 sm:p-6">
+              <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Saved clips</h2>
+              <ul className="mt-4 space-y-2">
+                {rows
+                  .slice()
+                  .reverse()
+                  .map((row) => (
+                    <li key={row.id} className="rounded-[1.1rem] bg-[#f7fbfe] px-4 py-3">
+                      <p className="font-semibold text-[#1b3348]">
+                        {row.angle}° · {row.exercise}
+                        {row.formScore != null ? ` · form ${row.formScore}` : ""}
+                        {row.source === "video"
+                          ? " · video"
+                          : row.source === "motion"
+                            ? " · motion"
+                            : row.source === "muscle"
+                              ? " · muscle"
+                              : " · photo"}
+                      </p>
+                      <p className="text-sm text-[#2f4a60]">
+                        {new Date(row.date).toLocaleString()}
+                        {row.minAngle != null ? ` · min ${row.minAngle}°` : ""}
+                        {row.range != null ? ` · range ${row.range}°` : ""}
+                      </p>
+                      {row.nextAction ? <p className="mt-1 text-sm text-[#1b3348]">{row.nextAction}</p> : null}
+                      {row.flags && row.flags.length > 0 ? (
+                        <p className="mt-1 text-sm text-[#7a6548]">Flags: {row.flags.join(", ")}</p>
+                      ) : null}
+                    </li>
+                  ))}
               </ul>
-            )}
-          </section>
-        </div>
+            </div>
+          )}
+        </DashCard>
+      </div>
 
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <Link href="/pt-update" className="rm-btn rm-btn-teal flex-1 text-center">
-            Push exercise update
-          </Link>
-          <Link href="/doctor" className="rm-btn rm-btn-ghost flex-1 text-center">
-            All patients
-          </Link>
-        </div>
-      </main>
-    </div>
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <Link href="/pt-update" className="rm-btn rm-btn-brand flex-1 rounded-full text-center">
+          Push exercise update
+        </Link>
+        <Link href="/doctor" className="rm-btn rm-btn-ghost flex-1 rounded-full text-center">
+          All patients
+        </Link>
+      </div>
+    </DashShell>
   );
 }
 
 export default function DoctorPatientPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-full items-center justify-center text-muted">Loading patient…</div>}>
+    <Suspense fallback={<div className="flex min-h-full items-center justify-center text-[#2f4a60]">Loading patient…</div>}>
       <PatientMovementView />
     </Suspense>
   );

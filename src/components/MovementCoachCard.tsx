@@ -25,9 +25,9 @@ export function MovementCoachCard({
   const actions = nextSessionActions(report, history, selectedExercise, goal);
 
   return (
-    <div className="mt-6 rounded-2xl border border-[var(--border)] bg-background px-4 py-4 sm:px-5">
-      <p className="rm-label">Movement coach</p>
-      <h3 className="mt-1 text-lg font-bold">What the AI saw</h3>
+    <div className="mt-6 rounded-[1.35rem] bg-[#f7fbfe] px-4 py-4 ring-1 ring-[#4f90c6]/12 sm:px-5">
+      <p className="text-sm font-semibold text-[#2f4a60]">Movement coach</p>
+      <h3 className="rm-serif mt-1 text-xl font-semibold text-[#1b3348]">What the AI saw</h3>
       <p className="mt-2 text-sm text-body">{report.headline}</p>
       {report.progressNote && <p className="mt-2 text-sm text-body">{report.progressNote}</p>}
       <p className="mt-3 text-sm font-semibold text-foreground">Form score {report.formScore} / 100</p>

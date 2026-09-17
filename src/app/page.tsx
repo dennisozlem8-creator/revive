@@ -1,55 +1,34 @@
 "use client";
 
-import type { ReactNode } from "react";
 import Link from "next/link";
-import { Header } from "@/components/Header";
-import { BottomNav } from "@/components/BottomNav";
+import {
+  DashCard,
+  DashIntro,
+  DashLoop,
+  DashPhotoLink,
+  DashShell,
+  DashStat,
+} from "@/components/clinic/DashKit";
 import { bodyAreas } from "@/lib/body-areas";
 import { useAuth } from "@/components/AuthProvider";
 import { t } from "@/lib/i18n";
 import { AuthLanding } from "@/components/AuthLanding";
 import { isCareTeam } from "@/lib/users";
-import { MpuAnglePhoto, MyoWarePhoto, PhotoFrame } from "@/components/LandingMedia";
-
-const areaIcons: Record<string, ReactNode> = {
-  ankle: (
-    <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8" stroke="currentColor" strokeWidth="1.5">
-      <path d="M8 20V12l2-4h4l2 4v8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-  knee: (
-    <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8" stroke="currentColor" strokeWidth="1.5">
-      <path d="M6 18c2-6 4-9 6-9s4 3 6 9" strokeLinecap="round" />
-      <circle cx="12" cy="9" r="2.5" />
-    </svg>
-  ),
-  "lower-back": (
-    <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8" stroke="currentColor" strokeWidth="1.5">
-      <path d="M12 3v18M9 6h6M8 12h8M9 18h6" strokeLinecap="round" />
-    </svg>
-  ),
-  wrist: (
-    <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8" stroke="currentColor" strokeWidth="1.5">
-      <path d="M8 14V8a2 2 0 0 1 4 0v6" strokeLinecap="round" />
-    </svg>
-  ),
-  other: (
-    <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8" stroke="currentColor" strokeWidth="1.5">
-      <circle cx="12" cy="8" r="3" />
-      <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" strokeLinecap="round" />
-    </svg>
-  ),
-};
+import { PhotoFrame } from "@/components/LandingMedia";
+import { loadMeasurements } from "@/lib/goniometer";
+import { doctorWatchLevel, progressSnapshot } from "@/lib/recovery-plan";
+import { calculateStreak } from "@/lib/streak";
 
 export default function Home() {
-  const { user, loading } = useAuth();
+  const { user, loading, getPatientsForDoctor } = useAuth();
   const locale = user?.language ?? "en";
   const isPatient = user?.role === "patient";
+  const careTeam = isCareTeam(user?.role);
 
   if (loading) {
     return (
-      <div className="flex min-h-full items-center justify-center bg-background text-muted">
-        Loading...
+      <div className="flex min-h-full items-center justify-center bg-background text-[#2f4a60]">
+        Loading your home…
       </div>
     );
   }
@@ -59,124 +38,161 @@ export default function Home() {
   }
 
   const firstName = user.name.split(" ")[0];
+  const clips = loadMeasurements(user.email);
+  const progress = progressSnapshot(clips, user.targetRom || 100);
+  const streak = calculateStreak(user);
+  const patients = careTeam ? getPatientsForDoctor() : [];
+  const caseloadClips = patients.reduce((sum, patient) => sum + loadMeasurements(patient.email).length, 0);
+  const attention = patients.filter((patient) => doctorWatchLevel(loadMeasurements(patient.email)).level !== "on-track").length;
 
   return (
-    <div className="relative min-h-full overflow-hidden rm-glow-patient pb-28 text-foreground">
-      <Header linkHome />
-
-      <main className="relative z-10 mx-auto flex w-full max-w-5xl flex-col px-4 pb-6 sm:px-6">
-        <section className="overflow-hidden rounded-[1.25rem] border border-[var(--border)] bg-white shadow-[0_12px_28px_rgba(27,51,72,0.07)]">
-          <div className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(14rem,0.85fr)]">
-            <PhotoFrame
-              src={isCareTeam(user.role) ? "/images/landing-exercise.webp" : "/images/landing-older-phone.webp?v=1"}
-              alt=""
-              imgClassName="object-[center_18%]"
-              className="h-32 sm:h-40 lg:order-2 lg:h-full lg:min-h-[12rem]"
+    <DashShell caregiver={careTeam}>
+      <section className="overflow-hidden rounded-[1.5rem] bg-white shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
+        <div className="grid lg:grid-cols-[minmax(0,1.2fr)_minmax(16rem,0.8fr)]">
+          <PhotoFrame
+            src={careTeam ? "/images/landing-exercise.webp" : "/images/landing-older-phone.webp?v=1"}
+            alt=""
+            imgClassName="object-[center_18%]"
+            className="h-40 sm:h-48 lg:order-2 lg:h-full lg:min-h-[16rem]"
+          />
+          <div className="p-5 sm:p-7">
+            <DashIntro
+              kicker="Physical therapy at home"
+              title={isPatient ? `Welcome back, ${firstName}.` : t("moveBetter", locale)}
+              text={
+                isPatient
+                  ? "Start with a photo or sensor, then do today’s session. Your clinician sees the same numbers."
+                  : careTeam
+                    ? "Open a linked patient, review saved clips, and send the next plan."
+                    : "Choose a body area for screening, movement tests, and today’s exercises."
+              }
             />
-            <div className="p-4 sm:p-5">
-              <p className="rm-label text-brand-light">Physical Therapy Assistance</p>
-              <h1 className="rm-serif mt-1 text-2xl font-semibold leading-tight text-foreground sm:text-3xl">
-                {isPatient ? `Welcome back, ${firstName}.` : t("moveBetter", locale)}
-              </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-body sm:text-base">
-                {isPatient
-                  ? "Start today's session from your briefing, or open a body area for a full assessment."
-                  : isCareTeam(user.role)
-                    ? "Open a linked patient from the care dashboard, or screen a body area."
-                    : "Choose a body area for screening questions, movement tests, and exercises made for you."}
-              </p>
-              <div className="mt-3 flex flex-col gap-2 sm:max-w-md">
-                {isPatient && (
-                  <Link href="/briefing" className="rm-btn rm-btn-brand inline-flex h-11 min-h-0 w-full rounded-full">
-                    {t("goToBriefing", locale)} →
-                  </Link>
-                )}
-                {isCareTeam(user.role) && (
-                  <Link href="/doctor" className="rm-btn rm-btn-brand inline-flex h-11 min-h-0 w-full rounded-full">
-                    Open care dashboard →
-                  </Link>
-                )}
-              </div>
+            <DashLoop />
+            <div className="mt-5 flex flex-col gap-2 sm:max-w-md">
+              {isPatient && (
+                <Link href="/briefing" className="rm-btn rm-btn-brand inline-flex h-12 min-h-0 w-full rounded-full">
+                  Open today’s briefing
+                </Link>
+              )}
+              {careTeam && (
+                <Link href="/doctor" className="rm-btn rm-btn-brand inline-flex h-12 min-h-0 w-full rounded-full">
+                  Open care dashboard
+                </Link>
+              )}
             </div>
           </div>
+        </div>
+      </section>
+
+      {isPatient && (
+        <section className="mt-6 grid gap-3 sm:grid-cols-3">
+          <DashStat
+            label="Latest peak"
+            value={progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
+            hint={progress.headline}
+          />
+          <DashStat label="Streak" value={streak} hint={streak > 0 ? "Days in a row" : "Do a session to start"} />
+          <DashStat label="Saved clips" value={clips.length} hint="Photo, motion, or muscle" />
         </section>
+      )}
 
-        {isPatient && (
-          <section className="mt-5">
-            <p className="rm-label text-brand-light">Today&apos;s tools</p>
-            <h2 className="rm-serif mt-0.5 text-xl font-semibold sm:text-2xl">Continue recovery</h2>
-            <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-              <Link
-                href="/goniometer"
-                className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md"
-              >
-                <PhotoFrame src="/images/landing-hero-photo.webp?v=3" alt="" className="h-24" />
-                <div className="p-3">
-                  <p className="rm-label text-brand-light">Measure</p>
-                  <h3 className="mt-1 text-base font-semibold">Photo Goniometer</h3>
-                  <p className="mt-0.5 text-sm leading-5 text-body">Record a clip and get the next sets.</p>
-                </div>
-              </Link>
-              <Link href="/muscle" className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md">
-                <MyoWarePhoto alt="" className="h-24" />
-                <div className="p-3">
-                  <p className="rm-label text-brand-light">Sensor</p>
-                  <h3 className="mt-1 text-base font-semibold">MyoWare 2.0</h3>
-                  <p className="mt-0.5 text-sm leading-5 text-body">Connect the muscle sensor over Bluetooth or USB.</p>
-                </div>
-              </Link>
-              <Link href="/session" className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md">
-                <MpuAnglePhoto alt="" className="h-24" />
-                <div className="p-3">
-                  <p className="rm-label text-brand-light">Session</p>
-                  <h3 className="mt-1 text-base font-semibold">Live recovery</h3>
-                  <p className="mt-0.5 text-sm leading-5 text-body">Run today&apos;s ROM test and exercises.</p>
-                </div>
-              </Link>
-            </div>
-          </section>
-        )}
+      {careTeam && (
+        <section className="mt-6 grid gap-3 sm:grid-cols-3">
+          <DashStat label="Patients" value={patients.length} hint="Linked to this account" />
+          <DashStat label="Need a look" value={attention} hint="Watch or attention flags" />
+          <DashStat label="Saved clips" value={caseloadClips} hint="Across the caseload" />
+        </section>
+      )}
 
+      {isPatient && (
         <section className="mt-6">
-          <p className="rm-label text-brand-light">Body areas</p>
-          <h2 className="rm-serif mt-0.5 text-xl font-semibold sm:text-2xl">Start an assessment</h2>
-          <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-            {bodyAreas.map((area) => (
-              <Link
-                key={area.id}
-                href={`/${area.id}`}
-                className="rm-card group flex flex-col p-4 transition hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md"
-              >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-soft text-brand transition group-hover:bg-brand group-hover:text-white">
-                  {areaIcons[area.id]}
-                </div>
-                <h3 className="mt-3 text-lg font-semibold text-foreground">{area.label}</h3>
-                <p className="mt-1 flex-1 text-sm leading-5 text-body">{area.description}</p>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-light">
-                  Start assessment →
-                </span>
-              </Link>
-            ))}
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Continue recovery</h2>
+          <p className="mt-1 text-base text-[#2f4a60]">Measure, then coach. Pick one way to start.</p>
+          <div className="mt-4 grid gap-3 lg:grid-cols-3">
+            <DashPhotoLink
+              href="/goniometer"
+              src="/images/landing-photo-goniometer.png?v=1"
+              kicker="01 Measure"
+              title="Photo Goniometer"
+              text="Side-view photo or clip. The angle is saved."
+            />
+            <DashPhotoLink
+              href="/muscle"
+              src="/images/landing-myoware.png?v=5"
+              kicker="02 Muscle"
+              title="MyoWare 2.0"
+              text="Connect Bluetooth or USB, then flex."
+              imgClassName="object-contain bg-white p-3"
+            />
+            <DashPhotoLink
+              href="/session"
+              src="/images/landing-mpu.png?v=6"
+              kicker="03 Coach"
+              title="Live session"
+              text="Run today’s ROM test and exercises."
+            />
           </div>
         </section>
+      )}
 
-        <section className="rm-glow-kids relative mt-5 min-h-[14rem] overflow-hidden rounded-[1.5rem] sm:min-h-[16rem]">
-          <PhotoFrame src="/images/landing-kids-quest.webp?v=5" alt="Quest bots stretching on a green meadow." className="absolute inset-0 h-full w-full" />
-          <div className="absolute inset-x-0 bottom-0 kids-caption flex flex-col gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
-            <div>
-              <p className="text-sm font-semibold text-[#5b6685]">Stretch with the bots</p>
-              <h2 className="kids-wordmark mt-1 text-3xl sm:text-4xl">Kids Quest</h2>
-              <p className="mt-1 max-w-md text-base leading-6 text-[#5b6685]">
-                The bots ask. You stretch.
-              </p>
-            </div>
-            <Link href="/kids" className="kids-cta h-11 min-h-0 rounded-full px-5 text-base">
-              {t("kidsQuest", locale)}
-            </Link>
+      {careTeam && patients.length > 0 && (
+        <DashCard className="mt-6">
+          <div className="divide-y divide-[#e8f3fb]">
+            {patients.slice(0, 4).map((patient) => {
+              const rows = loadMeasurements(patient.email);
+              const watch = doctorWatchLevel(rows);
+              const snap = progressSnapshot(rows, patient.targetRom || 100);
+              return (
+                <Link
+                  key={patient.email}
+                  href={`/doctor/patient?email=${encodeURIComponent(patient.email)}`}
+                  className="flex items-center justify-between gap-4 p-5 transition hover:bg-[#f7fbfe] sm:p-6"
+                >
+                  <div>
+                    <p className="rm-serif text-xl font-semibold text-[#1b3348]">{patient.name}</p>
+                    <p className="mt-1 text-sm text-[#2f4a60]">
+                      {watch.label} · {snap.latestPeak != null ? `${snap.latestPeak}°` : "No clips"} · streak{" "}
+                      {calculateStreak(patient)}
+                    </p>
+                  </div>
+                  <span className="text-sm font-semibold text-[#1b3348]">Review →</span>
+                </Link>
+              );
+            })}
           </div>
-        </section>
-      </main>
-      {isPatient && <BottomNav />}
-    </div>
+        </DashCard>
+      )}
+
+      <section className="mt-8">
+        <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Start an assessment</h2>
+        <p className="mt-1 text-base text-[#2f4a60]">Pick the joint your clinician asked you to work on.</p>
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {bodyAreas.map((area) => (
+            <DashPhotoLink
+              key={area.id}
+              href={`/${area.id}`}
+              src={area.cover}
+              kicker="Body area"
+              title={area.label}
+              text={area.description}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="rm-glow-kids relative mt-6 min-h-[14rem] overflow-hidden rounded-[1.5rem] sm:min-h-[16rem]">
+        <PhotoFrame src="/images/landing-kids-quest.webp?v=5" alt="Quest bots stretching on a green meadow." className="absolute inset-0 h-full w-full" />
+        <div className="absolute inset-x-0 bottom-0 kids-caption flex flex-col gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
+          <div>
+            <p className="text-sm font-semibold text-[#5b6685]">Stretch with the bots</p>
+            <h2 className="kids-wordmark mt-1 text-3xl sm:text-4xl">Kids Quest</h2>
+            <p className="mt-1 max-w-md text-base leading-6 text-[#5b6685]">The bots ask. You stretch.</p>
+          </div>
+          <Link href="/kids" className="kids-cta h-11 min-h-0 rounded-full px-5 text-base">
+            {t("kidsQuest", locale)}
+          </Link>
+        </div>
+      </section>
+    </DashShell>
   );
 }

@@ -149,14 +149,14 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
     <div className="space-y-6">
       <div>
         <div className="mb-2 flex justify-between text-sm">
-          <span className="rm-label">Follow your exercises</span>
-          <span className="font-semibold text-brand-light">
+          <span className="font-semibold text-[#2f4a60]">Follow your exercises</span>
+          <span className="font-semibold tabular-nums text-[#1b3348]">
             {index + 1} of {exercises.length}
           </span>
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-surface-elevated">
+        <div className="h-2 overflow-hidden rounded-full bg-[#e8f3fb]">
           <div
-            className="h-full rounded-full bg-correct transition-all"
+            className="h-full rounded-full bg-[#3a7d62] transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -175,16 +175,16 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
         </ul>
       )}
 
-      <section className="rm-card-elevated overflow-hidden">
-        <div className="flex h-48 items-center justify-center bg-surface-elevated">
+      <section className="overflow-hidden rounded-[1.5rem] bg-white shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
+        <div className="flex h-48 items-center justify-center bg-[#f7fbfe]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={media.image} alt={current.name} className="h-40 object-contain p-4" />
         </div>
         <div className="p-6">
-          <p className="rm-label text-brand-light">Exercise {index + 1}</p>
-          <h2 className="mt-1 text-2xl font-bold">{current.name}</h2>
-          <p className="mt-3 text-body leading-7">{current.description}</p>
-          <p className="mt-4 rounded-xl bg-brand/10 px-4 py-3 text-lg font-bold text-brand-light">
+          <p className="text-sm font-semibold text-[#2f4a60]">Exercise {index + 1}</p>
+          <h2 className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">{current.name}</h2>
+          <p className="mt-3 text-base leading-7 text-[#2f4a60]">{current.description}</p>
+          <p className="mt-4 rounded-[1.1rem] bg-[#e8f3fb] px-4 py-3 text-lg font-bold text-[#1b3348]">
             {current.sets}
           </p>
 

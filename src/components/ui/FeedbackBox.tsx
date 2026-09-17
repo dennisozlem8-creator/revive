@@ -20,7 +20,7 @@ const labelKeys = {
 export function FeedbackBox({ state, angle, target, locale = "en" }: FeedbackBoxProps) {
   return (
     <div className={feedbackClass(state)}>
-      <p className="relative z-10 text-sm font-bold uppercase tracking-widest">
+      <p className="relative z-10 text-sm font-semibold">
         {t(labelKeys[state], locale)}
       </p>
       <p className="relative z-10 rm-display mt-3">{angle}°</p>

@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Header } from "@/components/Header";
-import { BottomNav } from "@/components/BottomNav";
 import { TabRow } from "@/components/ui/TabRow";
 import { useAuth } from "@/components/AuthProvider";
-import { calculateStreak } from "@/lib/streak";
+import { calculateStreak, lastDaysActive } from "@/lib/streak";
 import { t } from "@/lib/i18n";
 import { loadMeasurements } from "@/lib/goniometer";
 import { GoniometerProgressChart } from "@/components/GoniometerProgressChart";
 import { ProgressInsight } from "@/components/ProgressInsight";
+import { DashBars, DashCard, DashHeat, DashIntro, DashPainMeter, DashShell, DashStat } from "@/components/clinic/DashKit";
 
 type ChartTab = "rom" | "reps" | "pain" | "photo";
 
@@ -21,154 +20,106 @@ export default function ChartsPage() {
   if (!user) return null;
 
   const locale = user.language ?? "en";
-  const sessions = user.exerciseHistory;
-  const romValues = sessions.map((_, i) => user.baselineRom + i * 4);
-  const weekDays = ["M", "T", "W", "T", "F", "S", "S"];
+  const clips = loadMeasurements(user.email);
+  const ordered = clips.slice().sort((a, b) => a.date.localeCompare(b.date));
+  const week = lastDaysActive(user, 7);
+  const month = lastDaysActive(user, 28);
+  const streak = calculateStreak(user);
 
   return (
-    <div className="min-h-full rm-glow-patient pb-28 text-foreground">
-      <Header linkHome />
-      <main className="mx-auto max-w-5xl px-6 pb-8">
-        <h1 className="rm-title text-3xl text-foreground">{t("progressCharts", locale)}</h1>
-        <p className="mt-1 text-body">
-          {sessions.length} sessions · {calculateStreak(user)} day streak
-        </p>
+    <DashShell>
+      <DashIntro
+        kicker="Report"
+        title={t("progressCharts", locale)}
+        text={`${ordered.length} saved readings · ${streak} day streak. Charts use what you recorded, not a made-up trend.`}
+      />
 
-        <div className="mt-6">
-          <TabRow
-            tabs={[
-              { id: "rom" as const, label: t("romTab", locale) },
-              { id: "reps" as const, label: t("repsTab", locale) },
-              { id: "pain" as const, label: t("painTab", locale) },
-              { id: "photo" as const, label: t("photoTab", locale) },
-            ]}
-            active={tab}
-            onChange={setTab}
-          />
-        </div>
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <DashStat label="Saved readings" value={ordered.length} hint="Photo, motion, or muscle" />
+        <DashStat label="This week" value={week.filter((d) => d.active).length} hint="Active days" />
+        <DashStat label="Streak" value={streak} hint="Days in a row" />
+      </div>
 
-        {tab === "rom" && (
-          <section className="rm-card mt-6 p-6">
-            <h2 className="font-semibold">ROM Recovery</h2>
-            <div className="relative mt-6 flex h-48 items-end gap-2">
-              {romValues.length === 0 ? (
-                <p className="rm-body">Complete a session to see your ROM chart.</p>
-              ) : (
-                <>
-                  <div
-                    className="pointer-events-none absolute inset-x-0 border-t border-dashed border-correct/60"
-                    style={{ bottom: `${(user.targetRom / (user.targetRom + 10)) * 100}%` }}
-                  />
-                  <span className="pointer-events-none absolute right-0 text-xs text-correct" style={{ bottom: `${(user.targetRom / (user.targetRom + 10)) * 100 + 2}%` }}>
-                    Goal {user.targetRom}°
-                  </span>
-                  {romValues.map((value, i) => (
-                    <div key={i} className="flex flex-1 flex-col items-center gap-1">
-                      <div
-                        className="w-full rounded-t bg-gradient-to-t from-brand to-brand-light"
-                        style={{ height: `${Math.min(100, (value / user.targetRom) * 100)}%` }}
-                      />
-                      <span className="text-xs text-muted">S{i + 1}</span>
-                    </div>
-                  ))}
-                </>
+      <div className="mt-6">
+        <TabRow
+          tabs={[
+            { id: "rom" as const, label: t("romTab", locale) },
+            { id: "reps" as const, label: t("repsTab", locale) },
+            { id: "pain" as const, label: t("painTab", locale) },
+            { id: "photo" as const, label: t("photoTab", locale) },
+          ]}
+          active={tab}
+          onChange={setTab}
+        />
+      </div>
+
+      {tab === "rom" && (
+        <DashCard className="mt-6 p-5 sm:p-6">
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Range of motion</h2>
+          <p className="mt-1 text-sm text-[#2f4a60]">Each bar is a saved peak angle.</p>
+          <div className="mt-5">
+            <DashBars
+              values={ordered.map((row) => row.angle)}
+              labels={ordered.map((row) =>
+                new Date(row.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })
               )}
-            </div>
-          </section>
-        )}
-
-        {tab === "reps" && (
-          <>
-            <section className="rm-card mt-6 p-6">
-              <h2 className="font-semibold">Weekly Reps</h2>
-              <div className="mt-6 flex h-40 items-end gap-3">
-                {weekDays.map((day, i) => {
-                  const met = i < user.activityDates.length;
-                  return (
-                    <div key={day + i} className="flex flex-1 flex-col items-center gap-2">
-                      <div
-                        className="w-full rounded-t"
-                        style={{
-                          height: met ? `${60 + i * 5}%` : "12%",
-                          backgroundColor: met ? "var(--correct)" : "var(--surface-elevated)",
-                        }}
-                      />
-                      <span className="text-xs text-muted">{day}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-            <section className="rm-card mt-6 p-6">
-              <h2 className="font-semibold">4-Week Compliance</h2>
-              <div className="mt-4 grid grid-cols-7 gap-1.5">
-                {Array.from({ length: 28 }, (_, i) => {
-                  const active = i < user.activityDates.length;
-                  const partial = i === user.activityDates.length;
-                  return (
-                    <div
-                      key={i}
-                      className="aspect-square rounded-md"
-                      style={{
-                        backgroundColor: active
-                          ? "rgba(16,185,129,0.85)"
-                          : partial
-                            ? "rgba(245,158,11,0.6)"
-                            : "#1a2f4a",
-                      }}
-                    />
-                  );
-                })}
-              </div>
-            </section>
-          </>
-        )}
-
-        {tab === "pain" && (
-          <section className="rm-card mt-6 p-6">
-            <h2 className="font-semibold">Pain Trend</h2>
-            <p className="mt-2 rm-body">
-              Today: <strong className="text-foreground">{user.painToday ?? "—"}/10</strong>
-            </p>
-            <div className="mt-6 flex h-32 items-end gap-2">
-              {Array.from({ length: 14 }, (_, i) => {
-                const pain = user.painToday ?? 3;
-                const h = Math.max(10, (pain / 10) * 100 - i * 3);
-                return (
-                  <div
-                    key={i}
-                    className="flex-1 rounded-t bg-gradient-to-t from-alert/80 to-almost/60"
-                    style={{ height: `${Math.max(8, h)}%` }}
-                  />
-                );
-              })}
-            </div>
-            <p className="mt-3 text-sm text-muted">Trend improves as ROM increases</p>
-          </section>
-        )}
-
-        {tab === "photo" && (
-          <div className="mt-6 space-y-4">
-            <ProgressInsight
-              rows={loadMeasurements(user.email)}
-              goal={user.targetRom || 100}
+              goal={user.targetRom}
             />
-            <section className="rm-card p-6">
-              <h2 className="font-semibold">Peak angle over time</h2>
-              <div className="mt-4">
-                <GoniometerProgressChart
-                  measurements={loadMeasurements(user.email)}
-                  goal={user.targetRom || 100}
-                />
-              </div>
-              <Link href="/goniometer" className="rm-btn rm-btn-brand mt-6 inline-flex">
-                Record a new clip
-              </Link>
-            </section>
           </div>
-        )}
-      </main>
-      <BottomNav />
-    </div>
+        </DashCard>
+      )}
+
+      {tab === "reps" && (
+        <div className="mt-6 grid gap-3 lg:grid-cols-2">
+          <DashCard className="p-5 sm:p-6">
+            <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">This week</h2>
+            <p className="mt-1 text-sm text-[#2f4a60]">A tall bar means you saved a session that day.</p>
+            <div className="mt-5">
+              <DashBars
+                values={week.map((day) => (day.active ? 1 : 0))}
+                labels={week.map((day) =>
+                  new Date(`${day.date}T12:00:00`).toLocaleDateString(undefined, { weekday: "narrow" })
+                )}
+              />
+            </div>
+          </DashCard>
+          <DashCard className="p-5 sm:p-6">
+            <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Last 28 days</h2>
+            <p className="mt-1 text-sm text-[#2f4a60]">Green is an active day.</p>
+            <div className="mt-5">
+              <DashHeat days={month} />
+            </div>
+          </DashCard>
+        </div>
+      )}
+
+      {tab === "pain" && (
+        <DashCard className="mt-6 p-5 sm:p-6">
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Pain today</h2>
+          <p className="mt-1 text-sm text-[#2f4a60]">Logged at check-in. A longer trend needs more check-ins.</p>
+          <div className="mt-5">
+            <DashPainMeter value={user.painToday} />
+          </div>
+          <Link href="/check-in" className="rm-btn rm-btn-brand mt-5 inline-flex h-11 min-h-0 rounded-full px-6">
+            Open check-in
+          </Link>
+        </DashCard>
+      )}
+
+      {tab === "photo" && (
+        <div className="mt-6 space-y-4">
+          <ProgressInsight rows={clips} goal={user.targetRom || 100} />
+          <DashCard className="p-5 sm:p-6">
+            <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Peak angle over time</h2>
+            <div className="mt-4">
+              <GoniometerProgressChart measurements={clips} goal={user.targetRom || 100} />
+            </div>
+            <Link href="/goniometer" className="rm-btn rm-btn-brand mt-6 inline-flex h-11 min-h-0 rounded-full px-6">
+              Record a new clip
+            </Link>
+          </DashCard>
+        </div>
+      )}
+    </DashShell>
   );
 }

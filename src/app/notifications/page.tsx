@@ -1,15 +1,15 @@
 "use client";
 
-import { Header } from "@/components/Header";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { DashCard, DashIntro, DashShell } from "@/components/clinic/DashKit";
 import { useAuth } from "@/components/AuthProvider";
 import {
   getNotificationsForUser,
   markNotificationsRead,
   requestNotificationPermission,
 } from "@/lib/notifications";
-import { useEffect, useState } from "react";
 import type { AppNotification } from "@/lib/notifications";
-import Link from "next/link";
 
 export default function NotificationsPage() {
   const { user, updateUser } = useAuth();
@@ -25,7 +25,7 @@ export default function NotificationsPage() {
   if (!user || user.role !== "patient") {
     return (
       <div className="flex min-h-full items-center justify-center bg-background p-6">
-        <Link href="/" className="text-brand-light">
+        <Link href="/" className="font-semibold text-[#1b3348]">
           Go home
         </Link>
       </div>
@@ -33,51 +33,45 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="min-h-full bg-background text-foreground">
-      <Header linkHome />
-      <main className="mx-auto max-w-2xl px-6 pb-24">
-        <h1 className="text-3xl font-semibold">Daily alerts</h1>
-        <p className="mt-2 text-muted">
-          Daily reminders to keep your recovery on track.
-        </p>
-
-        <div className="mt-6 rounded-2xl border border-[var(--border)] bg-surface p-6">
-          <label className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={user.notificationsEnabled}
-              onChange={(e) => {
-                updateUser({ notificationsEnabled: e.target.checked });
-                if (e.target.checked) requestNotificationPermission();
-              }}
-              className="accent-brand"
-            />
-            <span className="text-sm">Enable daily exercise reminders</span>
-          </label>
-          <p className="mt-2 text-xs text-muted">
-            Browser notifications when enabled in your device settings.
-          </p>
-        </div>
-
-        <div className="mt-8 space-y-3">
-          {notifications.length === 0 ? (
-            <p className="text-sm text-muted">No notifications yet.</p>
-          ) : (
-            notifications.map((n) => (
-              <article
-                key={n.id}
-                className="rounded-xl border border-[var(--border)] bg-surface p-4"
-              >
-                <p className="font-medium">{n.title}</p>
-                <p className="mt-1 text-sm text-muted">{n.message}</p>
-                <p className="mt-2 text-xs text-muted">
-                  {new Date(n.sentAt).toLocaleString()}
-                </p>
-              </article>
-            ))
-          )}
-        </div>
-      </main>
-    </div>
+    <DashShell nav={false} wide={false}>
+      <DashIntro
+        kicker="Alerts"
+        title="Daily reminders"
+        text="Turn on reminders to keep the measure-coach-report loop going."
+      />
+      <DashCard className="mt-6 p-6">
+        <label className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            checked={user.notificationsEnabled}
+            onChange={(event) => {
+              updateUser({ notificationsEnabled: event.target.checked });
+              if (event.target.checked) requestNotificationPermission();
+            }}
+            className="h-5 w-5 accent-[#4f90c6]"
+          />
+          <span className="text-base text-[#1b3348]">Enable daily exercise reminders</span>
+        </label>
+        <p className="mt-2 text-sm text-[#2f4a60]">Browser notifications when allowed in device settings.</p>
+      </DashCard>
+      <div className="mt-6 space-y-3">
+        {notifications.length === 0 ? (
+          <DashCard className="p-6">
+            <p className="rm-serif text-xl font-semibold text-[#1b3348]">No notifications yet</p>
+            <p className="mt-2 text-base leading-7 text-[#2f4a60]">
+              After a session, check-in, or clinician update, alerts land here.
+            </p>
+          </DashCard>
+        ) : (
+          notifications.map((note) => (
+            <DashCard key={note.id} className="p-5">
+              <p className="font-semibold text-[#1b3348]">{note.title}</p>
+              <p className="mt-1 text-sm text-[#2f4a60]">{note.message}</p>
+              <p className="mt-2 text-sm text-[#2f4a60]">{new Date(note.sentAt).toLocaleString()}</p>
+            </DashCard>
+          ))
+        )}
+      </div>
+    </DashShell>
   );
 }

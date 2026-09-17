@@ -34,10 +34,10 @@ export function TestLiveCharts({
         const current = item.values[item.values.length - 1] ?? 0;
         const high = Math.max(item.max ?? 1, ...item.values, 1);
         return (
-          <section key={item.label} className="rm-card p-4">
+          <section key={item.label} className="rounded-[1.35rem] bg-white p-4 shadow-[0_12px_28px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12">
             <div className="mb-2 flex items-center justify-between text-sm">
-              <span className="font-medium">{item.label}</span>
-              <span className="tabular-nums text-brand">
+              <span className="font-semibold text-[#2f4a60]">{item.label}</span>
+              <span className="font-semibold tabular-nums text-[#1b3348]">
                 {current}
                 {item.unit ?? ""}
               </span>
@@ -59,8 +59,8 @@ export function PeakBarChart({
 }) {
   const max = Math.max(1, ...bars.map((b) => Math.max(b.value, b.goal ?? 0)));
   return (
-    <section className="rm-card p-4">
-      <h3 className="text-sm font-medium">{title}</h3>
+    <section className="rounded-[1.35rem] bg-white p-5 shadow-[0_12px_28px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12">
+      <h3 className="text-sm font-semibold text-[#2f4a60]">{title}</h3>
       <div className="mt-4 space-y-3">
         {bars.map((bar) => (
           <div key={bar.label}>

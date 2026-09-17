@@ -67,7 +67,8 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   }
 
   return (
-    <header className="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/90 backdrop-blur-xl">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
       {linkHome ? (
         <Link
           href={isCareTeam(user?.role) ? "/doctor" : "/briefing"}
@@ -113,6 +114,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
             </button>
           </>
         )}
+      </div>
       </div>
     </header>
   );

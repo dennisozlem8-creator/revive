@@ -7,6 +7,7 @@ import { useAuth } from "./AuthProvider";
 import { calculateStreak } from "@/lib/streak";
 import { getChatResponse } from "@/lib/chat-bot";
 import type { SessionSummary } from "@/lib/session-results";
+import { DashCard } from "@/components/clinic/DashKit";
 
 type SessionReportProps = {
   summary: SessionSummary;
@@ -35,71 +36,71 @@ export function SessionReport({
 
   return (
     <div className="space-y-6">
-      <section className="rm-card-elevated border-purple/30 p-6 text-center">
-        <h2 className="rm-title text-2xl text-foreground">Your session report</h2>
-        <p className="mt-2 text-body">Great work finishing today&apos;s program.</p>
-      </section>
+      <DashCard className="p-6 text-center">
+        <p className="text-sm font-semibold text-[#2f4a60]">Session report</p>
+        <h2 className="rm-serif mt-1 text-3xl font-semibold text-[#1b3348]">Today’s numbers</h2>
+        <p className="mt-2 text-base text-[#2f4a60]">Great work finishing today’s program.</p>
+      </DashCard>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatTile value={`${summary.angle}°`} label="Peak ROM" accent="correct" />
-        <StatTile value={`+${romGain}°`} label="ROM gain" accent="brand" />
-        <StatTile value={`${compliance}%`} label="Compliance" accent="purple" />
-        <StatTile value={streak} label="Streak" accent="orange" />
+        <StatTile value={`${summary.angle}°`} label="Peak ROM" />
+        <StatTile value={`+${romGain}°`} label="ROM gain" />
+        <StatTile value={`${compliance}%`} label="Completed" />
+        <StatTile value={streak} label="Streak" />
       </div>
 
-      <section className="rm-card p-6">
-        <h3 className="font-bold">Exercises completed</h3>
+      <DashCard className="p-6">
+        <h3 className="rm-serif text-2xl font-semibold text-[#1b3348]">Exercises completed</h3>
         <ul className="mt-4 space-y-2">
           {completed.map((ex) => (
             <li
               key={ex.id}
-              className="flex items-center gap-2 rounded-xl border border-correct/30 bg-correct/10 px-4 py-3 text-sm"
+              className="flex items-center gap-2 rounded-[1.1rem] bg-[#e7f1ea] px-4 py-3 text-sm text-[#2a7a58]"
             >
-              <span className="text-correct">✓</span>
-              <span className="font-medium">{ex.name}</span>
-              <span className="ml-auto text-muted">{ex.sets}</span>
+              <span className="font-semibold">{ex.name}</span>
+              <span className="ml-auto text-[#2f4a60]">{ex.sets}</span>
             </li>
           ))}
         </ul>
         {completed.length < exercises.length && (
-          <p className="mt-3 text-sm text-muted">
+          <p className="mt-3 text-sm text-[#2f4a60]">
             {exercises.length - completed.length} exercise(s) skipped this session.
           </p>
         )}
-      </section>
+      </DashCard>
 
-      <section className="rm-card border-purple/30 p-6" style={{ background: "var(--ai-panel)" }}>
-        <h3 className="font-bold text-purple">RecoverAI summary</h3>
-        <p className="mt-3 leading-7 text-body">{reportText}</p>
-      </section>
+      <DashCard className="p-6">
+        <h3 className="rm-serif text-2xl font-semibold text-[#1b3348]">RecoverAI summary</h3>
+        <p className="mt-3 leading-7 text-[#2f4a60]">{reportText}</p>
+      </DashCard>
 
-      <section className="rm-card p-6">
-        <h3 className="font-bold">Sensor stats</h3>
-        <dl className="mt-4 grid grid-cols-2 gap-4 text-sm">
+      <DashCard className="p-6">
+        <h3 className="rm-serif text-2xl font-semibold text-[#1b3348]">Sensor stats</h3>
+        <dl className="mt-4 grid grid-cols-2 gap-4">
           <div>
-            <dt className="text-muted">Reps recorded</dt>
-            <dd className="text-xl font-bold">{summary.reps}</dd>
+            <dt className="text-sm font-semibold text-[#2f4a60]">Reps recorded</dt>
+            <dd className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">{summary.reps}</dd>
           </div>
           <div>
-            <dt className="text-muted">EMG effort</dt>
-            <dd className="text-xl font-bold">{summary.emg}%</dd>
+            <dt className="text-sm font-semibold text-[#2f4a60]">EMG effort</dt>
+            <dd className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">{summary.emg}%</dd>
           </div>
           <div>
-            <dt className="text-muted">Heart rate</dt>
-            <dd className="text-xl font-bold">{summary.hr} BPM</dd>
+            <dt className="text-sm font-semibold text-[#2f4a60]">Heart rate</dt>
+            <dd className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">{summary.hr} BPM</dd>
           </div>
           <div>
-            <dt className="text-muted">Pain today</dt>
-            <dd className="text-xl font-bold">{user.painToday ?? "—"}/10</dd>
+            <dt className="text-sm font-semibold text-[#2f4a60]">Pain today</dt>
+            <dd className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">{user.painToday ?? "—"}/10</dd>
           </div>
         </dl>
-      </section>
+      </DashCard>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Link href="/charts" className="rm-btn rm-btn-ghost flex-1 text-center">
+        <Link href="/charts" className="rm-btn rm-btn-ghost flex-1 rounded-full text-center">
           View charts
         </Link>
-        <button type="button" onClick={onDone} className="rm-btn rm-btn-primary flex-1">
+        <button type="button" onClick={onDone} className="rm-btn rm-btn-brand flex-1 rounded-full">
           Back to briefing
         </button>
       </div>
