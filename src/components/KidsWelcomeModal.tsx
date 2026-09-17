@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { markKidsWelcomeSeen } from "@/lib/kids-mode";
 import { KidsIcon } from "./KidsIcon";
+import { SafePicture } from "./SafePicture";
 
 type KidsWelcomeModalProps = {
   onDismiss: () => void;
@@ -23,13 +23,12 @@ export function KidsWelcomeModal({ onDismiss }: KidsWelcomeModalProps) {
       <div className="relative w-full max-w-lg text-center">
         <div className="kids-glass relative overflow-hidden p-0">
           <div className="relative">
-            <Image
+            <SafePicture
               src="/kids/welcome-hero.svg"
               alt=""
               width={640}
               height={360}
               className="h-44 w-full object-cover sm:h-56"
-              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#fff8ea] via-transparent to-transparent" />
             <div className="absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-2" aria-hidden>

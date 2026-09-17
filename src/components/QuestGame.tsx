@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { Exercise } from "@/lib/assessments";
 import { getExerciseMedia, getKidsExerciseImage } from "@/lib/exercise-media";
@@ -14,6 +13,7 @@ import {
 import { getFeedbackState } from "@/lib/feedback";
 import { SensorHelp } from "./SensorHelp";
 import { KidsIcon, KidsIconTitle } from "./KidsIcon";
+import { SafePicture } from "./SafePicture";
 import type { KidsIconName } from "@/lib/kids-icons";
 
 type QuestGameProps = {
@@ -188,7 +188,7 @@ export function QuestGame({
       )}
 
       <div className="relative mx-auto mt-5 flex h-48 w-full max-w-sm items-center justify-center overflow-hidden rounded-[1.5rem] border border-amber-200/70 bg-[#1a2848]/8 shadow-inner">
-        <Image
+        <SafePicture
           src={kidsImage}
           alt={exercise.name}
           width={400}

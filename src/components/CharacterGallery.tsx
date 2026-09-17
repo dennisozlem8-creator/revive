@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { KIDS_CHARACTERS, type KidsCharacter } from "@/lib/kids-characters";
 import { KidsIcon, KidsIconTitle } from "@/components/KidsIcon";
+import { SafePicture } from "@/components/SafePicture";
 
 type CharacterGalleryProps = {
   unlockedIds: string[];
@@ -73,7 +73,7 @@ export function CharacterGallery({
   return (
     <section className="mt-6">
       <div className="relative overflow-hidden rounded-[1.75rem] border border-amber-200/60 shadow-[0_18px_36px_rgba(40,24,8,0.16)]">
-        <Image
+        <SafePicture
           src="/kids/hero-collection.svg"
           alt=""
           width={800}

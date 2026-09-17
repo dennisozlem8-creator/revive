@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Header } from "@/components/Header";
@@ -24,6 +23,7 @@ import {
 } from "@/lib/kids-progress";
 import { KidsIcon, KidsIconTitle } from "@/components/KidsIcon";
 import { KidsAtmosphere } from "@/components/KidsAtmosphere";
+import { SafePicture } from "@/components/SafePicture";
 import type { KidsIconName } from "@/lib/kids-icons";
 
 const questZones: { id: string; icon: KidsIconName; name: string; image: string }[] = [
@@ -149,13 +149,12 @@ export default function KidsQuestPage() {
 
       <main className="relative z-10 mx-auto max-w-5xl px-4 pb-8 pt-3 sm:px-6">
         <section className="relative overflow-hidden rounded-[1.75rem] border border-amber-200/50 shadow-[0_22px_44px_rgba(40,24,8,0.18)]">
-          <Image
+          <SafePicture
             src="/kids/quest-map.svg"
             alt=""
             width={1200}
             height={360}
             className="h-44 w-full object-cover sm:h-52"
-            priority
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1a2848]/70 via-[#1a2848]/25 to-transparent" />
           <div className="absolute inset-0 flex flex-col justify-end gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
@@ -219,7 +218,7 @@ export default function KidsQuestPage() {
                     className="kids-zone text-left"
                   >
                     <div className="relative h-40 sm:h-48">
-                      <Image
+                      <SafePicture
                         src={zone.image}
                         alt=""
                         width={800}
