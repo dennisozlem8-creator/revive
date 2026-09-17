@@ -350,7 +350,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                     <p className="text-sm font-semibold text-[#5b6685]">Physical therapy for kids</p>
                     <p className="kids-wordmark mt-1 text-3xl sm:text-4xl">Kids Quest</p>
                     <p className="mt-1 max-w-xs text-base leading-6 text-[#5b6685]">
-                      The bots ask. You stretch. No sign-in.
+                      The bots ask. You stretch.
                     </p>
                   </div>
                   <span className="kids-cta h-11 min-h-0 rounded-full px-5 text-lg">Open</span>

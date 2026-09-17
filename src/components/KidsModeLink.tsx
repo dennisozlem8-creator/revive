@@ -44,7 +44,7 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
           <p className="text-sm font-semibold text-[#5b6685]">Physical therapy for kids</p>
           <p className="kids-wordmark mt-1 text-2xl">Kids Quest</p>
           <p className="mt-1 text-sm text-[#5b6685]">
-            {user ? "Open the stretch map with the bots." : "Stretch with the bots. Sign in later to save stars."}
+            The bots ask. You stretch.
           </p>
           <span className="kids-cta mt-4 inline-flex rounded-full px-5 py-2.5 text-base">Open</span>
         </div>
@@ -65,7 +65,7 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
       <span className="flex-1 py-3 pr-4">
         <span className="kids-wordmark block text-xl leading-none">Kids Quest</span>
         <span className="mt-1 block text-sm text-[#5b6685]">
-          {user ? "Switch to the stretch map" : "Open without signing in"}
+          Stretch with the bots
         </span>
       </span>
     </Link>

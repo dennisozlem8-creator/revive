@@ -115,9 +115,9 @@ export function GoInScreen({ mode }: GoInScreenProps) {
           />
           <div className="kids-caption flex items-center justify-between gap-3 px-3 py-3 sm:px-4">
             <span>
-              <p className="text-sm font-semibold text-[#5b6685]">No sign-in</p>
+              <p className="text-sm font-semibold text-[#5b6685]">Stretch with the bots</p>
               <p className="kids-wordmark mt-0.5 text-2xl leading-none">Kids Quest</p>
-              <p className="mt-1 text-sm leading-5 text-[#5b6685]">The bots count your stretches. No email.</p>
+              <p className="mt-1 text-sm leading-5 text-[#5b6685]">The bots ask. You stretch.</p>
             </span>
             <span className="shrink-0 text-sm font-semibold text-[#4d8ef0]">Open</span>
           </div>
