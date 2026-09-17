@@ -1,25 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" fill="none">
-  <rect width="720" height="280" rx="24" fill="#e8f3fb"/>
-  <ellipse cx="360" cy="248" rx="280" ry="16" fill="#cfe3f3"/>
-  <rect x="318" y="148" width="168" height="18" rx="6" fill="#9bb8d0"/>
-  <rect x="330" y="166" width="14" height="72" rx="4" fill="#7a93aa"/>
-  <rect x="460" y="166" width="14" height="72" rx="4" fill="#7a93aa"/>
-  <circle cx="430" cy="92" r="22" fill="#f3d4b8"/>
-  <path d="M412 92c4-16 22-22 34-10" stroke="#d4a07a" stroke-width="3" stroke-linecap="round"/>
-  <rect x="404" y="112" width="52" height="70" rx="16" fill="#4f90c6"/>
-  <path d="M456 150c28 8 48 28 54 58" stroke="#1b3348" stroke-width="12" stroke-linecap="round"/>
-  <path d="M510 208c18 2 28-10 40-38" stroke="#1b3348" stroke-width="12" stroke-linecap="round"/>
-  <circle cx="456" cy="152" r="7" fill="#e35d5d"/>
-  <circle cx="510" cy="206" r="7" fill="#3a7d62"/>
-  <circle cx="550" cy="170" r="7" fill="#4f90c6"/>
-  <path d="M456 152 L510 206 L550 170" stroke="#1b3348" stroke-width="3"/>
-  <rect x="528" y="132" width="46" height="22" rx="11" fill="#4f90c6"/>
-  <text x="551" y="148" text-anchor="middle" fill="#fff" font-size="12" font-family="ui-sans-serif,system-ui" font-weight="700">92°</text>
-  <circle cx="168" cy="128" r="20" fill="#e8c4a8"/>
-  <rect x="146" y="148" width="46" height="62" rx="14" fill="#3a7d62"/>
-  <path d="M154 210c-8 16-6 28 10 30" stroke="#1b3348" stroke-width="10" stroke-linecap="round"/>
-  <path d="M184 210c10 14 8 28-6 32" stroke="#1b3348" stroke-width="10" stroke-linecap="round"/>
-  <rect x="188" y="156" width="28" height="40" rx="8" fill="#1b3348"/>
-  <circle cx="202" cy="172" r="6" fill="#7ec8f0"/>
-  <text x="360" y="34" text-anchor="middle" fill="#3d7eb4" font-size="13" font-family="ui-sans-serif,system-ui" font-weight="700" letter-spacing="1.4">PHOTO GONIOMETER</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" fill="none">
+  <rect width="800" height="340" rx="28" fill="#e8f3fb"/>
+  <ellipse cx="400" cy="312" rx="300" ry="14" fill="#c5d9ea"/>
+  <rect x="430" y="188" width="190" height="16" rx="4" fill="#8aa4bc"/>
+  <rect x="448" y="204" width="16" height="88" rx="3" fill="#6b849c"/>
+  <rect x="586" y="204" width="16" height="88" rx="3" fill="#6b849c"/>
+  <circle cx="538" cy="108" r="26" fill="#f0c8a8"/>
+  <path d="M524 102c6-14 28-16 36 0" stroke="#c48a62" stroke-width="3" stroke-linecap="round"/>
+  <rect x="512" y="132" width="54" height="78" rx="18" fill="#4f90c6"/>
+  <path d="M566 176c36 10 58 36 66 72" stroke="#2a3d52" stroke-width="14" stroke-linecap="round"/>
+  <path d="M632 248c22 4 34-14 48-46" stroke="#2a3d52" stroke-width="14" stroke-linecap="round"/>
+  <ellipse cx="688" cy="198" rx="22" ry="10" fill="#2a3d52"/>
+  <circle cx="566" cy="176" r="8" fill="#e35d5d"/>
+  <circle cx="632" cy="248" r="8" fill="#3a7d62"/>
+  <circle cx="680" cy="202" r="8" fill="#4f90c6"/>
+  <path d="M566 176L632 248L680 202" stroke="#1b3348" stroke-width="3.5"/>
+  <text x="548" y="166" fill="#e35d5d" font-size="12" font-family="ui-sans-serif,system-ui" font-weight="700">HIP</text>
+  <text x="642" y="272" fill="#3a7d62" font-size="12" font-family="ui-sans-serif,system-ui" font-weight="700">KNEE</text>
+  <text x="690" y="190" fill="#4f90c6" font-size="12" font-family="ui-sans-serif,system-ui" font-weight="700">ANKLE</text>
+  <rect x="700" y="214" width="58" height="28" rx="14" fill="#4f90c6"/>
+  <text x="729" y="233" text-anchor="middle" fill="#fff" font-size="14" font-family="ui-sans-serif,system-ui" font-weight="700">92°</text>
+  <circle cx="188" cy="148" r="24" fill="#e8c4a8"/>
+  <rect x="164" y="172" width="50" height="70" rx="16" fill="#3a7d62"/>
+  <path d="M172 242c-10 20-4 36 16 38" stroke="#2a3d52" stroke-width="12" stroke-linecap="round"/>
+  <path d="M208 242c12 18 10 34-8 38" stroke="#2a3d52" stroke-width="12" stroke-linecap="round"/>
+  <rect x="214" y="178" width="34" height="48" rx="8" fill="#1b3348"/>
+  <circle cx="231" cy="196" r="8" fill="#7ec8f0"/>
+  <rect x="218" y="168" width="26" height="12" rx="3" fill="#1b3348"/>
+  <text x="80" y="48" fill="#1b3348" font-size="22" font-family="ui-sans-serif,system-ui" font-weight="700">How the photo works</text>
+  <text x="80" y="76" fill="#3d7eb4" font-size="15" font-family="ui-sans-serif,system-ui">Helper takes a side-view photo. You tap three points.</text>
 </svg>
