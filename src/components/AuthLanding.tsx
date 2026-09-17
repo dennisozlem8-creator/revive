@@ -89,24 +89,6 @@ const ways = [
   },
 ];
 
-const roles = [
-  {
-    title: "Patients",
-    text: "Measure at home, then follow today’s session.",
-    className: "border-[#9ec6e0] bg-[#e8f3fb]",
-  },
-  {
-    title: "Clinicians",
-    text: "See linked patients, angles, and effort from the care dashboard.",
-    className: "border-[#9dc4b0] bg-[#e7f1ea]",
-  },
-  {
-    title: "Caregivers",
-    text: "Help with the photo or sensor, and follow recovery on this device.",
-    className: "border-[#d4c6b0] bg-[#f3eee6]",
-  },
-];
-
 function CycleStrip({ className = "" }: { className?: string }) {
   return (
     <ol
@@ -146,8 +128,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           <div className="pointer-events-none absolute right-[-6rem] top-24 h-96 w-96 rounded-full bg-[#9dc4b0]/25 blur-3xl" />
 
           <div className="relative mx-auto w-full max-w-6xl px-5 pb-8 pt-10 sm:px-6 lg:pb-10 lg:pt-16">
-            <p className="rm-label text-brand-light">Revive Motion</p>
-            <h1 className="rm-serif mt-3 max-w-3xl text-[2.6rem] font-semibold leading-[1.06] text-foreground sm:text-6xl">
+            <h1 className="rm-serif max-w-3xl text-[2.6rem] font-semibold leading-[1.06] text-foreground sm:text-6xl">
               Physical Therapy Monitoring at Home.
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-body sm:text-xl sm:leading-9">
@@ -325,14 +306,6 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   <p className="mt-auto text-sm text-muted">Logged for today</p>
                 </div>
               </PhonePreview>
-            </div>
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
-              {roles.map((role) => (
-                <p key={role.title} className={`rounded-[1.5rem] border px-5 py-5 ${role.className}`}>
-                  <span className="block text-lg font-semibold">{role.title}</span>
-                  <span className="mt-1 block text-sm leading-6 text-body">{role.text}</span>
-                </p>
-              ))}
             </div>
             <Link
               href="/kids"

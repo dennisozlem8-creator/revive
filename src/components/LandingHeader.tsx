@@ -22,11 +22,8 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/85 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-5 py-3.5 sm:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-3 transition hover:opacity-85" onClick={() => setOpen(false)}>
+        <Link href="/" className="shrink-0 transition hover:opacity-85" onClick={() => setOpen(false)}>
           <Logo size={40} showText={false} compact />
-          <span className="hidden text-[1.05rem] font-semibold tracking-tight text-foreground sm:inline">
-            Revive Motion
-          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
