@@ -13,7 +13,7 @@ const steps = [
     n: "1",
     title: "Take a side-view photo",
     text: "A helper photographs the seated joint. Phone camera only.",
-    src: "/images/landing-hero-photo.webp?v=2",
+    src: "/images/landing-hero-photo.webp?v=3",
     alt: "A helper photographs a seated patient from the side.",
   },
   {
@@ -37,7 +37,7 @@ const solutions = [
     title: "Photo",
     subtitle: "Phone camera. No extra device.",
     points: ["Side-view photo", "Tap hip, knee, ankle", "See the angle"],
-    src: "/images/landing-hero-photo.webp?v=2",
+    src: "/images/landing-hero-photo.webp?v=3",
     alt: "Helper photographing a seated patient.",
     className: "border-[#b7d4c4] bg-[#e7f6ee]",
     titleClass: "text-[#2a7a58]",
@@ -102,11 +102,11 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               </div>
             </div>
 
-            <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(20rem,0.8fr)] lg:items-stretch">
+            <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(20rem,0.8fr)] lg:items-start">
               <PhotoFrame
-                src="/images/landing-hero-photo.webp?v=2"
+                src="/images/landing-hero-photo.webp?v=3"
                 alt="A helper photographs a seated patient from the side in a living room."
-                className="min-h-[20rem] rounded-[1.75rem] border border-[#b7d4e8] shadow-[0_22px_50px_rgba(27,51,72,0.1)] sm:min-h-[26rem] lg:min-h-full"
+                className="aspect-[16/9] rounded-[1.75rem] border border-[#b7d4e8] shadow-[0_22px_50px_rgba(27,51,72,0.1)]"
               />
               <section id="go-in" className="scroll-mt-28">
                 <div className="h-full rounded-[1.75rem] border border-[var(--border)] bg-white p-6 shadow-[0_22px_50px_rgba(27,51,72,0.1)] sm:p-7">
