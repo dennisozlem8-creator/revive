@@ -8,8 +8,6 @@ const nav = [
   { href: "#how-it-works", label: "How it works" },
   { href: "#sensors", label: "Sensors" },
   { href: "#features", label: "Features" },
-  { href: "#benefits", label: "Benefits" },
-  { href: "#for-patients", label: "Who it is for" },
   { href: "/kids", label: "Kids Quest" },
 ];
 
@@ -28,7 +26,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
           <Logo size={40} showText={false} compact />
         </Link>
 
-        <nav className="hidden items-center gap-5 xl:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
           {nav.map((item) => (
             <Link
               key={item.href}
@@ -53,7 +51,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
           </a>
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] text-foreground xl:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] text-foreground lg:hidden"
             aria-expanded={open}
             aria-controls="landing-mobile-nav"
             onClick={() => setOpen((value) => !value)}
@@ -75,7 +73,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
       {open && (
         <nav
           id="landing-mobile-nav"
-          className="border-t border-[var(--border)] bg-white px-5 py-3 xl:hidden"
+          className="border-t border-[var(--border)] bg-white px-5 py-3 lg:hidden"
           aria-label="Mobile"
         >
           <div className="mx-auto flex max-w-6xl flex-col">
