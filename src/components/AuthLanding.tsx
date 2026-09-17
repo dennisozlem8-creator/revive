@@ -36,7 +36,12 @@ const ways = [
   {
     title: "Photo",
     device: "Phone camera. No extra device.",
-    does: "A helper takes one side-view photo of the seated joint. You tap hip, knee, and ankle. The app shows the angle and saves it for the care team.",
+    points: [
+      "A helper takes one side-view photo of the seated joint.",
+      "Tap hip, then knee, then ankle on the photo.",
+      "The app shows the joint angle right away.",
+      "That number is saved for the clinician.",
+    ],
     src: "/images/landing-hero-photo.webp?v=3",
     alt: "Helper photographing a seated patient.",
     className: "border-[#b7d4c4] bg-[#e7f6ee]",
@@ -45,8 +50,13 @@ const ways = [
   },
   {
     title: "Motion sensor",
-    device: "MPU-6050 straps above and below the joint.",
-    does: "The sensors track how far the joint bends during the session. The app shows a live angle, so you can hold the position without anyone taking photos.",
+    device: "MPU-6050 straps on the joint.",
+    points: [
+      "Strap one sensor above the joint and one below it.",
+      "Do the session as usual. No helper needs to take photos.",
+      "The app shows a live angle while you move, such as 92 deg.",
+      "Hold that position, then do the next rep.",
+    ],
     src: "/images/landing-mpu.png?v=4",
     alt: "Revive Motion MPU-6050 straps with a live 92 degree elbow angle.",
     className: "border-[#c5c9e8] bg-[#eef0fb]",
@@ -57,7 +67,12 @@ const ways = [
   {
     title: "Muscle sensor",
     device: "MyoWare 2.0 pads on the muscle.",
-    does: "Flex the muscle. The app shows how hard it is working, over Bluetooth or a USB cable.",
+    points: [
+      "Place the pads on the muscle you are working.",
+      "Flex. The line on screen rises when the muscle works harder.",
+      "Connect with Bluetooth or a USB cable.",
+      "The clinician can see how hard the muscle worked.",
+    ],
     src: "/images/landing-myoware.png",
     alt: "MyoWare muscle sensor with electrode pads on an upper arm.",
     className: "border-[#d0c4e4] bg-[#f3eefc]",
@@ -162,7 +177,16 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   <div className="p-5 sm:p-6">
                     <h3 className={`text-xl font-bold uppercase ${item.titleClass}`}>{item.title}</h3>
                     <p className="mt-1 text-sm font-semibold">{item.device}</p>
-                    <p className="mt-3 text-sm leading-6 text-body">{item.does}</p>
+                    <ul className="mt-4 space-y-2 text-sm leading-6 text-body">
+                      {item.points.map((point) => (
+                        <li key={point} className="flex gap-2">
+                          <span aria-hidden className="mt-0.5 font-semibold text-brand-light">
+                            •
+                          </span>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </article>
               ))}
