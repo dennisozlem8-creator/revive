@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 220" fill="none">
+  <rect width="560" height="220" rx="20" fill="#f7fbfe"/>
+  <rect x="28" y="28" width="300" height="164" rx="16" fill="#fff" stroke="#c5d9ea"/>
+  <rect x="70" y="78" width="120" height="14" rx="4" fill="#9bb8d0"/>
+  <rect x="70" y="98" width="86" height="70" rx="8" fill="#e8f3fb"/>
+  <path d="M92 160 Q128 104 164 160" stroke="#4f90c6" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <circle cx="92" cy="160" r="6" fill="#e35d5d"/>
+  <circle cx="128" cy="118" r="6" fill="#3a7d62"/>
+  <circle cx="164" cy="160" r="6" fill="#4f90c6"/>
+  <text x="92" y="184" text-anchor="middle" fill="#e35d5d" font-size="10" font-family="ui-sans-serif,system-ui" font-weight="700">HIP</text>
+  <text x="128" y="108" text-anchor="middle" fill="#3a7d62" font-size="10" font-family="ui-sans-serif,system-ui" font-weight="700">KNEE</text>
+  <text x="176" y="184" fill="#4f90c6" font-size="10" font-family="ui-sans-serif,system-ui" font-weight="700">ANKLE</text>
+  <rect x="214" y="112" width="86" height="52" rx="12" fill="#e8f3fb" stroke="#4f90c6"/>
+  <text x="257" y="134" text-anchor="middle" fill="#3d7eb4" font-size="10" font-family="ui-sans-serif,system-ui" font-weight="700">ESTIMATED</text>
+  <text x="257" y="154" text-anchor="middle" fill="#1b3348" font-size="20" font-family="ui-sans-serif,system-ui" font-weight="700">92°</text>
+  <rect x="352" y="28" width="180" height="164" rx="16" fill="#fff" stroke="#c5d9ea"/>
+  <text x="442" y="56" text-anchor="middle" fill="#3d7eb4" font-size="11" font-family="ui-sans-serif,system-ui" font-weight="700">ROM PROGRESS</text>
+  <path d="M380 160 L400 148 L420 132 L440 118 L500 96" stroke="#4f90c6" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <circle cx="380" cy="160" r="4" fill="#4f90c6"/>
+  <circle cx="400" cy="148" r="4" fill="#4f90c6"/>
+  <circle cx="420" cy="132" r="4" fill="#4f90c6"/>
+  <circle cx="440" cy="118" r="4" fill="#4f90c6"/>
+  <circle cx="500" cy="96" r="4" fill="#3a7d62"/>
+  <line x1="372" y1="88" x2="516" y2="88" stroke="#c5d9ea" stroke-dasharray="4 4"/>
+  <text x="508" y="82" fill="#3a7d62" font-size="10" font-family="ui-sans-serif,system-ui" font-weight="700">Goal</text>
+</svg>

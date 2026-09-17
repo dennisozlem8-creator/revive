@@ -6,7 +6,7 @@ import { Logo } from "./Logo";
 
 const nav = [
   { href: "#how-it-works", label: "How it works" },
-  { href: "#sensors", label: "Sensors" },
+  { href: "#sensors", label: "Photo & sensors" },
   { href: "#features", label: "Features" },
   { href: "/kids", label: "Kids Quest" },
 ];

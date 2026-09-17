@@ -7,7 +7,7 @@ Source: [https://github.com/dennisozlem8-creator/revive](https://github.com/denn
 
 Kids Quest is a storybook adventure world for exercises, with original kingdoms and hero art. Adult clinic pages stay on the light clinic theme.
 
-The public homepage is a short visual pitch: what the app does, four how-it-works steps, camera plus optional sensors, and a compact feature grid. Signed-in home is the recovery dashboard.
+The public homepage uses people graphics and a visual photo flow, then three solutions: Photo, MPU-6050, and MyoWare. Signed-in home is the recovery dashboard.
 
 ## Photo Goniometer
 
