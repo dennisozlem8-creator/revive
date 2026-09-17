@@ -2,35 +2,50 @@ import { SafePicture } from "@/components/SafePicture";
 
 const slides = [
   {
+    src: "/images/landing-hero-photo.webp?v=3",
+    alt: "A helper photographs a seated patient from the side.",
+    n: "01",
+    label: "Photo first",
+    line: "Take the side-view photo.",
+  },
+  {
     src: "/images/landing-older-session.webp?v=1",
     alt: "An older patient doing a guided squat at home.",
+    n: "02",
     label: "Session",
+    line: "Do today’s exercises.",
   },
   {
     src: "/images/landing-younger-session.webp?v=1",
     alt: "A younger patient doing a lunge while watching the phone.",
+    n: "03",
     label: "Live plan",
-  },
-  {
-    src: "/images/landing-hero-photo.webp?v=3",
-    alt: "A helper photographs a seated patient from the side.",
-    label: "Photo first",
+    line: "Follow the phone while you move.",
   },
 ] as const;
 
 export function SessionStack() {
   return (
-    <div className="flex flex-col gap-3 py-4 lg:py-8" aria-label="Patients using Revive Motion">
-      {slides.map((slide) => (
-        <figure key={slide.label} className="relative h-72 overflow-hidden rounded-[1.35rem] bg-[#d7e8f6] shadow-[0_18px_40px_rgba(8,20,32,0.28)] sm:h-80 lg:h-[min(34rem,78vh)]">
-          <SafePicture
-            src={slide.src}
-            alt={slide.alt}
-            className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
-          />
-          <p className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1 text-sm font-semibold text-[#1b3348] shadow-sm">
-            {slide.label}
-          </p>
+    <div className="flex flex-col gap-3 py-4 lg:py-8" aria-label="Photo first, then the session, then the live plan">
+      {slides.map((slide, index) => (
+        <figure
+          key={slide.label}
+          className="sticky top-20 overflow-hidden rounded-[1.35rem] bg-[#d7e8f6] shadow-[0_18px_40px_rgba(8,20,32,0.28)] lg:top-24"
+          style={{ zIndex: index + 1 }}
+        >
+          <div className="relative h-72 sm:h-80 lg:h-[min(34rem,78vh)]">
+            <SafePicture
+              src={slide.src}
+              alt={slide.alt}
+              className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
+            />
+            <p className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1 text-sm font-semibold text-[#1b3348] shadow-sm">
+              {slide.n} {slide.label}
+            </p>
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#1b3348]/80 to-transparent px-4 pb-4 pt-12 sm:px-5 sm:pb-5">
+              <p className="text-base font-semibold leading-6 text-white sm:text-lg">{slide.line}</p>
+            </div>
+          </div>
         </figure>
       ))}
     </div>
