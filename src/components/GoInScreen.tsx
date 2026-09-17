@@ -139,7 +139,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
               <p className="rm-kids-type flex items-center gap-2 text-base font-bold text-[#2a1848]">
                 <KidsIcon name="gamepad" size={18} /> Kids Quest
               </p>
-              <p className="text-xs font-semibold text-[#5a3a18] sm:text-sm">Open the storybook. No email needed.</p>
+              <p className="text-xs font-semibold text-[#5a3a18] sm:text-sm">Storybook physical therapy. No email needed.</p>
             </span>
             <Chevron className="text-[#c47a32]" />
           </div>

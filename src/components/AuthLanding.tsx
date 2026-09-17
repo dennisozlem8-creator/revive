@@ -344,13 +344,15 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 href="/kids"
                 className="rm-glow-kids relative block min-h-[14rem] overflow-hidden rounded-[1.35rem] shadow-[0_12px_24px_rgba(40,24,8,0.14)] sm:min-h-[16rem]"
               >
-                <PhotoFrame src="/images/landing-kids-quest.webp" alt="Kids Quest adventure world." className="absolute inset-0 h-full w-full" />
+                <PhotoFrame src="/images/landing-kids-quest.webp?v=2" alt="Kids Quest storybook: children doing physical therapy exercises on the path to a castle." className="absolute inset-0 h-full w-full" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2a1848]/80 via-[#2a1848]/20 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
                   <div>
-                    <p className="rm-kids-type text-[11px] font-bold uppercase tracking-[0.16em] text-amber-200">Younger patients</p>
+                    <p className="rm-kids-type text-[11px] font-bold uppercase tracking-[0.16em] text-amber-200">Physical therapy exercises</p>
                     <p className="rm-kids-type mt-0.5 text-2xl text-amber-50 drop-shadow sm:text-3xl">Kids Quest</p>
-                    <p className="mt-1 text-sm font-medium text-amber-100/90">Storybook world. No sign-in.</p>
+                    <p className="mt-1 max-w-xs text-sm font-medium leading-5 text-amber-100/90">
+                      Storybook quests made of today&apos;s stretches and reps. No sign-in.
+                    </p>
                   </div>
                   <span className="kids-cta rm-btn rm-kids-type h-9 min-h-0 rounded-full px-4 text-sm">Open</span>
                 </div>

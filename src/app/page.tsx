@@ -161,16 +161,16 @@ export default function Home() {
         </section>
 
         <section className="relative mt-5 overflow-hidden rounded-[1.25rem]">
-          <PhotoFrame src="/images/landing-kids-quest.webp" alt="" className="h-36 sm:h-44" />
+          <PhotoFrame src="/images/landing-kids-quest.webp?v=2" alt="" className="h-36 sm:h-44" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#2a1848]/75 via-[#2a1848]/35 to-transparent" />
           <div className="rm-glow-kids absolute inset-0 flex flex-col justify-end gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
             <div className="kids-glass p-3 sm:max-w-xl sm:p-4">
               <p className="rm-kids-type flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#8a4a10]">
-                Younger patients
+                Physical therapy exercises
               </p>
               <h2 className="rm-kids-type kids-title-ink mt-0.5 text-2xl sm:text-3xl">Kids Quest</h2>
               <p className="mt-1 text-sm font-medium leading-5 text-[#3a2a58]">
-                Storybook adventure world for younger patients, with kingdoms, quests, and gold stars.
+                Storybook quests made of today&apos;s stretches and reps, with kingdoms and gold stars.
               </p>
             </div>
             <Link href="/kids" className="kids-cta rm-btn rm-kids-type h-10 min-h-0 rounded-full px-5 text-sm sm:h-11 sm:text-base">
