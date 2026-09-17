@@ -175,7 +175,7 @@ function demoClips(): GoniometerMeasurement[] {
     {
       id: "demo-photo-0",
       userEmail: email,
-      date: daysAgo(0, 9),
+      date: daysAgo(0, 11),
       exercise: "Heel Slide",
       joint: "Knee (Right)",
       angle: 92,
@@ -187,7 +187,7 @@ function demoClips(): GoniometerMeasurement[] {
     {
       id: "demo-motion-0",
       userEmail: email,
-      date: daysAgo(0, 10),
+      date: daysAgo(0, 9),
       exercise: "Heel Slide",
       joint: "Knee (Right)",
       angle: 78,
