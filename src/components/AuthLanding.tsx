@@ -81,6 +81,28 @@ const ways = [
   },
 ];
 
+const cycle = ["Measure", "Coach", "Report", "Improve"] as const;
+
+function CycleTagline({ className = "" }: { className?: string }) {
+  return (
+    <p
+      className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.72rem] font-bold uppercase tracking-[0.16em] text-brand-light sm:text-xs ${className}`}
+      aria-label="Measure, Coach, Report, Improve"
+    >
+      {cycle.map((word, index) => (
+        <span key={word} className="inline-flex items-center gap-2">
+          {index > 0 && (
+            <span aria-hidden className="text-brand">
+              :
+            </span>
+          )}
+          <span>{word}</span>
+        </span>
+      ))}
+    </p>
+  );
+}
+
 export function AuthLanding({ mode }: AuthLandingProps) {
   const cta = mode === "login" ? "Go in" : "Create an account";
 
@@ -98,10 +120,11 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         <section className="relative overflow-hidden">
           <div className="mx-auto w-full max-w-6xl px-5 py-8 sm:px-6 lg:py-12">
             <div className="max-w-2xl">
-              <p className="rm-label text-brand-light">Photo + sensors</p>
+              <p className="rm-label text-brand-light">Revive Motion</p>
               <h1 className="rm-serif mt-2 text-[2.4rem] font-semibold leading-[1.08] text-foreground sm:text-5xl">
-                Measure the joint at home.
+                Physical Therapy Monitoring at Home.
               </h1>
+              <CycleTagline className="mt-4" />
               <p className="mt-4 max-w-lg text-lg leading-8 text-body">
                 Photograph the movement, or wear a sensor. Then follow today’s exercises with your clinician.
               </p>
@@ -270,8 +293,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
       </main>
 
       <footer className="border-t border-[var(--border)] bg-white">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-8 sm:px-6">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-5 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <Logo size={40} showText={false} compact />
+          <CycleTagline />
           <a href="#go-in" className="font-semibold text-brand-light">
             {cta}
           </a>
