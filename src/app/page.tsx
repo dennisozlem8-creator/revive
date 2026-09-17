@@ -9,7 +9,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { t } from "@/lib/i18n";
 import { AuthLanding } from "@/components/AuthLanding";
 import { isCareTeam } from "@/lib/users";
-import { MpuAnglePhoto, PhotoFrame } from "@/components/LandingMedia";
+import { MpuAnglePhoto, MyoWarePhoto, PhotoFrame } from "@/components/LandingMedia";
 
 const areaIcons: Record<string, ReactNode> = {
   ankle: (
@@ -117,7 +117,7 @@ export default function Home() {
                 </div>
               </Link>
               <Link href="/muscle" className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md">
-                <PhotoFrame src="/images/landing-myoware.png" alt="" fit="contain" className="h-28" />
+                <MyoWarePhoto alt="" className="h-36" />
                 <div className="p-5">
                   <p className="rm-label text-brand-light">Sensor</p>
                   <h3 className="mt-2 text-lg font-semibold">MyoWare 2.0</h3>

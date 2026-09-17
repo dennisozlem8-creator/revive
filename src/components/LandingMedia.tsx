@@ -46,6 +46,25 @@ export function MpuAnglePhoto({
   );
 }
 
+/** MyoWare arm shot: contain + padding so the elbow, pads, and shirt stay inside the frame. */
+export function MyoWarePhoto({
+  className = "",
+  alt = "MyoWare 2.0 muscle sensor with electrode pads on an upper arm.",
+}: {
+  className?: string;
+  alt?: string;
+}) {
+  return (
+    <div className={`relative overflow-hidden bg-white ${className}`}>
+      <SafePicture
+        src="/images/landing-myoware.png?v=5"
+        alt={alt}
+        className="absolute inset-0 h-full w-full object-contain p-4 sm:p-6"
+      />
+    </div>
+  );
+}
+
 export function JointMarks({ className = "" }: { className?: string }) {
   return (
     <PhotoFrame src="/images/landing-leg-marks.webp" alt="Side view of a seated leg from hip to ankle." className={className}>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
-import { JointMarks, MpuAnglePhoto, PhonePreview, PhotoFrame, RomChart } from "@/components/LandingMedia";
+import { JointMarks, MpuAnglePhoto, MyoWarePhoto, PhonePreview, PhotoFrame, RomChart } from "@/components/LandingMedia";
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
 
@@ -80,11 +80,12 @@ const ways = [
       "Connect with Bluetooth or a USB cable.",
       "The clinician can see how hard the muscle worked.",
     ],
-    src: "/images/landing-myoware.png",
+    src: "/images/landing-myoware.png?v=5",
     alt: "MyoWare muscle sensor with electrode pads on an upper arm.",
     className: "border-[#d0c4e4] bg-[#f3eefc]",
     titleClass: "text-[#5a3d8a]",
     fit: "contain" as const,
+    myoware: true,
   },
 ];
 
@@ -238,6 +239,8 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   <div className={index % 2 === 1 ? "lg:order-2" : ""}>
                     {"mpu" in item && item.mpu ? (
                       <MpuAnglePhoto className="aspect-[4/3] min-h-[17rem] rounded-[2rem] shadow-[0_20px_48px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/12 sm:min-h-[20rem]" />
+                    ) : "myoware" in item && item.myoware ? (
+                      <MyoWarePhoto className="aspect-[4/3] min-h-[17rem] rounded-[2rem] shadow-[0_20px_48px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/12 sm:min-h-[20rem]" />
                     ) : (
                       <PhotoFrame
                         src={item.src}
