@@ -33,7 +33,7 @@ const kidsDisplay = Fredoka({
 export const metadata: Metadata = {
   title: "Revive Motion | Physical Therapy Assistance",
   description:
-    "Home physical therapy assistance. Measure range of motion, follow today’s session, and keep your clinician in the loop.",
+    "Home physical therapy assistance for patients, clinicians, and caregivers. Measure with Photo Goniometer, MyoWare 2.0, or a heart sensor; follow today’s dose; keep your care team in the loop.",
 };
 
 export default function RootLayout({
