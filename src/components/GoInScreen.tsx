@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { AuthForm } from "./AuthForm";
 import { KidsIcon } from "./KidsIcon";
-import { KidsQuestBannerArt } from "./LandingArt";
+import { SafePicture } from "./SafePicture";
 import { ResetAppButton } from "./ResetAppButton";
 import type { UserRole } from "@/lib/users";
 
@@ -109,7 +109,11 @@ export function GoInScreen({ mode }: GoInScreenProps) {
           className="overflow-hidden rounded-2xl border-2 border-[#f0c36a] text-left shadow-[0_10px_24px_rgba(180,100,20,0.16)] transition hover:-translate-y-0.5 hover:shadow-lg"
         >
           <div className="relative h-24 overflow-hidden">
-            <KidsQuestBannerArt className="h-full w-full object-cover" />
+            <SafePicture
+              src="/images/landing-kids-quest.webp"
+              alt=""
+              className="h-full w-full object-cover object-[center_35%]"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-[#4a2c78]/75 via-transparent to-transparent" />
             <p className="rm-kids-type absolute bottom-2 left-4 flex items-center gap-2 text-lg font-bold text-white drop-shadow">
               <KidsIcon name="star" size={20} /> Adventure world

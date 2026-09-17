@@ -1,13 +1,6 @@
 import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
-import {
-  AngleChartArt,
-  AppScreenArt,
-  MpuArt,
-  MyowareArt,
-  PeoplePhotoArt,
-  PhotoFlowArt,
-} from "@/components/LandingArt";
+import { JointMarks, PhonePreview, PhotoFrame, RomChart } from "@/components/LandingMedia";
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
 
@@ -15,38 +8,58 @@ type AuthLandingProps = {
   mode: "login" | "register";
 };
 
+const steps = [
+  {
+    n: "1",
+    title: "Take a side-view photo",
+    text: "A helper photographs the seated joint. Phone camera only.",
+    src: "/images/landing-hero-photo.webp",
+    alt: "A helper photographs a seated patient from the side.",
+  },
+  {
+    n: "2",
+    title: "Tap hip, knee, ankle",
+    text: "The app marks the three points and shows the angle.",
+    src: "/images/landing-leg-marks.webp",
+    alt: "Side view of a seated knee ready to mark.",
+  },
+  {
+    n: "3",
+    title: "Do today’s session",
+    text: "Follow the exercises your clinician set for today.",
+    src: "/images/landing-exercise.webp",
+    alt: "A patient following a home session on a tablet.",
+  },
+];
+
 const solutions = [
   {
     title: "Photo",
     subtitle: "Phone camera. No extra device.",
     points: ["Side-view photo", "Tap hip, knee, ankle", "See the angle"],
+    src: "/images/landing-hero-photo.webp",
+    alt: "Helper photographing a seated patient.",
     className: "border-[#b7d4c4] bg-[#e7f6ee]",
     titleClass: "text-[#2a7a58]",
-    Art: PeoplePhotoArt,
   },
   {
     title: "Motion sensor",
     subtitle: "MPU-6050 on the joint.",
     points: ["Live angle", "Hands-free", "During the session"],
+    src: "/images/landing-mpu-knee.webp",
+    alt: "Motion sensor strapped to a knee.",
     className: "border-[#c5c9e8] bg-[#eef0fb]",
     titleClass: "text-[#4a4f8a]",
-    Art: MpuArt,
   },
   {
     title: "Muscle sensor",
     subtitle: "MyoWare 2.0.",
     points: ["Muscle effort", "Flex to see the signal", "Bluetooth or USB"],
+    src: "/images/landing-myoware-arm.webp",
+    alt: "MyoWare muscle sensor on a forearm.",
     className: "border-[#d0c4e4] bg-[#f3eefc]",
     titleClass: "text-[#5a3d8a]",
-    Art: MyowareArt,
   },
-];
-
-const inside = [
-  { title: "Briefing", kind: "briefing" as const },
-  { title: "Session", kind: "session" as const },
-  { title: "Dashboard", kind: "dashboard" as const },
-  { title: "Check-in", kind: "checkin" as const },
 ];
 
 export function AuthLanding({ mode }: AuthLandingProps) {
@@ -64,39 +77,39 @@ export function AuthLanding({ mode }: AuthLandingProps) {
 
       <main>
         <section className="relative overflow-hidden">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_8%_-8%,rgba(79,144,198,0.22),transparent_42%)]"
-          />
-          <div className="relative mx-auto w-full max-w-6xl px-5 py-8 sm:px-6 lg:py-10">
-            <div className="max-w-xl">
+          <div className="mx-auto w-full max-w-6xl px-5 py-8 sm:px-6 lg:py-12">
+            <div className="max-w-2xl">
               <p className="rm-label text-brand-light">Photo + sensors</p>
-              <h1 className="rm-serif mt-2 text-[2.2rem] font-semibold leading-[1.12] text-foreground sm:text-4xl">
+              <h1 className="rm-serif mt-2 text-[2.4rem] font-semibold leading-[1.08] text-foreground sm:text-5xl">
                 Measure the joint at home.
               </h1>
-              <p className="mt-3 text-base text-body">Then follow today&apos;s exercises with your clinician.</p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <p className="mt-4 max-w-lg text-lg leading-8 text-body">
+                Photograph the movement, or wear a sensor. Then follow today’s exercises with your clinician.
+              </p>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <a
                   href="#go-in"
-                  className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 font-semibold text-white"
+                  className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-7 font-semibold text-white shadow-sm"
                 >
                   {cta}
                 </a>
                 <a
                   href="#how-it-works"
-                  className="inline-flex h-12 items-center justify-center rounded-full border border-[#9dc4b0] bg-[#e7f1ea] px-6 font-semibold text-[#2a4638]"
+                  className="inline-flex h-12 items-center justify-center rounded-full border border-[#9dc4b0] bg-[#e7f1ea] px-7 font-semibold text-[#2a4638]"
                 >
                   See how
                 </a>
               </div>
             </div>
 
-            <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-start">
-              <div className="overflow-hidden rounded-[1.5rem] border border-[#b7d4e8] bg-white">
-                <PeoplePhotoArt className="h-auto w-full" />
-              </div>
+            <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(20rem,0.8fr)] lg:items-stretch">
+              <PhotoFrame
+                src="/images/landing-hero-photo.webp"
+                alt="A helper photographs a seated patient from the side in a living room."
+                className="min-h-[20rem] rounded-[1.75rem] border border-[#b7d4e8] shadow-[0_22px_50px_rgba(27,51,72,0.1)] sm:min-h-[26rem] lg:min-h-full"
+              />
               <section id="go-in" className="scroll-mt-28">
-                <div className="rounded-[1.75rem] border border-[var(--border)] bg-white p-6 shadow-[0_22px_50px_rgba(27,51,72,0.1)] sm:p-7">
+                <div className="h-full rounded-[1.75rem] border border-[var(--border)] bg-white p-6 shadow-[0_22px_50px_rgba(27,51,72,0.1)] sm:p-7">
                   <GoInScreen mode={mode} />
                 </div>
               </section>
@@ -105,24 +118,36 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         </section>
 
         <section id="how-it-works" className="scroll-mt-28 bg-white">
-          <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-6">
-            <h2 className="rm-serif text-3xl font-semibold text-foreground">How it works</h2>
-            <div className="mt-6 overflow-hidden rounded-[1.25rem] border border-[#c5d9ea] bg-white">
-              <PhotoFlowArt className="h-auto w-full" />
+          <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-6">
+            <p className="rm-label text-brand-light">Three steps</p>
+            <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">How it works</h2>
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {steps.map((step) => (
+                <article key={step.n} className="overflow-hidden rounded-[1.5rem] border border-[#c5d9ea] bg-[#f7fbfe]">
+                  <PhotoFrame src={step.src} alt={step.alt} className="h-56" />
+                  <div className="p-5">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-light">Step {step.n}</p>
+                    <h3 className="mt-1 text-lg font-semibold">{step.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-body">{step.text}</p>
+                  </div>
+                </article>
+              ))}
             </div>
-            <div className="mt-6 overflow-hidden rounded-[1.25rem] border border-[#c5d9ea] bg-white">
-              <AngleChartArt className="h-auto w-full" />
+            <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.9fr)]">
+              <JointMarks className="min-h-[16rem] rounded-[1.5rem] border border-[#c5d9ea]" />
+              <RomChart />
             </div>
           </div>
         </section>
 
-        <section id="sensors" className="scroll-mt-28 bg-[#1b3348] py-12 text-white">
+        <section id="sensors" className="scroll-mt-28 bg-[#1b3348] py-14 text-white">
           <div className="mx-auto w-full max-w-6xl px-5 sm:px-6">
-            <h2 className="rm-serif text-3xl font-semibold">Photo and sensors</h2>
-            <div className="mt-8 grid gap-4 lg:grid-cols-3">
+            <p className="rm-label text-[#9ec6e0]">Choose a way to measure</p>
+            <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">Photo and sensors</h2>
+            <div className="mt-8 grid gap-5 lg:grid-cols-3">
               {solutions.map((item) => (
                 <article key={item.title} className={`overflow-hidden rounded-[1.5rem] border text-foreground ${item.className}`}>
-                  <item.Art className="h-40 w-full" />
+                  <PhotoFrame src={item.src} alt={item.alt} className="h-52" />
                   <div className="p-5">
                     <h3 className={`text-xl font-bold uppercase ${item.titleClass}`}>{item.title}</h3>
                     <p className="mt-1 text-sm font-semibold">{item.subtitle}</p>
@@ -138,16 +163,57 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section id="features" className="scroll-mt-28 bg-white py-12">
+        <section id="features" className="scroll-mt-28 bg-white py-14">
           <div className="mx-auto w-full max-w-6xl px-5 sm:px-6">
-            <h2 className="rm-serif text-3xl font-semibold text-foreground">Inside the app</h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {inside.map((item) => (
-                <article key={item.title} className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[#f7fbfe]">
-                  <AppScreenArt kind={item.kind} className="h-28 w-full" />
-                  <p className="px-4 py-3 text-sm font-semibold">{item.title}</p>
-                </article>
-              ))}
+            <p className="rm-label text-brand-light">For the whole care team</p>
+            <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">Inside the app</h2>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <PhonePreview title="Briefing">
+                <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
+                  <PhotoFrame src="/images/landing-exercise.webp" alt="" className="h-28" />
+                  <div className="p-3">
+                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-light">Today</p>
+                    <p className="mt-1 font-semibold">Knee extension</p>
+                    <p className="mt-1 text-sm text-muted">3 sets · photo first</p>
+                  </div>
+                </div>
+              </PhonePreview>
+              <PhonePreview title="Session">
+                <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
+                  <PhotoFrame src="/images/landing-mpu-knee.webp" alt="" className="h-28" />
+                  <div className="p-3">
+                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-light">Live</p>
+                    <p className="rm-serif mt-1 text-3xl font-semibold">92 deg</p>
+                    <p className="mt-1 text-sm text-muted">Hold, then the next rep</p>
+                  </div>
+                </div>
+              </PhonePreview>
+              <PhonePreview title="Dashboard">
+                <div className="flex h-full flex-col rounded-2xl bg-white p-3 shadow-sm">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-light">Trend</p>
+                  <p className="mt-1 font-semibold">Range this week</p>
+                  <svg viewBox="0 0 160 70" className="mt-4 h-20 w-full">
+                    <polyline points="8,58 40,50 72,42 104,28 150,16" fill="none" stroke="#4f90c6" strokeWidth="4" />
+                    <circle cx="150" cy="16" r="4" fill="#3a7d62" />
+                  </svg>
+                  <p className="mt-auto text-sm text-muted">Shared with the clinician</p>
+                </div>
+              </PhonePreview>
+              <PhonePreview title="Check-in">
+                <div className="flex h-full flex-col rounded-2xl bg-white p-3 shadow-sm">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-light">Pain</p>
+                  <p className="rm-serif mt-1 text-3xl font-semibold">2 / 10</p>
+                  <div className="mt-4 flex gap-1">
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <span
+                        key={i}
+                        className={`h-8 flex-1 rounded-md ${i < 2 ? "bg-[#c47a32]" : "bg-[#e8f3fb]"}`}
+                      />
+                    ))}
+                  </div>
+                  <p className="mt-auto text-sm text-muted">Logged for today</p>
+                </div>
+              </PhonePreview>
             </div>
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <p className="rounded-2xl border border-[#9ec6e0] bg-[#e8f3fb] px-4 py-3 font-semibold">Patients</p>
@@ -156,10 +222,17 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             </div>
             <Link
               href="/kids"
-              className="rm-glow-kids mt-6 flex items-center justify-between overflow-hidden rounded-[1.5rem] p-5"
+              className="rm-glow-kids relative mt-8 block overflow-hidden rounded-[1.75rem] shadow-[0_18px_36px_rgba(40,24,8,0.16)]"
             >
-              <span className="rm-kids-type kids-title-ink text-2xl">Kids Quest</span>
-              <span className="kids-cta rm-btn h-11 rounded-full px-5 text-sm">Open</span>
+              <PhotoFrame src="/images/landing-kids-quest.webp" alt="Kids Quest adventure world." className="h-44 sm:h-56" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#2a1848]/70 via-[#2a1848]/25 to-transparent" />
+              <div className="absolute inset-0 flex items-end justify-between gap-4 p-5 sm:p-7">
+                <div>
+                  <p className="rm-kids-type text-sm font-bold uppercase tracking-[0.16em] text-amber-200">Younger patients</p>
+                  <p className="rm-kids-type mt-1 text-3xl text-amber-50 drop-shadow">Kids Quest</p>
+                </div>
+                <span className="kids-cta rm-btn rm-kids-type h-11 rounded-full px-5 text-sm">Open</span>
+              </div>
             </Link>
           </div>
         </section>

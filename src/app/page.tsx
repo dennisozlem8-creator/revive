@@ -9,6 +9,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { t } from "@/lib/i18n";
 import { AuthLanding } from "@/components/AuthLanding";
 import { isCareTeam } from "@/lib/users";
+import { PhotoFrame } from "@/components/LandingMedia";
 
 const areaIcons: Record<string, ReactNode> = {
   ankle: (
@@ -64,29 +65,38 @@ export default function Home() {
       <Header linkHome />
 
       <main className="relative z-10 mx-auto flex w-full max-w-5xl flex-col px-6 pb-8">
-        <section className="overflow-hidden rounded-[1.75rem] border border-[var(--border)] bg-white p-6 shadow-[0_16px_40px_rgba(27,51,72,0.07)] sm:p-8">
-          <p className="rm-label text-brand-light">Physical Therapy Assistance</p>
-          <h1 className="rm-serif mt-2 text-[2rem] font-semibold leading-tight text-foreground sm:text-4xl">
-            {isPatient ? `Welcome back, ${firstName}.` : t("moveBetter", locale)}
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg leading-8 text-body">
-            {isPatient
-              ? "Start today's session from your briefing, or open a body area for a full assessment."
-              : isCareTeam(user.role)
-                ? "Open a linked patient from the care dashboard, or screen a body area."
-                : "Choose a body area for screening questions, movement tests, and exercises made for you."}
-          </p>
-          <div className="mt-6 flex flex-col gap-3 sm:max-w-md">
-            {isPatient && (
-              <Link href="/briefing" className="rm-btn rm-btn-brand inline-flex w-full rounded-full">
-                {t("goToBriefing", locale)} →
-              </Link>
-            )}
-            {isCareTeam(user.role) && (
-              <Link href="/doctor" className="rm-btn rm-btn-brand inline-flex w-full rounded-full">
-                Open care dashboard →
-              </Link>
-            )}
+        <section className="overflow-hidden rounded-[1.75rem] border border-[var(--border)] bg-white shadow-[0_16px_40px_rgba(27,51,72,0.07)]">
+          <div className="grid lg:grid-cols-[minmax(0,1.1fr)_minmax(14rem,0.9fr)]">
+            <div className="p-6 sm:p-8">
+              <p className="rm-label text-brand-light">Physical Therapy Assistance</p>
+              <h1 className="rm-serif mt-2 text-[2rem] font-semibold leading-tight text-foreground sm:text-4xl">
+                {isPatient ? `Welcome back, ${firstName}.` : t("moveBetter", locale)}
+              </h1>
+              <p className="mt-3 max-w-2xl text-lg leading-8 text-body">
+                {isPatient
+                  ? "Start today's session from your briefing, or open a body area for a full assessment."
+                  : isCareTeam(user.role)
+                    ? "Open a linked patient from the care dashboard, or screen a body area."
+                    : "Choose a body area for screening questions, movement tests, and exercises made for you."}
+              </p>
+              <div className="mt-6 flex flex-col gap-3 sm:max-w-md">
+                {isPatient && (
+                  <Link href="/briefing" className="rm-btn rm-btn-brand inline-flex w-full rounded-full">
+                    {t("goToBriefing", locale)} →
+                  </Link>
+                )}
+                {isCareTeam(user.role) && (
+                  <Link href="/doctor" className="rm-btn rm-btn-brand inline-flex w-full rounded-full">
+                    Open care dashboard →
+                  </Link>
+                )}
+              </div>
+            </div>
+            <PhotoFrame
+              src={isCareTeam(user.role) ? "/images/landing-exercise.webp" : "/images/landing-hero-photo.webp"}
+              alt=""
+              className="hidden h-full min-h-[14rem] lg:block"
+            />
           </div>
         </section>
 
@@ -97,21 +107,30 @@ export default function Home() {
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Link
                 href="/goniometer"
-                className="rm-card p-5 transition hover:border-brand/50 hover:shadow-md"
+                className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md"
               >
-                <p className="rm-label text-brand-light">Measure</p>
-                <h3 className="mt-2 text-lg font-semibold">Photo Goniometer</h3>
-                <p className="mt-1 text-sm leading-6 text-body">Record a clip and get the next sets.</p>
+                <PhotoFrame src="/images/landing-hero-photo.webp" alt="" className="h-28" />
+                <div className="p-5">
+                  <p className="rm-label text-brand-light">Measure</p>
+                  <h3 className="mt-2 text-lg font-semibold">Photo Goniometer</h3>
+                  <p className="mt-1 text-sm leading-6 text-body">Record a clip and get the next sets.</p>
+                </div>
               </Link>
-              <Link href="/muscle" className="rm-card p-5 transition hover:border-brand/50 hover:shadow-md">
-                <p className="rm-label text-brand-light">Sensor</p>
-                <h3 className="mt-2 text-lg font-semibold">MyoWare 2.0</h3>
-                <p className="mt-1 text-sm leading-6 text-body">Connect the muscle sensor over Bluetooth or USB.</p>
+              <Link href="/muscle" className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md">
+                <PhotoFrame src="/images/landing-myoware-arm.webp" alt="" className="h-28" />
+                <div className="p-5">
+                  <p className="rm-label text-brand-light">Sensor</p>
+                  <h3 className="mt-2 text-lg font-semibold">MyoWare 2.0</h3>
+                  <p className="mt-1 text-sm leading-6 text-body">Connect the muscle sensor over Bluetooth or USB.</p>
+                </div>
               </Link>
-              <Link href="/session" className="rm-card p-5 transition hover:border-brand/50 hover:shadow-md">
-                <p className="rm-label text-brand-light">Session</p>
-                <h3 className="mt-2 text-lg font-semibold">Live recovery</h3>
-                <p className="mt-1 text-sm leading-6 text-body">Run today&apos;s ROM test and exercises.</p>
+              <Link href="/session" className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md">
+                <PhotoFrame src="/images/landing-mpu-knee.webp" alt="" className="h-28" />
+                <div className="p-5">
+                  <p className="rm-label text-brand-light">Session</p>
+                  <h3 className="mt-2 text-lg font-semibold">Live recovery</h3>
+                  <p className="mt-1 text-sm leading-6 text-body">Run today&apos;s ROM test and exercises.</p>
+                </div>
               </Link>
             </div>
           </section>
@@ -140,8 +159,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="rm-glow-kids relative mt-8 overflow-hidden rounded-[1.75rem] p-6 sm:p-8">
-          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <section className="relative mt-8 overflow-hidden rounded-[1.75rem]">
+          <PhotoFrame src="/images/landing-kids-quest.webp" alt="" className="h-48 sm:h-56" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2a1848]/75 via-[#2a1848]/35 to-transparent" />
+          <div className="rm-glow-kids absolute inset-0 flex flex-col justify-end gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
             <div className="kids-glass p-5 sm:max-w-xl">
               <p className="rm-kids-type flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-[#8a4a10]">
                 Younger patients

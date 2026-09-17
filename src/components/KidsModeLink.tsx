@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "./AuthProvider";
 import { KidsIcon } from "./KidsIcon";
-import { KidsQuestBannerArt } from "./LandingArt";
+import { SafePicture } from "./SafePicture";
 
 const KIDS_HREF = "/kids";
 
@@ -39,7 +39,11 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
         <span className="flex justify-center" aria-hidden>
           <KidsIcon name="gamepad" size={56} />
         </span>
-        <KidsQuestBannerArt className="mx-auto mt-2 h-24 w-full object-cover sm:h-28" />
+        <SafePicture
+          src="/images/landing-kids-quest.webp"
+          alt=""
+          className="mx-auto mt-2 h-24 w-full rounded-xl object-cover object-[center_40%] sm:h-28"
+        />
         <p className="mt-3 inline-flex items-center justify-center gap-2 text-lg font-bold text-amber-900">
           <KidsIcon name="gamepad" size={28} />
           Enter Kids Quest World
