@@ -125,7 +125,7 @@ export default function Home() {
                 </div>
               </Link>
               <Link href="/session" className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md">
-                <PhotoFrame src="/images/landing-mpu-knee.webp" alt="" className="h-28" />
+                <PhotoFrame src="/images/landing-mpu-knee.webp?v=real" alt="" className="h-28" />
                 <div className="p-5">
                   <p className="rm-label text-brand-light">Session</p>
                   <h3 className="mt-2 text-lg font-semibold">Live recovery</h3>

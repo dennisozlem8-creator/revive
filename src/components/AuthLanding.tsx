@@ -46,8 +46,8 @@ const solutions = [
     title: "Motion sensor",
     subtitle: "MPU-6050 on the joint.",
     points: ["Live angle", "Hands-free", "During the session"],
-    src: "/images/landing-mpu-knee.webp",
-    alt: "Motion sensor strapped to a knee.",
+    src: "/images/landing-mpu-knee.webp?v=real",
+    alt: "MPU motion sensors on the upper arm and wrist with the joint angle marked.",
     className: "border-[#c5c9e8] bg-[#eef0fb]",
     titleClass: "text-[#4a4f8a]",
   },
@@ -180,7 +180,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               </PhonePreview>
               <PhonePreview title="Session">
                 <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
-                  <PhotoFrame src="/images/landing-mpu-knee.webp" alt="" className="h-28" />
+                  <PhotoFrame src="/images/landing-mpu-knee.webp?v=real" alt="" className="h-28" />
                   <div className="p-3">
                     <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-light">Live</p>
                     <p className="rm-serif mt-1 text-3xl font-semibold">92 deg</p>
