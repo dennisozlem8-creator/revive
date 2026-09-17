@@ -1,38 +1,44 @@
 import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
-import { JointMarks, MpuAnglePhoto, MyoWarePhoto, PhonePreview, PhotoFrame, RomChart } from "@/components/LandingMedia";
+import { JointMarks, MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame } from "@/components/LandingMedia";
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
+import { SessionStack } from "@/components/SessionStack";
 
 type AuthLandingProps = {
   mode: "login" | "register";
 };
 
 const cycle = [
-  { n: "01", word: "Measure", line: "Photo, MPU-6050, or MyoWare." },
-  { n: "02", word: "Coach", line: "Follow today’s session next." },
-  { n: "03", word: "Report", line: "Angles stay with the care team." },
-  { n: "04", word: "Improve", line: "The next plan uses this reading." },
+  { n: "01", word: "Measure", line: "Photo, MPU-6050, or MyoWare on this device.", color: "#9dc4b0" },
+  { n: "02", word: "Coach", line: "Follow today’s session after the reading.", color: "#7eb3d9" },
+  { n: "03", word: "Report", line: "Angles stay with the care team.", color: "#4f90c6" },
+  { n: "04", word: "Improve", line: "The next plan uses what you just recorded.", color: "#3a7d62" },
 ] as const;
 
-const steps = [
+const steps: {
+  n: string;
+  title: string;
+  text: string;
+  src?: string;
+  alt?: string;
+  marks?: boolean;
+}[] = [
   {
-    n: "1",
+    n: "01",
     title: "Take a side-view photo",
     text: "A helper photographs the seated joint. Phone camera only.",
     src: "/images/landing-hero-photo.webp?v=3",
     alt: "A helper photographs a seated patient from the side.",
   },
   {
-    n: "2",
+    n: "02",
     title: "Tap hip, knee, ankle",
     text: "The app marks the three points and shows the angle.",
-    src: "/images/landing-leg-marks.webp",
-    alt: "Side view of a seated knee ready to mark.",
     marks: true,
   },
   {
-    n: "3",
+    n: "03",
     title: "Do today’s session",
     text: "Follow the exercises your clinician set for today.",
     src: "/images/landing-exercise.webp",
@@ -40,75 +46,31 @@ const steps = [
   },
 ];
 
-const ways = [
+const ways: {
+  title: string;
+  text: string;
+  src?: string;
+  alt?: string;
+  mpu?: boolean;
+  myoware?: boolean;
+}[] = [
   {
     title: "Photo",
-    device: "Phone camera. No extra device.",
-    points: [
-      "A helper takes one side-view photo of the seated joint.",
-      "Tap hip, then knee, then ankle on the photo.",
-      "The app shows the joint angle right away.",
-      "That number is saved for the clinician.",
-    ],
+    text: "Phone camera. Tap hip, knee, then ankle. The angle is saved for the clinician.",
     src: "/images/landing-hero-photo.webp?v=3",
     alt: "Helper photographing a seated patient.",
-    className: "border-[#b7d4c4] bg-[#e7f6ee]",
-    titleClass: "text-[#2a7a58]",
-    fit: "cover" as const,
   },
   {
     title: "Motion sensor",
-    device: "MPU-6050 straps on the joint.",
-    points: [
-      "Strap one sensor above the joint and one below it.",
-      "Do the session as usual. No helper needs to take photos.",
-      "The app shows a live angle while you move, such as 92 deg.",
-      "Hold that position, then do the next rep.",
-    ],
-    src: "/images/landing-mpu.png?v=4",
-    alt: "Revive Motion MPU-6050 straps with a live 92 degree elbow angle.",
-    className: "border-[#c5c9e8] bg-[#eef0fb]",
-    titleClass: "text-[#4a4f8a]",
-    fit: "contain" as const,
+    text: "MPU-6050 straps above and below the joint. Live angle while you move, such as 92 deg.",
     mpu: true,
   },
   {
     title: "Muscle sensor",
-    device: "MyoWare 2.0 pads on the muscle.",
-    points: [
-      "Place the pads on the muscle you are working.",
-      "Flex. The line on screen rises when the muscle works harder.",
-      "Connect with Bluetooth or a USB cable.",
-      "The clinician can see how hard the muscle worked.",
-    ],
-    src: "/images/landing-myoware.png?v=5",
-    alt: "MyoWare muscle sensor with electrode pads on an upper arm.",
-    className: "border-[#d0c4e4] bg-[#f3eefc]",
-    titleClass: "text-[#5a3d8a]",
-    fit: "contain" as const,
+    text: "MyoWare 2.0 pads on the muscle. Flex, then connect with Bluetooth or a USB cable.",
     myoware: true,
   },
 ];
-
-function CycleStrip({ className = "" }: { className?: string }) {
-  return (
-    <ol
-      className={`grid grid-cols-2 gap-2 sm:grid-cols-4 ${className}`}
-      aria-label="Measure, Coach, Report, Improve"
-    >
-      {cycle.map((item) => (
-        <li
-          key={item.word}
-          className="rounded-xl bg-white/90 px-2.5 py-2 shadow-[0_6px_16px_rgba(27,51,72,0.05)] ring-1 ring-[#4f90c6]/12 sm:px-3 sm:py-2.5"
-        >
-          <p className="text-[10px] font-bold tracking-[0.16em] text-brand-light">{item.n}</p>
-          <p className="rm-serif text-base font-semibold leading-tight text-foreground sm:text-lg">{item.word}</p>
-          <p className="mt-0.5 text-[12px] leading-4 text-muted sm:text-sm sm:leading-5">{item.line}</p>
-        </li>
-      ))}
-    </ol>
-  );
-}
 
 export function AuthLanding({ mode }: AuthLandingProps) {
   const cta = mode === "login" ? "Sign in" : "Create an account";
@@ -149,13 +111,13 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 See how
               </a>
             </div>
-            <CycleStrip className="mt-4" />
 
-            <div className="mt-4 grid items-stretch gap-3 lg:mt-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(20rem,0.88fr)] lg:gap-4">
+            <div className="mt-5 grid items-stretch gap-3 lg:grid-cols-[minmax(0,1.12fr)_minmax(20rem,0.88fr)] lg:gap-4">
               <PhotoFrame
-                src="/images/landing-hero-photo.webp?v=3"
-                alt="A helper photographs a seated patient from the side in a living room."
-                className="order-2 min-h-[11rem] self-stretch rounded-[1.25rem] shadow-[0_16px_36px_rgba(27,51,72,0.12)] sm:min-h-[14rem] lg:order-1 lg:min-h-0"
+                src="/images/landing-older-phone.webp?v=1"
+                alt="An older patient using Revive Motion on a phone at home."
+                imgClassName="object-[center_18%]"
+                className="order-2 min-h-[16rem] self-stretch rounded-[1.25rem] shadow-[0_16px_36px_rgba(27,51,72,0.12)] sm:min-h-[20rem] lg:order-1 lg:min-h-0"
               />
               <section id="go-in" className="order-1 flex scroll-mt-20 lg:order-2">
                 <div className="flex h-full w-full flex-col justify-center rounded-[1.25rem] bg-white p-3 shadow-[0_16px_36px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/15 sm:p-4">
@@ -166,7 +128,43 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section id="how-it-works" className="scroll-mt-20 bg-white">
+        <section id="how-it-works" className="scroll-mt-20 bg-[#1b3348] text-white">
+          <div className="mx-auto grid w-full max-w-6xl items-stretch lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+            <div className="flex flex-col justify-center px-4 py-10 sm:px-6 lg:sticky lg:top-16 lg:self-start lg:px-8 lg:py-16">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#9dc4b0]">Guided on this device</p>
+              <h2 className="rm-serif mt-2 text-3xl font-semibold leading-[1.1] sm:text-4xl">
+                Sessions you can do at home, with the care team still in the loop.
+              </h2>
+              <p className="mt-3 max-w-md text-sm leading-6 text-white/80 sm:text-base">
+                Photograph the joint, or wear a sensor. Then follow today’s plan. Live angles and effort stay with the clinician — no made-up scores, just what you record.
+              </p>
+              <ol className="relative mt-6 space-y-4 border-l border-white/20 pl-5" aria-label="Measure, Coach, Report, Improve">
+                {cycle.map((item) => (
+                  <li key={item.word} className="relative">
+                    <span
+                      aria-hidden
+                      className="absolute -left-[1.54rem] top-1.5 h-3 w-3 rounded-full ring-4 ring-[#1b3348]"
+                      style={{ background: item.color }}
+                    />
+                    <p className="text-sm font-semibold">{item.word}</p>
+                    <p className="text-sm leading-5 text-white/70">{item.line}</p>
+                  </li>
+                ))}
+              </ol>
+              <a
+                href="#go-in"
+                className="mt-7 inline-flex h-11 w-fit items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb]"
+              >
+                {cta}
+              </a>
+            </div>
+            <div className="px-4 pb-10 sm:px-6 lg:px-8 lg:py-10">
+              <SessionStack />
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[#f7fbfe]">
           <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -179,32 +177,23 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {steps.map((step) => (
-                <article
+                <OverlayCard
                   key={step.n}
-                  className="overflow-hidden rounded-[1.25rem] bg-[#f7fbfe] shadow-[0_10px_22px_rgba(27,51,72,0.05)] ring-1 ring-[#4f90c6]/10"
-                >
-                  <div className="relative">
-                    {"marks" in step && step.marks ? (
-                      <JointMarks className="h-36 sm:h-40" />
-                    ) : (
-                      <PhotoFrame src={step.src} alt={step.alt} className="h-36 sm:h-40" />
-                    )}
-                    <span className="rm-serif absolute left-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white text-sm font-semibold text-foreground shadow-sm">
-                      {step.n}
-                    </span>
-                  </div>
-                  <div className="px-3 py-3">
-                    <h3 className="text-base font-semibold leading-snug">{step.title}</h3>
-                    <p className="mt-0.5 text-sm leading-5 text-body">{step.text}</p>
-                  </div>
-                </article>
+                  kicker={step.n}
+                  title={step.title}
+                  text={step.text}
+                  src={step.src}
+                  alt={step.alt}
+                  media={
+                    step.marks ? <JointMarks className="absolute inset-0 h-full w-full" /> : undefined
+                  }
+                />
               ))}
             </div>
-            <RomChart className="mt-3 rounded-[1.25rem]" />
           </div>
         </section>
 
-        <section id="sensors" className="scroll-mt-20 bg-[#e8f3fb]">
+        <section id="sensors" className="scroll-mt-20 bg-white">
           <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -215,46 +204,29 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 You do not need all three. Pick the method your clinician asked for, or start with a photo.
               </p>
             </div>
-            <div className="mt-5 space-y-4">
+            <div className="mt-5 grid gap-3 lg:grid-cols-3">
               {ways.map((item, index) => (
-                <article
+                <OverlayCard
                   key={item.title}
-                  className="grid items-stretch overflow-hidden rounded-[1.25rem] bg-white/70 shadow-[0_10px_22px_rgba(27,51,72,0.05)] ring-1 ring-black/5 lg:grid-cols-2"
-                >
-                  <div className={index % 2 === 1 ? "lg:order-2" : ""}>
-                    {"mpu" in item && item.mpu ? (
-                      <MpuAnglePhoto className="h-44 sm:h-52 lg:h-full lg:min-h-[16rem]" />
-                    ) : "myoware" in item && item.myoware ? (
-                      <MyoWarePhoto className="h-44 sm:h-52 lg:h-full lg:min-h-[16rem]" />
-                    ) : (
-                      <PhotoFrame
-                        src={item.src}
-                        alt={item.alt}
-                        fit={item.fit}
-                        className="h-44 sm:h-52 lg:h-full lg:min-h-[16rem]"
-                      />
-                    )}
-                  </div>
-                  <div className={`flex flex-col justify-center p-4 sm:p-5 ${item.className}`}>
-                    <p className="text-[10px] font-bold tracking-[0.16em] text-brand-light">0{index + 1}</p>
-                    <h3 className={`mt-0.5 text-lg font-bold uppercase tracking-tight ${item.titleClass}`}>{item.title}</h3>
-                    <p className="mt-0.5 text-sm font-semibold">{item.device}</p>
-                    <ul className="mt-2.5 space-y-1.5 text-sm leading-5 text-body">
-                      {item.points.map((point) => (
-                        <li key={point} className="flex gap-2">
-                          <span aria-hidden className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </article>
+                  kicker={`0${index + 1}`}
+                  title={item.title}
+                  text={item.text}
+                  src={item.src}
+                  alt={item.alt}
+                  media={
+                    item.mpu ? (
+                      <MpuAnglePhoto className="absolute inset-0 h-full w-full" />
+                    ) : item.myoware ? (
+                      <MyoWarePhoto className="absolute inset-0 h-full w-full" />
+                    ) : undefined
+                  }
+                />
               ))}
             </div>
           </div>
         </section>
 
-        <section id="features" className="scroll-mt-20 bg-white py-8 lg:py-10">
+        <section id="features" className="scroll-mt-20 bg-[#e8f3fb] py-8 lg:py-10">
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -290,7 +262,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 <div className="flex h-full flex-col rounded-xl bg-white px-2.5 py-2 sm:px-3 sm:py-2.5">
                   <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-light">Trend</p>
                   <p className="text-sm font-semibold leading-snug sm:text-base">Range this week</p>
-                  <svg viewBox="0 0 160 70" className="mt-1 w-full flex-1 min-h-[3.25rem]">
+                  <svg viewBox="0 0 160 70" className="mt-1 min-h-[3.25rem] w-full flex-1">
                     <polyline points="8,58 40,50 72,42 104,28 150,16" fill="none" stroke="#4f90c6" strokeWidth="4" />
                     <circle cx="150" cy="16" r="4" fill="#3a7d62" />
                   </svg>
@@ -313,20 +285,32 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 </div>
               </PhonePreview>
             </div>
-            <Link
-              href="/kids"
-              className="rm-glow-kids relative mt-4 block overflow-hidden rounded-[1.25rem] shadow-[0_12px_24px_rgba(40,24,8,0.14)]"
-            >
-              <PhotoFrame src="/images/landing-kids-quest.webp" alt="Kids Quest adventure world." className="h-28 sm:h-36" />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#2a1848]/70 via-[#2a1848]/20 to-transparent" />
-              <div className="absolute inset-0 flex items-end justify-between gap-3 p-3 sm:p-5">
-                <div>
-                  <p className="rm-kids-type text-[11px] font-bold uppercase tracking-[0.16em] text-amber-200">Younger patients</p>
-                  <p className="rm-kids-type mt-0.5 text-xl text-amber-50 drop-shadow sm:text-3xl">Kids Quest</p>
+            <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+              <OverlayCard
+                src="/images/landing-younger-phone.webp?v=1"
+                alt="A younger patient following a session on a phone."
+                kicker="Younger adults"
+                title="The same session on a phone"
+                text="Open today’s briefing, take the reading, then do the reps. Nothing extra to install."
+                href="#go-in"
+                className="min-h-[14rem] sm:min-h-[16rem]"
+              />
+              <Link
+                href="/kids"
+                className="rm-glow-kids relative block min-h-[14rem] overflow-hidden rounded-[1.35rem] shadow-[0_12px_24px_rgba(40,24,8,0.14)] sm:min-h-[16rem]"
+              >
+                <PhotoFrame src="/images/landing-kids-quest.webp" alt="Kids Quest adventure world." className="absolute inset-0 h-full w-full" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#2a1848]/80 via-[#2a1848]/20 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
+                  <div>
+                    <p className="rm-kids-type text-[11px] font-bold uppercase tracking-[0.16em] text-amber-200">Younger patients</p>
+                    <p className="rm-kids-type mt-0.5 text-2xl text-amber-50 drop-shadow sm:text-3xl">Kids Quest</p>
+                    <p className="mt-1 text-sm font-medium text-amber-100/90">Storybook world. No sign-in.</p>
+                  </div>
+                  <span className="kids-cta rm-btn rm-kids-type h-9 min-h-0 rounded-full px-4 text-sm">Open</span>
                 </div>
-                <span className="kids-cta rm-btn rm-kids-type h-9 rounded-full px-4 text-sm sm:h-10 sm:px-5">Open</span>
-              </div>
-            </Link>
+              </Link>
+            </div>
           </div>
         </section>
       </main>
@@ -338,7 +322,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               <Logo size={36} showText={false} compact />
               <span className="font-semibold tracking-tight">Revive Motion</span>
             </div>
-            <p className="mt-1.5 text-xs font-semibold tracking-[0.14em] text-brand-light uppercase">
+            <p className="mt-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-light">
               Measure : Coach : Report : Improve
             </p>
           </div>

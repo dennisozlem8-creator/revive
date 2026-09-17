@@ -68,8 +68,9 @@ export default function Home() {
         <section className="overflow-hidden rounded-[1.25rem] border border-[var(--border)] bg-white shadow-[0_12px_28px_rgba(27,51,72,0.07)]">
           <div className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(14rem,0.85fr)]">
             <PhotoFrame
-              src={isCareTeam(user.role) ? "/images/landing-exercise.webp" : "/images/landing-hero-photo.webp?v=3"}
+              src={isCareTeam(user.role) ? "/images/landing-exercise.webp" : "/images/landing-older-phone.webp?v=1"}
               alt=""
+              imgClassName="object-[center_18%]"
               className="h-32 sm:h-40 lg:order-2 lg:h-full lg:min-h-[12rem]"
             />
             <div className="p-4 sm:p-5">

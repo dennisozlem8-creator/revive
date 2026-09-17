@@ -7,19 +7,21 @@ export function PhotoFrame({
   className = "",
   children,
   fit = "cover",
+  imgClassName = "",
 }: {
   src: string;
   alt: string;
   className?: string;
   children?: ReactNode;
   fit?: "cover" | "contain";
+  imgClassName?: string;
 }) {
   return (
     <div className={`relative overflow-hidden ${fit === "contain" ? "bg-white" : "bg-[#d7e8f6]"} ${className}`}>
       <SafePicture
         src={src}
         alt={alt}
-        className={`absolute inset-0 h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
+        className={`absolute inset-0 h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"} ${imgClassName}`}
       />
       {children}
     </div>
@@ -132,6 +134,49 @@ export function RomChart({ className = "" }: { className?: string }) {
       </svg>
     </div>
   );
+}
+
+export function OverlayCard({
+  src,
+  alt = "",
+  kicker,
+  title,
+  text,
+  media,
+  href,
+  className = "",
+}: {
+  src?: string;
+  alt?: string;
+  kicker?: string;
+  title: string;
+  text: string;
+  media?: ReactNode;
+  href?: string;
+  className?: string;
+}) {
+  const inner = (
+    <>
+      {media ?? (src ? <PhotoFrame src={src} alt={alt} className="absolute inset-0 h-full w-full" imgClassName="object-[center_22%]" /> : null)}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#1b3348]/80 via-[#1b3348]/15 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-4 text-white sm:p-5">
+        {kicker ? (
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/80">{kicker}</p>
+        ) : null}
+        <h3 className="rm-serif mt-0.5 text-xl font-semibold leading-tight sm:text-2xl">{title}</h3>
+        <p className="mt-1 max-w-md text-sm leading-5 text-white/90">{text}</p>
+      </div>
+    </>
+  );
+  const cls = `relative isolate block min-h-[17rem] overflow-hidden rounded-[1.35rem] sm:min-h-[21rem] ${className}`;
+  if (href) {
+    return (
+      <a href={href} className={cls}>
+        {inner}
+      </a>
+    );
+  }
+  return <article className={cls}>{inner}</article>;
 }
 
 export function PhonePreview({
