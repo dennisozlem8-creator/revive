@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Exercise } from "@/lib/assessments";
 import { getExerciseMedia, getKidsExerciseImage } from "@/lib/exercise-media";
 import { persistMeasurement } from "@/lib/goniometer";
-import { myoWareBrowserHelp } from "@/lib/myoware-sensor";
 import { useAuth } from "./AuthProvider";
 import {
   createKidsSensorReading,
@@ -167,7 +166,7 @@ export function QuestGame({
   }
 
   function speech() {
-    if (!measure) return `The bots ask. You stretch, ${firstName}. Pick photo, motion, or muscle.`;
+    if (!measure) return `The bots ask. You stretch. Pick photo, motion, or muscle.`;
     if (done) return `Great work, ${firstName}. Stretch complete.`;
     if (measure === "photo") {
       if (!recording) return "Stand where the camera can see the stretch.";
@@ -323,7 +322,7 @@ export function QuestGame({
                 </div>
               )}
               {!muscle.connected && !muscle.connecting && (
-                <p className="mt-2 text-sm text-[#5b6685]">{myoWareBrowserHelp()}</p>
+                <p className="mt-2 text-sm text-[#5b6685]">Chrome on a computer. Ask a grown-up to tap Bluetooth or USB.</p>
               )}
             </div>
           )}
