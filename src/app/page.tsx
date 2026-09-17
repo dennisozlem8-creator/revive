@@ -93,7 +93,7 @@ export default function Home() {
               </div>
             </div>
             <PhotoFrame
-              src={isCareTeam(user.role) ? "/images/landing-exercise.webp" : "/images/landing-hero-photo.webp"}
+              src={isCareTeam(user.role) ? "/images/landing-exercise.webp" : "/images/landing-hero-photo.webp?v=2"}
               alt=""
               className="hidden h-full min-h-[14rem] lg:block"
             />
@@ -109,7 +109,7 @@ export default function Home() {
                 href="/goniometer"
                 className="rm-card overflow-hidden p-0 transition hover:border-brand/50 hover:shadow-md"
               >
-                <PhotoFrame src="/images/landing-hero-photo.webp" alt="" className="h-28" />
+                <PhotoFrame src="/images/landing-hero-photo.webp?v=2" alt="" className="h-28" />
                 <div className="p-5">
                   <p className="rm-label text-brand-light">Measure</p>
                   <h3 className="mt-2 text-lg font-semibold">Photo Goniometer</h3>
