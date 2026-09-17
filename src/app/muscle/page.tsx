@@ -41,16 +41,15 @@ export default function MuscleSensorPage() {
       <DashIntro
         kicker="Muscle sensor"
         title="MyoWare 2.0"
-        text="Connect with Bluetooth or USB, then flex. Or play a demo flex to see effort spike on this screen."
+        text="Play a demo flex to see effort spike. Connect Bluetooth or USB for real ENV from the pads."
       />
       <div className="mt-5">
         <MuscleLiveDemo />
       </div>
       <PhotoFrame src="/images/landing-myoware.png?v=6" alt="" className="mt-6 h-40 rounded-[1.35rem] lg:hidden" />
 
-      <DashCard className="mt-6 p-5">
-          <h2 className="font-semibold">Wireless — do this now</h2>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-body">
+      <HelpBlock title="Wireless — do this now">
+          <ol className="list-decimal space-y-2 pl-5">
             <li>Leave the Elegoo Uno unplugged. The Wireless Shield has its own USB port and battery.</li>
             <li>Unstack the Wireless Shield from the muscle sensor. Plug USB into the <strong className="text-foreground">Wireless Shield</strong>.</li>
             <li>
@@ -80,11 +79,11 @@ export default function MuscleSensorPage() {
               <strong className="text-foreground">MyoWareSensor1</strong>. Flex.
             </li>
           </ol>
-          <p className="mt-3 text-sm text-muted">
+          <p className="mt-3">
             Good signs: the LED stays on after Chrome connects, then ENV numbers jump when you flex.
             Factory firmware waits for USB and will not work with this website — upload the file above.
           </p>
-      </DashCard>
+      </HelpBlock>
 
         <div className="mt-6">
           <MyoWarePanel />
