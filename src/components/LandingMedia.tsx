@@ -28,6 +28,27 @@ export function PhotoFrame({
   );
 }
 
+/** Unique square Revive Motion photo-goniometer shot, composed to fill overlay cards. */
+export function PhotoGoniometerPhoto({
+  className = "",
+  alt = "Revive Motion photo goniometer: navy polo, smartphone photographing a bent knee with a live 92 degree overlay.",
+  imgClassName = "object-cover object-center",
+}: {
+  className?: string;
+  alt?: string;
+  imgClassName?: string;
+}) {
+  return (
+    <div className={`relative overflow-hidden bg-[#d7e8f6] ${className}`}>
+      <SafePicture
+        src="/images/landing-photo-goniometer.png?v=1"
+        alt={alt}
+        className={`absolute inset-0 h-full w-full ${imgClassName}`}
+      />
+    </div>
+  );
+}
+
 /** Unique square Revive Motion MPU shot, composed to fill overlay cards. */
 export function MpuAnglePhoto({
   className = "",

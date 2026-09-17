@@ -39,7 +39,7 @@ const measures: { id: MeasureId; kicker: string; name: string; line: string; ima
     kicker: "Photo Goniometer",
     name: "Photo",
     line: "Match the picture. Do the stretch.",
-    image: "/images/landing-hero-photo.webp?v=3",
+    image: "/images/landing-photo-goniometer.png?v=1",
   },
   {
     id: "motion",

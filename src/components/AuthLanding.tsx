@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
-import { JointMarks, MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame } from "@/components/LandingMedia";
+import { JointMarks, MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame, PhotoGoniometerPhoto } from "@/components/LandingMedia";
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
 import { SessionStack } from "@/components/SessionStack";
@@ -51,14 +51,14 @@ const ways: {
   text: string;
   src?: string;
   alt?: string;
+  photo?: boolean;
   mpu?: boolean;
   myoware?: boolean;
 }[] = [
   {
     title: "Photo",
     text: "Phone camera. Tap hip, knee, then ankle. The angle is saved for the clinician.",
-    src: "/images/landing-hero-photo.webp?v=3",
-    alt: "Helper photographing a seated patient.",
+    photo: true,
   },
   {
     title: "Motion sensor",
@@ -214,7 +214,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   src={item.src}
                   alt={item.alt}
                   media={
-                    item.mpu ? (
+                    item.photo ? (
+                      <PhotoGoniometerPhoto className="absolute inset-0 h-full w-full" />
+                    ) : item.mpu ? (
                       <MpuAnglePhoto className="absolute inset-0 h-full w-full" />
                     ) : item.myoware ? (
                       <MyoWarePhoto className="absolute inset-0 h-full w-full" />
