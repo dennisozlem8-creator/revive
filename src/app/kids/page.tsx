@@ -28,11 +28,11 @@ import { SafePicture } from "@/components/SafePicture";
 import type { KidsIconName } from "@/lib/kids-icons";
 
 const questZones: { id: string; icon: KidsIconName; name: string; image: string }[] = [
-  { id: "ankle", icon: "foot", name: "Ankle Island", image: "/kids/zones/ankle.svg" },
-  { id: "knee", icon: "knee", name: "Knee Kingdom", image: "/kids/zones/knee.svg" },
-  { id: "lower-back", icon: "wave", name: "Back Bay", image: "/kids/zones/back.svg" },
-  { id: "wrist", icon: "hand", name: "Wrist Woods", image: "/kids/zones/wrist.svg" },
-  { id: "other", icon: "star", name: "Mystery Meadow", image: "/kids/zones/meadow.svg" },
+  { id: "ankle", icon: "anklebot", name: "Ankle Island", image: "/kids/zones/ankle.webp?v=1" },
+  { id: "knee", icon: "kneebot", name: "Knee Bounce City", image: "/kids/zones/knee.webp?v=1" },
+  { id: "lower-back", icon: "backbot", name: "Back Stretch Bay", image: "/kids/zones/back.webp?v=1" },
+  { id: "wrist", icon: "wristbot", name: "Wrist Wiggle Woods", image: "/kids/zones/wrist.webp?v=1" },
+  { id: "other", icon: "meadowbot", name: "Mystery Meadow", image: "/kids/zones/meadow.webp?v=1" },
 ];
 
 const levels = [
@@ -52,7 +52,7 @@ export default function KidsQuestPage() {
   const firstName = user?.name.split(" ")[0] ?? "Hero";
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
-  const [speech, setSpeech] = useState(`Hey ${firstName}! Ready for your quest?`);
+  const [speech, setSpeech] = useState(`Hey ${firstName}! The bots are ready. Stretch, squat, and score.`);
   const [kidsProgress, setKidsProgress] = useState<KidsProgressData>(() => loadKidsProgress());
   const [celebrateIds, setCelebrateIds] = useState<string[]>([]);
   const [showWelcome, setShowWelcome] = useState(false);
@@ -94,7 +94,7 @@ export default function KidsQuestPage() {
         .map((id) => getCharacterById(id)?.name)
         .filter(Boolean)
         .join(", ");
-      setSpeech(`You unlocked ${names}! Check your hero collection!`);
+      setSpeech(`You unlocked ${names}! Meet your new quest bot!`);
     }
   }, [questProgress, streak]);
 
@@ -108,7 +108,7 @@ export default function KidsQuestPage() {
     setKidsProgress(next);
     saveKidsProgress(next);
     const char = getCharacterById(id);
-    if (char) setSpeech(`${char.name} is ready for adventure!`);
+    if (char) setSpeech(`${char.name} will count your reps today!`);
   };
 
   const area = selectedArea ? getBodyArea(selectedArea) : null;
@@ -136,9 +136,9 @@ export default function KidsQuestPage() {
 
       {showToast && !showWelcome && (
         <div className="fixed left-0 right-0 top-2 z-[60] flex justify-center px-4 animate-kids-toast">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/80 bg-white/90 px-5 py-2 text-sm font-bold text-amber-950 shadow-[0_10px_28px_rgba(40,24,8,0.18)] backdrop-blur">
+          <div className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/90 px-5 py-2 text-sm font-bold text-[#1a1a6a] shadow-[0_0_0_3px_#ff4fa3,0_10px_28px_rgba(20,20,90,0.18)] backdrop-blur">
             <KidsIcon name="star" size={22} />
-            Kids Quest World
+            Kids Quest HQ
             <KidsIcon name="sparkle" size={22} />
           </div>
         </div>
@@ -155,22 +155,22 @@ export default function KidsQuestPage() {
       <KidsModeBanner />
 
       <main className="relative z-10 mx-auto max-w-5xl px-4 pb-8 pt-3 sm:px-6">
-        <section className="relative overflow-hidden rounded-[1.75rem] border border-amber-200/50 shadow-[0_22px_44px_rgba(40,24,8,0.18)]">
+        <section className="relative overflow-hidden rounded-[1.75rem] border-4 border-white shadow-[0_0_0_4px_#ffe14a,0_22px_44px_rgba(20,20,90,0.18)]">
           <SafePicture
-            src="/kids/quest-map.svg"
-            alt=""
+            src="/kids/quest-hq.webp?v=1"
+            alt="Colorful quest bots waving from candy Kids Quest HQ."
             width={1200}
             height={360}
-            className="h-44 w-full object-cover sm:h-52"
+            className="h-44 w-full object-cover object-[center_70%] sm:h-52"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1a2848]/70 via-[#1a2848]/25 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a6a]/75 via-[#1a1a6a]/10 to-transparent" />
           <div className="absolute inset-0 flex flex-col justify-end gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-200">Revive Motion</p>
-              <h1 className="mt-1 text-3xl font-bold tracking-tight text-amber-50 drop-shadow-md sm:text-4xl">
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-yellow-200">The bots count your reps</p>
+              <h1 className="mt-1 text-3xl font-bold tracking-tight text-white drop-shadow-md sm:text-4xl">
                 Kids Quest
               </h1>
-              <p className="mt-1 flex items-center gap-1 text-sm font-semibold text-amber-100">
+              <p className="mt-1 flex items-center gap-1 text-sm font-semibold text-yellow-100">
                 <KidsIcon name="star" size={18} />
                 {level.name}
               </p>
@@ -206,11 +206,11 @@ export default function KidsQuestPage() {
             <section className="mt-6">
               <h2 className="kids-title-ink text-2xl sm:text-3xl">
                 <KidsIconTitle icon="map" size={34}>
-                  Quest map
+                  Stretch map
                 </KidsIconTitle>
               </h2>
               <p className="mt-1 flex items-center gap-1 text-sm font-medium text-indigo-900/75">
-                Choose a kingdom and start your quest.
+                Pick a candy zone. The bots ask — you stretch, squat, and score.
                 <KidsIcon name="rocket" size={20} />
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -220,7 +220,7 @@ export default function KidsQuestPage() {
                     type="button"
                     onClick={() => {
                       setSelectedArea(zone.id);
-                      setSpeech(`Enter ${zone.name}! Pick a quest.`);
+                      setSpeech(`Enter ${zone.name}! Pick a stretch quest.`);
                     }}
                     className="kids-zone text-left"
                   >
@@ -232,7 +232,7 @@ export default function KidsQuestPage() {
                         height={480}
                         className="h-full w-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#1a1840]/85 via-[#1a1840]/20 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a6a]/78 via-transparent to-transparent" />
                       <span className="absolute left-3 top-3 drop-shadow-lg" aria-hidden>
                         <KidsIcon name={zone.icon} size={48} />
                       </span>
@@ -240,7 +240,7 @@ export default function KidsQuestPage() {
                         <h2 className="text-xl font-bold tracking-tight text-amber-50 drop-shadow">
                           {zone.name}
                         </h2>
-                        <p className="mt-0.5 text-sm font-medium text-amber-100/90">Enter the quest zone</p>
+                        <p className="mt-0.5 text-sm font-medium text-amber-100/90">Stretch with the bots</p>
                       </div>
                     </div>
                   </button>
@@ -274,7 +274,7 @@ export default function KidsQuestPage() {
           <section className="mt-4">
             <button type="button" onClick={() => setSelectedArea(null)} className="text-sm font-bold text-amber-900">
               <span className="inline-flex items-center gap-1">
-                ← Back to quest map
+                ← Back to stretch map
                 <KidsIcon name="map" size={18} />
               </span>
             </button>
@@ -348,7 +348,7 @@ export default function KidsQuestPage() {
             Return to adult mode
           </Link>
           <p className="flex items-center justify-center gap-1 text-xs font-semibold text-amber-900/80">
-            Your XP, stars, and heroes are saved.
+            Your XP, stars, and quest bots are saved.
             <KidsIcon name="star" size={16} />
           </p>
         </div>

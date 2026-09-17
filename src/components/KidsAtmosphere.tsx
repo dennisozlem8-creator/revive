@@ -4,6 +4,11 @@ export function KidsAtmosphere() {
       <div className="kids-cloud kids-cloud-1" />
       <div className="kids-cloud kids-cloud-2" />
       <div className="kids-cloud kids-cloud-3" />
+      <span className="kids-orb kids-orb-1" />
+      <span className="kids-orb kids-orb-2" />
+      <span className="kids-orb kids-orb-3" />
+      <span className="kids-orb kids-orb-4" />
+      <span className="kids-orb kids-orb-5" />
       <span className="kids-star kids-star-1" />
       <span className="kids-star kids-star-2" />
       <span className="kids-star kids-star-3" />

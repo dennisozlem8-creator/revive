@@ -47,12 +47,12 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
         >
           {isKids ? (
             <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-b from-amber-100 to-amber-200 shadow-[0_0_0_1px_rgba(232,197,107,0.8),0_8px_18px_rgba(20,24,60,0.25)]">
-                <KidsIcon name="gamepad" size={40} />
+              <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border-2 border-white bg-white shadow-[0_0_0_3px_#ffe14a,0_8px_18px_rgba(20,24,60,0.25)]">
+                <KidsIcon name="hero" size={44} />
               </span>
               <div className="hidden sm:block">
                 <p className="text-sm font-bold leading-tight tracking-tight text-amber-50 drop-shadow">Kids Quest</p>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-200/90">Adventure world</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-yellow-100">The bots count your reps</p>
               </div>
             </div>
           ) : (
@@ -62,12 +62,12 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
       ) : (
         isKids ? (
           <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-b from-amber-100 to-amber-200 shadow-[0_0_0_1px_rgba(232,197,107,0.8),0_8px_18px_rgba(20,24,60,0.25)]">
-              <KidsIcon name="gamepad" size={40} />
+            <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border-2 border-white bg-white shadow-[0_0_0_3px_#ffe14a,0_8px_18px_rgba(20,24,60,0.25)]">
+              <KidsIcon name="hero" size={44} />
             </span>
             <div className="hidden sm:block">
                 <p className="text-sm font-bold leading-tight tracking-tight text-amber-50 drop-shadow">Kids Quest</p>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-200/90">Adventure world</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-yellow-100">The bots count your reps</p>
             </div>
           </div>
         ) : (

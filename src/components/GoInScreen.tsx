@@ -125,7 +125,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
         >
           <div className="relative h-12 overflow-hidden sm:h-14">
             <SafePicture
-              src="/images/landing-kids-quest.webp?v=2"
+              src="/images/landing-kids-quest.webp?v=4"
               alt=""
               className="h-full w-full object-cover object-[center_35%]"
             />
@@ -139,7 +139,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
               <p className="rm-kids-type flex items-center gap-2 text-base font-bold text-[#2a1848]">
                 <KidsIcon name="gamepad" size={18} /> Kids Quest
               </p>
-              <p className="text-xs font-semibold text-[#5a3a18] sm:text-sm">Storybook physical therapy. No email needed.</p>
+              <p className="text-xs font-semibold text-[#5a3a18] sm:text-sm">The bots ask. You stretch. No email needed.</p>
             </span>
             <Chevron className="text-[#c47a32]" />
           </div>

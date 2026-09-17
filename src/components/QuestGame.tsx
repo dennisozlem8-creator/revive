@@ -95,7 +95,7 @@ export function QuestGame({
   }
 
   function speech() {
-    if (done) return `Amazing ${firstName}! Quest complete!`;
+    if (done) return `Amazing ${firstName}! Stretch quest complete!`;
     if (!connected) return `Connect your Revive Motion sensor to begin, ${firstName}!`;
     if (connecting) return `Searching for your sensor, ${firstName}… almost there!`;
     if (!recording) return `Sensor ready! Do the ${exercise.name} movement.`;

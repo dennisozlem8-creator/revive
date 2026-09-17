@@ -12,10 +12,10 @@ export type ExerciseMedia = {
 
 const defaultMedia = (name: string): ExerciseMedia => ({
   image: "/exercises/mobility.svg",
-  kidsImage: "/kids/exercises/quest-default.svg",
+  kidsImage: "/kids/exercises/quest-default.webp",
   kidsQuest: {
     title: `${name} Quest`,
-    story: "Complete the movement to power up your hero!",
+    story: "The bots count each stretch. Match the picture, then score.",
     gamePrompt: "Wear your sensor — reps count when you hit the right angle",
     reps: 10,
     reward: "Star badge",
@@ -25,10 +25,10 @@ const defaultMedia = (name: string): ExerciseMedia => ({
 export const exerciseMedia: Record<string, ExerciseMedia> = {
   "ankle-pumps": {
     image: "/exercises/ankle.svg",
-    kidsImage: "/kids/zones/ankle.svg",
+    kidsImage: "/kids/zones/ankle.webp?v=1",
     kidsQuest: {
-      title: "Rocket Ankle Boost",
-      story: "Pump your ankle to fuel the rocket ship!",
+      title: "Ankle Pump Boost",
+      story: "The bots count each ankle pump. Point, flex, score!",
       gamePrompt: "Tap each time you point and flex your foot",
       reps: 15,
       reward: "Rocket badge",
@@ -37,8 +37,8 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
   "calf-stretch": {
     image: "/exercises/stretch.svg",
     kidsQuest: {
-      title: "Stretchy Giraffe",
-      story: "Stretch tall like a giraffe reaching for leaves!",
+      title: "Tall Stretch",
+      story: "The yellow bot stretches tall. Match that reach!",
       gamePrompt: "Hold stretch, then tap when done",
       reps: 6,
       reward: "🦒 Tall badge",
@@ -47,8 +47,8 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
   "resistance-eversion": {
     image: "/exercises/strength.svg",
     kidsQuest: {
-      title: "Shield Foot Defender",
-      story: "Push against the band to protect the castle!",
+      title: "Band Push",
+      story: "Push out against the band. The bots count strong reps!",
       gamePrompt: "Tap for each strong push outward",
       reps: 12,
       reward: "🛡️ Shield badge",
@@ -57,8 +57,8 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
   "heel-raises": {
     image: "/exercises/strength.svg",
     kidsQuest: {
-      title: "Tiptoe Tower Climb",
-      story: "Rise on your toes to climb the magic tower!",
+      title: "Tiptoe Bounce",
+      story: "Rise on your toes. The bots bounce with you!",
       gamePrompt: "Tap each time you lift your heels",
       reps: 10,
       reward: "🏰 Tower badge",
@@ -66,10 +66,10 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
   },
   "heel-slides": {
     image: "/exercises/knee.svg",
-    kidsImage: "/kids/zones/knee.svg",
+    kidsImage: "/kids/zones/knee.webp?v=1",
     kidsQuest: {
-      title: "Penguin Slide",
-      story: "Slide your heel like a penguin on ice!",
+      title: "Heel Slide",
+      story: "Slide your heel in. The green bot squats along!",
       gamePrompt: "Tap when you slide heel toward hip",
       reps: 12,
       reward: "🐧 Ice badge",
@@ -89,7 +89,7 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
     image: "/exercises/strength.svg",
     kidsQuest: {
       title: "Frog Hop Squat",
-      story: "Squat down like a frog ready to hop!",
+      story: "Squat down with the bots. Mini squat, big score!",
       gamePrompt: "Tap for each mini squat",
       reps: 8,
       reward: "🐸 Hop badge",
@@ -117,10 +117,10 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
   },
   "cat-cow": {
     image: "/exercises/core.svg",
-    kidsImage: "/kids/zones/back.svg",
+    kidsImage: "/kids/zones/back.webp?v=1",
     kidsQuest: {
-      title: "Cat & Cow Adventure",
-      story: "Arch like a cat, then moo like a cow!",
+      title: "Cat & Cow Stretch",
+      story: "Arch, then round. The bots stretch their backs too!",
       gamePrompt: "Tap for each cat-cow cycle",
       reps: 8,
       reward: "🐱 Farm badge",
@@ -148,10 +148,10 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
   },
   "wrist-circles": {
     image: "/exercises/wrist.svg",
-    kidsImage: "/kids/zones/wrist.svg",
+    kidsImage: "/kids/zones/wrist.webp?v=1",
     kidsQuest: {
-      title: "Wrist Wizard Wheel",
-      story: "Spin your wrist to cast magic circles!",
+      title: "Wrist Wiggle Wheel",
+      story: "Spin your wrist. The pink bot wiggles with you!",
       gamePrompt: "Tap for each wrist circle",
       reps: 10,
       reward: "🪄 Magic badge",
@@ -160,8 +160,8 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
   "prayer-stretch": {
     image: "/exercises/wrist.svg",
     kidsQuest: {
-      title: "Prayer Power Push",
-      story: "Press palms together to unlock the temple door!",
+      title: "Palm Press",
+      story: "Press palms together. Hold, then the bots score it!",
       gamePrompt: "Tap when stretch is held",
       reps: 6,
       reward: "🕌 Temple badge",
@@ -221,7 +221,7 @@ export const exerciseMedia: Record<string, ExerciseMedia> = {
     image: "/exercises/strength.svg",
     kidsQuest: {
       title: "Chair Quest Squat",
-      story: "Squat with chair support to lift the treasure chest!",
+      story: "Squat with a chair. The red bot does it with you!",
       gamePrompt: "Tap for each supported squat",
       reps: 8,
       reward: "💎 Treasure badge",
@@ -235,5 +235,5 @@ export function getExerciseMedia(exerciseId: string, exerciseName: string) {
 
 export function getKidsExerciseImage(exerciseId: string, exerciseName: string) {
   const media = getExerciseMedia(exerciseId, exerciseName);
-  return media.kidsImage ?? "/kids/exercises/quest-default.svg";
+  return media.kidsImage ?? "/kids/exercises/quest-default.webp";
 }

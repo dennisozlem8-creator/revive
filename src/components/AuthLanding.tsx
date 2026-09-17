@@ -344,14 +344,14 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 href="/kids"
                 className="rm-glow-kids relative block min-h-[14rem] overflow-hidden rounded-[1.35rem] shadow-[0_12px_24px_rgba(40,24,8,0.14)] sm:min-h-[16rem]"
               >
-                <PhotoFrame src="/images/landing-kids-quest.webp?v=2" alt="Kids Quest storybook: children doing physical therapy exercises on the path to a castle." className="absolute inset-0 h-full w-full" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#2a1848]/80 via-[#2a1848]/20 to-transparent" />
+                <PhotoFrame src="/images/landing-kids-quest.webp?v=4" alt="Kids Quest: colorful quest bots doing physical therapy stretches and reps." className="absolute inset-0 h-full w-full" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a6a]/80 via-[#1a1a6a]/15 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
                   <div>
-                    <p className="rm-kids-type text-[11px] font-bold uppercase tracking-[0.16em] text-amber-200">Physical therapy exercises</p>
+                    <p className="rm-kids-type text-[11px] font-bold uppercase tracking-[0.16em] text-yellow-200">Physical therapy exercises</p>
                     <p className="rm-kids-type mt-0.5 text-2xl text-amber-50 drop-shadow sm:text-3xl">Kids Quest</p>
-                    <p className="mt-1 max-w-xs text-sm font-medium leading-5 text-amber-100/90">
-                      Storybook quests made of today&apos;s stretches and reps. No sign-in.
+                    <p className="mt-1 max-w-xs text-sm font-medium leading-5 text-yellow-50/95">
+                      Candy quest bots ask the moves. You stretch, squat, and score. No sign-in.
                     </p>
                   </div>
                   <span className="kids-cta rm-btn rm-kids-type h-9 min-h-0 rounded-full px-4 text-sm">Open</span>

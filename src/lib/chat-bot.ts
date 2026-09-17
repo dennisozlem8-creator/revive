@@ -59,7 +59,7 @@ const faq: { keywords: string[]; answer: string }[] = [
   {
     keywords: ["kids", "quest", "game"],
     answer:
-      "Kids Quest Mode turns exercises into adventure games! Go to Kids Quest from the home page, pick a zone, and complete tap-based rep games to earn XP and badges.",
+      "Kids Quest turns stretches and reps into a colorful bot world. Open Kids Quest, pick a candy zone, and the bots count your physical therapy moves for XP.",
   },
   {
     keywords: ["doctor", "therapist", "provider"],

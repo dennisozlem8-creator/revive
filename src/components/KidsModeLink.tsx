@@ -40,7 +40,7 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
           <KidsIcon name="gamepad" size={56} />
         </span>
         <SafePicture
-          src="/images/landing-kids-quest.webp?v=2"
+          src="/images/landing-kids-quest.webp?v=4"
           alt=""
           className="mx-auto mt-2 h-24 w-full rounded-xl object-cover object-[center_40%] sm:h-28"
         />
@@ -50,8 +50,8 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
         </p>
         <p className="mt-1 text-xs font-bold text-violet-700">
           {user
-            ? "Switch to your colorful adventure mode"
-            : "Explore quests — sign in later to save progress"}
+            ? "Switch to the colorful bot stretch world"
+            : "Stretch with the bots — sign in later to save progress"}
         </p>
         <span className="mt-3 inline-flex rounded-full bg-gradient-to-b from-amber-300 to-amber-500 px-5 py-2 text-sm font-bold text-amber-950 shadow">
           Go to Kids Quest →

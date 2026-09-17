@@ -59,8 +59,7 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
             <p className="flex items-start gap-2 font-semibold text-amber-900">
               <KidsIcon name="sparkle" size={18} className="mt-0.5" />
               <span>
-                In quest mode, move along with the on-screen exercise — reps count automatically
-                from the demo readings!
+                In quest mode, move with the on-screen stretch — the bots count reps from the demo readings!
               </span>
             </p>
           )}

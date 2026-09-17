@@ -11,7 +11,7 @@ export function KidsModeBanner() {
     <div className="kids-ribbon relative z-40 px-4 py-2 text-center" role="status">
       <p className="inline-flex items-center justify-center gap-2 text-sm font-semibold tracking-wide animate-kids-badge-pulse">
         <KidsIcon name="gamepad" size={20} />
-        Kids Quest World
+        Kids Quest HQ
         <KidsIcon name="star" size={20} />
       </p>
       {!user && (

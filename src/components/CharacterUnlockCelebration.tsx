@@ -28,7 +28,7 @@ export function CharacterUnlockCelebration({
       className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0c1840]/60 p-6 backdrop-blur-md animate-fade-up"
       onClick={onDismiss}
       role="dialog"
-      aria-label="New hero unlocked"
+      aria-label="New quest bot unlocked"
     >
       <div
         className="kids-glass max-w-sm p-8 text-center"
@@ -36,7 +36,7 @@ export function CharacterUnlockCelebration({
       >
         <p className="flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-amber-800">
           <KidsIcon name="party" size={22} />
-          New hero
+          New quest bot
         </p>
         <span className="mt-5 flex justify-center drop-shadow-[0_8px_18px_rgba(180,100,20,0.35)]">
           <KidsIcon name={character.avatar} size={104} />
