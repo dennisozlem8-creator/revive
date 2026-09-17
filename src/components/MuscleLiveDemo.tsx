@@ -29,6 +29,18 @@ export function MuscleLiveDemo() {
   const [history, setHistory] = useState<number[]>(() => Array(HISTORY).fill(6));
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!new URLSearchParams(window.location.search).has("flex")) return;
+    const t = window.setTimeout(() => {
+      startedRef.current = performance.now();
+      setElapsed(0);
+      setHistory(Array(HISTORY).fill(6));
+      setRunning(true);
+    }, 700);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
     if (!running) return;
     const id = window.setInterval(() => {
       const nextElapsed = performance.now() - startedRef.current;

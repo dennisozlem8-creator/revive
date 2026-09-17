@@ -1,7 +1,7 @@
 export type FlexPhase = "rest" | "rising" | "peak" | "falling";
 
 /** One rest → squeeze → peak → release loop, in milliseconds. */
-export const DEMO_FLEX_CYCLE_MS = 6400;
+export const DEMO_FLEX_CYCLE_MS = 7000;
 
 export type DemoFlexSample = {
   effort: number;
@@ -18,20 +18,20 @@ export function demoFlexAt(elapsedMs: number): DemoFlexSample {
   let effort: number;
   let phase: FlexPhase;
 
-  if (t < 1100) {
+  if (t < 800) {
     phase = "rest";
     effort = 7 + Math.round(Math.sin(t / 90) * 2);
-  } else if (t < 2500) {
+  } else if (t < 2000) {
     phase = "rising";
-    const p = (t - 1100) / 1400;
+    const p = (t - 800) / 1200;
     const ease = 1 - (1 - p) * (1 - p) * (1 - p);
     effort = Math.round(8 + ease * 86);
-  } else if (t < 4000) {
+  } else if (t < 4800) {
     phase = "peak";
-    effort = 92 + Math.round(Math.sin(t / 65) * 5);
-  } else if (t < 5200) {
+    effort = 93 + Math.round(Math.sin(t / 70) * 4);
+  } else if (t < 6000) {
     phase = "falling";
-    const p = (t - 4000) / 1200;
+    const p = (t - 4800) / 1200;
     const ease = p * p;
     effort = Math.round(94 * (1 - ease) + 8 * ease);
   } else {
