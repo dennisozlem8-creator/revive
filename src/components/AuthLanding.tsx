@@ -137,7 +137,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <ImpactBand locale={locale} cta={cta} />
+        <ImpactBand locale={locale} />
 
         <section id="how-it-works" className="scroll-mt-20 bg-[#1b3348] text-white">
           <div className="mx-auto grid w-full max-w-6xl items-stretch lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
