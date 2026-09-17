@@ -5,21 +5,6 @@ type AuthLandingProps = {
   mode: "login" | "register";
 };
 
-const features = [
-  {
-    title: "Photo Goniometer",
-    detail: "Record a side-view clip. Get a form score and the next sets to do.",
-  },
-  {
-    title: "Muscle sensor",
-    detail: "Connect MyoWare 2.0 over Bluetooth or USB and see live effort.",
-  },
-  {
-    title: "Kids Quest",
-    detail: "A storybook exercise world for younger patients.",
-  },
-];
-
 export function AuthLanding({ mode }: AuthLandingProps) {
   return (
     <div className="relative min-h-full overflow-hidden bg-background text-foreground">
@@ -37,24 +22,6 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             Physical therapy assistance at home. Measure the joint, follow today&apos;s dose, and
             keep your clinician in the loop.
           </p>
-          <ul className="mt-8 hidden w-full max-w-lg space-y-4 text-left sm:block">
-            {features.map((item) => (
-              <li key={item.title} className="rounded-2xl border border-[var(--border)] bg-white/80 px-5 py-4">
-                <p className="font-semibold text-foreground">{item.title}</p>
-                <p className="mt-1 text-sm leading-6 text-body">{item.detail}</p>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8 hidden w-full overflow-hidden rounded-3xl border border-[var(--border)] bg-white shadow-[0_18px_40px_rgba(27,51,72,0.08)] lg:block">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/landing-hero.svg"
-              alt="Today’s plan, photo angle, and muscle effort"
-              width={800}
-              height={280}
-              className="h-auto w-full"
-            />
-          </div>
         </section>
         <section className="w-full max-w-md lg:w-[44%]">
           <div className="rounded-[1.75rem] border border-[var(--border)] bg-white p-6 shadow-[0_22px_50px_rgba(27,51,72,0.1)] sm:p-8">
