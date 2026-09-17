@@ -40,7 +40,7 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
           <KidsIcon name="gamepad" size={56} />
         </span>
         <SafePicture
-          src="/images/landing-kids-quest.webp"
+          src="/images/landing-kids-quest.webp?v=2"
           alt=""
           className="mx-auto mt-2 h-24 w-full rounded-xl object-cover object-[center_40%] sm:h-28"
         />

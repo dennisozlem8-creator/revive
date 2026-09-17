@@ -125,7 +125,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
         >
           <div className="relative h-12 overflow-hidden sm:h-14">
             <SafePicture
-              src="/images/landing-kids-quest.webp"
+              src="/images/landing-kids-quest.webp?v=2"
               alt=""
               className="h-full w-full object-cover object-[center_35%]"
             />
