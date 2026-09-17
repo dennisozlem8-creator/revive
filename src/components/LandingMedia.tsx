@@ -28,7 +28,7 @@ export function PhotoFrame({
   );
 }
 
-/** Unique Revive Motion MPU shot: padded so the live angle is never cropped. */
+/** Unique square Revive Motion MPU shot, composed to fill overlay cards. */
 export function MpuAnglePhoto({
   className = "",
   alt = "Revive Motion MPU-6050 straps on the upper arm and wrist with a live elbow angle of 92 degrees.",
@@ -37,13 +37,12 @@ export function MpuAnglePhoto({
   alt?: string;
 }) {
   return (
-    <div className={`relative overflow-hidden bg-[#e8f3fb] ${className}`}>
+    <div className={`relative overflow-hidden bg-[#d7e8f6] ${className}`}>
       <SafePicture
-        src="/images/landing-mpu.png?v=4"
+        src="/images/landing-mpu.png?v=6"
         alt={alt}
-        className="absolute inset-0 h-full w-full object-contain p-1.5 sm:p-2.5"
+        className="absolute inset-0 h-full w-full object-cover object-center"
       />
-      <div className="pointer-events-none absolute inset-2 rounded-lg ring-2 ring-[#4f90c6]/55 sm:inset-3 sm:rounded-xl" />
     </div>
   );
 }
