@@ -328,7 +328,10 @@ export function AuthLanding({ mode }: AuthLandingProps) {
       <footer className="border-t border-[var(--border)] bg-[#f7fbfe]">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-10 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <Logo size={40} showText={false} compact />
+            <div className="flex items-center gap-3">
+              <Logo size={40} showText={false} compact />
+              <span className="font-semibold tracking-tight">Revive Motion</span>
+            </div>
             <p className="mt-3 text-sm font-semibold tracking-[0.14em] text-brand-light uppercase">
               Measure : Coach : Report : Improve
             </p>

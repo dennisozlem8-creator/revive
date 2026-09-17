@@ -19,12 +19,17 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   const isCaregiver = variant === "caregiver" || isCareTeam(user?.role);
 
   const logo = (
-    <Logo
-      size={40}
-      showText={false}
-      compact
-      className={isCaregiver ? "[&_span]:text-[var(--caregiver-text)]" : ""}
-    />
+    <span className="flex items-center gap-3">
+      <Logo
+        size={40}
+        showText={false}
+        compact
+        className={isCaregiver ? "[&_span]:text-[var(--caregiver-text)]" : ""}
+      />
+      <span className={`text-[1.05rem] font-semibold tracking-tight ${isCaregiver ? "text-[var(--caregiver-text)]" : "text-foreground"}`}>
+        Revive Motion
+      </span>
+    </span>
   );
 
   const isKids = variant === "kids";
