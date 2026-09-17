@@ -32,16 +32,18 @@ export function PhotoFrame({
 export function MpuAnglePhoto({
   className = "",
   alt = "Revive Motion MPU-6050 straps on the upper arm and wrist with a live elbow angle of 92 degrees.",
+  imgClassName = "object-cover object-center",
 }: {
   className?: string;
   alt?: string;
+  imgClassName?: string;
 }) {
   return (
     <div className={`relative overflow-hidden bg-[#d7e8f6] ${className}`}>
       <SafePicture
         src="/images/landing-mpu.png?v=6"
         alt={alt}
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        className={`absolute inset-0 h-full w-full ${imgClassName}`}
       />
     </div>
   );
@@ -186,11 +188,15 @@ export function PhonePreview({
   children: ReactNode;
 }) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_24px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12">
-      <div className="bg-[#e8f3fb] px-2 py-1 text-center text-[10px] font-semibold tracking-[0.16em] text-brand-light sm:px-3 sm:py-1.5">
-        {title.toUpperCase()}
+    <article className="flex h-full min-h-[20.5rem] flex-col rounded-[1.85rem] bg-gradient-to-b from-[#d7ebf7] to-[#cfe4f4] p-2 shadow-[0_18px_36px_rgba(27,51,72,0.1)] ring-1 ring-white/70 sm:min-h-[24.5rem] sm:p-2.5">
+      <div className="flex items-center justify-center gap-2 pb-2 pt-0.5">
+        <span className="h-1 w-7 rounded-full bg-[#4f90c6]/30" />
+        <p className="text-[10px] font-semibold tracking-[0.2em] text-brand-light">{title.toUpperCase()}</p>
+        <span className="h-1 w-7 rounded-full bg-[#4f90c6]/30" />
       </div>
-      <div className="flex flex-1 flex-col bg-[#f7fbfe] p-1.5 sm:p-2">{children}</div>
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.35rem] bg-white">
+        {children}
+      </div>
     </article>
   );
 }

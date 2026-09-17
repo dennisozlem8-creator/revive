@@ -226,64 +226,108 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section id="features" className="scroll-mt-20 bg-[#e8f3fb] py-8 lg:py-10">
+        <section id="features" className="scroll-mt-20 bg-[#e8f3fb] py-8 lg:py-12">
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="rm-label text-brand-light">Your care, connected</p>
-                <h2 className="rm-serif mt-0.5 text-2xl font-semibold sm:text-3xl">Inside the app</h2>
+            <div className="overflow-hidden rounded-[2rem] bg-white/80 p-4 shadow-[0_16px_40px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12 sm:p-6 lg:p-8">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="rm-label text-brand-light">Your care, connected</p>
+                  <h2 className="rm-serif mt-0.5 text-2xl font-semibold sm:text-4xl">Inside the app</h2>
+                </div>
+                <p className="max-w-md text-sm leading-6 text-body sm:text-right">
+                  Briefing, session, dashboard, and check-in stay on this device for the whole care team.
+                </p>
               </div>
-              <p className="max-w-md text-sm leading-6 text-body sm:text-right">
-                Briefing, session, dashboard, and check-in stay on this device for the whole care team.
-              </p>
-            </div>
-            <div className="mt-5 grid grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-3">
-              <PhonePreview title="Briefing">
-                <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white">
-                  <PhotoFrame src="/images/landing-exercise.webp" alt="" className="h-[4.75rem] sm:h-24" />
-                  <div className="px-2.5 py-2 sm:px-3">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-light">Today</p>
-                    <p className="text-sm font-semibold leading-snug sm:text-base">Knee extension</p>
-                    <p className="text-xs text-muted sm:text-sm">3 sets · photo first</p>
+              <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+                <PhonePreview title="Briefing">
+                  <div className="flex h-full flex-col">
+                    <div className="relative h-[7.5rem] sm:h-40">
+                      <PhotoFrame src="/images/landing-exercise.webp" alt="" className="absolute inset-0 h-full w-full" />
+                      <span className="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-brand-light">
+                        Today
+                      </span>
+                    </div>
+                    <div className="flex flex-1 flex-col px-3 py-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">Today&apos;s plan</p>
+                      <p className="mt-1 text-base font-semibold leading-snug sm:text-lg">Knee extension</p>
+                      <p className="mt-0.5 text-sm text-muted">3 sets · photo first</p>
+                      <div className="mt-auto flex items-center justify-between pt-3">
+                        <span className="text-xs font-medium text-muted">Photo Goniometer</span>
+                        <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">Start</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </PhonePreview>
-              <PhonePreview title="Session">
-                <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white">
-                  <MpuAnglePhoto alt="" className="h-[4.75rem] sm:h-24" />
-                  <div className="px-2.5 py-2 sm:px-3">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-light">Live</p>
-                    <p className="rm-serif text-xl font-semibold leading-none sm:text-2xl">92 deg</p>
-                    <p className="mt-0.5 text-xs text-muted sm:text-sm">Hold, then the next rep</p>
+                </PhonePreview>
+                <PhonePreview title="Session">
+                  <div className="flex h-full flex-col">
+                    <div className="relative h-[7.5rem] sm:h-40">
+                      <MpuAnglePhoto alt="" className="absolute inset-0 h-full w-full" imgClassName="object-cover object-[center_20%]" />
+                      <span className="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-brand-light">
+                        Live
+                      </span>
+                    </div>
+                    <div className="flex flex-1 flex-col px-3 py-3">
+                      <p className="rm-serif text-3xl font-semibold leading-none">92 deg</p>
+                      <p className="mt-1 text-sm text-muted">Hold, then the next rep</p>
+                      <div className="mt-auto flex items-center gap-1.5 pt-3">
+                        <span className="h-2 w-2 rounded-full bg-brand" />
+                        <span className="h-2 w-2 rounded-full bg-brand" />
+                        <span className="h-2 w-2 rounded-full bg-[#d7e8f6]" />
+                        <span className="ml-auto text-xs font-medium text-muted">Rep 2 of 3</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </PhonePreview>
-              <PhonePreview title="Dashboard">
-                <div className="flex h-full flex-col rounded-xl bg-white px-2.5 py-2 sm:px-3 sm:py-2.5">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-light">Trend</p>
-                  <p className="text-sm font-semibold leading-snug sm:text-base">Range this week</p>
-                  <svg viewBox="0 0 160 70" className="mt-1 min-h-[3.25rem] w-full flex-1">
-                    <polyline points="8,58 40,50 72,42 104,28 150,16" fill="none" stroke="#4f90c6" strokeWidth="4" />
-                    <circle cx="150" cy="16" r="4" fill="#3a7d62" />
-                  </svg>
-                  <p className="mt-1 text-xs text-muted sm:text-sm">Shared with the clinician</p>
-                </div>
-              </PhonePreview>
-              <PhonePreview title="Check-in">
-                <div className="flex h-full flex-col rounded-xl bg-white px-2.5 py-2 sm:px-3 sm:py-2.5">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-brand-light">Pain</p>
-                  <p className="rm-serif text-xl font-semibold leading-none sm:text-2xl">2 / 10</p>
-                  <div className="mt-2 flex flex-1 items-center gap-1">
-                    {Array.from({ length: 10 }).map((_, i) => (
-                      <span
-                        key={i}
-                        className={`h-5 flex-1 rounded-md sm:h-6 ${i < 2 ? "bg-[#c47a32]" : "bg-[#e8f3fb]"}`}
-                      />
-                    ))}
+                </PhonePreview>
+                <PhonePreview title="Dashboard">
+                  <div className="flex h-full flex-col px-3 py-3">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-light">Trend</p>
+                    <p className="mt-0.5 text-base font-semibold sm:text-lg">Range this week</p>
+                    <div className="mt-2 flex gap-2">
+                      <span className="rounded-full bg-[#e8f3fb] px-2.5 py-1 text-[11px] font-semibold text-brand-light">Latest 92 deg</span>
+                      <span className="rounded-full bg-[#e7f1ea] px-2.5 py-1 text-[11px] font-semibold text-[#2a7a58]">Toward goal</span>
+                    </div>
+                    <svg viewBox="0 0 200 90" className="mt-3 w-full flex-1" role="img" aria-label="Range of motion rising across the week">
+                      <defs>
+                        <linearGradient id="rm-dash-fill" x1="0" x2="0" y1="0" y2="1">
+                          <stop offset="0%" stopColor="#4f90c6" stopOpacity="0.35" />
+                          <stop offset="100%" stopColor="#4f90c6" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M8,78 L8,70 L40,62 L72,54 L104,40 L136,30 L192,18 L192,78 Z" fill="url(#rm-dash-fill)" />
+                      <polyline points="8,70 40,62 72,54 104,40 136,30 192,18" fill="none" stroke="#4f90c6" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <circle cx="192" cy="18" r="4.5" fill="#3a7d62" />
+                      <text x="8" y="88" fontSize="8" fill="#4d6478">Mon</text>
+                      <text x="168" y="88" fontSize="8" fill="#4d6478">Sun</text>
+                    </svg>
+                    <p className="mt-2 text-xs text-muted">Shared with the clinician</p>
                   </div>
-                  <p className="mt-2 text-xs text-muted sm:text-sm">Logged for today</p>
-                </div>
-              </PhonePreview>
+                </PhonePreview>
+                <PhonePreview title="Check-in">
+                  <div className="flex h-full flex-col px-3 py-3">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-light">Pain</p>
+                    <p className="rm-serif mt-0.5 text-3xl font-semibold leading-none">2 / 10</p>
+                    <div className="mt-3 flex gap-1">
+                      {Array.from({ length: 10 }).map((_, i) => (
+                        <span
+                          key={i}
+                          className={`h-7 flex-1 rounded-md ${i < 2 ? "bg-[#c47a32]" : "bg-[#e8f3fb]"}`}
+                        />
+                      ))}
+                    </div>
+                    <div className="mt-4 space-y-2">
+                      <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
+                        <span className="text-xs font-medium text-muted">Sleep</span>
+                        <span className="text-sm font-semibold">Restful</span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
+                        <span className="text-xs font-medium text-muted">Stiffness</span>
+                        <span className="text-sm font-semibold">Mild</span>
+                      </div>
+                    </div>
+                    <p className="mt-auto pt-3 text-xs text-muted">Logged for today</p>
+                  </div>
+                </PhonePreview>
+              </div>
             </div>
             <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
               <OverlayCard
