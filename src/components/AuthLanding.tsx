@@ -128,7 +128,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           <div className="pointer-events-none absolute -left-28 top-0 h-64 w-64 rounded-full bg-[#4f90c6]/15 blur-3xl" />
           <div className="pointer-events-none absolute right-[-6rem] top-16 h-72 w-72 rounded-full bg-[#9dc4b0]/25 blur-3xl" />
 
-          <div className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-4 sm:px-6 lg:pb-10 lg:pt-6">
+          <div className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-5 sm:px-6 lg:pb-10 lg:pt-8">
             <h1 className="rm-serif max-w-3xl text-[1.85rem] font-semibold leading-[1.08] text-foreground sm:text-4xl lg:text-5xl">
               Physical Therapy Monitoring at Home.
             </h1>
@@ -155,10 +155,10 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               <PhotoFrame
                 src="/images/landing-hero-photo.webp?v=3"
                 alt="A helper photographs a seated patient from the side in a living room."
-                className="order-2 h-44 rounded-[1.25rem] shadow-[0_16px_36px_rgba(27,51,72,0.12)] sm:h-56 lg:order-1 lg:h-full"
+                className="order-2 min-h-[11rem] self-stretch rounded-[1.25rem] shadow-[0_16px_36px_rgba(27,51,72,0.12)] sm:min-h-[14rem] lg:order-1 lg:min-h-0"
               />
-              <section id="go-in" className="order-1 scroll-mt-20 lg:order-2">
-                <div className="h-full rounded-[1.25rem] bg-white p-3 shadow-[0_16px_36px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/15 sm:p-4">
+              <section id="go-in" className="order-1 flex scroll-mt-20 lg:order-2">
+                <div className="flex h-full w-full flex-col justify-center rounded-[1.25rem] bg-white p-3 shadow-[0_16px_36px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/15 sm:p-4">
                   <GoInScreen mode={mode} />
                 </div>
               </section>
