@@ -76,6 +76,15 @@ body {
   line-height: 1.65;
 }
 
+@media print {
+  body {
+    background: white;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+}
+
 .rm-serif {
   font-family: var(--font-serif);
   letter-spacing: -0.03em;

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Logo } from "./Logo";
 import { LanguageToggle } from "./LanguageToggle";
 import { useAuth } from "./AuthProvider";
-import { t } from "@/lib/i18n";
+import { clinicLocale, t } from "@/lib/i18n";
 import { KidsIcon } from "@/components/KidsIcon";
 import { isCareTeam } from "@/lib/users";
 
@@ -15,7 +15,7 @@ type HeaderProps = {
 
 export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   const { user, logout } = useAuth();
-  const locale = user?.language ?? "en";
+  const locale = clinicLocale(user);
   const isCaregiver = variant === "caregiver" || isCareTeam(user?.role);
 
   const logo = (
@@ -67,7 +67,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/90 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/90 backdrop-blur-xl print:hidden">
       <div className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         {linkHome ? (
           <Link

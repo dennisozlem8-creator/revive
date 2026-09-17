@@ -15,8 +15,11 @@ import {
 import { useAuth } from "@/components/AuthProvider";
 import { calculateStreak, getActivityDates, getLongestStreak, lastDaysActive } from "@/lib/streak";
 import { ProgressInsight } from "@/components/ProgressInsight";
+import { DemoBanner } from "@/components/DemoBanner";
+import { ReportActions } from "@/components/ReportActions";
 import { loadMeasurements } from "@/lib/goniometer";
-import { preExerciseSetup, progressSnapshot } from "@/lib/recovery-plan";
+import { preExerciseSetup, progressSnapshot, setupStepText } from "@/lib/recovery-plan";
+import { clinicLocale, t, tf } from "@/lib/i18n";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -31,12 +34,13 @@ export default function DashboardPage() {
     );
   }
 
+  const locale = clinicLocale(user);
   const streak = calculateStreak(user);
   const longestStreak = getLongestStreak(user);
   const totalActiveDays = getActivityDates(user).length;
   const questsDone = Object.values(user.questProgress).filter(Boolean).length;
   const clips = loadMeasurements(user.email);
-  const progress = progressSnapshot(clips, user.targetRom || 100);
+  const progress = progressSnapshot(clips, user.targetRom || 100, locale);
   const todayExercise = user.ptPrescription?.exerciseName ?? "Heel Slide";
   const setup = preExerciseSetup(todayExercise).slice(0, 3);
   const heat = lastDaysActive(user, 28);
@@ -44,14 +48,18 @@ export default function DashboardPage() {
 
   return (
     <DashShell>
+      <DemoBanner locale={locale} />
       <DashIntro
-        kicker="Your dashboard"
-        title={`Today’s plan: ${todayExercise}`}
-        text="Measure, follow the setup, then do the sets. That loop is what your clinician can read."
+        kicker={t("yourDashboard", locale)}
+        title={tf("todaysPlan", locale, { exercise: todayExercise })}
+        text={t("dashboardText", locale)}
         action={
-          <Link href="/briefing" className="rm-btn rm-btn-brand h-11 min-h-0 rounded-full px-6">
-            Start briefing
-          </Link>
+          <div className="flex flex-col gap-2 sm:items-end">
+            <Link href="/briefing" className="rm-btn rm-btn-brand h-11 min-h-0 rounded-full px-6">
+              {t("startBriefing", locale)}
+            </Link>
+            <ReportActions locale={locale} />
+          </div>
         }
       />
       <DashLoop />
@@ -60,64 +68,67 @@ export default function DashboardPage() {
         <DashRing
           value={progress.latestPeak ?? 0}
           max={goal}
-          label="Range vs goal"
+          label={t("rangeVsGoal", locale)}
           display={progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
         />
-        <DashStat label="Current streak" value={streak} hint={streak > 0 ? "Keep going today" : "Complete a session to start"} />
-        <DashStat label="Longest streak" value={longestStreak} hint="Best run so far" />
-        <DashStat label="Active days" value={totalActiveDays} hint={`${clips.length} saved clips`} />
+        <DashStat label={t("currentStreak", locale)} value={streak} hint={streak > 0 ? t("keepGoingToday", locale) : t("completeSessionToStart", locale)} />
+        <DashStat label={t("longestStreak", locale)} value={longestStreak} hint={t("bestRun", locale)} />
+        <DashStat label={t("activeDays", locale)} value={totalActiveDays} hint={tf("savedClips", locale, { n: clips.length })} />
       </div>
 
       <div className="mt-6 grid gap-3 lg:grid-cols-3">
         <DashPhotoLink
           href="/goniometer"
           src="/images/landing-photo-goniometer.png?v=2"
-          kicker="01 Measure"
-          title="Photo Goniometer"
-          text="Take the side-view photo first."
+          kicker={`01 ${t("measure", locale)}`}
+          title={t("photoGoniometer", locale)}
+          text={t("takeSidePhoto", locale)}
         />
         <DashPhotoLink
           href="/session"
           src="/images/landing-mpu.png?v=7"
           kicker="02 Coach"
-          title="Live session"
-          text="Follow today’s ROM test."
+          title={t("liveSession", locale)}
+          text={t("followRomTest", locale)}
         />
         <DashPhotoLink
           href="/charts"
           src="/images/landing-exercise.webp"
-          kicker="03 Report"
-          title="Progress charts"
-          text="Show the trend, not a guess."
+          kicker={`03 ${t("reportKicker", locale)}`}
+          title={t("progressCharts", locale)}
+          text={t("showTheTrend", locale)}
         />
       </div>
 
       <div className="mt-6">
-        <ProgressInsight rows={clips} goal={goal} />
+        <ProgressInsight rows={clips} goal={goal} locale={locale} />
       </div>
 
       <div className="mt-6 grid gap-3 lg:grid-cols-2">
         <DashCard className="p-5 sm:p-6">
-          <p className="text-sm font-semibold text-[#2f4a60]">Before you record</p>
-          <h2 className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">Set up · Record · Do the sets</h2>
+          <p className="text-sm font-semibold text-[#2f4a60]">{t("beforeYouRecord", locale)}</p>
+          <h2 className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">{t("setUpRecordSets", locale)}</h2>
           <ol className="mt-4 space-y-3">
-            {setup.map((step, index) => (
+            {setup.map((step, index) => {
+              const copy = setupStepText(step, locale);
+              return (
               <li key={step.title} className="flex gap-3">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e8f3fb] text-sm font-bold text-[#1b3348]">
                   {index + 1}
                 </span>
                 <div>
-                  <p className="font-semibold text-[#1b3348]">{step.title}</p>
-                  <p className="mt-0.5 text-sm leading-6 text-[#2f4a60]">{step.detail}</p>
+                  <p className="font-semibold text-[#1b3348]">{copy.title}</p>
+                  <p className="mt-0.5 text-sm leading-6 text-[#2f4a60]">{copy.detail}</p>
                 </div>
               </li>
-            ))}
+              );
+            })}
           </ol>
         </DashCard>
         <DashCard className="p-5 sm:p-6">
-          <p className="text-sm font-semibold text-[#2f4a60]">Last 28 days</p>
-          <h2 className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">Active days</h2>
-          <p className="mt-2 text-sm text-[#2f4a60]">Green means a session or clip was saved that day.</p>
+          <p className="text-sm font-semibold text-[#2f4a60]">{t("last28Days", locale)}</p>
+          <h2 className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">{t("activeDays", locale)}</h2>
+          <p className="mt-2 text-sm text-[#2f4a60]">{t("greenMeansSaved", locale)}</p>
           <div className="mt-4">
             <DashHeat days={heat} />
           </div>
@@ -128,14 +139,14 @@ export default function DashboardPage() {
         <DashCard>
           {user.exerciseHistory.length === 0 ? (
             <DashEmpty
-              title="No sessions yet"
-              text="Finish today’s briefing to put the first assessment on this board."
+              title={t("noSessionsYet", locale)}
+              text={t("finishBriefingFirst", locale)}
               href="/briefing"
-              action="Open briefing"
+              action={t("openBriefing", locale)}
             />
           ) : (
             <div className="p-5 sm:p-6">
-              <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Recent sessions</h2>
+              <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">{t("recentSessions", locale)}</h2>
               <ul className="mt-4 space-y-2">
                 {user.exerciseHistory
                   .slice(-5)
@@ -151,12 +162,12 @@ export default function DashboardPage() {
           )}
         </DashCard>
         <DashCard className="p-5 sm:p-6">
-          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Kids Quest</h2>
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">{t("kidsQuest", locale)}</h2>
           <p className="mt-2 text-base text-[#2f4a60]">
-            {questsDone} stretch{questsDone !== 1 ? "es" : ""} done. Stars stay on this device.
+            {tf("stretchesDone", locale, { n: questsDone })}
           </p>
           <Link href="/kids" className="kids-cta mt-5 inline-flex h-11 min-h-0 rounded-full px-5 text-base">
-            Continue Kids Quest
+            {t("continueKids", locale)}
           </Link>
         </DashCard>
       </div>

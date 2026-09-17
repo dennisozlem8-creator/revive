@@ -11,6 +11,8 @@ import type { AppNotification } from "@/lib/notifications";
 import { loadMeasurements } from "@/lib/goniometer";
 import { doctorWatchLevel, progressSnapshot } from "@/lib/recovery-plan";
 import { GoniometerProgressChart } from "@/components/GoniometerProgressChart";
+import { DemoBanner } from "@/components/DemoBanner";
+import { clinicLocale } from "@/lib/i18n";
 
 export default function DoctorDashboardPage() {
   const { user, getPatientsForDoctor } = useAuth();
@@ -35,11 +37,13 @@ export default function DoctorDashboardPage() {
     );
   }
 
+  const locale = clinicLocale(user);
   const attention = patients.filter((patient) => doctorWatchLevel(loadMeasurements(patient.email)).level !== "on-track").length;
   const clips = patients.reduce((sum, patient) => sum + loadMeasurements(patient.email).length, 0);
 
   return (
     <DashShell caregiver>
+      <DemoBanner locale={locale} />
       <DashIntro
         kicker={user?.role === "caregiver" ? "Caregiver dashboard" : "Clinician dashboard"}
         title="Your patients"

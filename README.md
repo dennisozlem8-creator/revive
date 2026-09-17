@@ -7,6 +7,15 @@ Source: [https://github.com/dennisozlem8-creator/revive](https://github.com/denn
 
 Kids Quest is a physical therapy stretch world for kids — original 3D quest bots, a calm sky UI, and a three-tap map. Stretch with the bots. Photo Goniometer (live camera or tap three points), MPU-6050, and MyoWare 2.0 all count reps and save the reading on this device. Adult clinic pages stay on the light clinic theme.
 
+## Demo account
+
+Tap **Try the demo** on the homepage, or sign in:
+
+- Patient: `demo@revivemotion.ai` / `demo123`
+- Clinician: `clinic@revivemotion.ai` / `demo123`
+
+The demo patient already has a still photo (92°), a live motion reading (78°), a muscle peak, pain 3/10, and a one-page **Session report** under `/report`. Use **ES / EN** in the header to switch the clinic to Spanish.
+
 The public homepage shows one photo / motion / muscle section that explains each way to measure, plus hip/knee/ankle marks and a progress chart. Signed-in home is the recovery dashboard.
 
 Adult dashboards (home, briefing, care, charts, clinician, session, Photo Goniometer, MyoWare, library, RecoverAI, shop) use the same clinic shell: photo tiles, real rings and heatmaps, Measure · Coach · Report · Improve. Charts use saved clips only — no invented compliance or pain trends.

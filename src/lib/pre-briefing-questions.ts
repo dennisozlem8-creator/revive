@@ -1,45 +1,70 @@
 import type { InjuryType } from "./users";
+import type { Locale } from "./i18n";
+import { doingWellLabel } from "./i18n";
+
+export type LocalizedText = { en: string; es: string };
 
 export type PreBriefingQuestion = {
   id: string;
-  text: string;
+  text: LocalizedText;
   type: "scale" | "choice";
-  options?: string[];
+  options?: { value: string; label: LocalizedText }[];
 };
+
+const choice = (value: string, en: string, es: string) => ({
+  value,
+  label: { en, es },
+});
 
 const commonQuestions: PreBriefingQuestion[] = [
   {
     id: "sleep",
-    text: "How did you sleep last night?",
+    text: { en: "How did you sleep last night?", es: "¿Cómo dormiste anoche?" },
     type: "choice",
-    options: ["Great — 7+ hours", "OK — some rest", "Poor — disrupted"],
+    options: [
+      choice("Great — 7+ hours", "Great — 7+ hours", "Bien — 7 horas o más"),
+      choice("OK — some rest", "OK — some rest", "Regular — algo de descanso"),
+      choice("Poor — disrupted", "Poor — disrupted", "Mal — sueño interrumpido"),
+    ],
   },
   {
     id: "energy",
-    text: "Energy level right now?",
+    text: { en: "Energy level right now?", es: "¿Nivel de energía ahora?" },
     type: "scale",
   },
   {
     id: "medication",
-    text: "Did you take prescribed medication today?",
+    text: { en: "Did you take prescribed medication today?", es: "¿Tomaste el medicamento indicado hoy?" },
     type: "choice",
-    options: ["Yes", "No", "Not prescribed"],
+    options: [
+      choice("Yes", "Yes", "Sí"),
+      choice("No", "No", "No"),
+      choice("Not prescribed", "Not prescribed", "No me lo recetaron"),
+    ],
   },
   {
     id: "swelling",
-    text: "Any swelling since yesterday?",
+    text: { en: "Any swelling since yesterday?", es: "¿Hubo hinchazón desde ayer?" },
     type: "choice",
-    options: ["None", "Slight", "Noticeable"],
+    options: [
+      choice("None", "None", "Ninguna"),
+      choice("Slight", "Slight", "Poca"),
+      choice("Noticeable", "Noticeable", "Notable"),
+    ],
   },
   {
     id: "yesterday",
-    text: "Did you complete yesterday's exercises?",
+    text: { en: "Did you complete yesterday's exercises?", es: "¿Completaste los ejercicios de ayer?" },
     type: "choice",
-    options: ["Yes, fully", "Partially", "No / rest day"],
+    options: [
+      choice("Yes, fully", "Yes, fully", "Sí, por completo"),
+      choice("Partially", "Partially", "En parte"),
+      choice("No / rest day", "No / rest day", "No / día de descanso"),
+    ],
   },
   {
     id: "confidence",
-    text: "Confidence in doing today's session?",
+    text: { en: "Confidence in doing today's session?", es: "¿Confianza para la sesión de hoy?" },
     type: "scale",
   },
 ];
@@ -48,101 +73,167 @@ const injuryQuestions: Record<InjuryType, PreBriefingQuestion[]> = {
   knee: [
     {
       id: "knee-stiffness",
-      text: "Morning knee stiffness today?",
+      text: { en: "Morning knee stiffness today?", es: "¿Rigidez de rodilla esta mañana?" },
       type: "choice",
-      options: ["None", "Mild", "Moderate", "Severe"],
+      options: [
+        choice("None", "None", "Ninguna"),
+        choice("Mild", "Mild", "Leve"),
+        choice("Moderate", "Moderate", "Moderada"),
+        choice("Severe", "Severe", "Severa"),
+      ],
     },
     {
       id: "knee-stairs",
-      text: "Pain on stairs or squatting?",
+      text: { en: "Pain on stairs or squatting?", es: "¿Dolor en escaleras o al agacharte?" },
       type: "choice",
-      options: ["No", "A little", "Yes, limits activity"],
+      options: [
+        choice("No", "No", "No"),
+        choice("A little", "A little", "Un poco"),
+        choice("Yes, limits activity", "Yes, limits activity", "Sí, limita la actividad"),
+      ],
     },
     {
       id: "knee-giving-way",
-      text: "Any giving-way or buckling?",
+      text: { en: "Any giving-way or buckling?", es: "¿La rodilla se dobló o falló?" },
       type: "choice",
-      options: ["No", "Once", "More than once"],
+      options: [
+        choice("No", "No", "No"),
+        choice("Once", "Once", "Una vez"),
+        choice("More than once", "More than once", "Más de una vez"),
+      ],
     },
   ],
   ankle: [
     {
       id: "ankle-stiffness",
-      text: "Ankle stiffness when you wake up?",
+      text: { en: "Ankle stiffness when you wake up?", es: "¿Rigidez de tobillo al despertar?" },
       type: "choice",
-      options: ["None", "Mild", "Moderate", "Severe"],
+      options: [
+        choice("None", "None", "Ninguna"),
+        choice("Mild", "Mild", "Leve"),
+        choice("Moderate", "Moderate", "Moderada"),
+        choice("Severe", "Severe", "Severa"),
+      ],
     },
     {
       id: "ankle-walking",
-      text: "Pain while walking today?",
+      text: { en: "Pain while walking today?", es: "¿Dolor al caminar hoy?" },
       type: "choice",
-      options: ["No", "Mild", "Moderate", "Severe"],
+      options: [
+        choice("No", "No", "No"),
+        choice("Mild", "Mild", "Leve"),
+        choice("Moderate", "Moderate", "Moderado"),
+        choice("Severe", "Severe", "Severo"),
+      ],
     },
     {
       id: "ankle-balance",
-      text: "Balance on uneven ground?",
+      text: { en: "Balance on uneven ground?", es: "¿Equilibrio en terreno irregular?" },
       type: "choice",
-      options: ["Steady", "Slightly unsteady", "Very unsteady"],
+      options: [
+        choice("Steady", "Steady", "Estable"),
+        choice("Slightly unsteady", "Slightly unsteady", "Un poco inestable"),
+        choice("Very unsteady", "Very unsteady", "Muy inestable"),
+      ],
     },
   ],
   elbow: [
     {
       id: "elbow-stiffness",
-      text: "Elbow stiffness this morning?",
+      text: { en: "Elbow stiffness this morning?", es: "¿Rigidez de codo esta mañana?" },
       type: "choice",
-      options: ["None", "Mild", "Moderate", "Severe"],
+      options: [
+        choice("None", "None", "Ninguna"),
+        choice("Mild", "Mild", "Leve"),
+        choice("Moderate", "Moderate", "Moderada"),
+        choice("Severe", "Severe", "Severa"),
+      ],
     },
     {
       id: "elbow-grip",
-      text: "Grip strength compared to yesterday?",
+      text: { en: "Grip strength compared to yesterday?", es: "¿Fuerza de agarre comparada con ayer?" },
       type: "choice",
-      options: ["Better", "Same", "Weaker"],
+      options: [
+        choice("Better", "Better", "Mejor"),
+        choice("Same", "Same", "Igual"),
+        choice("Weaker", "Weaker", "Más débil"),
+      ],
     },
     {
       id: "elbow-lifting",
-      text: "Pain when lifting or reaching?",
+      text: { en: "Pain when lifting or reaching?", es: "¿Dolor al levantar o alcanzar?" },
       type: "choice",
-      options: ["No", "Light loads only", "Most movements"],
+      options: [
+        choice("No", "No", "No"),
+        choice("Light loads only", "Light loads only", "Solo cargas ligeras"),
+        choice("Most movements", "Most movements", "En la mayoría de movimientos"),
+      ],
     },
   ],
   wrist: [
     {
       id: "wrist-stiffness",
-      text: "Wrist stiffness this morning?",
+      text: { en: "Wrist stiffness this morning?", es: "¿Rigidez de muñeca esta mañana?" },
       type: "choice",
-      options: ["None", "Mild", "Moderate", "Severe"],
+      options: [
+        choice("None", "None", "Ninguna"),
+        choice("Mild", "Mild", "Leve"),
+        choice("Moderate", "Moderate", "Moderada"),
+        choice("Severe", "Severe", "Severa"),
+      ],
     },
     {
       id: "wrist-typing",
-      text: "Discomfort with typing or gripping?",
+      text: { en: "Discomfort with typing or gripping?", es: "¿Molestia al escribir o agarrar?" },
       type: "choice",
-      options: ["No", "After a while", "Immediately"],
+      options: [
+        choice("No", "No", "No"),
+        choice("After a while", "After a while", "Después de un rato"),
+        choice("Immediately", "Immediately", "De inmediato"),
+      ],
     },
     {
       id: "wrist-numbness",
-      text: "Any numbness or tingling?",
+      text: { en: "Any numbness or tingling?", es: "¿Entumecimiento o hormigueo?" },
       type: "choice",
-      options: ["No", "Occasionally", "Often"],
+      options: [
+        choice("No", "No", "No"),
+        choice("Occasionally", "Occasionally", "A veces"),
+        choice("Often", "Often", "A menudo"),
+      ],
     },
   ],
   other: [
     {
       id: "other-stiffness",
-      text: "Stiffness in the affected area today?",
+      text: { en: "Stiffness in the affected area today?", es: "¿Rigidez en la zona afectada hoy?" },
       type: "choice",
-      options: ["None", "Mild", "Moderate", "Severe"],
+      options: [
+        choice("None", "None", "Ninguna"),
+        choice("Mild", "Mild", "Leve"),
+        choice("Moderate", "Moderate", "Moderada"),
+        choice("Severe", "Severe", "Severa"),
+      ],
     },
     {
       id: "other-movement",
-      text: "Pain with everyday movement?",
+      text: { en: "Pain with everyday movement?", es: "¿Dolor con el movimiento diario?" },
       type: "choice",
-      options: ["No", "A little", "Yes, limits activity"],
+      options: [
+        choice("No", "No", "No"),
+        choice("A little", "A little", "Un poco"),
+        choice("Yes, limits activity", "Yes, limits activity", "Sí, limita la actividad"),
+      ],
     },
     {
       id: "other-confidence",
-      text: "Comfort moving the injured area?",
+      text: { en: "Comfort moving the injured area?", es: "¿Comodidad al mover la zona lesionada?" },
       type: "choice",
-      options: ["Confident", "Somewhat", "Very cautious"],
+      options: [
+        choice("Confident", "Confident", "Con confianza"),
+        choice("Somewhat", "Somewhat", "Más o menos"),
+        choice("Very cautious", "Very cautious", "Muy cuidadoso"),
+      ],
     },
   ],
 };
@@ -151,14 +242,22 @@ export function getPreBriefingQuestions(injury: InjuryType): PreBriefingQuestion
   return [...commonQuestions, ...injuryQuestions[injury]];
 }
 
+export function questionText(question: PreBriefingQuestion, locale: Locale) {
+  return question.text[locale];
+}
+
+export function optionLabel(option: { value: string; label: LocalizedText }, locale: Locale) {
+  return option.label[locale];
+}
+
 export type CheckInAnswers = Record<string, string | number>;
 
-export function summarizeCheckIn(answers: CheckInAnswers): string {
+export function summarizeCheckIn(answers: CheckInAnswers, locale: Locale = "en"): string {
   const flags: string[] = [];
-  if (answers.sleep === "Poor — disrupted") flags.push("poor sleep");
-  if (Number(answers.energy) <= 2) flags.push("low energy");
-  if (answers.swelling === "Noticeable") flags.push("swelling");
-  if (answers.yesterday === "No / rest day") flags.push("missed yesterday");
-  if (Number(answers.confidence) <= 2) flags.push("low confidence");
-  return flags.length ? flags.join(", ") : "doing well";
+  if (answers.sleep === "Poor — disrupted") flags.push(locale === "es" ? "mal sueño" : "poor sleep");
+  if (Number(answers.energy) <= 2) flags.push(locale === "es" ? "poca energía" : "low energy");
+  if (answers.swelling === "Noticeable") flags.push(locale === "es" ? "hinchazón" : "swelling");
+  if (answers.yesterday === "No / rest day") flags.push(locale === "es" ? "ayer no entrenó" : "missed yesterday");
+  if (Number(answers.confidence) <= 2) flags.push(locale === "es" ? "poca confianza" : "low confidence");
+  return flags.length ? flags.join(", ") : doingWellLabel(locale);
 }

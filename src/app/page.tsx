@@ -11,8 +11,10 @@ import {
 } from "@/components/clinic/DashKit";
 import { bodyAreas } from "@/lib/body-areas";
 import { useAuth } from "@/components/AuthProvider";
-import { t } from "@/lib/i18n";
+import { t, clinicLocale } from "@/lib/i18n";
 import { AuthLanding } from "@/components/AuthLanding";
+import { DemoBanner } from "@/components/DemoBanner";
+import { ReportActions } from "@/components/ReportActions";
 import { isCareTeam } from "@/lib/users";
 import { PhotoFrame } from "@/components/LandingMedia";
 import { loadMeasurements } from "@/lib/goniometer";
@@ -21,7 +23,7 @@ import { calculateStreak } from "@/lib/streak";
 
 export default function Home() {
   const { user, loading, getPatientsForDoctor } = useAuth();
-  const locale = user?.language ?? "en";
+  const locale = clinicLocale(user);
   const isPatient = user?.role === "patient";
   const careTeam = isCareTeam(user?.role);
 
@@ -39,7 +41,7 @@ export default function Home() {
 
   const firstName = user.name.split(" ")[0];
   const clips = loadMeasurements(user.email);
-  const progress = progressSnapshot(clips, user.targetRom || 100);
+  const progress = progressSnapshot(clips, user.targetRom || 100, locale);
   const streak = calculateStreak(user);
   const patients = careTeam ? getPatientsForDoctor() : [];
   const caseloadClips = patients.reduce((sum, patient) => sum + loadMeasurements(patient.email).length, 0);
@@ -47,6 +49,7 @@ export default function Home() {
 
   return (
     <DashShell caregiver={careTeam}>
+      <DemoBanner locale={locale} />
       <section className="overflow-hidden rounded-[1.5rem] bg-white shadow-[0_14px_32px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
         <div className="grid lg:grid-cols-[minmax(0,1.2fr)_minmax(16rem,0.8fr)]">
           <PhotoFrame
@@ -70,9 +73,12 @@ export default function Home() {
             <DashLoop />
             <div className="mt-5 flex flex-col gap-2 sm:max-w-md">
               {isPatient && (
-                <Link href="/briefing" className="rm-btn rm-btn-brand inline-flex h-12 min-h-0 w-full rounded-full">
-                  Open today’s briefing
-                </Link>
+                <>
+                  <Link href="/briefing" className="rm-btn rm-btn-brand inline-flex h-12 min-h-0 w-full rounded-full">
+                    {t("goToBriefing", locale)}
+                  </Link>
+                  <ReportActions locale={locale} className="w-full" />
+                </>
               )}
               {careTeam && (
                 <Link href="/doctor" className="rm-btn rm-btn-brand inline-flex h-12 min-h-0 w-full rounded-full">

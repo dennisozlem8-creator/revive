@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 import { loadUsers, saveUsers, isCareTeam, type User, type UserRole, type PTPrescription } from "@/lib/users";
+import { seedDemoAccounts } from "@/lib/demo-account";
+import { loadDeviceLocale } from "@/lib/i18n";
 import { logActivityToday } from "@/lib/streak";
 
 export type { ExerciseRecord, User, UserRole } from "@/lib/users";
@@ -28,6 +30,7 @@ type AuthContextValue = {
   loading: boolean;
   login: (email: string, password: string) => string | null;
   register: (options: RegisterOptions) => string | null;
+  enterDemo: (role?: "patient" | "doctor") => void;
   logout: () => void;
   saveExerciseHistory: (
     areaId: string,
@@ -138,6 +141,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return null;
   }, []);
 
+  const enterDemo = useCallback((role: "patient" | "doctor" = "patient") => {
+    const { patient, clinician } = seedDemoAccounts(loadDeviceLocale());
+    const next = role === "doctor" ? clinician : patient;
+    localStorage.setItem(SESSION_KEY, next.email);
+    setUser(normalizeUser(next));
+  }, []);
+
   const logout = useCallback(() => {
     localStorage.removeItem(SESSION_KEY);
     setUser(null);
@@ -226,6 +236,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       login,
       register,
+      enterDemo,
       logout,
       saveExerciseHistory,
       getPreviousExerciseIds,
@@ -239,6 +250,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       login,
       register,
+      enterDemo,
       logout,
       saveExerciseHistory,
       getPreviousExerciseIds,

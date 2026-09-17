@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { LanguageToggle } from "./LanguageToggle";
 
 const nav = [
   { href: "#how-it-works", label: "How it works" },
@@ -49,6 +50,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
         </nav>
 
         <div className="flex items-center gap-2">
+          <LanguageToggle />
           <a
             href="#go-in"
             className="inline-flex h-10 items-center justify-center rounded-full bg-brand px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-light"

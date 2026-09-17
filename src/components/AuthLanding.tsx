@@ -4,6 +4,7 @@ import { JointMarks, MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, Pho
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
 import { SessionStack } from "@/components/SessionStack";
+import { TryDemoButton } from "@/components/TryDemoButton";
 
 type AuthLandingProps = {
   mode: "login" | "register";
@@ -107,13 +108,14 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             <p className="mt-2 max-w-xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
               Photograph the movement, or wear a sensor. Then follow today’s exercises with your clinician.
             </p>
-            <div className="mt-3 flex gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
               <a
                 href="#go-in"
                 className="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light sm:h-11 sm:flex-none sm:px-7"
               >
                 {cta}
               </a>
+              <TryDemoButton className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:h-11 sm:flex-none sm:px-7" />
               <a
                 href="#how-it-works"
                 className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-[#9dc4b0] bg-white/80 px-5 text-sm font-semibold text-[#2a4638] transition hover:bg-[#e7f1ea] sm:h-11 sm:flex-none sm:px-7"

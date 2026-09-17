@@ -29,6 +29,8 @@ import { coachMovement, coachPhotoPose } from "@/lib/movement-coach";
 import { GoniometerProgressChart } from "./GoniometerProgressChart";
 import { MovementChart } from "./MovementChart";
 import { MovementCoachCard } from "./MovementCoachCard";
+import { useClinicLocale } from "./useClinicLocale";
+import { t, tf } from "@/lib/i18n";
 
 type Step = "upload" | "mark";
 
@@ -159,6 +161,7 @@ export function PhotoGoniometer({
   userEmail: string;
   goal: number;
 }) {
+  const { locale } = useClinicLocale();
   const imgRef = useRef<HTMLImageElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -672,7 +675,7 @@ export function PhotoGoniometer({
         <section className="rm-card p-5">
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="rm-label">Exercise</span>
+              <span className="rm-label">{t("exercise", locale)}</span>
               <select
                 value={exercise}
                 onChange={(e) => setExercise(e.target.value)}
@@ -684,7 +687,7 @@ export function PhotoGoniometer({
               </select>
             </label>
             <label className="block text-sm">
-              <span className="rm-label">Joint</span>
+              <span className="rm-label">{t("joint", locale)}</span>
               <select
                 value={joint}
                 onChange={(e) => setJoint(e.target.value)}
@@ -721,20 +724,20 @@ export function PhotoGoniometer({
                 <div className="flex flex-col gap-3 sm:flex-row">
                   {recording ? (
                     <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={stopRecording}>
-                      Stop recording
+                      {t("stopRecording", locale)}
                     </button>
                   ) : (
                     <>
                       <button type="button" className="rm-btn rm-btn-primary flex-1" onClick={startRecording}>
-                        Record movement
+                        {t("recordMovement", locale)}
                       </button>
                       <button type="button" className="rm-btn rm-btn-brand flex-1" onClick={() => void captureStill()}>
-                        Take photo
+                        {t("takePhoto", locale)}
                       </button>
                     </>
                   )}
                   <button type="button" className="rm-btn rm-btn-ghost flex-1" onClick={stopCamera}>
-                    Close camera
+                    {t("closeCamera", locale)}
                   </button>
                 </div>
                 {trackerReady && (
@@ -791,7 +794,7 @@ export function PhotoGoniometer({
                 className="rm-btn rm-btn-brand w-full"
                 onClick={() => void startCamera()}
               >
-                Open camera
+                {t("openCamera", locale)}
               </button>
             )}
             <button
@@ -799,17 +802,17 @@ export function PhotoGoniometer({
               className="rm-btn rm-btn-primary w-full"
               onClick={() => videoFileRef.current?.click()}
             >
-              Choose video from files
+              {t("chooseVideo", locale)}
             </button>
             <div className="relative">
               <div className="rm-btn rm-btn-ghost pointer-events-none w-full">
-                Still photo instead
+                {t("stillPhotoInstead", locale)}
               </div>
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/*"
                 className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
-                aria-label="Still photo instead"
+                aria-label={t("stillPhotoInstead", locale)}
                 onChange={(e) => {
                   onPhotoFile(e.target.files?.[0]);
                   window.setTimeout(() => {
@@ -823,7 +826,7 @@ export function PhotoGoniometer({
               className="text-sm font-medium text-brand-light"
               onClick={() => fileRef.current?.click()}
             >
-              Choose photo from files
+              {t("choosePhoto", locale)}
             </button>
           </div>
 
@@ -878,7 +881,7 @@ export function PhotoGoniometer({
                   void runVideoAnalysis(url);
                 }}
               >
-                {analyzing ? `Analyzing… ${analyzePct}%` : "Analyze movement"}
+                {analyzing ? `${t("analyzing", locale)} ${analyzePct}%` : t("analyzeMovement", locale)}
               </button>
               <button
                 type="button"
@@ -886,7 +889,7 @@ export function PhotoGoniometer({
                 disabled={saving}
                 onClick={() => void saveVideoResult()}
               >
-                {saving ? "Saving…" : saved ? "Saved to records" : "Save to database"}
+                {saving ? t("saving", locale) : saved ? t("savedToRecords", locale) : t("saveToRecords", locale)}
               </button>
             </div>
           )}
@@ -917,11 +920,11 @@ export function PhotoGoniometer({
       {step === "mark" && photoUrl && (
         <section className="rm-card p-6">
           <p className="rm-label">Step 2</p>
-          <h2 className="mt-1 text-xl font-bold">Mark hip, then knee, then ankle</h2>
+          <h2 className="mt-1 text-xl font-bold">{t("markPoints", locale)}</h2>
           <p className="mt-2 rm-body">
             {pending
-              ? `Tap the ${LANDMARK_LABELS[pending].toLowerCase()} next.`
-              : "All three points are set. Confirm to calculate the angle."}
+              ? tf("tapNext", locale, { landmark: t(pending, locale).toLowerCase() })
+              : t("allThreeSet", locale)}
           </p>
 
           <ol className="mt-4 flex flex-wrap gap-2">
@@ -1074,7 +1077,7 @@ export function PhotoGoniometer({
                   disabled={saving || saved}
                   onClick={() => void savePhotoResult()}
                 >
-                  {saving ? "Saving…" : saved ? "Saved to records" : "Save to database"}
+                  {saving ? t("saving", locale) : saved ? t("savedToRecords", locale) : t("saveToRecords", locale)}
                 </button>
               </div>
             </>
@@ -1124,7 +1127,7 @@ export function PhotoGoniometer({
                   disabled={saving || saved}
                   onClick={() => void saveVideoResult()}
                 >
-                  {saving ? "Saving…" : saved ? "Saved to records" : "Save to database"}
+                  {saving ? t("saving", locale) : saved ? t("savedToRecords", locale) : t("saveToRecords", locale)}
                 </button>
               </div>
             </>

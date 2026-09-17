@@ -13,6 +13,8 @@ import {
 } from "@/lib/session-results";
 import type { Exercise } from "@/lib/assessments";
 import { getExerciseMedia } from "@/lib/exercise-media";
+import { ReportActions } from "./ReportActions";
+import { clinicLocale } from "@/lib/i18n";
 
 type SessionResultsProps = {
   summary: SessionSummary;
@@ -62,14 +64,17 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
         </div>
       </section>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-xl font-bold">Your exercises</h3>
-        <Link
-          href="/kids"
-          className="rm-kids-type inline-flex items-center rounded-full bg-[#f5c84a] px-4 py-2 text-sm font-bold text-[#243056] shadow-sm"
-        >
-          Kids Quest
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <ReportActions locale={clinicLocale(user)} />
+          <Link
+            href="/kids"
+            className="rm-kids-type inline-flex items-center rounded-full bg-[#f5c84a] px-4 py-2 text-sm font-bold text-[#243056] shadow-sm"
+          >
+            Kids Quest
+          </Link>
+        </div>
       </div>
 
       {questExercise ? (

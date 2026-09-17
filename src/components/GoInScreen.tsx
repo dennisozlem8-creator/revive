@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { AuthForm } from "./AuthForm";
 import { SafePicture } from "./SafePicture";
+import { TryDemoButton } from "./TryDemoButton";
 import { ResetAppButton } from "./ResetAppButton";
 import type { UserRole } from "@/lib/users";
 
@@ -87,6 +88,11 @@ export function GoInScreen({ mode }: GoInScreenProps) {
           : "Tap who you are. Next you will create an email and password for that role."}
       </p>
       <div className="mt-3 flex flex-col gap-1.5">
+        <TryDemoButton className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light" />
+        <TryDemoButton
+          role="doctor"
+          className="inline-flex h-11 items-center justify-center rounded-full border border-[#9dc4b0] bg-white px-5 text-sm font-semibold text-[#2a4638] transition hover:bg-[#e7f1ea]"
+        />
         {entries.map((item) => (
           <button
             key={item.id}

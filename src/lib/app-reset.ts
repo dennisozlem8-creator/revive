@@ -4,8 +4,10 @@ const KEYS = [
   "revive-motion-notifications",
   "revive-motion-last-daily",
   "revive-motion-kids-progress",
+  "revive-motion-kids-quests",
   "revive-motion-goniometer",
   "revive-motion-heart",
+  "revive-motion-myoware",
 ];
 
 export function resetAppData() {

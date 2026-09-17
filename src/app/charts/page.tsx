@@ -5,11 +5,13 @@ import Link from "next/link";
 import { TabRow } from "@/components/ui/TabRow";
 import { useAuth } from "@/components/AuthProvider";
 import { calculateStreak, lastDaysActive } from "@/lib/streak";
-import { t } from "@/lib/i18n";
 import { loadMeasurements } from "@/lib/goniometer";
 import { GoniometerProgressChart } from "@/components/GoniometerProgressChart";
 import { ProgressInsight } from "@/components/ProgressInsight";
 import { DashBars, DashCard, DashHeat, DashIntro, DashPainMeter, DashShell, DashStat } from "@/components/clinic/DashKit";
+import { DemoBanner } from "@/components/DemoBanner";
+import { ReportActions } from "@/components/ReportActions";
+import { clinicLocale, t, tf } from "@/lib/i18n";
 
 type ChartTab = "rom" | "reps" | "pain" | "photo";
 
@@ -19,7 +21,7 @@ export default function ChartsPage() {
 
   if (!user) return null;
 
-  const locale = user.language ?? "en";
+  const locale = clinicLocale(user);
   const clips = loadMeasurements(user.email);
   const ordered = clips.slice().sort((a, b) => a.date.localeCompare(b.date));
   const week = lastDaysActive(user, 7);
@@ -28,16 +30,18 @@ export default function ChartsPage() {
 
   return (
     <DashShell>
+      <DemoBanner locale={locale} />
       <DashIntro
-        kicker="Report"
+        kicker={t("reportKicker", locale)}
         title={t("progressCharts", locale)}
-        text={`${ordered.length} saved readings · ${streak} day streak. Charts use what you recorded, not a made-up trend.`}
+        text={tf("chartsIntro", locale, { n: ordered.length, streak })}
+        action={<ReportActions locale={locale} />}
       />
 
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        <DashStat label="Saved readings" value={ordered.length} hint="Photo, motion, or muscle" />
-        <DashStat label="This week" value={week.filter((d) => d.active).length} hint="Active days" />
-        <DashStat label="Streak" value={streak} hint="Days in a row" />
+        <DashStat label={t("savedReadings", locale)} value={ordered.length} hint={t("photoMotionMuscle", locale)} />
+        <DashStat label={t("thisWeek", locale)} value={week.filter((d) => d.active).length} hint={t("activeDays", locale)} />
+        <DashStat label={t("streak", locale)} value={streak} hint={t("daysInARow", locale)} />
       </div>
 
       <div className="mt-6">
@@ -55,8 +59,8 @@ export default function ChartsPage() {
 
       {tab === "rom" && (
         <DashCard className="mt-6 p-5 sm:p-6">
-          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Range of motion</h2>
-          <p className="mt-1 text-sm text-[#2f4a60]">Each bar is a saved peak angle.</p>
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">{t("rangeOfMotion", locale)}</h2>
+          <p className="mt-1 text-sm text-[#2f4a60]">{t("eachBarPeak", locale)}</p>
           <div className="mt-5">
             <DashBars
               values={ordered.map((row) => row.angle)}
@@ -72,8 +76,8 @@ export default function ChartsPage() {
       {tab === "reps" && (
         <div className="mt-6 grid gap-3 lg:grid-cols-2">
           <DashCard className="p-5 sm:p-6">
-            <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">This week</h2>
-            <p className="mt-1 text-sm text-[#2f4a60]">A tall bar means you saved a session that day.</p>
+            <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">{t("thisWeek", locale)}</h2>
+            <p className="mt-1 text-sm text-[#2f4a60]">{t("aTallBar", locale)}</p>
             <div className="mt-5">
               <DashBars
                 values={week.map((day) => (day.active ? 1 : 0))}
@@ -84,8 +88,8 @@ export default function ChartsPage() {
             </div>
           </DashCard>
           <DashCard className="p-5 sm:p-6">
-            <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Last 28 days</h2>
-            <p className="mt-1 text-sm text-[#2f4a60]">Green is an active day.</p>
+            <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">{t("last28Days", locale)}</h2>
+            <p className="mt-1 text-sm text-[#2f4a60]">{t("greenIsActive", locale)}</p>
             <div className="mt-5">
               <DashHeat days={month} />
             </div>
@@ -95,27 +99,27 @@ export default function ChartsPage() {
 
       {tab === "pain" && (
         <DashCard className="mt-6 p-5 sm:p-6">
-          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Pain today</h2>
-          <p className="mt-1 text-sm text-[#2f4a60]">Logged at check-in. A longer trend needs more check-ins.</p>
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">{t("painToday", locale)}</h2>
+          <p className="mt-1 text-sm text-[#2f4a60]">{t("painLogged", locale)}</p>
           <div className="mt-5">
             <DashPainMeter value={user.painToday} />
           </div>
           <Link href="/check-in" className="rm-btn rm-btn-brand mt-5 inline-flex h-11 min-h-0 rounded-full px-6">
-            Open check-in
+            {t("openCheckIn", locale)}
           </Link>
         </DashCard>
       )}
 
       {tab === "photo" && (
         <div className="mt-6 space-y-4">
-          <ProgressInsight rows={clips} goal={user.targetRom || 100} />
+          <ProgressInsight rows={clips} goal={user.targetRom || 100} locale={locale} />
           <DashCard className="p-5 sm:p-6">
-            <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Peak angle over time</h2>
+            <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">{t("peakOverTime", locale)}</h2>
             <div className="mt-4">
               <GoniometerProgressChart measurements={clips} goal={user.targetRom || 100} />
             </div>
             <Link href="/goniometer" className="rm-btn rm-btn-brand mt-6 inline-flex h-11 min-h-0 rounded-full px-6">
-              Record a new clip
+              {t("recordNewClip", locale)}
             </Link>
           </DashCard>
         </div>

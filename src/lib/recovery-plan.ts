@@ -1,4 +1,6 @@
 import type { GoniometerMeasurement } from "./goniometer";
+import type { Locale } from "./i18n";
+import { headlineFromProgress } from "./i18n";
 import type { MovementCoachReport } from "./movement-coach";
 
 export type SetupStep = {
@@ -97,9 +99,62 @@ export function preExerciseSetup(exercise: string): SetupStep[] {
   return [...SHARED_SETUP, ...(EXERCISE_SETUP[exercise] ?? EXERCISE_SETUP["Heel Slide"])];
 }
 
+const SETUP_ES: Record<string, { title: string; detail: string }> = {
+  "Set the camera first": {
+    title: "Coloca la cámara primero",
+    detail: "Pon el teléfono o la computadora a 1.2–1.8 metros al lado, a la altura de la rodilla. La cadera, la rodilla y el tobillo deben verse completos.",
+  },
+  "Clear the joint": {
+    title: "Deja la articulación visible",
+    detail: "Sube el short o la bata por encima de la rodilla. Quítate un brace grueso para el clip si tu clínico dijo que es seguro.",
+  },
+  "Warm up for 60 seconds": {
+    title: "Calienta 60 segundos",
+    detail: "Haz 4 repeticiones suaves del mismo ejercicio antes de grabar. Sin rebotes.",
+  },
+  "Stop rule": {
+    title: "Regla para parar",
+    detail: "Si el dolor es agudo, nuevo o mayor de 6 de 10, para. Guarda el clip solo si el movimiento se sintió como tu trabajo habitual.",
+  },
+  "Sit tall on a firm chair": {
+    title: "Siéntate derecho en una silla firme",
+    detail: "Pies apoyados. Sujeta el asiento con ambas manos. Desliza un pie hacia atrás debajo de la silla al grabar.",
+  },
+  "Keep the thigh quiet": {
+    title: "Mantén el muslo quieto",
+    detail: "El muslo de trabajo se queda en la silla. Solo se mueve la pierna de abajo.",
+  },
+  "Hold a counter or chair": {
+    title: "Sujétate de un mostrador o silla",
+    detail: "Apóyate en la otra pierna. Lleva el talón de trabajo hacia el asiento y bájalo en una cuenta de 3.",
+  },
+  "Thighs stay lined up": {
+    title: "Los muslos alineados",
+    detail: "No levantes la cadera para fingir más flexión. Para cuando la pelvis quiera inclinarse.",
+  },
+  "Lie on your stomach on a firm bed": {
+    title: "Acuéstate boca abajo en una cama firme",
+    detail: "Cámara al lado de la cama. Los huesos de la cadera se quedan en el colchón mientras el talón sube.",
+  },
+  "Lie on your back": {
+    title: "Acuéstate boca arriba",
+    detail: "Pon una toalla bajo el talón para que se deslice. Cámara al lado de la cama, no a los pies.",
+  },
+  "Kneecap toward the ceiling": {
+    title: "Rótula hacia el techo",
+    detail: "No dejes que la rodilla se vaya hacia adentro o afuera mientras el talón se desliza.",
+  },
+};
+
+export function setupStepText(step: SetupStep, locale: Locale) {
+  if (locale !== "es") return { title: step.title, detail: step.detail };
+  return SETUP_ES[step.title] ?? { title: step.title, detail: step.detail };
+}
+
 export function progressSnapshot(
   rows: GoniometerMeasurement[],
-  goal: number
+  goal: number,
+  locale: Locale = "en"
 ): ProgressSnapshot {
   const ordered = rows.slice().sort((a, b) => a.date.localeCompare(b.date));
   const first = ordered[0];
@@ -118,18 +173,13 @@ export function progressSnapshot(
     (change != null && change >= 0 && (daysSinceLast ?? 99) <= 3) ||
     (weeklyCount >= 3 && (latestForm ?? 60) >= 60);
 
-  let headline = "Save a side-view clip so we can start a real trend.";
-  if (latestPeak != null && change != null && ordered.length >= 2) {
-    if (change > 0) {
-      headline = `Peak is up ${change}° since the first saved clip (${firstPeak}° → ${latestPeak}°). Goal is ${goal}°.`;
-    } else if (change < 0) {
-      headline = `Peak is ${Math.abs(change)}° lower than the first clip. Hold the last good form and do not chase a bigger number today.`;
-    } else {
-      headline = `Peak is holding at ${latestPeak}°. Repeat the same setup so the next change is real.`;
-    }
-  } else if (latestPeak != null) {
-    headline = `First saved peak is ${latestPeak}°. Record again in 1–2 days with the same camera setup.`;
-  }
+  const headline = headlineFromProgress(locale, {
+    latestPeak,
+    firstPeak,
+    change,
+    sessions: ordered.length,
+    goal,
+  });
 
   return {
     sessions: ordered.length,
