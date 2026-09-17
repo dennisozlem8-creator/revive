@@ -146,6 +146,7 @@ export function OverlayCard({
   media,
   href,
   className = "",
+  imgClassName = "object-[center_22%]",
 }: {
   src?: string;
   alt?: string;
@@ -155,10 +156,11 @@ export function OverlayCard({
   media?: ReactNode;
   href?: string;
   className?: string;
+  imgClassName?: string;
 }) {
   const inner = (
     <>
-      {media ?? (src ? <PhotoFrame src={src} alt={alt} className="absolute inset-0 h-full w-full" imgClassName="object-[center_22%]" /> : null)}
+      {media ?? (src ? <PhotoFrame src={src} alt={alt} className="absolute inset-0 h-full w-full" imgClassName={imgClassName} /> : null)}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#1b3348]/80 via-[#1b3348]/15 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-4 text-white sm:p-5">
         {kicker ? (

@@ -331,12 +331,13 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             </div>
             <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
               <OverlayCard
-                src="/images/landing-younger-phone.webp?v=1"
-                alt="A younger patient following a session on a phone."
-                kicker="Younger adults"
+                src="/images/landing-girl-phone.webp?v=1"
+                alt="A 7-year-old using Revive Motion on a phone at home."
+                kicker="Younger patients"
                 title="The same session on a phone"
                 text="Open today’s briefing, take the reading, then do the reps. Nothing extra to install."
                 href="#go-in"
+                imgClassName="object-cover object-[center_62%]"
                 className="min-h-[14rem] sm:min-h-[16rem]"
               />
               <Link
