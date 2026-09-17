@@ -13,21 +13,21 @@ const steps = [
     n: "01",
     title: "Sign in on this device",
     body: "Choose patient, clinician, or caregiver. Your plan and progress stay with this browser until you sign in on another device.",
-    card: "border-[#9ec6e0] bg-[#e8f3fb]",
+    card: "border-[#9ec6e0] border-l-4 border-l-[#4f90c6] bg-[#e8f3fb]",
     num: "text-[#3d7eb4]",
   },
   {
     n: "02",
     title: "Measure today’s motion",
     body: "Use the photo goniometer for joint range, or connect a MyoWare sensor when you have one. No extra hardware is required to start.",
-    card: "border-[#9dc4b0] bg-[#e7f1ea]",
+    card: "border-[#9dc4b0] border-l-4 border-l-[#3a7d62] bg-[#e7f1ea]",
     num: "text-[#3a7d62]",
   },
   {
     n: "03",
     title: "Follow the dose, share progress",
     body: "Complete the sets your session recommends, then keep a linked doctor or caregiver in the loop from the care dashboard.",
-    card: "border-[#d4c6b0] bg-[#f3eee6]",
+    card: "border-[#d4c6b0] border-l-4 border-l-[#c47a32] bg-[#f3eee6]",
     num: "text-[#7a6548]",
   },
 ];
@@ -38,7 +38,7 @@ const audiences = [
     kicker: "Patients",
     title: "Clinic-guided recovery at home",
     body: "Open today’s briefing, record a clip, and get the next sets without guessing. Body-area assessments cover ankle, knee, lower back, wrist, and more.",
-    card: "border-[#9ec6e0] bg-[#e8f3fb]",
+    card: "border-[#9ec6e0] border-l-4 border-l-[#4f90c6] bg-[#e8f3fb]",
     kickerClass: "text-[#3d7eb4]",
   },
   {
@@ -46,7 +46,7 @@ const audiences = [
     kicker: "Clinicians",
     title: "See linked patients in one place",
     body: "Doctors on this device can open a patient, review movement trends, and keep home work aligned with the plan of care.",
-    card: "border-[#9dc4b0] bg-[#e7f1ea]",
+    card: "border-[#9dc4b0] border-l-4 border-l-[#3a7d62] bg-[#e7f1ea]",
     kickerClass: "text-[#3a7d62]",
   },
   {
@@ -54,7 +54,7 @@ const audiences = [
     kicker: "Caregivers",
     title: "Follow a family member’s week",
     body: "Stay close to sessions and progress without taking over the exercises. Support the person you care for from the same app.",
-    card: "border-[#d4c6b0] bg-[#f3eee6]",
+    card: "border-[#d4c6b0] border-l-4 border-l-[#c47a32] bg-[#f3eee6]",
     kickerClass: "text-[#7a6548]",
   },
 ];
@@ -92,7 +92,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               </p>
               <h1 className="rm-serif mt-5 max-w-xl text-[2.35rem] font-semibold leading-[1.12] text-foreground sm:text-5xl lg:text-[3.35rem]">
                 Move better.{" "}
-                <span className="text-brand">Feel stronger.</span>
+                <span className="inline-block text-brand">Feel stronger.</span>
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-8 text-body">
                 Home physical therapy with a calm clinic workflow: measure the joint, follow
@@ -129,7 +129,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section id="how-it-works" className="border-t border-[var(--border)] bg-white">
+        <section id="how-it-works" className="scroll-mt-28 border-t border-[var(--border)] bg-white">
           <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 lg:py-20">
             <p className="rm-label text-brand-light">Care pathway</p>
             <h2 className="rm-serif mt-2 max-w-xl text-3xl font-semibold text-foreground sm:text-4xl">
@@ -151,7 +151,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section className="border-t border-[var(--border)] bg-background">
+        <section className="scroll-mt-28 border-t border-[var(--border)] bg-background">
+          <div id="for-patients" className="scroll-mt-28" />
+          <div id="for-clinicians" className="scroll-mt-28" />
           <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-6 lg:py-20">
             <p className="rm-label text-brand-light">Who it is for</p>
             <h2 className="rm-serif mt-2 max-w-xl text-3xl font-semibold text-foreground sm:text-4xl">
@@ -161,8 +163,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               {audiences.map((item) => (
                 <article
                   key={item.id}
-                  id={item.id}
-                  className={`scroll-mt-28 rounded-3xl border p-7 shadow-[0_12px_32px_rgba(27,51,72,0.05)] ${item.card}`}
+                  className={`rounded-3xl border p-7 shadow-[0_12px_32px_rgba(27,51,72,0.05)] ${item.card}`}
                 >
                   <p className={`rm-label ${item.kickerClass}`}>{item.kicker}</p>
                   <h3 className="rm-serif mt-3 text-2xl font-semibold text-foreground">{item.title}</h3>
