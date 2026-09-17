@@ -7,19 +7,9 @@ const slides = [
     label: "Session",
   },
   {
-    src: "/images/landing-younger-phone.webp?v=1",
-    alt: "A younger patient following today’s plan on a phone.",
-    label: "Check-in",
-  },
-  {
     src: "/images/landing-younger-session.webp?v=1",
     alt: "A younger patient doing a lunge while watching the phone.",
     label: "Live plan",
-  },
-  {
-    src: "/images/landing-child-phone.webp?v=1",
-    alt: "A 10-year-old using Revive Motion on a phone at home.",
-    label: "On this device",
   },
   {
     src: "/images/landing-hero-photo.webp?v=3",
