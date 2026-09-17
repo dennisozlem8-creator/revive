@@ -23,7 +23,7 @@ export function ImpactBand({ locale }: { locale: Locale }) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#132536]/90 via-transparent to-[#1b3348]/20" />
 
         <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:py-12">
-          <h2 className="rm-serif max-w-3xl whitespace-pre-line text-balance text-[1.9rem] font-semibold leading-[1.02] tracking-tight text-white drop-shadow-[0_10px_28px_rgba(0,0,0,0.45)] sm:text-[3.45rem] sm:leading-[0.94] lg:text-[4.25rem]">
+          <h2 className="rm-serif max-w-4xl whitespace-pre-line text-[1.85rem] font-semibold leading-[1.05] tracking-tight text-white drop-shadow-[0_10px_28px_rgba(0,0,0,0.45)] sm:text-[3.15rem] sm:leading-[1.02] lg:text-[3.85rem]">
             {t("impactTitle", locale)}
           </h2>
 
@@ -33,7 +33,7 @@ export function ImpactBand({ locale }: { locale: Locale }) {
                 <p className="rm-serif text-[2.8rem] font-semibold leading-none tracking-tight text-white drop-shadow-[0_8px_18px_rgba(0,0,0,0.35)] sm:text-[3.6rem] lg:text-[4.1rem]">
                   {stat.value}
                 </p>
-                <p className="mt-2 max-w-[17rem] text-sm font-semibold leading-5 text-white/80 sm:text-[15px] sm:leading-6">
+                <p className="mt-2 max-w-[18rem] text-sm font-semibold leading-5 text-white/80 sm:text-[15px] sm:leading-6">
                   {stat.label}
                 </p>
               </article>
@@ -41,7 +41,7 @@ export function ImpactBand({ locale }: { locale: Locale }) {
           </div>
 
           <div className="mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:items-center sm:justify-between">
-            <p className="rm-serif max-w-2xl text-[1.35rem] font-semibold leading-tight text-white sm:text-[1.6rem]">
+            <p className="rm-serif max-w-xl text-[1.25rem] font-semibold leading-snug text-white sm:max-w-2xl sm:text-[1.5rem]">
               {t("impactAnswerTitle", locale)}
             </p>
             <TryDemoButton className="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-white px-7 text-sm font-semibold text-[#1b3348] shadow-[0_12px_28px_rgba(0,0,0,0.28)] transition hover:bg-[#e8f3fb]" />
