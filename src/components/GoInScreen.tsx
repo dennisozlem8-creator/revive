@@ -111,7 +111,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
           <SafePicture
             src="/images/landing-kids-quest.webp?v=5"
             alt=""
-            className="h-24 w-full object-cover object-[center_62%] sm:h-28"
+            className="h-36 w-full object-cover object-[center_68%] sm:h-40"
           />
           <div className="kids-caption flex items-center justify-between gap-3 px-3 py-3 sm:px-4">
             <span>
