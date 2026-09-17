@@ -32,11 +32,11 @@ const steps = [
   },
 ];
 
-const solutions = [
+const ways = [
   {
     title: "Photo",
-    subtitle: "Phone camera. No extra device.",
-    points: ["Side-view photo", "Tap hip, knee, ankle", "See the angle"],
+    device: "Phone camera. No extra device.",
+    does: "A helper takes one side-view photo of the seated joint. You tap hip, knee, and ankle. The app shows the angle and saves it for the care team.",
     src: "/images/landing-hero-photo.webp?v=3",
     alt: "Helper photographing a seated patient.",
     className: "border-[#b7d4c4] bg-[#e7f6ee]",
@@ -45,8 +45,8 @@ const solutions = [
   },
   {
     title: "Motion sensor",
-    subtitle: "MPU-6050 on the joint.",
-    points: ["Live angle", "Hands-free", "During the session"],
+    device: "MPU-6050 straps above and below the joint.",
+    does: "The sensors track how far the joint bends during the session. The app shows a live angle, so you can hold the position without anyone taking photos.",
     src: "/images/landing-mpu.png?v=4",
     alt: "Revive Motion MPU-6050 straps with a live 92 degree elbow angle.",
     className: "border-[#c5c9e8] bg-[#eef0fb]",
@@ -56,8 +56,8 @@ const solutions = [
   },
   {
     title: "Muscle sensor",
-    subtitle: "MyoWare 2.0.",
-    points: ["Muscle effort", "Flex to see the signal", "Bluetooth or USB"],
+    device: "MyoWare 2.0 pads on the muscle.",
+    does: "Flex the muscle. The app shows how hard it is working, over Bluetooth or a USB cable.",
     src: "/images/landing-myoware.png",
     alt: "MyoWare muscle sensor with electrode pads on an upper arm.",
     className: "border-[#d0c4e4] bg-[#f3eefc]",
@@ -121,34 +121,6 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section id="sensors" className="scroll-mt-28 bg-white">
-          <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-6">
-            <p className="rm-label text-brand-light">Wear a sensor</p>
-            <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">MPU-6050 and MyoWare</h2>
-            <div className="mt-8 grid gap-5 lg:grid-cols-2">
-              <article className="overflow-hidden rounded-[1.5rem] border border-[#c5c9e8] bg-[#eef0fb]">
-                <MpuAnglePhoto className="aspect-[4/3] min-h-[18rem] sm:min-h-[22rem]" />
-                <div className="p-5">
-                  <h3 className="text-xl font-bold uppercase text-[#4a4f8a]">Motion sensor</h3>
-                  <p className="mt-1 text-sm font-semibold">MPU-6050 on the joint. Live angle, hands-free.</p>
-                </div>
-              </article>
-              <article className="overflow-hidden rounded-[1.5rem] border border-[#d0c4e4] bg-[#f3eefc]">
-                <PhotoFrame
-                  src="/images/landing-myoware.png"
-                  alt="MyoWare muscle sensor with electrode pads on an upper arm."
-                  fit="contain"
-                  className="h-72 sm:h-80"
-                />
-                <div className="p-5">
-                  <h3 className="text-xl font-bold uppercase text-[#5a3d8a]">Muscle sensor</h3>
-                  <p className="mt-1 text-sm font-semibold">MyoWare 2.0. Flex to see the signal over Bluetooth or USB.</p>
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
-
         <section id="how-it-works" className="scroll-mt-28 bg-[#f7fbfe]">
           <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-6">
             <p className="rm-label text-brand-light">Three steps</p>
@@ -172,26 +144,25 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section className="bg-[#1b3348] py-14 text-white">
+        <section id="sensors" className="scroll-mt-28 bg-[#e8f3fb] py-14">
           <div className="mx-auto w-full max-w-6xl px-5 sm:px-6">
-            <p className="rm-label text-[#9ec6e0]">Choose a way to measure</p>
-            <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">Photo and sensors</h2>
+            <p className="rm-label text-brand-light">Choose one way to measure</p>
+            <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">Photo, motion, or muscle</h2>
+            <p className="mt-3 max-w-2xl text-lg leading-8 text-body">
+              You do not need all three. Pick the method your clinician asked for, or start with a photo.
+            </p>
             <div className="mt-8 grid gap-5 lg:grid-cols-3">
-              {solutions.map((item) => (
-                <article key={item.title} className={`overflow-hidden rounded-[1.5rem] border text-foreground ${item.className}`}>
+              {ways.map((item) => (
+                <article key={item.title} className={`overflow-hidden rounded-[1.5rem] border ${item.className}`}>
                   {"mpu" in item && item.mpu ? (
-                    <MpuAnglePhoto className="aspect-[4/3] min-h-[16rem] sm:min-h-[20rem]" />
+                    <MpuAnglePhoto className="aspect-[4/3] min-h-[16rem] sm:min-h-[18rem]" />
                   ) : (
-                    <PhotoFrame src={item.src} alt={item.alt} fit={item.fit} className="h-64 sm:h-72" />
+                    <PhotoFrame src={item.src} alt={item.alt} fit={item.fit} className="aspect-[4/3] min-h-[16rem] sm:min-h-[18rem]" />
                   )}
-                  <div className="p-5">
+                  <div className="p-5 sm:p-6">
                     <h3 className={`text-xl font-bold uppercase ${item.titleClass}`}>{item.title}</h3>
-                    <p className="mt-1 text-sm font-semibold">{item.subtitle}</p>
-                    <ul className="mt-4 space-y-1.5 text-sm">
-                      {item.points.map((point) => (
-                        <li key={point}>✓ {point}</li>
-                      ))}
-                    </ul>
+                    <p className="mt-1 text-sm font-semibold">{item.device}</p>
+                    <p className="mt-3 text-sm leading-6 text-body">{item.does}</p>
                   </div>
                 </article>
               ))}

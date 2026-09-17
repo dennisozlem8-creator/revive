@@ -7,7 +7,7 @@ Source: [https://github.com/dennisozlem8-creator/revive](https://github.com/denn
 
 Kids Quest is a storybook adventure world for exercises, with original kingdoms and hero art. Adult clinic pages stay on the light clinic theme.
 
-The public homepage uses photographs of people measuring at home: a helper taking a side-view photo, hip/knee/ankle marks, a Revive Motion MPU-6050 live-angle shot, and MyoWare on the arm. Signed-in home is the recovery dashboard.
+The public homepage shows one photo / motion / muscle section that explains each way to measure, plus hip/knee/ankle marks and a progress chart. Signed-in home is the recovery dashboard.
 
 ## Photo Goniometer
 
