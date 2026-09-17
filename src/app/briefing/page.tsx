@@ -65,6 +65,7 @@ export default function BriefingPage() {
           max={goal}
           label={t("rangeVsGoal", locale)}
           display={progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
+          ofGoal={t("ofGoal", locale)}
         />
         <DashStat
           label={t("lastSessionMoves", locale)}

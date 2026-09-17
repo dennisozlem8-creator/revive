@@ -86,11 +86,13 @@ export function DashRing({
   max,
   label,
   display,
+  ofGoal = "of goal",
 }: {
   value: number;
   max: number;
   label: string;
   display: string;
+  ofGoal?: string;
 }) {
   const pct = max <= 0 ? 0 : Math.min(100, Math.max(0, (value / max) * 100));
   const r = 36;
@@ -117,7 +119,7 @@ export function DashRing({
       </svg>
       <div>
         <p className="text-sm font-semibold text-[#2f4a60]">{label}</p>
-        <p className="mt-0.5 text-base text-[#1b3348]">{Math.round(pct)}% of goal</p>
+        <p className="mt-0.5 text-base text-[#1b3348]">{Math.round(pct)}% {ofGoal}</p>
       </div>
     </article>
   );

@@ -70,6 +70,7 @@ export default function DashboardPage() {
           max={goal}
           label={t("rangeVsGoal", locale)}
           display={progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
+          ofGoal={t("ofGoal", locale)}
         />
         <DashStat label={t("currentStreak", locale)} value={streak} hint={streak > 0 ? t("keepGoingToday", locale) : t("completeSessionToStart", locale)} />
         <DashStat label={t("longestStreak", locale)} value={longestStreak} hint={t("bestRun", locale)} />
