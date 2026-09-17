@@ -4,13 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { LanguageToggle } from "./LanguageToggle";
-
-const nav = [
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#sensors", label: "Photo & sensors" },
-  { href: "#features", label: "Features" },
-  { href: "/kids", label: "Kids Quest" },
-];
+import { useClinicLocale } from "./useClinicLocale";
+import { t } from "@/lib/i18n";
 
 type LandingHeaderProps = {
   mode: "login" | "register";
@@ -18,7 +13,14 @@ type LandingHeaderProps = {
 
 export function LandingHeader({ mode }: LandingHeaderProps) {
   const [open, setOpen] = useState(false);
-  const cta = mode === "login" ? "Sign in" : "Create account";
+  const { locale } = useClinicLocale();
+  const cta = mode === "login" ? t("signIn", locale) : t("createAccount", locale);
+  const nav = [
+    { href: "#how-it-works", label: t("howItWorks", locale) },
+    { href: "#sensors", label: t("photoAndSensors", locale) },
+    { href: "#features", label: t("features", locale) },
+    { href: "/kids", label: t("kidsQuest", locale) },
+  ];
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/85 backdrop-blur-xl">
@@ -50,7 +52,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LanguageToggle />
+          <LanguageToggle labeled />
           <a
             href="#go-in"
             className="inline-flex h-10 items-center justify-center rounded-full bg-brand px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-light"
@@ -64,7 +66,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
             aria-controls="landing-mobile-nav"
             onClick={() => setOpen((value) => !value)}
           >
-            <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
+            <span className="sr-only">{open ? t("closeMenu", locale) : t("openMenu", locale)}</span>
             {open ? (
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />

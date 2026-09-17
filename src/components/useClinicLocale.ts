@@ -12,6 +12,11 @@ export function useClinicLocale() {
     setDevice(loadDeviceLocale());
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = user?.language ?? device;
+  }, [device, user?.language]);
+
+
   const locale: Locale = user?.language ?? device;
 
   const setLocale = useCallback(

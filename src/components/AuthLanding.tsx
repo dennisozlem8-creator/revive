@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
 import { JointMarks, MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame, PhotoGoniometerPhoto } from "@/components/LandingMedia";
@@ -5,6 +7,8 @@ import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
 import { SessionStack } from "@/components/SessionStack";
 import { TryDemoButton } from "@/components/TryDemoButton";
+import { useClinicLocale } from "@/components/useClinicLocale";
+import { t, tf } from "@/lib/i18n";
 
 type AuthLandingProps = {
   mode: "login" | "register";
@@ -20,71 +24,54 @@ function SectionIntro({ kicker, title, text }: { kicker: string; title: string; 
   );
 }
 
-const cycle = [
-  { n: "01", word: "Measure", line: "Photo, MPU-6050, or MyoWare on this device.", color: "#9dc4b0" },
-  { n: "02", word: "Coach", line: "Follow today’s session after the reading.", color: "#7eb3d9" },
-  { n: "03", word: "Report", line: "Angles stay with the care team.", color: "#4f90c6" },
-  { n: "04", word: "Improve", line: "The next plan uses what you just recorded.", color: "#3a7d62" },
-] as const;
-
-const steps: {
-  n: string;
-  title: string;
-  text: string;
-  src?: string;
-  alt?: string;
-  marks?: boolean;
-}[] = [
-  {
-    n: "01",
-    title: "Take a side-view photo",
-    text: "A helper photographs the seated joint. Phone camera only.",
-    src: "/images/landing-hero-photo.webp?v=3",
-    alt: "A helper photographs a seated patient from the side.",
-  },
-  {
-    n: "02",
-    title: "Tap hip, knee, ankle",
-    text: "The app marks the three points and shows the angle.",
-    marks: true,
-  },
-  {
-    n: "03",
-    title: "Do today’s session",
-    text: "Follow the exercises your clinician set for today.",
-    src: "/images/landing-exercise.webp",
-    alt: "A patient following a home session on a tablet.",
-  },
-];
-
-const ways: {
-  title: string;
-  text: string;
-  src?: string;
-  alt?: string;
-  photo?: boolean;
-  mpu?: boolean;
-  myoware?: boolean;
-}[] = [
-  {
-    title: "Photo",
-    text: "Phone camera. Tap hip, knee, then ankle. A still reading, such as 92 deg, is saved for the clinician.",
-    photo: true,
-  },
-  {
-    title: "Motion sensor",
-    text: "MPU-6050 straps above and below the joint. Live angle while you move, such as 78 deg.",
-    mpu: true,
-  },
-  {
-    title: "Muscle sensor",
-    text: "MyoWare 2.0 pads on the muscle. Flex, then connect with Bluetooth or a USB cable.",
-    myoware: true,
-  },
-];
-
 export function AuthLanding({ mode }: AuthLandingProps) {
-  const cta = mode === "login" ? "Sign in" : "Create an account";
+  const { locale } = useClinicLocale();
+  const cta = mode === "login" ? t("signIn", locale) : t("createAccount", locale);
+  const cycle = [
+    { n: "01", word: t("measure", locale), line: t("cycleMeasure", locale), color: "#9dc4b0" },
+    { n: "02", word: t("coach", locale), line: t("cycleCoach", locale), color: "#7eb3d9" },
+    { n: "03", word: t("reportWord", locale), line: t("cycleReport", locale), color: "#4f90c6" },
+    { n: "04", word: t("improve", locale), line: t("cycleImprove", locale), color: "#3a7d62" },
+  ] as const;
+  const steps = [
+    {
+      n: "01",
+      title: t("stepPhotoTitle", locale),
+      text: t("stepPhotoText", locale),
+      src: "/images/landing-hero-photo.webp?v=3",
+      alt: t("takeSideViewShort", locale),
+    },
+    {
+      n: "02",
+      title: t("stepMarksTitle", locale),
+      text: t("stepMarksText", locale),
+      marks: true,
+    },
+    {
+      n: "03",
+      title: t("stepSessionTitle", locale),
+      text: t("stepSessionText", locale),
+      src: "/images/landing-exercise.webp",
+      alt: t("doTodaysExercises", locale),
+    },
+  ];
+  const ways = [
+    {
+      title: t("wayPhotoTitle", locale),
+      text: t("wayPhotoText", locale),
+      photo: true,
+    },
+    {
+      title: t("wayMotionTitle", locale),
+      text: t("wayMotionText", locale),
+      mpu: true,
+    },
+    {
+      title: t("wayMuscleTitle", locale),
+      text: t("wayMuscleText", locale),
+      myoware: true,
+    },
+  ];
 
   return (
     <div className="min-h-full bg-background text-foreground">
@@ -92,7 +79,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         href="#go-in"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:shadow"
       >
-        Skip to sign in
+        {t("skipToSignIn", locale)}
       </a>
       <LandingHeader mode={mode} />
 
@@ -103,10 +90,13 @@ export function AuthLanding({ mode }: AuthLandingProps) {
 
           <div className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-5 sm:px-6 lg:pb-10 lg:pt-8">
             <h1 className="rm-serif max-w-3xl text-[1.85rem] font-semibold leading-[1.08] text-foreground sm:text-4xl lg:text-5xl">
-              Physical Therapy Monitoring at Home.
+              {t("heroTitle", locale)}
             </h1>
             <p className="mt-2 max-w-xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
-              Photograph the movement, or wear a sensor. Then follow today’s exercises with your clinician.
+              {t("heroText", locale)}
+            </p>
+            <p className="mt-2 max-w-xl text-sm font-semibold text-[#3d7eb4] sm:text-[0.95rem]">
+              {t("fullSpanish", locale)}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <a
@@ -120,14 +110,14 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 href="#how-it-works"
                 className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-[#9dc4b0] bg-white/80 px-5 text-sm font-semibold text-[#2a4638] transition hover:bg-[#e7f1ea] sm:h-11 sm:flex-none sm:px-7"
               >
-                See how
+                {t("seeHow", locale)}
               </a>
             </div>
 
             <div className="mt-5 grid items-stretch gap-3 lg:grid-cols-[minmax(0,1.12fr)_minmax(20rem,0.88fr)] lg:gap-4">
               <PhotoFrame
                 src="/images/landing-older-phone.webp?v=1"
-                alt="An older patient using Revive Motion on a phone at home."
+                alt={t("sameSessionPhone", locale)}
                 imgClassName="object-[center_18%]"
                 className="order-2 min-h-[16rem] self-stretch rounded-[1.25rem] shadow-[0_16px_36px_rgba(27,51,72,0.12)] sm:min-h-[20rem] lg:order-1 lg:min-h-0"
               />
@@ -143,12 +133,12 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         <section id="how-it-works" className="scroll-mt-20 bg-[#1b3348] text-white">
           <div className="mx-auto grid w-full max-w-6xl items-stretch lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
             <div className="flex flex-col justify-center px-4 py-10 sm:px-6 lg:sticky lg:top-16 lg:self-start lg:px-8 lg:py-16">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#9dc4b0]">Guided on this device</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#9dc4b0]">{t("guidedOnDevice", locale)}</p>
               <h2 className="rm-serif mt-2 text-3xl font-semibold leading-[1.1] sm:text-4xl">
-                Sessions you can do at home, with the care team still in the loop.
+                {t("sessionsAtHome", locale)}
               </h2>
               <p className="mt-3 max-w-md text-sm leading-6 text-white/80 sm:text-base">
-                Photograph the joint, or wear a sensor. Then follow today’s plan. Live angles and effort stay with the clinician — no made-up scores, just what you record.
+                {t("sessionsAtHomeText", locale)}
               </p>
               <ol className="relative mt-6 space-y-4 border-l border-white/20 pl-5" aria-label="Measure, Coach, Report, Improve">
                 {cycle.map((item) => (
@@ -171,7 +161,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               </a>
             </div>
             <div className="px-4 pb-10 sm:px-6 lg:px-8 lg:py-10">
-              <SessionStack />
+              <SessionStack locale={locale} />
             </div>
           </div>
         </section>
@@ -179,9 +169,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         <section className="bg-[#f7fbfe]">
           <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
             <SectionIntro
-              kicker="How it works"
-              title="Three steps on this device"
-              text="Take a photo. Tap the joint. Then do today’s session."
+              kicker={t("howItWorks", locale)}
+              title={t("threeSteps", locale)}
+              text={t("threeStepsText", locale)}
             />
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {steps.map((step) => (
@@ -204,9 +194,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         <section id="sensors" className="scroll-mt-20 bg-white">
           <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
             <SectionIntro
-              kicker="Choose one way to measure"
-              title="Photo, motion, or muscle"
-              text="You only need one. Start with a photo if you do not have a sensor."
+              kicker={t("chooseOneWay", locale)}
+              title={t("photoMotionMuscle", locale)}
+              text={t("oneSensorEnough", locale)}
             />
             <div className="mt-5 grid gap-3 lg:grid-cols-3">
               {ways.map((item, index) => (
@@ -215,16 +205,14 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   kicker={`0${index + 1}`}
                   title={item.title}
                   text={item.text}
-                  src={item.src}
-                  alt={item.alt}
                   media={
                     item.photo ? (
                       <PhotoGoniometerPhoto className="absolute inset-0 h-full w-full" />
                     ) : item.mpu ? (
                       <MpuAnglePhoto className="absolute inset-0 h-full w-full" />
-                    ) : item.myoware ? (
+                    ) : (
                       <MyoWarePhoto className="absolute inset-0 h-full w-full" />
-                    ) : undefined
+                    )
                   }
                 />
               ))}
@@ -236,59 +224,59 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
             <div className="overflow-hidden rounded-[2rem] bg-white/80 p-4 shadow-[0_16px_40px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12 sm:p-6 lg:p-8">
               <SectionIntro
-                kicker="What you use each day"
-                title="Inside the app"
-                text="Today’s plan, the session, your progress, and check-in."
+                kicker={t("whatYouUse", locale)}
+                title={t("insideTheApp", locale)}
+                text={t("insideTheAppText", locale)}
               />
               <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-                <PhonePreview title="Briefing">
+                <PhonePreview title={t("previewBriefing", locale)}>
                   <div className="flex h-full flex-col">
                     <div className="relative h-[7.5rem] sm:h-40">
                       <PhotoFrame src="/images/landing-exercise.webp" alt="" className="absolute inset-0 h-full w-full" />
                       <span className="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-[#1b3348]">
-                        Today
+                        {t("previewToday", locale)}
                       </span>
                     </div>
                     <div className="flex flex-1 flex-col px-3 py-3">
-                      <p className="text-xs font-semibold text-[#2f4a60]">Today&apos;s plan</p>
-                      <p className="mt-1 text-base font-semibold leading-snug sm:text-lg">Knee extension</p>
-                      <p className="mt-0.5 text-sm text-muted">3 sets · photo first</p>
+                      <p className="text-xs font-semibold text-[#2f4a60]">{t("todaysPrescription", locale)}</p>
+                      <p className="mt-1 text-base font-semibold leading-snug sm:text-lg">{t("previewKneeExtension", locale)}</p>
+                      <p className="mt-0.5 text-sm text-muted">{t("previewSetsPhoto", locale)}</p>
                       <div className="mt-auto flex items-center justify-between pt-3">
-                        <span className="text-xs font-medium text-muted">Photo Goniometer</span>
-                        <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">Start</span>
+                        <span className="text-xs font-medium text-muted">{t("photoGoniometer", locale)}</span>
+                        <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">{t("previewStart", locale)}</span>
                       </div>
                     </div>
                   </div>
                 </PhonePreview>
-                <PhonePreview title="Session">
+                <PhonePreview title={t("previewSession", locale)}>
                   <div className="flex h-full flex-col">
                     <div className="relative h-[7.5rem] sm:h-40">
                       <MpuAnglePhoto alt="" className="absolute inset-0 h-full w-full" imgClassName="object-cover object-[center_20%]" />
                       <span className="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-[#1b3348]">
-                        Live
+                        {t("previewLive", locale)}
                       </span>
                     </div>
                     <div className="flex flex-1 flex-col px-3 py-3">
                       <p className="rm-serif text-3xl font-semibold leading-none">78 deg</p>
-                      <p className="mt-1 text-sm text-muted">Live motion, not the still photo</p>
+                      <p className="mt-1 text-sm text-muted">{t("previewLiveMotion", locale)}</p>
                       <div className="mt-auto flex items-center gap-1.5 pt-3">
                         <span className="h-2 w-2 rounded-full bg-brand" />
                         <span className="h-2 w-2 rounded-full bg-brand" />
                         <span className="h-2 w-2 rounded-full bg-[#d7e8f6]" />
-                        <span className="ml-auto text-xs font-medium text-muted">Rep 2 of 3</span>
+                        <span className="ml-auto text-xs font-medium text-muted">{tf("previewRepOf", locale, { n: 2, total: 3 })}</span>
                       </div>
                     </div>
                   </div>
                 </PhonePreview>
-                <PhonePreview title="Dashboard">
+                <PhonePreview title={t("previewDashboard", locale)}>
                   <div className="flex h-full flex-col px-3 py-3">
-                    <p className="text-xs font-semibold text-[#2f4a60]">This week</p>
-                    <p className="mt-0.5 text-base font-semibold sm:text-lg">Range this week</p>
+                    <p className="text-xs font-semibold text-[#2f4a60]">{t("previewThisWeek", locale)}</p>
+                    <p className="mt-0.5 text-base font-semibold sm:text-lg">{t("previewRangeWeek", locale)}</p>
                     <div className="mt-2 flex flex-wrap gap-2">
-                      <span className="rounded-full bg-[#e8f3fb] px-2.5 py-1 text-xs font-semibold text-[#1b3348]">Photo 92 deg</span>
-                      <span className="rounded-full bg-[#e7f1ea] px-2.5 py-1 text-xs font-semibold text-[#2a7a58]">Live 78 deg</span>
+                      <span className="rounded-full bg-[#e8f3fb] px-2.5 py-1 text-xs font-semibold text-[#1b3348]">{t("previewPhotoDeg", locale)}</span>
+                      <span className="rounded-full bg-[#e7f1ea] px-2.5 py-1 text-xs font-semibold text-[#2a7a58]">{t("previewLiveDeg", locale)}</span>
                     </div>
-                    <svg viewBox="0 0 200 90" className="mt-3 w-full flex-1" role="img" aria-label="Range of motion rising across the week">
+                    <svg viewBox="0 0 200 90" className="mt-3 w-full flex-1" role="img" aria-label={t("previewRangeWeek", locale)}>
                       <defs>
                         <linearGradient id="rm-dash-fill" x1="0" x2="0" y1="0" y2="1">
                           <stop offset="0%" stopColor="#4f90c6" stopOpacity="0.35" />
@@ -301,12 +289,12 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                       <text x="8" y="88" fontSize="8" fill="#4d6478">Mon</text>
                       <text x="168" y="88" fontSize="8" fill="#4d6478">Sun</text>
                     </svg>
-                    <p className="mt-2 text-xs text-muted">Shared with the clinician</p>
+                    <p className="mt-2 text-xs text-muted">{t("previewSharedClinician", locale)}</p>
                   </div>
                 </PhonePreview>
-                <PhonePreview title="Check-in">
+                <PhonePreview title={t("checkIn", locale)}>
                   <div className="flex h-full flex-col px-3 py-3">
-                    <p className="text-xs font-semibold text-[#2f4a60]">Pain</p>
+                    <p className="text-xs font-semibold text-[#2f4a60]">{t("pain", locale)}</p>
                     <p className="rm-serif mt-0.5 text-3xl font-semibold leading-none">2 / 10</p>
                     <div className="mt-3 flex gap-1">
                       {Array.from({ length: 10 }).map((_, i) => (
@@ -318,15 +306,15 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                     </div>
                     <div className="mt-4 space-y-2">
                       <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
-                        <span className="text-xs font-medium text-muted">Sleep</span>
-                        <span className="text-sm font-semibold">Restful</span>
+                        <span className="text-xs font-medium text-muted">{t("previewSleep", locale)}</span>
+                        <span className="text-sm font-semibold">{t("previewRestful", locale)}</span>
                       </div>
                       <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
-                        <span className="text-xs font-medium text-muted">Stiffness</span>
-                        <span className="text-sm font-semibold">Mild</span>
+                        <span className="text-xs font-medium text-muted">{t("previewStiffness", locale)}</span>
+                        <span className="text-sm font-semibold">{t("previewMild", locale)}</span>
                       </div>
                     </div>
-                    <p className="mt-auto pt-3 text-xs text-muted">Logged for today</p>
+                    <p className="mt-auto pt-3 text-xs text-muted">{t("previewLoggedToday", locale)}</p>
                   </div>
                 </PhonePreview>
               </div>
@@ -334,10 +322,10 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
               <OverlayCard
                 src="/images/landing-girl-phone.webp?v=1"
-                alt="A 7-year-old using Revive Motion on a phone at home."
-                kicker="Younger patients"
-                title="The same session on a phone"
-                text="Open today’s briefing, take the reading, then do the reps. Nothing extra to install."
+                alt={t("sameSessionPhone", locale)}
+                kicker={t("youngerPatients", locale)}
+                title={t("sameSessionPhone", locale)}
+                text={t("sameSessionPhoneText", locale)}
                 href="#go-in"
                 imgClassName="object-cover object-[center_62%]"
                 className="min-h-[14rem] sm:min-h-[16rem]"
@@ -346,16 +334,16 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 href="/kids"
                 className="rm-glow-kids relative block min-h-[14rem] overflow-hidden rounded-[1.5rem] shadow-[0_12px_28px_rgba(36,48,86,0.12)] sm:min-h-[16rem]"
               >
-                <PhotoFrame src="/images/landing-kids-quest.webp?v=5" alt="Kids Quest: original quest bots doing physical therapy stretches on a meadow." className="absolute inset-0 h-full w-full" />
+                <PhotoFrame src="/images/landing-kids-quest.webp?v=5" alt={t("stretchWithBots", locale)} className="absolute inset-0 h-full w-full" />
                 <div className="absolute inset-x-0 bottom-0 kids-caption flex items-end justify-between gap-3 p-4 sm:p-5">
                   <div>
-                    <p className="text-sm font-semibold text-[#5b6685]">Stretch with the bots</p>
-                    <p className="kids-wordmark mt-1 text-3xl sm:text-4xl">Kids Quest</p>
+                    <p className="text-sm font-semibold text-[#5b6685]">{t("stretchWithBots", locale)}</p>
+                    <p className="kids-wordmark mt-1 text-3xl sm:text-4xl">{t("kidsQuest", locale)}</p>
                     <p className="mt-1 max-w-xs text-base leading-6 text-[#5b6685]">
-                      The bots ask. You stretch.
+                      {t("botsAskYouStretch", locale)}
                     </p>
                   </div>
-                  <span className="kids-cta h-11 min-h-0 rounded-full px-5 text-lg">Open</span>
+                  <span className="kids-cta h-11 min-h-0 rounded-full px-5 text-lg">{t("open", locale)}</span>
                 </div>
               </Link>
             </div>
@@ -376,16 +364,16 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm font-medium text-muted">
             <a href="#how-it-works" className="hover:text-foreground">
-              How it works
+              {t("howItWorks", locale)}
             </a>
             <a href="#sensors" className="hover:text-foreground">
-              Photo & sensors
+              {t("photoAndSensors", locale)}
             </a>
             <a href="#features" className="hover:text-foreground">
-              Features
+              {t("features", locale)}
             </a>
             <Link href="/kids" className="hover:text-foreground">
-              Kids Quest
+              {t("kidsQuest", locale)}
             </Link>
           </div>
           <a href="#go-in" className="inline-flex h-10 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white">

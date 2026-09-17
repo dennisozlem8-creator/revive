@@ -3,23 +3,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./AuthProvider";
+import { useClinicLocale } from "./useClinicLocale";
 import { loadUsers, isCareTeam, type UserRole } from "@/lib/users";
 import { todayDateString } from "@/lib/streak";
+import { t, tf } from "@/lib/i18n";
 
 type AuthFormProps = {
   mode: "login" | "register";
   defaultRole?: UserRole;
 };
 
-const roleCopy: Record<UserRole, string> = {
-  patient: "Patient",
-  doctor: "Clinician",
-  caregiver: "Caregiver",
-};
-
 export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
   const { login, register } = useAuth();
   const router = useRouter();
+  const { locale } = useClinicLocale();
   const role = defaultRole;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,6 +24,10 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
   const [doctorEmail, setDoctorEmail] = useState("");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [error, setError] = useState("");
+
+  const roleWord =
+    role === "doctor" ? t("clinicianRole", locale) : role === "caregiver" ? t("caregiverRole", locale) : t("patientRole", locale);
+  const roleInSentence = locale === "es" ? roleWord.toLowerCase() : roleWord.toLowerCase();
 
   function routeAfterAuth(nextRole: UserRole, setupComplete?: boolean, lastCheckInDate?: string) {
     if (isCareTeam(nextRole)) {
@@ -73,19 +74,21 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
   return (
     <form onSubmit={handleSubmit}>
       <h1 className="rm-serif text-xl font-semibold sm:text-2xl">
-        {mode === "login" ? `${roleCopy[role]} sign in` : `Create a ${roleCopy[role].toLowerCase()} account`}
+        {mode === "login"
+          ? tf("roleSignIn", locale, { role: roleWord })
+          : tf("createRoleAccount", locale, { role: roleInSentence })}
       </h1>
       <p className="mt-1 text-sm leading-5 text-muted">
         {mode === "login"
-          ? `Type the email and password for this ${roleCopy[role].toLowerCase()} account, then tap Sign in.`
-          : `Choose an email and password for this ${roleCopy[role].toLowerCase()} account.`}
+          ? tf("typeEmailPassword", locale, { role: roleInSentence })
+          : tf("chooseEmailPassword", locale, { role: roleInSentence })}
       </p>
 
       <div className="mt-4 space-y-3">
         {mode === "register" && (
           <div>
             <label htmlFor="name" className="mb-1 block text-sm text-muted">
-              Full name
+              {t("fullName", locale)}
             </label>
             <input
               id="name"
@@ -99,7 +102,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
         )}
         <div>
           <label htmlFor="email" className="mb-1 block text-sm text-muted">
-            Email
+            {t("email", locale)}
           </label>
           <input
             id="email"
@@ -112,7 +115,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
         </div>
         <div>
           <label htmlFor="password" className="mb-1 block text-sm text-muted">
-            Password
+            {t("password", locale)}
           </label>
           <input
             id="password"
@@ -128,7 +131,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
           <>
             <div>
               <label htmlFor="doctorEmail" className="mb-1 block text-sm text-muted">
-                Doctor or caregiver email (optional)
+                {t("doctorEmailOptional", locale)}
               </label>
               <input
                 id="doctorEmail"
@@ -145,7 +148,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
                 onChange={(e) => setNotificationsEnabled(e.target.checked)}
                 className="accent-brand"
               />
-              Send me daily exercise reminders
+              {t("dailyReminders", locale)}
             </label>
           </>
         )}
@@ -157,7 +160,9 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
         type="submit"
         className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-full bg-brand text-sm font-medium text-white transition hover:bg-brand-light"
       >
-        {mode === "login" ? `Sign in as a ${roleCopy[role].toLowerCase()}` : `Create ${roleCopy[role].toLowerCase()} account`}
+        {mode === "login"
+          ? tf("signInAsRole", locale, { role: roleInSentence })
+          : tf("createRoleAccountBtn", locale, { role: roleInSentence })}
       </button>
     </form>
   );

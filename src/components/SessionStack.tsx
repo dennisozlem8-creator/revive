@@ -1,35 +1,36 @@
 import { SafePicture } from "@/components/SafePicture";
+import { t, type Locale } from "@/lib/i18n";
 
-const slides = [
-  {
-    src: "/images/landing-hero-photo.webp?v=3",
-    alt: "A helper photographs a seated patient from the side.",
-    n: "01",
-    label: "Photo first",
-    line: "Take the side-view photo.",
-  },
-  {
-    src: "/images/landing-older-session.webp?v=1",
-    alt: "An older patient doing a guided squat at home.",
-    n: "02",
-    label: "Session",
-    line: "Do today’s exercises.",
-  },
-  {
-    src: "/images/landing-younger-session.webp?v=1",
-    alt: "A younger patient doing a lunge while watching the phone.",
-    n: "03",
-    label: "Live plan",
-    line: "Follow the phone while you move.",
-  },
-] as const;
+export function SessionStack({ locale = "en" }: { locale?: Locale }) {
+  const slides = [
+    {
+      src: "/images/landing-hero-photo.webp?v=3",
+      alt: t("takeSideViewShort", locale),
+      n: "01",
+      label: t("photoFirst", locale),
+      line: t("takeSideViewShort", locale),
+    },
+    {
+      src: "/images/landing-older-session.webp?v=1",
+      alt: t("doTodaysExercises", locale),
+      n: "02",
+      label: t("sessionSlide", locale),
+      line: t("doTodaysExercises", locale),
+    },
+    {
+      src: "/images/landing-younger-session.webp?v=1",
+      alt: t("followThePhone", locale),
+      n: "03",
+      label: t("livePlan", locale),
+      line: t("followThePhone", locale),
+    },
+  ] as const;
 
-export function SessionStack() {
   return (
-    <div className="flex flex-col gap-3 py-4 lg:py-8" aria-label="Photo first, then the session, then the live plan">
+    <div className="flex flex-col gap-3 py-4 lg:py-8" aria-label={`${t("photoFirst", locale)}, ${t("sessionSlide", locale)}, ${t("livePlan", locale)}`}>
       {slides.map((slide, index) => (
         <figure
-          key={slide.label}
+          key={slide.n}
           className="sticky top-20 overflow-hidden rounded-[1.35rem] bg-[#d7e8f6] shadow-[0_18px_40px_rgba(8,20,32,0.28)] lg:top-24"
           style={{ zIndex: index + 1 }}
         >

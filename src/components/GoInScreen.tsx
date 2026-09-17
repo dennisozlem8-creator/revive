@@ -6,49 +6,11 @@ import { AuthForm } from "./AuthForm";
 import { SafePicture } from "./SafePicture";
 import { TryDemoButton } from "./TryDemoButton";
 import { ResetAppButton } from "./ResetAppButton";
+import { useClinicLocale } from "./useClinicLocale";
+import { t } from "@/lib/i18n";
 import type { UserRole } from "@/lib/users";
 
 type GoInRole = UserRole;
-
-const entries: {
-  id: GoInRole;
-  title: string;
-  action: string;
-  subtitle: string;
-  tileClass: string;
-  chevronClass: string;
-}[] = [
-  {
-    id: "patient",
-    title: "Patient",
-    action: "Sign in as a patient",
-    subtitle: "Home sessions, measurement, and today’s plan.",
-    tileClass: "border-[#9ec6e0] bg-[#e8f3fb] text-[#1b3348] hover:border-[#4f90c6]",
-    chevronClass: "text-[#3d7eb4]",
-  },
-  {
-    id: "doctor",
-    title: "Clinician",
-    action: "Sign in as a clinician",
-    subtitle: "Open the care dashboard for linked patients.",
-    tileClass: "border-[#9dc4b0] bg-[#e7f1ea] text-[#2a4638] hover:border-[#3a7d62]",
-    chevronClass: "text-[#3a7d62]",
-  },
-  {
-    id: "caregiver",
-    title: "Caregiver",
-    action: "Sign in as a caregiver",
-    subtitle: "Follow a family member’s recovery on this device.",
-    tileClass: "border-[#d4c6b0] bg-[#f3eee6] text-[#4a3d32] hover:border-[#7a6548]",
-    chevronClass: "text-[#7a6548]",
-  },
-];
-
-const registerActions: Record<GoInRole, string> = {
-  patient: "Create a patient account",
-  doctor: "Create a clinician account",
-  caregiver: "Create a caregiver account",
-};
 
 type GoInScreenProps = {
   mode: "login" | "register";
@@ -56,18 +18,59 @@ type GoInScreenProps = {
 
 export function GoInScreen({ mode }: GoInScreenProps) {
   const [entry, setEntry] = useState<GoInRole | null>(null);
+  const { locale } = useClinicLocale();
   const signingIn = mode === "login";
+
+  const entries: {
+    id: GoInRole;
+    title: string;
+    action: string;
+    subtitle: string;
+    tileClass: string;
+    chevronClass: string;
+  }[] = [
+    {
+      id: "patient",
+      title: t("patientRole", locale),
+      action: t("signInPatient", locale),
+      subtitle: t("patientSubtitle", locale),
+      tileClass: "border-[#9ec6e0] bg-[#e8f3fb] text-[#1b3348] hover:border-[#4f90c6]",
+      chevronClass: "text-[#3d7eb4]",
+    },
+    {
+      id: "doctor",
+      title: t("clinicianRole", locale),
+      action: t("signInClinician", locale),
+      subtitle: t("clinicianSubtitle", locale),
+      tileClass: "border-[#9dc4b0] bg-[#e7f1ea] text-[#2a4638] hover:border-[#3a7d62]",
+      chevronClass: "text-[#3a7d62]",
+    },
+    {
+      id: "caregiver",
+      title: t("caregiverRole", locale),
+      action: t("signInCaregiver", locale),
+      subtitle: t("caregiverSubtitle", locale),
+      tileClass: "border-[#d4c6b0] bg-[#f3eee6] text-[#4a3d32] hover:border-[#7a6548]",
+      chevronClass: "text-[#7a6548]",
+    },
+  ];
+
+  const registerActions: Record<GoInRole, string> = {
+    patient: t("createPatient", locale),
+    doctor: t("createClinician", locale),
+    caregiver: t("createCaregiver", locale),
+  };
 
   if (entry) {
     return (
       <>
-        <p className="rm-label text-brand-light">Step 2 of 2</p>
+        <p className="rm-label text-brand-light">{t("step2of2", locale)}</p>
         <button
           type="button"
           onClick={() => setEntry(null)}
           className="mt-0.5 mb-3 text-sm font-medium text-brand-light hover:text-brand"
         >
-          ← Choose a different role
+          {t("chooseDifferentRole", locale)}
         </button>
         <AuthForm key={entry} mode={mode} defaultRole={entry} />
         <ResetAppButton variant="quiet" />
@@ -78,14 +81,12 @@ export function GoInScreen({ mode }: GoInScreenProps) {
 
   return (
     <>
-      <p className="rm-label text-brand-light">Step 1 of 2</p>
+      <p className="rm-label text-brand-light">{t("step1of2", locale)}</p>
       <h2 className="rm-serif mt-0.5 text-xl font-semibold text-foreground sm:text-2xl">
-        {signingIn ? "Sign in" : "Create an account"}
+        {signingIn ? t("signIn", locale) : t("createAccount", locale)}
       </h2>
       <p className="mt-1 text-sm leading-5 text-muted">
-        {signingIn
-          ? "Tap who you are. Next you will type that account’s email and password."
-          : "Tap who you are. Next you will create an email and password for that role."}
+        {signingIn ? t("chooseRole", locale) : t("createAccountWho", locale)}
       </p>
       <div className="mt-3 flex flex-col gap-1.5">
         <TryDemoButton className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light" />
@@ -107,7 +108,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
               </p>
               <p className="text-xs leading-4 opacity-90 sm:text-sm sm:leading-5">{item.subtitle}</p>
             </span>
-            <span className={`shrink-0 text-sm font-semibold ${item.chevronClass}`}>Next</span>
+            <span className={`shrink-0 text-sm font-semibold ${item.chevronClass}`}>{t("next", locale)}</span>
           </button>
         ))}
         <Link
@@ -121,11 +122,11 @@ export function GoInScreen({ mode }: GoInScreenProps) {
           />
           <div className="kids-caption flex items-center justify-between gap-3 px-3 py-3 sm:px-4">
             <span>
-              <p className="text-sm font-semibold text-[#5b6685]">Stretch with the bots</p>
-              <p className="kids-wordmark mt-0.5 text-2xl leading-none">Kids Quest</p>
-              <p className="mt-1 text-sm leading-5 text-[#5b6685]">The bots ask. You stretch.</p>
+              <p className="text-sm font-semibold text-[#5b6685]">{t("stretchWithBots", locale)}</p>
+              <p className="kids-wordmark mt-0.5 text-2xl leading-none">{t("kidsQuest", locale)}</p>
+              <p className="mt-1 text-sm leading-5 text-[#5b6685]">{t("botsAskYouStretch", locale)}</p>
             </span>
-            <span className="shrink-0 text-sm font-semibold text-[#4d8ef0]">Open</span>
+            <span className="shrink-0 text-sm font-semibold text-[#4d8ef0]">{t("open", locale)}</span>
           </div>
         </Link>
       </div>
@@ -136,20 +137,21 @@ export function GoInScreen({ mode }: GoInScreenProps) {
 }
 
 function SwitchAuthLink({ mode }: { mode: "login" | "register" }) {
+  const { locale } = useClinicLocale();
   return (
     <p className="mt-3 text-center text-sm text-muted">
       {mode === "login" ? (
         <>
-          No account yet?{" "}
+          {t("noAccountYet", locale)}{" "}
           <Link href="/register" className="font-semibold text-brand-light hover:text-brand">
-            Create one
+            {t("createOne", locale)}
           </Link>
         </>
       ) : (
         <>
-          Already have an account?{" "}
+          {t("alreadyHaveAccount", locale)}{" "}
           <Link href="/login" className="font-semibold text-brand-light hover:text-brand">
-            Sign in
+            {t("signIn", locale)}
           </Link>
         </>
       )}
