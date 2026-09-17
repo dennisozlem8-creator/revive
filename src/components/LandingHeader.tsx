@@ -21,7 +21,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/85 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-5 py-3.5 sm:px-6">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
         <Link
           href="/"
           className="flex shrink-0 items-center gap-3 transition hover:opacity-85"

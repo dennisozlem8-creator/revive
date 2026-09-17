@@ -79,7 +79,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
         <button
           type="button"
           onClick={() => setEntry(null)}
-          className="mt-1 mb-4 text-sm font-medium text-brand-light hover:text-brand"
+          className="mt-0.5 mb-3 text-sm font-medium text-brand-light hover:text-brand"
         >
           ← Choose a different role
         </button>
@@ -93,53 +93,53 @@ export function GoInScreen({ mode }: GoInScreenProps) {
   return (
     <>
       <p className="rm-label text-brand-light">Step 1 of 2</p>
-      <h2 className="rm-serif mt-1 text-2xl font-semibold text-foreground">
+      <h2 className="rm-serif mt-0.5 text-xl font-semibold text-foreground sm:text-2xl">
         {signingIn ? "Sign in" : "Create an account"}
       </h2>
-      <p className="mt-2 text-sm leading-6 text-muted">
+      <p className="mt-1 text-sm leading-5 text-muted">
         {signingIn
           ? "Tap who you are. Next you will type that account’s email and password."
           : "Tap who you are. Next you will create an email and password for that role."}
       </p>
-      <div className="mt-6 flex flex-col gap-3">
+      <div className="mt-3 flex flex-col gap-1.5">
         {entries.map((item) => (
           <button
             key={item.id}
             type="button"
             onClick={() => setEntry(item.id)}
-            className={`flex min-h-[4.75rem] items-center justify-between gap-4 rounded-2xl border px-5 py-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${item.tileClass}`}
+            className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition hover:-translate-y-0.5 hover:shadow-md sm:px-4 ${item.tileClass}`}
           >
             <span>
-              <p className="text-xs font-bold uppercase tracking-[0.14em] opacity-70">{item.title}</p>
-              <p className="mt-0.5 text-lg font-bold leading-snug">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] opacity-70">{item.title}</p>
+              <p className="text-[0.95rem] font-bold leading-snug sm:text-base">
                 {signingIn ? item.action : registerActions[item.id]}
               </p>
-              <p className="mt-0.5 text-sm leading-6 opacity-90">{item.subtitle}</p>
+              <p className="text-xs leading-4 opacity-90 sm:text-sm sm:leading-5">{item.subtitle}</p>
             </span>
             <span className={`shrink-0 text-sm font-semibold ${item.chevronClass}`}>Next</span>
           </button>
         ))}
         <Link
           href="/kids"
-          className="overflow-hidden rounded-2xl border-2 border-[#f0c36a] text-left shadow-[0_10px_24px_rgba(180,100,20,0.16)] transition hover:-translate-y-0.5 hover:shadow-lg"
+          className="overflow-hidden rounded-xl border-2 border-[#f0c36a] text-left shadow-[0_8px_18px_rgba(180,100,20,0.14)] transition hover:-translate-y-0.5 hover:shadow-lg"
         >
-          <div className="relative h-24 overflow-hidden">
+          <div className="relative h-12 overflow-hidden sm:h-14">
             <SafePicture
               src="/images/landing-kids-quest.webp"
               alt=""
               className="h-full w-full object-cover object-[center_35%]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#4a2c78]/75 via-transparent to-transparent" />
-            <p className="rm-kids-type absolute bottom-2 left-4 flex items-center gap-2 text-lg font-bold text-white drop-shadow">
-              <KidsIcon name="star" size={20} /> No sign-in
+            <p className="rm-kids-type absolute bottom-1.5 left-3 flex items-center gap-1.5 text-sm font-bold text-white drop-shadow sm:text-base">
+              <KidsIcon name="star" size={16} /> No sign-in
             </p>
           </div>
-          <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-[#ffe08a] via-[#ffd0f0] to-[#b8e0ff] px-5 py-3">
+          <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-[#ffe08a] via-[#ffd0f0] to-[#b8e0ff] px-3 py-2 sm:px-4">
             <span>
-              <p className="rm-kids-type flex items-center gap-2 text-lg font-bold text-[#2a1848]">
-                <KidsIcon name="gamepad" size={22} /> Kids Quest
+              <p className="rm-kids-type flex items-center gap-2 text-base font-bold text-[#2a1848]">
+                <KidsIcon name="gamepad" size={18} /> Kids Quest
               </p>
-              <p className="text-sm font-semibold text-[#5a3a18]">Open the storybook. No email needed.</p>
+              <p className="text-xs font-semibold text-[#5a3a18] sm:text-sm">Open the storybook. No email needed.</p>
             </span>
             <Chevron className="text-[#c47a32]" />
           </div>
@@ -153,7 +153,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
 
 function SwitchAuthLink({ mode }: { mode: "login" | "register" }) {
   return (
-    <p className="mt-5 text-center text-sm text-muted">
+    <p className="mt-3 text-center text-sm text-muted">
       {mode === "login" ? (
         <>
           No account yet?{" "}

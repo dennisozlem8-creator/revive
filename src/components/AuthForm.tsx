@@ -72,16 +72,16 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1 className="rm-serif text-2xl font-semibold">
+      <h1 className="rm-serif text-xl font-semibold sm:text-2xl">
         {mode === "login" ? `${roleCopy[role]} sign in` : `Create a ${roleCopy[role].toLowerCase()} account`}
       </h1>
-      <p className="mt-2 text-sm leading-6 text-muted">
+      <p className="mt-1 text-sm leading-5 text-muted">
         {mode === "login"
           ? `Type the email and password for this ${roleCopy[role].toLowerCase()} account, then tap Sign in.`
           : `Choose an email and password for this ${roleCopy[role].toLowerCase()} account.`}
       </p>
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-4 space-y-3">
         {mode === "register" && (
           <div>
             <label htmlFor="name" className="mb-1 block text-sm text-muted">
@@ -92,7 +92,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-3 outline-none focus:border-brand"
+              className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-2.5 outline-none focus:border-brand"
               required
             />
           </div>
@@ -106,7 +106,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-3 outline-none focus:border-brand"
+            className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-2.5 outline-none focus:border-brand"
             required
           />
         </div>
@@ -119,7 +119,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-3 outline-none focus:border-brand"
+            className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-2.5 outline-none focus:border-brand"
             required
             minLength={6}
           />
@@ -135,7 +135,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
                 type="email"
                 value={doctorEmail}
                 onChange={(e) => setDoctorEmail(e.target.value)}
-                className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-3 outline-none focus:border-brand"
+                className="w-full rounded-xl border border-[var(--border)] bg-background px-4 py-2.5 outline-none focus:border-brand"
               />
             </div>
             <label className="flex items-center gap-3 text-sm">
@@ -155,7 +155,7 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
 
       <button
         type="submit"
-        className="mt-6 inline-flex h-11 w-full items-center justify-center rounded-full bg-brand text-sm font-medium text-white transition hover:bg-brand-light"
+        className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-full bg-brand text-sm font-medium text-white transition hover:bg-brand-light"
       >
         {mode === "login" ? `Sign in as a ${roleCopy[role].toLowerCase()}` : `Create ${roleCopy[role].toLowerCase()} account`}
       </button>

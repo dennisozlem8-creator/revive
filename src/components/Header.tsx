@@ -37,7 +37,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   return (
       <header
       className={`relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 sm:px-6 ${
-        isKids ? "kids-header rounded-b-[1.75rem] py-3" : "py-5"
+        isKids ? "kids-header rounded-b-[1.75rem] py-3" : "py-3"
       }`}
     >
       {linkHome ? (

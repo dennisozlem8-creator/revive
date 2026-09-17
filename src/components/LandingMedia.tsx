@@ -26,7 +26,7 @@ export function PhotoFrame({
   );
 }
 
-/** Unique Revive Motion MPU shot: full 4:3 frame, padded so the live angle is never cropped. */
+/** Unique Revive Motion MPU shot: padded so the live angle is never cropped. */
 export function MpuAnglePhoto({
   className = "",
   alt = "Revive Motion MPU-6050 straps on the upper arm and wrist with a live elbow angle of 92 degrees.",
@@ -39,9 +39,9 @@ export function MpuAnglePhoto({
       <SafePicture
         src="/images/landing-mpu.png?v=4"
         alt={alt}
-        className="absolute inset-0 h-full w-full object-contain p-3 sm:p-5"
+        className="absolute inset-0 h-full w-full object-contain p-1.5 sm:p-2.5"
       />
-      <div className="pointer-events-none absolute inset-3 rounded-xl ring-2 ring-[#4f90c6]/55 sm:inset-4" />
+      <div className="pointer-events-none absolute inset-2 rounded-lg ring-2 ring-[#4f90c6]/55 sm:inset-3 sm:rounded-xl" />
     </div>
   );
 }
@@ -59,7 +59,7 @@ export function MyoWarePhoto({
       <SafePicture
         src="/images/landing-myoware.png?v=5"
         alt={alt}
-        className="absolute inset-0 h-full w-full object-contain p-4 sm:p-6"
+        className="absolute inset-0 h-full w-full object-contain p-1.5 sm:p-2.5"
       />
     </div>
   );
@@ -101,33 +101,35 @@ function Marker({
 
 export function RomChart({ className = "" }: { className?: string }) {
   return (
-    <div className={`flex h-full flex-col justify-between border border-[#c5d9ea] bg-white p-6 sm:p-7 ${className}`}>
+    <div
+      className={`grid items-center gap-3 border border-[#c5d9ea] bg-white p-3 sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] sm:gap-5 sm:p-4 ${className}`}
+    >
       <div>
         <p className="rm-label text-brand-light">Progress</p>
-        <p className="rm-serif mt-1 text-2xl font-semibold">Motion is rising</p>
+        <p className="rm-serif mt-0.5 text-xl font-semibold leading-tight sm:text-2xl">Motion is rising</p>
+        <p className="mt-1 text-sm text-muted">Saved angles stay with the care team.</p>
       </div>
-      <svg viewBox="0 0 280 120" className="mt-4 h-28 w-full" role="img" aria-label="Range of motion chart going up toward the goal">
-        <line x1="16" y1="88" x2="264" y2="88" stroke="#d7e8f6" />
-        <line x1="16" y1="36" x2="264" y2="36" stroke="#c5d9ea" strokeDasharray="4 5" />
-        <text x="264" y="28" textAnchor="end" fill="#3a7d62" fontSize="11" fontWeight="700">
+      <svg viewBox="0 0 280 100" className="h-20 w-full sm:h-24" role="img" aria-label="Range of motion chart going up toward the goal">
+        <line x1="16" y1="78" x2="264" y2="78" stroke="#d7e8f6" />
+        <line x1="16" y1="28" x2="264" y2="28" stroke="#c5d9ea" strokeDasharray="4 5" />
+        <text x="264" y="22" textAnchor="end" fill="#3a7d62" fontSize="11" fontWeight="700">
           Goal
         </text>
         <polyline
-          points="20,96 70,86 120,74 170,58 220,46 258,34"
+          points="20,86 70,76 120,64 170,48 220,36 258,24"
           fill="none"
           stroke="#4f90c6"
           strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <circle cx="20" cy="96" r="4" fill="#4f90c6" />
-        <circle cx="70" cy="86" r="4" fill="#4f90c6" />
-        <circle cx="120" cy="74" r="4" fill="#4f90c6" />
-        <circle cx="170" cy="58" r="4" fill="#4f90c6" />
-        <circle cx="220" cy="46" r="4" fill="#4f90c6" />
-        <circle cx="258" cy="34" r="5" fill="#3a7d62" />
+        <circle cx="20" cy="86" r="4" fill="#4f90c6" />
+        <circle cx="70" cy="76" r="4" fill="#4f90c6" />
+        <circle cx="120" cy="64" r="4" fill="#4f90c6" />
+        <circle cx="170" cy="48" r="4" fill="#4f90c6" />
+        <circle cx="220" cy="36" r="4" fill="#4f90c6" />
+        <circle cx="258" cy="24" r="5" fill="#3a7d62" />
       </svg>
-      <p className="mt-2 text-sm text-muted">Saved angles stay with the care team.</p>
     </div>
   );
 }
@@ -140,11 +142,11 @@ export function PhonePreview({
   children: ReactNode;
 }) {
   return (
-    <article className="overflow-hidden rounded-[2rem] bg-white shadow-[0_16px_40px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
-      <div className="bg-[#e8f3fb] px-4 py-2.5 text-center text-[11px] font-semibold tracking-[0.16em] text-brand-light">
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_24px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12">
+      <div className="bg-[#e8f3fb] px-2 py-1 text-center text-[10px] font-semibold tracking-[0.16em] text-brand-light sm:px-3 sm:py-1.5">
         {title.toUpperCase()}
       </div>
-      <div className="aspect-[4/5] bg-[#f7fbfe] p-3">{children}</div>
+      <div className="flex flex-1 flex-col bg-[#f7fbfe] p-1.5 sm:p-2">{children}</div>
     </article>
   );
 }
