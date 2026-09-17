@@ -38,7 +38,7 @@ export function TestLiveCharts({
             <div className="mb-2 flex items-center justify-between text-sm">
               <span className="font-semibold text-[#2f4a60]">{item.label}</span>
               <span className="font-semibold tabular-nums text-[#1b3348]">
-                {current}
+                {Math.round(current)}
                 {item.unit ?? ""}
               </span>
             </div>

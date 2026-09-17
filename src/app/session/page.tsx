@@ -39,7 +39,7 @@ export default function SessionPage() {
   const [recording, setRecording] = useState(false);
   const [summary, setSummary] = useState<SessionSummary | null>(null);
   const [completedIds, setCompletedIds] = useState<string[]>([]);
-  const [wave, setWave] = useState<number[]>(() => Array(24).fill(8));
+  const [wave, setWave] = useState<number[]>(() => Array(24).fill(0));
   const [emgWave, setEmgWave] = useState<number[]>(() => Array(24).fill(20));
   const [hrWave, setHrWave] = useState<number[]>(() => Array(24).fill(70));
   const savedRef = useRef(false);
@@ -71,7 +71,7 @@ export default function SessionPage() {
         setHr(fake);
         setHrWave((prev) => [...prev.slice(1), fake]);
       }
-      setWave((prev) => [...prev.slice(1), Math.max(12, Math.sin(next * 0.08) * 40 + 50)]);
+      setWave((prev) => [...prev.slice(1), next]);
       setEmgWave((prev) => [...prev.slice(1), liveEmg]);
       if (next >= target * 0.88) {
         setReps((r) => Math.min(targetReps, r + (Math.random() > 0.7 ? 1 : 0)));
