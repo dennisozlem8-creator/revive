@@ -6,13 +6,13 @@ import { QuestGame } from "@/components/QuestGame";
 import { CharacterGallery } from "@/components/CharacterGallery";
 import { CharacterUnlockCelebration } from "@/components/CharacterUnlockCelebration";
 import { KidsWelcomeModal } from "@/components/KidsWelcomeModal";
-import { KidsModeBanner } from "@/components/KidsModeBanner";
 import { useAuth } from "@/components/AuthProvider";
 import { getAssessment } from "@/lib/assessments";
 import { getBodyArea } from "@/lib/body-areas";
 import { calculateStreak } from "@/lib/streak";
 import { getCharacterById } from "@/lib/kids-characters";
 import { hasSeenKidsWelcome } from "@/lib/kids-mode";
+import { getKidsExerciseImage } from "@/lib/exercise-media";
 import {
   EMPTY_QUEST_PROGRESS,
   loadKidsProgress,
@@ -20,18 +20,30 @@ import {
   syncKidsProgress,
   type KidsProgressData,
 } from "@/lib/kids-progress";
-import { KidsIcon, KidsIconTitle } from "@/components/KidsIcon";
 import { KidsAtmosphere } from "@/components/KidsAtmosphere";
 import { KidsBottomNav } from "@/components/KidsBottomNav";
+import { KidsIcon } from "@/components/KidsIcon";
 import { SafePicture } from "@/components/SafePicture";
 import type { KidsIconName } from "@/lib/kids-icons";
 
-const questZones: { id: string; icon: KidsIconName; name: string; image: string }[] = [
-  { id: "ankle", icon: "anklebot", name: "Ankle Island", image: "/kids/zones/ankle.webp?v=1" },
-  { id: "knee", icon: "kneebot", name: "Knee Bounce City", image: "/kids/zones/knee.webp?v=1" },
-  { id: "lower-back", icon: "backbot", name: "Back Stretch Bay", image: "/kids/zones/back.webp?v=1" },
-  { id: "wrist", icon: "wristbot", name: "Wrist Wiggle Woods", image: "/kids/zones/wrist.webp?v=1" },
-  { id: "other", icon: "meadowbot", name: "Mystery Meadow", image: "/kids/zones/meadow.webp?v=1" },
+const questZones: {
+  id: string;
+  icon: KidsIconName;
+  name: string;
+  world: string;
+  image: string;
+}[] = [
+  { id: "ankle", icon: "anklebot", name: "Ankle", world: "Island", image: "/kids/zones/ankle.webp?v=2" },
+  { id: "knee", icon: "kneebot", name: "Knee", world: "City", image: "/kids/zones/knee.webp?v=2" },
+  { id: "lower-back", icon: "backbot", name: "Back", world: "Bay", image: "/kids/zones/back.webp?v=2" },
+  { id: "wrist", icon: "wristbot", name: "Wrist", world: "Woods", image: "/kids/zones/wrist.webp?v=2" },
+  { id: "other", icon: "meadowbot", name: "Meadow", world: "Mystery", image: "/kids/zones/meadow.webp?v=2" },
+];
+
+const howSteps = [
+  { n: "1", title: "Pick a world", text: "Tap a picture on the map." },
+  { n: "2", title: "Start a stretch", text: "Open one card. The bot talks." },
+  { n: "3", title: "Match the picture", text: "Bend, then stand. Reps count." },
 ];
 
 const levels = [
@@ -48,18 +60,16 @@ function getLevel(xp: number) {
 
 export default function KidsQuestPage() {
   const { user } = useAuth();
-  const firstName = user?.name.split(" ")[0] ?? "Hero";
+  const firstName = user?.name.split(" ")[0] ?? "friend";
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
   const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
-  const [speech, setSpeech] = useState(`Hey ${firstName}! The bots are ready. Stretch, squat, and score.`);
+  const [focus, setFocus] = useState<"map" | "bots">("map");
   const [kidsProgress, setKidsProgress] = useState<KidsProgressData>(() => loadKidsProgress());
   const [celebrateIds, setCelebrateIds] = useState<string[]>([]);
   const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
-    if (!hasSeenKidsWelcome()) {
-      setShowWelcome(true);
-    }
+    if (!hasSeenKidsWelcome()) setShowWelcome(true);
   }, []);
 
   const xp = user?.xp ?? 0;
@@ -68,7 +78,6 @@ export default function KidsQuestPage() {
   const streak = user ? calculateStreak(user) : 0;
   const questsDone = user ? Object.values(user.questProgress).filter(Boolean).length : 0;
   const questProgress = user?.questProgress ?? EMPTY_QUEST_PROGRESS;
-
   const selectedCharacter = getCharacterById(kidsProgress.selectedId);
   const heroAvatar = selectedCharacter?.avatar ?? "hero";
 
@@ -84,11 +93,6 @@ export default function KidsQuestPage() {
     );
     if (newlyUnlocked.length > 0) {
       setCelebrateIds((prev) => [...prev, ...newlyUnlocked]);
-      const names = newlyUnlocked
-        .map((id) => getCharacterById(id)?.name)
-        .filter(Boolean)
-        .join(", ");
-      setSpeech(`You unlocked ${names}! Meet your new quest bot!`);
     }
   }, [questProgress, streak]);
 
@@ -101,30 +105,29 @@ export default function KidsQuestPage() {
     const next = { ...kidsProgress, selectedId: id };
     setKidsProgress(next);
     saveKidsProgress(next);
-    const char = getCharacterById(id);
-    if (char) setSpeech(`${char.name} will count your reps today!`);
   };
 
   const area = selectedArea ? getBodyArea(selectedArea) : null;
   const assessment = selectedArea ? getAssessment(selectedArea) : null;
   const activeExercise = assessment?.exercises.find((e) => e.id === activeExerciseId);
+  const showHome = !selectedArea && !activeExercise;
 
-  const showMap = !selectedArea && !activeExercise;
+  const navScreen = activeExercise
+    ? "quest"
+    : selectedArea
+      ? "zone"
+      : focus === "bots"
+        ? "bots"
+        : "map";
 
   return (
-    <div className="relative min-h-full overflow-hidden rm-glow-kids pb-32">
+    <div className="relative min-h-full overflow-hidden rm-glow-kids pb-28">
       <KidsAtmosphere />
       <div className="rm-xp-track fixed left-0 right-0 top-0 z-50 rounded-none">
         <div className="rm-xp-fill" style={{ width: `${xpPct}%` }} />
       </div>
 
-      {showWelcome && (
-        <KidsWelcomeModal
-          onDismiss={() => {
-            setShowWelcome(false);
-          }}
-        />
-      )}
+      {showWelcome && <KidsWelcomeModal onDismiss={() => setShowWelcome(false)} />}
 
       {celebrateIds.length > 0 && (
         <CharacterUnlockCelebration
@@ -134,140 +137,150 @@ export default function KidsQuestPage() {
       )}
 
       <Header linkHome variant="kids" />
-      <KidsModeBanner />
 
-      <main className="relative z-10 mx-auto max-w-5xl px-4 pb-8 pt-3 sm:px-6">
-        <section className="overflow-hidden rounded-[1.75rem] border-4 border-white shadow-[0_0_0_4px_#ffe14a,0_22px_44px_rgba(20,20,90,0.18)]">
-          <SafePicture
-            src="/kids/quest-hq.webp?v=1"
-            alt="Colorful quest bots waving from candy Kids Quest HQ."
-            width={1200}
-            height={360}
-            className="h-40 w-full object-cover object-[center_70%] sm:h-48"
-          />
-          <div className="kids-caption flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-            <div>
-              <p className="text-lg font-bold text-[#1a1a6a]">The bots count your reps</p>
-              <h1 className="kids-wordmark mt-1 text-4xl sm:text-5xl">Kids Quest</h1>
-              <p className="mt-1 flex items-center gap-1 text-lg font-bold text-[#1a1a6a]">
-                <KidsIcon name="star" size={22} />
-                {level.name}
-              </p>
-            </div>
-            <div className="flex gap-2 text-center">
-              <div className="min-w-[4.5rem] rounded-2xl border-2 border-white bg-white px-3 py-2 shadow-[0_0_0_3px_#ff4fa3]">
-                <p className="text-2xl font-extrabold leading-none text-[#1a1a6a]">{xp}</p>
-                <p className="mt-1 text-base font-bold text-[#1a1a6a]">Stars</p>
-              </div>
-              <div className="min-w-[4.5rem] rounded-2xl border-2 border-white bg-white px-3 py-2 shadow-[0_0_0_3px_#38bdf8]">
-                <p className="text-2xl font-extrabold leading-none text-[#1a1a6a]">{streak}</p>
-                <p className="mt-1 text-base font-bold text-[#1a1a6a]">Days</p>
-              </div>
-              <div className="min-w-[4.5rem] rounded-2xl border-2 border-white bg-white px-3 py-2 shadow-[0_0_0_3px_#a3e635]">
-                <p className="text-2xl font-extrabold leading-none text-[#1a1a6a]">{questsDone}</p>
-                <p className="mt-1 text-base font-bold text-[#1a1a6a]">Done</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {showMap && (
+      <main className="relative z-10 mx-auto max-w-5xl px-4 pb-6 pt-4 sm:px-6">
+        {showHome && focus === "map" && (
           <>
-            <section className="mt-6">
-              <h2 className="kids-title-ink text-3xl sm:text-4xl">
-                <KidsIconTitle icon="map" size={36}>
-                  Stretch map
-                </KidsIconTitle>
-              </h2>
-              <p className="mt-2 text-lg font-bold text-[#1a1a6a]">
-                Tap a picture. Stretch with the bots.
-              </p>
+            <section className="overflow-hidden rounded-[1.5rem] bg-white shadow-[0_10px_32px_rgba(36,48,86,0.08)]">
+              <SafePicture
+                src="/kids/quest-hq.webp?v=2"
+                alt="Quest bots stretching on a grassy hill."
+                width={1200}
+                height={360}
+                className="h-52 w-full object-cover object-[center_70%] sm:h-72"
+              />
+              <div className="kids-caption flex flex-col gap-5 px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
+                <div>
+                  <p className="text-sm font-semibold tracking-wide text-[#5b6685]">Physical therapy for kids</p>
+                  <h1 className="kids-wordmark mt-1 text-[2.15rem] leading-none sm:text-4xl">Kids Quest</h1>
+                  <p className="mt-2 max-w-md text-base leading-6 text-[#5b6685]">
+                    {selectedCharacter?.name ?? "Hank Bot"} counts {firstName}&apos;s stretches. Tap a world to begin.
+                  </p>
+                </div>
+                <div className="flex gap-8 text-[#243056]">
+                  <div>
+                    <p className="text-[1.65rem] font-semibold tabular-nums leading-none">{xp}</p>
+                    <p className="mt-1 text-sm text-[#5b6685]">Stars</p>
+                  </div>
+                  <div>
+                    <p className="text-[1.65rem] font-semibold tabular-nums leading-none">{streak}</p>
+                    <p className="mt-1 text-sm text-[#5b6685]">Streak</p>
+                  </div>
+                  <div>
+                    <p className="text-[1.65rem] font-semibold tabular-nums leading-none">{questsDone}</p>
+                    <p className="mt-1 text-sm text-[#5b6685]">Done</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="mt-5 grid gap-3 sm:grid-cols-3">
+              {howSteps.map((step) => (
+                <div key={step.n} className="kids-step flex items-start gap-3 px-4 py-3.5">
+                  <span className="kids-step-n mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold">
+                    {step.n}
+                  </span>
+                  <div>
+                    <p className="kids-title-ink text-lg leading-tight">{step.title}</p>
+                    <p className="mt-0.5 text-sm leading-5 text-[#5b6685]">{step.text}</p>
+                  </div>
+                </div>
+              ))}
+            </section>
+
+            <section className="mt-8">
+              <div>
+                <h2 className="kids-title-ink text-2xl sm:text-3xl">Stretch map</h2>
+                <p className="mt-1 text-base text-[#5b6685]">{level.name}. Open a world.</p>
+              </div>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {questZones.map((zone) => (
                   <button
                     key={zone.id}
                     type="button"
-                    onClick={() => {
-                      setSelectedArea(zone.id);
-                      setSpeech(`Enter ${zone.name}! Pick a stretch.`);
-                    }}
+                    onClick={() => setSelectedArea(zone.id)}
                     className="kids-zone text-left"
                   >
-                    <div className="relative h-36 sm:h-40">
+                    <div className="relative">
                       <SafePicture
                         src={zone.image}
                         alt=""
                         width={800}
                         height={480}
-                        className="h-full w-full object-cover"
+                        className="h-44 w-full object-cover sm:h-52"
                       />
-                      <span className="absolute left-3 top-3" aria-hidden>
-                        <KidsIcon name={zone.icon} size={52} />
+                      <span className="absolute bottom-3 left-3 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-white shadow-[0_6px_16px_rgba(36,48,86,0.16)] ring-2 ring-white">
+                        <KidsIcon name={zone.icon} size={48} />
                       </span>
                     </div>
-                    <div className="kids-caption p-4">
-                      <h2 className="kids-title-ink text-2xl">{zone.name}</h2>
-                      <p className="mt-1 text-lg font-bold text-[#1a1a6a]">Tap to stretch</p>
+                    <div className="kids-caption flex items-end justify-between gap-3 px-4 py-3.5">
+                      <div>
+                        <p className="text-sm font-semibold text-[#5b6685]">{zone.world}</p>
+                        <h3 className="kids-title-ink text-[1.65rem] leading-none">{zone.name}</h3>
+                      </div>
+                      <p className="text-sm font-semibold text-[#4d8ef0]">Open</p>
                     </div>
                   </button>
                 ))}
               </div>
             </section>
-
-            <div id="bot-crew" className="scroll-mt-24">
-            <CharacterGallery
-              unlockedIds={kidsProgress.unlockedIds}
-              selectedId={kidsProgress.selectedId}
-              onSelect={handleSelectCharacter}
-            />
-            </div>
           </>
         )}
 
-        <section className="kids-glass mt-5 flex items-center gap-3 p-4">
-          <KidsIcon name={heroAvatar} size={72} />
-          <div className="relative flex-1 rounded-2xl border-2 border-white bg-white px-4 py-3 text-[#1a1a6a]">
-            <p className="text-lg font-bold leading-snug sm:text-xl">{speech}</p>
-          </div>
-        </section>
+        {showHome && focus === "bots" && (
+          <CharacterGallery
+            unlockedIds={kidsProgress.unlockedIds}
+            selectedId={kidsProgress.selectedId}
+            onSelect={handleSelectCharacter}
+          />
+        )}
 
         {selectedArea && area && assessment && !activeExercise && (
-          <section className="mt-4">
-            <button type="button" onClick={() => setSelectedArea(null)} className="kids-back">
-              <KidsIcon name="map" size={22} />
+          <section>
+            <button
+              type="button"
+              onClick={() => setSelectedArea(null)}
+              className="kids-back"
+            >
               Map
             </button>
-            <h2 className="kids-title-ink mt-4 text-3xl sm:text-4xl">
-              <KidsIconTitle icon="target" size={36}>
-                {area.label} stretches
-              </KidsIconTitle>
-            </h2>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <div className="mt-4 overflow-hidden rounded-[1.5rem] bg-white shadow-[0_10px_32px_rgba(36,48,86,0.08)]">
+              <SafePicture
+                src={questZones.find((z) => z.id === selectedArea)?.image ?? ""}
+                alt=""
+                width={800}
+                height={320}
+                className="h-40 w-full object-cover sm:h-52"
+              />
+              <div className="kids-caption px-5 py-4">
+                <p className="text-sm font-semibold text-[#5b6685]">
+                  {questZones.find((z) => z.id === selectedArea)?.world} world
+                </p>
+                <h2 className="kids-title-ink mt-0.5 text-3xl">{area.label}</h2>
+              </div>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {assessment.exercises.map((exercise) => {
                 const done = user?.questProgress[exercise.id];
                 return (
                   <button
                     key={exercise.id}
                     type="button"
-                    onClick={() => {
-                      setActiveExerciseId(exercise.id);
-                      setSpeech(done ? "Let's beat your best!" : "You can do it!");
-                    }}
-                    className={`rounded-[1.5rem] border-4 border-white p-5 text-left ${
-                      done
-                        ? "bg-white shadow-[0_0_0_4px_#22c55e]"
-                        : "bg-white shadow-[0_0_0_4px_#ffe14a]"
-                    }`}
+                    onClick={() => setActiveExerciseId(exercise.id)}
+                    className="kids-zone text-left"
                   >
-                    <p className="flex items-center gap-2 text-lg font-extrabold text-[#1a1a6a]">
-                      <KidsIcon name={done ? "check" : "gamepad"} size={24} />
-                      {done ? "Done" : "New"}
-                    </p>
-                    <h3 className="mt-2 text-2xl font-extrabold text-[#1a1a6a]">{exercise.name}</h3>
-                    <p className="mt-2 flex items-center gap-2 text-xl font-extrabold text-[#1a1a6a]">
-                      {done ? "Play again" : "Start"}
-                      <KidsIcon name={done ? "sparkle" : "rocket"} size={22} />
-                    </p>
+                    <SafePicture
+                      src={getKidsExerciseImage(exercise.id, exercise.name)}
+                      alt=""
+                      width={800}
+                      height={360}
+                      className="h-36 w-full object-cover"
+                    />
+                    <div className="kids-caption px-4 py-3.5">
+                      <p className="text-sm font-semibold text-[#4d8ef0]">{done ? "Done" : "New"}</p>
+                      <h3 className="kids-title-ink mt-0.5 text-xl leading-tight">{exercise.name}</h3>
+                      <p className="mt-2 text-base font-semibold text-[#243056]">{done ? "Play again" : "Start"}</p>
+                    </div>
                   </button>
                 );
               })}
@@ -276,9 +289,8 @@ export default function KidsQuestPage() {
         )}
 
         {activeExercise && (
-          <section className="mx-auto mt-4 max-w-lg">
+          <section className="mx-auto max-w-lg">
             <button type="button" onClick={() => setActiveExerciseId(null)} className="kids-back">
-              <KidsIcon name="target" size={22} />
               Stretches
             </button>
             <div className="mt-4">
@@ -288,7 +300,6 @@ export default function KidsQuestPage() {
                 avatarIcon={heroAvatar}
                 onQuestComplete={() => checkUnlocks()}
                 onComplete={() => {
-                  setSpeech("Great form! Keep it up!");
                   setActiveExerciseId(null);
                   checkUnlocks();
                 }}
@@ -298,18 +309,18 @@ export default function KidsQuestPage() {
         )}
       </main>
       <KidsBottomNav
-        screen={activeExercise ? "quest" : selectedArea ? "zone" : "map"}
+        screen={navScreen}
         onMap={() => {
+          setFocus("map");
           setSelectedArea(null);
           setActiveExerciseId(null);
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
         onBots={() => {
+          setFocus("bots");
           setSelectedArea(null);
           setActiveExerciseId(null);
-          window.setTimeout(() => {
-            document.getElementById("bot-crew")?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 50);
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
     </div>

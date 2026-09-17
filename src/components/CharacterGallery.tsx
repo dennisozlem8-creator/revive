@@ -1,7 +1,7 @@
 "use client";
 
 import { KIDS_CHARACTERS, type KidsCharacter } from "@/lib/kids-characters";
-import { KidsIcon, KidsIconTitle } from "@/components/KidsIcon";
+import { KidsIcon } from "@/components/KidsIcon";
 import { SafePicture } from "@/components/SafePicture";
 
 type CharacterGalleryProps = {
@@ -29,32 +29,22 @@ function CharacterCard({
       type="button"
       disabled={!unlocked}
       onClick={onSelect}
-      className={`relative flex flex-col items-center rounded-[1.35rem] border-2 bg-white p-4 text-center transition ${
+      className={`relative flex flex-col items-center rounded-[1.25rem] bg-white p-4 text-center shadow-[0_8px_24px_rgba(36,48,86,0.08)] ${
         unlocked
           ? selected
-            ? "border-white shadow-[0_0_0_4px_#ff4fa3,0_0_0_8px_#ffe14a,0_12px_28px_rgba(20,20,90,0.16)]"
-            : "border-white shadow-[0_0_0_3px_#38bdf8,0_10px_24px_rgba(20,20,90,0.1)] hover:-translate-y-0.5"
-          : "cursor-default border-slate-200/80 bg-white/50"
+            ? "ring-2 ring-[#f5c84a]"
+            : "hover:-translate-y-0.5"
+          : "cursor-default opacity-55"
       } ${compact ? "p-3" : "p-4"}`}
     >
-      <span
-        className={`transition ${unlocked ? "" : "opacity-30 grayscale blur-[1px]"}`}
-        aria-hidden
-      >
-        <KidsIcon name={unlocked ? character.avatar : "mystery"} size={compact ? 44 : 56} />
-      </span>
-      <p className={`mt-2 text-lg font-extrabold ${unlocked ? "text-[#1a1a6a]" : "text-[#1a1a6a]/50"}`}>
-        {unlocked ? character.name : "Locked"}
+      <KidsIcon name={unlocked ? character.avatar : "mystery"} size={compact ? 48 : 64} />
+      <p className="mt-2 font-semibold text-[#243056]">{unlocked ? character.name : "Locked"}</p>
+      <p className="mt-0.5 text-sm text-[#5b6685]">
+        {unlocked ? character.trait : character.unlockHint}
       </p>
-      {unlocked ? (
-        <p className="mt-0.5 text-base font-bold text-[#1a1a6a]">{character.trait}</p>
-      ) : (
-        <p className="mt-1 text-base font-bold text-[#1a1a6a]/70">{character.unlockHint}</p>
-      )}
       {selected && unlocked && (
-        <span className="absolute -right-1 -top-1 inline-flex items-center gap-0.5 rounded-full border-2 border-white bg-[#ffe14a] px-2 py-1 text-sm font-extrabold text-[#1a1a6a] shadow-[0_0_0_3px_#ff4fa3]">
-          <KidsIcon name="star" size={14} />
-          Active
+        <span className="absolute right-2 top-2 rounded-full bg-[#f5c84a] px-2 py-0.5 text-xs font-semibold text-[#243056]">
+          Playing
         </span>
       )}
     </button>
@@ -71,31 +61,27 @@ export function CharacterGallery({
   const total = KIDS_CHARACTERS.length;
 
   return (
-    <section className="mt-6">
-      <div className="overflow-hidden rounded-[1.75rem] border-4 border-white shadow-[0_0_0_4px_#ff4fa3,0_18px_36px_rgba(20,20,90,0.16)]">
+    <section>
+      <div className="overflow-hidden rounded-[1.5rem] bg-white shadow-[0_10px_32px_rgba(36,48,86,0.08)]">
         <SafePicture
-          src="/kids/hero-collection.webp?v=1"
-          alt="Five colorful quest bots lined up at candy HQ."
+          src="/kids/hero-collection.webp?v=2"
+          alt="Quest bot crew."
           width={800}
           height={200}
-          className="h-28 w-full object-cover object-[center_75%] sm:h-32"
+          className="h-36 w-full object-cover object-[center_75%] sm:h-44"
         />
-        <div className="kids-caption flex items-center justify-between gap-3 p-4">
+        <div className="kids-caption flex items-end justify-between gap-3 px-5 py-4">
           <div>
-            <h2 className="kids-title-ink text-3xl">
-              <KidsIconTitle icon="hero" size={36}>
-                Bot crew
-              </KidsIconTitle>
-            </h2>
-            <p className="mt-1 text-lg font-bold text-[#1a1a6a]">Tap a bot to play</p>
+            <h2 className="kids-title-ink text-2xl sm:text-3xl">Bot crew</h2>
+            <p className="mt-1 text-base text-[#5b6685]">Tap a bot to take them on stretches.</p>
           </div>
-          <span className="inline-flex items-center gap-1 rounded-full border-2 border-white bg-white px-3 py-1 text-lg font-extrabold text-[#1a1a6a] shadow-[0_0_0_3px_#ffe14a]">
-            <KidsIcon name="star" size={18} /> {unlockedCount}/{total}
-          </span>
+          <p className="text-sm font-semibold text-[#5b6685]">
+            {unlockedCount}/{total}
+          </p>
         </div>
       </div>
       <div
-        className={`mt-5 grid gap-3 ${
+        className={`mt-4 grid gap-3 ${
           compact ? "grid-cols-3 sm:grid-cols-5" : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
         }`}
       >

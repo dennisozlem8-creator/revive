@@ -32,59 +32,55 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
     </span>
   );
 
-  const isKids = variant === "kids";
+  if (variant === "kids") {
+    const kidsBrand = (
+      <div className="flex items-center gap-3">
+        <span className="flex h-11 w-11 overflow-hidden rounded-full bg-[#eef5fa] ring-1 ring-[#243056]/10">
+          <KidsIcon name="hero" size={44} />
+        </span>
+        <div>
+          <p className="kids-wordmark text-xl leading-none sm:text-2xl">Kids Quest</p>
+          <p className="mt-0.5 text-sm text-[#5b6685]">Stretch with the bots</p>
+        </div>
+      </div>
+    );
 
-  return (
-      <header
-      className={`relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 sm:px-6 ${
-        isKids ? "kids-header rounded-b-[1.75rem] py-3" : "py-3"
-      }`}
-    >
-      {linkHome ? (
-        <Link
-          href={isCareTeam(user?.role) ? "/doctor" : isKids ? "/kids" : "/briefing"}
-          className="transition hover:opacity-85"
-        >
-          {isKids ? (
-            <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border-2 border-white bg-white shadow-[0_0_0_3px_#ffe14a,0_8px_18px_rgba(20,24,60,0.25)]">
-                <KidsIcon name="hero" size={44} />
-              </span>
-              <div>
-                <p className="kids-wordmark text-2xl sm:text-3xl">Kids Quest</p>
-                <p className="text-base font-bold text-[#1a1a6a]">The bots count your reps</p>
-              </div>
-            </div>
+    return (
+      <header className="kids-header relative z-10 w-full">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+          {linkHome ? (
+            <Link href="/kids" className="transition hover:opacity-85">
+              {kidsBrand}
+            </Link>
           ) : (
-            logo
+            kidsBrand
           )}
-        </Link>
-      ) : (
-        isKids ? (
-          <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border-2 border-white bg-white shadow-[0_0_0_3px_#ffe14a,0_8px_18px_rgba(20,24,60,0.25)]">
-              <KidsIcon name="hero" size={44} />
-            </span>
-            <div>
-              <p className="kids-wordmark text-2xl sm:text-3xl">Kids Quest</p>
-              <p className="text-base font-bold text-[#1a1a6a]">The bots count your reps</p>
-            </div>
-          </div>
-        ) : (
-          logo
-        )
-      )}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {!isKids && <LanguageToggle />}
-        {isKids && (
           <Link
             href={user ? "/briefing" : "/"}
-            className="kids-cta rounded-full px-4 py-2 text-base"
+            className="rounded-full px-4 py-2 text-sm font-semibold text-[#5b6685] hover:bg-white"
           >
             Grown-ups
           </Link>
-        )}
-        {variant !== "kids" && (!user || user.role === "patient") && (
+        </div>
+      </header>
+    );
+  }
+
+  return (
+    <header className="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      {linkHome ? (
+        <Link
+          href={isCareTeam(user?.role) ? "/doctor" : "/briefing"}
+          className="transition hover:opacity-85"
+        >
+          {logo}
+        </Link>
+      ) : (
+        logo
+      )}
+      <div className="flex items-center gap-2 sm:gap-3">
+        <LanguageToggle />
+        {(!user || user.role === "patient") && (
           <>
             {user?.role === "patient" && (
               <Link href="/dashboard" className="hidden text-sm font-medium text-brand-light hover:text-brand sm:inline">
@@ -93,13 +89,13 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
             )}
             <Link
               href="/kids"
-              className="rm-kids-type inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-200 via-fuchsia-200 to-sky-200 px-3 py-1.5 text-sm font-bold text-[#4a2c0a] shadow-sm"
+              className="rm-kids-type inline-flex items-center rounded-full bg-[#f5c84a] px-3 py-1.5 text-sm font-bold text-[#243056] shadow-sm"
             >
               {t("kidsQuest", locale)}
             </Link>
           </>
         )}
-        {user && !isKids && (
+        {user && (
           <>
             <span className={`hidden text-sm sm:inline ${isCaregiver ? "text-[var(--caregiver-muted)]" : "text-muted"}`}>
               {user.name.split(" ")[0]}

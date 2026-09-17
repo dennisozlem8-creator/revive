@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useAuth } from "./AuthProvider";
-import { KidsIcon } from "./KidsIcon";
 import { SafePicture } from "./SafePicture";
 
 const KIDS_HREF = "/kids";
@@ -18,12 +17,12 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
   if (loading) {
     return (
       <div
-        className={`animate-pulse rounded-2xl border-2 border-orange/40 bg-orange/10 px-5 py-8 text-center ${className}`}
+        className={`animate-pulse overflow-hidden rounded-[1.5rem] bg-white px-5 py-8 ${className}`}
         aria-busy="true"
         aria-label="Loading Kids Quest"
       >
-        <div className="mx-auto h-24 w-48 rounded-lg bg-orange/20" />
-        <div className="mx-auto mt-4 h-5 w-40 rounded bg-orange/20" />
+        <div className="h-28 w-full rounded-xl bg-[#eef5fa]" />
+        <div className="mx-auto mt-4 h-5 w-40 rounded bg-[#eef5fa]" />
       </div>
     );
   }
@@ -34,43 +33,21 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
     return (
       <Link
         href={KIDS_HREF}
-        className={`block overflow-hidden rounded-[1.75rem] border border-amber-300/80 bg-gradient-to-b from-white via-amber-50 to-sky-50 p-5 text-center shadow-[0_18px_36px_rgba(40,24,8,0.12)] ${className}`}
+        className={`rm-glow-kids block overflow-hidden rounded-[1.5rem] bg-white text-center shadow-[0_10px_32px_rgba(36,48,86,0.08)] ${className}`}
       >
-        <span className="flex justify-center" aria-hidden>
-          <KidsIcon name="gamepad" size={56} />
-        </span>
         <SafePicture
-          src="/images/landing-kids-quest.webp?v=4"
+          src="/images/landing-kids-quest.webp?v=5"
           alt=""
-          className="mx-auto mt-2 h-24 w-full rounded-xl object-cover object-[center_40%] sm:h-28"
+          className="h-36 w-full object-cover object-[center_62%] sm:h-40"
         />
-        <p className="mt-3 inline-flex items-center justify-center gap-2 text-lg font-bold text-amber-900">
-          <KidsIcon name="gamepad" size={28} />
-          Enter Kids Quest World
-        </p>
-        <p className="mt-1 text-xs font-bold text-violet-700">
-          {user
-            ? "Switch to the colorful bot stretch world"
-            : "Stretch with the bots — sign in later to save progress"}
-        </p>
-        <span className="mt-3 inline-flex rounded-full bg-gradient-to-b from-amber-300 to-amber-500 px-5 py-2 text-sm font-bold text-amber-950 shadow">
-          Go to Kids Quest →
-        </span>
-      </Link>
-    );
-  }
-
-  if (!user) {
-    return (
-      <Link
-        href={KIDS_HREF}
-        className={`inline-flex w-full flex-col items-center justify-center gap-1 rounded-2xl border-2 border-orange/50 bg-orange/15 px-6 py-3 text-sm font-bold text-orange ${className}`}
-      >
-        <span className="inline-flex items-center gap-2">
-          <KidsIcon name="gamepad" size={22} />
-          Kids Quest Mode
-        </span>
-        <span className="text-xs font-medium text-purple">Tap to explore the quest world</span>
+        <div className="kids-caption px-5 py-4">
+          <p className="text-sm font-semibold text-[#5b6685]">Physical therapy for kids</p>
+          <p className="kids-wordmark mt-1 text-2xl">Kids Quest</p>
+          <p className="mt-1 text-sm text-[#5b6685]">
+            {user ? "Open the stretch map with the bots." : "Stretch with the bots. Sign in later to save stars."}
+          </p>
+          <span className="kids-cta mt-4 inline-flex rounded-full px-5 py-2.5 text-base">Open</span>
+        </div>
       </Link>
     );
   }
@@ -78,10 +55,19 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
   return (
     <Link
       href={KIDS_HREF}
-      className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-orange/50 bg-orange/15 px-6 py-3 text-sm font-bold text-orange ${className}`}
+      className={`rm-glow-kids inline-flex w-full items-center justify-between gap-3 overflow-hidden rounded-[1.25rem] bg-white text-left shadow-[0_8px_24px_rgba(36,48,86,0.08)] ${className}`}
     >
-      <KidsIcon name="gamepad" size={22} />
-      Switch to Kids Quest Mode
+      <SafePicture
+        src="/kids/icons/kids-bot-hero.webp"
+        alt=""
+        className="h-16 w-16 object-cover"
+      />
+      <span className="flex-1 py-3 pr-4">
+        <span className="kids-wordmark block text-xl leading-none">Kids Quest</span>
+        <span className="mt-1 block text-sm text-[#5b6685]">
+          {user ? "Switch to the stretch map" : "Open without signing in"}
+        </span>
+      </span>
     </Link>
   );
 }

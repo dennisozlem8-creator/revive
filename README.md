@@ -5,7 +5,7 @@ Physical therapy web app for guided recovery, sensor ROM tests, Kids Quest, and 
 Live site: [https://www.revivemotion.ai](https://www.revivemotion.ai)  
 Source: [https://github.com/dennisozlem8-creator/revive](https://github.com/dennisozlem8-creator/revive)
 
-Kids Quest is a colorful bot world for physical therapy stretches and reps — original candy blob-bots, rainbow HQ, no sign-in. Adult clinic pages stay on the light clinic theme.
+Kids Quest is a physical therapy stretch world for kids — original 3D quest bots, a calm sky UI, and a three-tap map. No sign-in. Adult clinic pages stay on the light clinic theme.
 
 The public homepage shows one photo / motion / muscle section that explains each way to measure, plus hip/knee/ankle marks and a progress chart. Signed-in home is the recovery dashboard.
 

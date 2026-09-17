@@ -13,7 +13,6 @@ import {
 } from "@/lib/session-results";
 import type { Exercise } from "@/lib/assessments";
 import { getExerciseMedia } from "@/lib/exercise-media";
-import { KidsIcon } from "./KidsIcon";
 
 type SessionResultsProps = {
   summary: SessionSummary;
@@ -52,8 +51,7 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
   return (
     <div className="space-y-6">
       <section className="rm-card-elevated border-correct/30 p-6 text-center">
-        <p className="text-4xl">🎉</p>
-        <h2 className="rm-title mt-2 text-2xl text-foreground">Session complete!</h2>
+        <h2 className="rm-title text-2xl text-foreground">Session complete</h2>
         <p className="mt-2 text-body">
           Based on your recording, here are your personalized exercises.
         </p>
@@ -68,10 +66,9 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
         <h3 className="text-xl font-bold">Your exercises</h3>
         <Link
           href="/kids"
-          className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow"
+          className="rm-kids-type inline-flex items-center rounded-full bg-[#f5c84a] px-4 py-2 text-sm font-bold text-[#243056] shadow-sm"
         >
-          <KidsIcon name="map" size={18} />
-          Quest map
+          Kids Quest
         </Link>
       </div>
 
@@ -108,16 +105,15 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
                       <p className="text-sm font-semibold text-foreground">{media.kidsQuest.title}</p>
                       <p className="text-xs text-muted">{media.kidsQuest.story}</p>
                       {questDone && (
-                        <p className="mt-1 text-xs font-semibold text-correct">🏅 Badge earned!</p>
+                        <p className="mt-1 text-xs font-semibold text-correct">Badge earned</p>
                       )}
                     </div>
                     <button
                       type="button"
                       onClick={() => setQuestExercise(exercise)}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-5 py-3 text-sm font-black text-white shadow transition hover:opacity-90"
+                      className="rm-kids-type inline-flex items-center rounded-full bg-[#f5c84a] px-5 py-3 text-sm font-bold text-[#243056] shadow-sm transition hover:opacity-90"
                     >
-                      <KidsIcon name={questDone ? "sparkle" : "gamepad"} size={18} />
-                      {questDone ? "Play again" : "Start quest"}
+                      {questDone ? "Play again" : "Start stretch"}
                     </button>
                   </div>
                 </div>

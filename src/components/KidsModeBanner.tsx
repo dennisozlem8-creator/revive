@@ -2,22 +2,17 @@
 
 import Link from "next/link";
 import { useAuth } from "./AuthProvider";
-import { KidsIcon } from "./KidsIcon";
 
 export function KidsModeBanner() {
   const { user } = useAuth();
 
   return (
-    <div className="kids-ribbon relative z-40 px-4 py-3 text-center" role="status">
-      <p className="inline-flex items-center justify-center gap-2 text-xl font-extrabold text-[#1a1a6a]">
-        <KidsIcon name="gamepad" size={24} />
-        Tap a picture to stretch
-        <KidsIcon name="star" size={24} />
-      </p>
+    <div className="relative z-40 px-4 py-3 text-center" role="status">
+      <p className="text-base font-semibold text-[#243056]">Tap a picture to stretch</p>
       {!user && (
-        <p className="mt-1 text-lg font-bold text-[#1a1a6a]">
+        <p className="mt-1 text-sm text-[#5b6685]">
           Ask a grown-up to save your stars.{" "}
-          <Link href="/login" className="underline">
+          <Link href="/login" className="font-semibold text-[#4d8ef0]">
             Sign in
           </Link>
         </p>

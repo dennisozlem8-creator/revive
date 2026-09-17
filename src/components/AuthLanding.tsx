@@ -342,18 +342,18 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               />
               <Link
                 href="/kids"
-                className="rm-glow-kids relative block min-h-[14rem] overflow-hidden rounded-[1.35rem] shadow-[0_12px_24px_rgba(40,24,8,0.14)] sm:min-h-[16rem]"
+                className="rm-glow-kids relative block min-h-[14rem] overflow-hidden rounded-[1.5rem] shadow-[0_12px_28px_rgba(36,48,86,0.12)] sm:min-h-[16rem]"
               >
-                <PhotoFrame src="/images/landing-kids-quest.webp?v=4" alt="Kids Quest: colorful quest bots doing physical therapy stretches and reps." className="absolute inset-0 h-full w-full" />
+                <PhotoFrame src="/images/landing-kids-quest.webp?v=5" alt="Kids Quest: original quest bots doing physical therapy stretches on a meadow." className="absolute inset-0 h-full w-full" />
                 <div className="absolute inset-x-0 bottom-0 kids-caption flex items-end justify-between gap-3 p-4 sm:p-5">
                   <div>
-                    <p className="rm-kids-type text-base font-extrabold text-[#1a1a6a]">Physical therapy exercises</p>
+                    <p className="text-sm font-semibold text-[#5b6685]">Physical therapy for kids</p>
                     <p className="kids-wordmark mt-1 text-3xl sm:text-4xl">Kids Quest</p>
-                    <p className="mt-1 max-w-xs text-lg font-bold leading-6 text-[#1a1a6a]">
+                    <p className="mt-1 max-w-xs text-base leading-6 text-[#5b6685]">
                       The bots ask. You stretch. No sign-in.
                     </p>
                   </div>
-                  <span className="kids-cta rm-btn rm-kids-type h-11 min-h-0 rounded-full px-5 text-lg">Open</span>
+                  <span className="kids-cta h-11 min-h-0 rounded-full px-5 text-lg">Open</span>
                 </div>
               </Link>
             </div>

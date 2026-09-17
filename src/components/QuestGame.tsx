@@ -11,8 +11,7 @@ import {
   type KidsSensorReading,
 } from "@/lib/device-sensor";
 import { getFeedbackState } from "@/lib/feedback";
-import { SensorHelp } from "./SensorHelp";
-import { KidsIcon, KidsIconTitle } from "./KidsIcon";
+import { KidsIcon } from "./KidsIcon";
 import { SafePicture } from "./SafePicture";
 import type { KidsIconName } from "@/lib/kids-icons";
 
@@ -25,10 +24,10 @@ type QuestGameProps = {
 };
 
 const feedbackKidsLabel = {
-  correct: "CORRECT FORM! Rep counted!",
-  almost: "ALMOST THERE! Push a little more!",
-  alert: "ADJUST FORM — follow the picture!",
-  idle: "Wear your sensor and start moving!",
+  correct: "Nice form. Rep counted.",
+  almost: "A little more bend.",
+  alert: "Match the picture.",
+  idle: "Connect, then start.",
 };
 
 export function QuestGame({
@@ -46,14 +45,12 @@ export function QuestGame({
   const [recording, setRecording] = useState(false);
   const [reps, setReps] = useState(0);
   const [reading, setReading] = useState<KidsSensorReading | null>(null);
-  const [wave, setWave] = useState<number[]>(() => Array(20).fill(8));
-  const [celebrate, setCelebrate] = useState(false);
   const tickRef = useRef(0);
   const lastRepTickRef = useRef(-99);
 
   const target = media.kidsQuest.reps;
   const done = reps >= target;
-  const firstName = user?.name.split(" ")[0] ?? "Hero";
+  const firstName = user?.name.split(" ")[0] ?? "friend";
   const feedback = getFeedbackState(reading?.angle ?? 0, targetAngle);
 
   useEffect(() => {
@@ -64,18 +61,14 @@ export function QuestGame({
       const tick = tickRef.current;
       const next = createKidsSensorReading(tick, targetAngle);
       setReading(next);
-      setWave((prev) => [...prev.slice(1), Math.max(10, (next.angle / targetAngle) * 80)]);
 
-      if (
-        repDetected(next.angle, targetAngle, lastRepTickRef.current, tick)
-      ) {
+      if (repDetected(next.angle, targetAngle, lastRepTickRef.current, tick)) {
         lastRepTickRef.current = tick;
         setReps((r) => {
           const updated = r + 1;
           if (updated >= target) {
             completeQuest(exercise.id, 50);
             onQuestComplete?.(exercise.id);
-            setCelebrate(true);
             setRecording(false);
           }
           return updated;
@@ -95,71 +88,49 @@ export function QuestGame({
   }
 
   function speech() {
-    if (done) return `Amazing ${firstName}! Stretch quest complete!`;
-    if (!connected) return `Connect your Revive Motion sensor to begin, ${firstName}!`;
-    if (connecting) return `Searching for your sensor, ${firstName}… almost there!`;
-    if (!recording) return `Sensor ready! Do the ${exercise.name} movement.`;
-    if (feedback === "correct") return `Great form ${firstName}! Rep ${reps} counted!`;
-    if (feedback === "almost") return `So close ${firstName}! A little more bend!`;
-    if (reps > target / 2) return `Keep going ${firstName}! ${target - reps} reps left!`;
-    return `Move with the sensor ${firstName} — reps count automatically!`;
+    if (done) return `Great work, ${firstName}. Stretch complete.`;
+    if (!connected) return `${firstName}, connect to begin this stretch.`;
+    if (connecting) return "Finding the practice sensor…";
+    if (!recording) return `Ready. Do ${exercise.name}.`;
+    if (feedback === "correct") return `Rep ${reps} counted.`;
+    if (feedback === "almost") return "A little more bend.";
+    if (reps > target / 2) return `${target - reps} left.`;
+    return "Move with the picture.";
   }
 
   return (
-    <div className="kids-glass overflow-hidden p-6">
-      <div className="flex items-start gap-4">
-        <KidsIcon name={avatarIcon} size={72} />
-        <div className="relative flex-1 rounded-2xl border-2 border-white bg-white px-4 py-3 text-[#1a1a6a]">
-          <p className="text-xl font-extrabold leading-snug">{speech()}</p>
-        </div>
+    <div className="kids-glass overflow-hidden p-5 sm:p-6">
+      <div className="flex items-center gap-3">
+        <KidsIcon name={avatarIcon} size={56} />
+        <p className="text-base font-medium leading-snug text-[#243056] sm:text-lg">{speech()}</p>
       </div>
 
-      <div className="mt-5 flex items-center gap-4 rounded-2xl border border-amber-200/70 bg-white/70 p-4">
-        <div
-          className={`flex h-14 w-14 items-center justify-center rounded-xl ${
-            connected ? "bg-brand/25" : connecting ? "bg-brand/15" : "bg-surface-elevated"
-          }`}
-        >
-          <svg viewBox="0 0 48 48" className="h-9 w-9" aria-hidden>
-            <rect
-              x="14"
-              y="8"
-              width="20"
-              height="32"
-              rx="6"
-              fill={connected ? "#2563EB" : connecting ? "#1D4ED8" : "#334155"}
-            />
-            {(connected || connecting) && (
-              <circle
-                cx="24"
-                cy="20"
-                r="6"
-                fill="none"
-                stroke="#60A5FA"
-                strokeWidth="2"
-                className="animate-pulse-soft"
-              />
-            )}
-          </svg>
-        </div>
-        <div className="flex-1">
-          <p className="text-xl font-extrabold text-[#1a1a6a]">
-            {connecting
-              ? "Connecting…"
-              : connected
-                ? recording
-                  ? "Move with the bot"
-                  : "Ready to stretch"
-                : "Tap Connect"}
+      <div className="mt-5 overflow-hidden rounded-[1.25rem]">
+        <SafePicture
+          src={kidsImage}
+          alt={exercise.name}
+          width={800}
+          height={480}
+          className="h-44 w-full object-cover sm:h-52"
+        />
+      </div>
+
+      <h3 className="kids-title-ink mt-4 text-center text-2xl">{media.kidsQuest.title}</h3>
+      <p className="mt-1 text-center text-base text-[#5b6685]">{media.kidsQuest.story}</p>
+
+      <div className="mt-5 flex items-center justify-between rounded-[1.15rem] bg-[#eef5fa] px-4 py-3">
+        <div>
+          <p className="text-sm font-semibold text-[#5b6685]">
+            {connecting ? "Connecting" : connected ? (recording ? "Moving" : "Ready") : "Practice sensor"}
           </p>
-          <p className="text-base font-bold text-[#1a1a6a]">
+          <p className="text-base text-[#243056]">
             {connecting
-              ? "Wait 2 seconds"
+              ? "Just a moment"
               : connected
                 ? recording
-                  ? "Bend, then stand up"
-                  : "Tap Start when you are ready"
-                : "This is a practice sensor"}
+                  ? "Bend, then stand"
+                  : "Start when you are ready"
+                : "No hardware needed"}
           </p>
         </div>
         {!connected && (
@@ -167,137 +138,63 @@ export function QuestGame({
             type="button"
             disabled={connecting}
             onClick={handleConnect}
-            className="kids-cta rounded-full px-5 py-3 text-xl disabled:opacity-60"
+            className="kids-cta rounded-full px-5 py-2.5 text-base disabled:opacity-60"
           >
-            {connecting ? (
-              <span className="inline-flex items-center gap-2">
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                Connecting
-              </span>
-            ) : (
-              "Connect"
-            )}
+            {connecting ? "Connecting" : "Connect"}
           </button>
         )}
       </div>
 
-      {!connected && (
-        <div className="mt-3">
-          <SensorHelp variant="kids" />
+      {connected && (
+        <div className="mt-5 grid grid-cols-2 gap-3 text-center">
+          <div className="rounded-[1.15rem] bg-[#eef5fa] py-4">
+            <p className="text-3xl font-semibold tabular-nums text-[#243056]">{reading?.angle ?? 0}°</p>
+            <p className="mt-1 text-sm text-[#5b6685]">Angle · {targetAngle}°</p>
+          </div>
+          <div className="rounded-[1.15rem] bg-[#eef5fa] py-4">
+            <p className="text-3xl font-semibold tabular-nums text-[#243056]">
+              {reps}/{target}
+            </p>
+            <p className="mt-1 text-sm text-[#5b6685]">Reps</p>
+          </div>
         </div>
       )}
 
-      <div className="relative mx-auto mt-5 flex h-48 w-full max-w-sm items-center justify-center overflow-hidden rounded-[1.5rem] border border-amber-200/70 bg-[#1a2848]/8 shadow-inner">
-        <SafePicture
-          src={kidsImage}
-          alt={exercise.name}
-          width={400}
-          height={300}
-          className="h-full w-full object-cover p-2"
-        />
-        {celebrate && (
-          <span className="absolute inset-0 flex items-center justify-center animate-pulse-soft">
-            <KidsIcon name="star" size={88} />
-          </span>
-        )}
-      </div>
-
-      <h3 className="kids-title-ink mt-4 text-center text-3xl">
-        <KidsIconTitle icon="target" size={32} className="justify-center">
-          {media.kidsQuest.title}
-        </KidsIconTitle>
-      </h3>
-      <p className="mt-2 text-center text-lg font-bold text-[#1a1a6a]">{media.kidsQuest.story}</p>
-
-      {connected && (
+      {connected && recording && (
         <>
-          <div className={`rm-feedback rm-feedback--${feedback} mt-5 min-h-[7rem]`}>
-            <p className="relative z-10 text-xs font-bold uppercase tracking-widest">
-              {feedbackKidsLabel[feedback]}
-            </p>
-            <p className="relative z-10 mt-2 text-5xl font-bold tabular-nums">
-              {reading?.angle ?? 0}°
-            </p>
-            <p className="relative z-10 mt-1 text-sm">Target {targetAngle}°</p>
-          </div>
-
-          <div className="mt-3 flex h-16 items-end gap-1 rounded-xl bg-surface/60 p-2">
-            {wave.map((h, i) => (
-              <div
-                key={i}
-                className="flex-1 rounded-t bg-purple/70"
-                style={{ height: `${h}%` }}
-              />
-            ))}
-          </div>
-
-          <div className="mt-3 grid grid-cols-3 gap-2 text-center text-sm">
-            <div className="rounded-lg bg-violet-100 py-2">
-              <p className="font-black text-violet-700">{reading?.emg ?? "—"}</p>
-              <p className="flex items-center justify-center gap-1 text-xs font-bold text-violet-800">
-                <KidsIcon name="bolt" size={14} /> EMG
-              </p>
-            </div>
-            <div className="rounded-lg bg-orange-100 py-2">
-              <p className="font-black text-orange-600">{reading?.hr ?? "—"}</p>
-              <p className="flex items-center justify-center gap-1 text-xs font-bold text-orange-800">
-                <KidsIcon name="heart" size={14} /> BPM
-              </p>
-            </div>
-            <div className="rounded-lg bg-amber-100 py-2">
-              <p className="font-black text-amber-600">
-                {reps}/{target}
-              </p>
-              <p className="flex items-center justify-center gap-1 text-xs font-bold text-amber-800">
-                <KidsIcon name="star" size={14} /> Reps
-              </p>
-            </div>
-          </div>
-
-          <div className="rm-xp-track mt-4">
-            <div
-              className="rm-xp-fill"
-              style={{ width: `${Math.min(100, (reps / target) * 100)}%` }}
-            />
+          <p className="mt-4 text-center text-base font-semibold text-[#243056]">
+            {feedbackKidsLabel[feedback]}
+          </p>
+          <div className="rm-xp-track mt-3 rounded-full">
+            <div className="rm-xp-fill rounded-full" style={{ width: `${Math.min(100, (reps / target) * 100)}%` }} />
           </div>
         </>
       )}
 
       {!connected ? null : done ? (
-        <div className="mt-6 rounded-2xl border border-emerald-300/70 bg-emerald-50/80 p-5 text-center">
-          <p className="text-4xl">{media.kidsQuest.reward}</p>
-          <p className="mt-2 inline-flex items-center justify-center gap-2 text-lg font-bold text-emerald-800">
-            <KidsIcon name="party" size={24} />
-            Quest complete! +50 XP
-          </p>
-          <button
-            type="button"
-            onClick={onComplete}
-            className="mt-4 inline-flex items-center justify-center gap-2 kids-cta rounded-full px-6 py-3 text-xl"
-          >
+        <div className="mt-6 text-center">
+          <p className="kids-title-ink text-2xl">{media.kidsQuest.reward}</p>
+          <p className="mt-1 text-base text-[#5b6685]">Complete. Plus 50 stars.</p>
+          <button type="button" onClick={onComplete} className="kids-cta mt-4 rounded-full px-8 py-3 text-lg">
             Continue
-            <KidsIcon name="rocket" size={20} />
           </button>
         </div>
       ) : !recording ? (
-        <button
-          type="button"
-          onClick={() => {
-            tickRef.current = 0;
-            lastRepTickRef.current = -99;
-            setRecording(true);
-          }}
-          className="kids-cta mt-6 w-full rounded-2xl py-5 text-2xl"
-        >
-          <span className="inline-flex items-center justify-center gap-2">
+        connected && (
+          <button
+            type="button"
+            onClick={() => {
+              tickRef.current = 0;
+              lastRepTickRef.current = -99;
+              setRecording(true);
+            }}
+            className="kids-cta mt-6 w-full rounded-full py-4 text-xl"
+          >
             Start
-            <KidsIcon name="gamepad" size={24} />
-          </span>
-        </button>
+          </button>
+        )
       ) : (
-        <p className="mt-4 text-center text-xl font-extrabold text-[#1a1a6a] animate-pulse-soft">
-          Keep stretching!
-        </p>
+        <p className="mt-4 text-center text-base font-medium text-[#5b6685]">Keep stretching.</p>
       )}
     </div>
   );

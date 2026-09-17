@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AuthForm } from "./AuthForm";
-import { KidsIcon } from "./KidsIcon";
 import { SafePicture } from "./SafePicture";
 import { ResetAppButton } from "./ResetAppButton";
 import type { UserRole } from "@/lib/users";
@@ -53,20 +52,6 @@ const registerActions: Record<GoInRole, string> = {
 type GoInScreenProps = {
   mode: "login" | "register";
 };
-
-function Chevron({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className={`h-5 w-5 shrink-0 ${className ?? "text-brand-light"}`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    >
-      <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 export function GoInScreen({ mode }: GoInScreenProps) {
   const [entry, setEntry] = useState<GoInRole | null>(null);
@@ -121,27 +106,20 @@ export function GoInScreen({ mode }: GoInScreenProps) {
         ))}
         <Link
           href="/kids"
-          className="overflow-hidden rounded-xl border-2 border-[#f0c36a] text-left shadow-[0_8px_18px_rgba(180,100,20,0.14)] transition hover:-translate-y-0.5 hover:shadow-lg"
+          className="rm-glow-kids overflow-hidden rounded-[1.25rem] border border-[rgba(36,48,86,0.08)] text-left shadow-[0_8px_24px_rgba(36,48,86,0.08)] transition hover:-translate-y-0.5 hover:shadow-lg"
         >
-          <div className="relative h-12 overflow-hidden sm:h-14">
-            <SafePicture
-              src="/images/landing-kids-quest.webp?v=4"
-              alt=""
-              className="h-full w-full object-cover object-[center_35%]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#4a2c78]/75 via-transparent to-transparent" />
-            <p className="rm-kids-type absolute bottom-1.5 left-3 flex items-center gap-1.5 text-lg font-extrabold text-white drop-shadow">
-              <KidsIcon name="star" size={16} /> No sign-in
-            </p>
-          </div>
-          <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-[#ffe08a] via-[#ffd0f0] to-[#b8e0ff] px-3 py-2 sm:px-4">
+          <SafePicture
+            src="/images/landing-kids-quest.webp?v=5"
+            alt=""
+            className="h-24 w-full object-cover object-[center_62%] sm:h-28"
+          />
+          <div className="kids-caption flex items-center justify-between gap-3 px-3 py-3 sm:px-4">
             <span>
-              <p className="rm-kids-type flex items-center gap-2 text-xl font-extrabold text-[#2a1848]">
-                <KidsIcon name="gamepad" size={18} /> Kids Quest
-              </p>
-              <p className="text-lg font-extrabold text-[#2a1848] sm:text-xl">Quest bots count your stretches. No email.</p>
+              <p className="text-sm font-semibold text-[#5b6685]">No sign-in</p>
+              <p className="kids-wordmark mt-0.5 text-2xl leading-none">Kids Quest</p>
+              <p className="mt-1 text-sm leading-5 text-[#5b6685]">The bots count your stretches. No email.</p>
             </span>
-            <Chevron className="text-[#c47a32]" />
+            <span className="shrink-0 text-sm font-semibold text-[#4d8ef0]">Open</span>
           </div>
         </Link>
       </div>

@@ -160,20 +160,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="relative mt-5 overflow-hidden rounded-[1.25rem]">
-          <PhotoFrame src="/images/landing-kids-quest.webp?v=4" alt="Colorful quest bots stretching on a candy hill." className="h-36 sm:h-44" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a6a]/75 via-[#1a1a6a]/25 to-transparent" />
-          <div className="rm-glow-kids absolute inset-0 flex flex-col justify-end gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
-            <div className="kids-glass p-3 sm:max-w-xl sm:p-4">
-              <p className="rm-kids-type text-base font-extrabold text-[#1a1a6a]">
-                Physical therapy exercises
-              </p>
+        <section className="rm-glow-kids relative mt-5 min-h-[14rem] overflow-hidden rounded-[1.5rem] sm:min-h-[16rem]">
+          <PhotoFrame src="/images/landing-kids-quest.webp?v=5" alt="Quest bots stretching on a green meadow." className="absolute inset-0 h-full w-full" />
+          <div className="absolute inset-x-0 bottom-0 kids-caption flex flex-col gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
+            <div>
+              <p className="text-sm font-semibold text-[#5b6685]">Physical therapy for kids</p>
               <h2 className="kids-wordmark mt-1 text-3xl sm:text-4xl">Kids Quest</h2>
-              <p className="mt-1 text-lg font-bold leading-6 text-[#1a1a6a]">
-                The bots ask. You stretch, squat, and score.
+              <p className="mt-1 max-w-md text-base leading-6 text-[#5b6685]">
+                The bots ask. You stretch. Open a world on the map.
               </p>
             </div>
-            <Link href="/kids" className="kids-cta rm-btn rm-kids-type h-10 min-h-0 rounded-full px-5 text-sm sm:h-11 sm:text-base">
+            <Link href="/kids" className="kids-cta h-11 min-h-0 rounded-full px-5 text-base">
               {t("kidsQuest", locale)}
             </Link>
           </div>

@@ -23,7 +23,7 @@ export const KIDS_CHARACTERS: KidsCharacter[] = [
     avatar: "hero",
     trait: "Bounce bot",
     unlockCondition: { type: "starter" },
-    unlockHint: "Your starter quest bot!",
+    unlockHint: "Your starter quest bot",
   },
   {
     id: "spark-sam",

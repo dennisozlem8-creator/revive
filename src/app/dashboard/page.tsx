@@ -10,7 +10,6 @@ import {
   getActivityDates,
   getLongestStreak,
 } from "@/lib/streak";
-import { KidsIcon } from "@/components/KidsIcon";
 import { ProgressInsight } from "@/components/ProgressInsight";
 import { loadMeasurements } from "@/lib/goniometer";
 import { preExerciseSetup } from "@/lib/recovery-plan";
@@ -143,9 +142,8 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/kids"
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-4 py-2 text-sm font-black text-white shadow hover:opacity-90"
+              className="rm-kids-type mt-4 inline-flex items-center rounded-full bg-[#f5c84a] px-4 py-2 text-sm font-bold text-[#243056] shadow-sm hover:opacity-90"
             >
-              <KidsIcon name="gamepad" size={18} />
               Continue Kids Quest
             </Link>
           </div>
