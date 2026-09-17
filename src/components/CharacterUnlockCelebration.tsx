@@ -34,15 +34,15 @@ export function CharacterUnlockCelebration({
         className="kids-glass max-w-sm p-8 text-center"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-amber-800">
+        <p className="flex items-center justify-center gap-2 text-[11px] font-extrabold text-[#1a1a6a]">
           <KidsIcon name="party" size={22} />
           New quest bot
         </p>
         <span className="mt-5 flex justify-center drop-shadow-[0_8px_18px_rgba(180,100,20,0.35)]">
           <KidsIcon name={character.avatar} size={104} />
         </span>
-        <h3 className="kids-title-ink mt-4 text-3xl">{character.name}</h3>
-        <p className="mt-1 font-medium text-indigo-900/75">{character.trait}</p>
+        <h3 className="kids-title-ink mt-4 text-4xl">{character.name}</h3>
+        <p className="mt-1 text-lg font-bold text-[#1a1a6a]">{character.trait}</p>
         {characterIds.length > 1 && (
           <p className="mt-2 flex items-center justify-center gap-1 text-sm font-semibold text-amber-800">
             +{characterIds.length - 1} more unlocked!

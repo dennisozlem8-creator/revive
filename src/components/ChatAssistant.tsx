@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { getChatResponse } from "@/lib/chat-bot";
 import { useAuth } from "./AuthProvider";
+import { usePathname } from "next/navigation";
 
 type Message = { role: "user" | "assistant"; text: string };
 
 export function ChatAssistant() {
   const { user } = useAuth();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
@@ -23,6 +25,7 @@ export function ChatAssistant() {
   }, [messages, open]);
 
   if (!user) return null;
+  if (pathname === "/kids") return null;
 
   function sendMessage(e: React.FormEvent) {
     e.preventDefault();

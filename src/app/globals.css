@@ -299,12 +299,16 @@ details[open] > summary::after {
   --brand-soft: rgba(255, 79, 163, 0.18);
   --foreground: #1a1a6a;
   --muted: #3d3d8a;
-  --body: #26267a;
+  --body: #1a1a6a;
   --kids-ink: #1a1a6a;
   --kids-cream: #fffde8;
   position: relative;
   font-family: var(--font-kids), var(--font-geist-sans), system-ui, sans-serif;
   color: var(--kids-ink);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
   background:
     radial-gradient(ellipse 80% 50% at 12% -6%, rgba(255, 79, 163, 0.4), transparent 52%),
     radial-gradient(ellipse 70% 45% at 92% 0%, rgba(56, 189, 248, 0.5), transparent 55%),
@@ -312,23 +316,33 @@ details[open] > summary::after {
     linear-gradient(180deg, #3ecbff 0%, #7af0ff 18%, #fff36a 48%, #ff8ec8 78%, #c4b5fd 100%);
 }
 
-.rm-glow-kids .kids-title {
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  background: linear-gradient(90deg, #ffe14a 0%, #ff4fa3 42%, #22d3ee 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 2px 8px rgba(20, 20, 90, 0.28));
-}
-
+.rm-glow-kids .kids-title,
 .rm-glow-kids .kids-title-ink {
   font-weight: 800;
-  letter-spacing: -0.03em;
-  background: linear-gradient(90deg, #ff2d86 0%, #7b5cff 42%, #0ea5e9 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  letter-spacing: 0.02em;
+  color: #1a1a6a;
+  background: none;
+  -webkit-text-fill-color: #1a1a6a;
+  filter: none;
+}
+
+.rm-glow-kids .kids-wordmark {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffe14a;
+  line-height: 1;
+  text-shadow:
+    2px 0 0 #6b21a8,
+    -2px 0 0 #6b21a8,
+    0 2px 0 #6b21a8,
+    0 -2px 0 #6b21a8,
+    3px 3px 0 #6b21a8;
+}
+
+.rm-glow-kids .kids-caption {
+  background: #fffde8;
+  color: #1a1a6a;
+  border-top: 4px solid #ffe14a;
 }
 
 .rm-glow-kids .kids-glass {
@@ -361,6 +375,9 @@ details[open] > summary::after {
 }
 
 .rm-glow-kids .kids-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(180deg, #ffe14a 0%, #ffb703 100%);
   color: #1a1a6a;
   border: 3px solid #fff;
@@ -368,6 +385,9 @@ details[open] > summary::after {
     0 0 0 3px #ff4fa3,
     0 10px 24px rgba(255, 79, 163, 0.28);
   font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+  min-height: 3.25rem;
 }
 
 .rm-glow-kids .kids-cta:hover {
@@ -385,16 +405,43 @@ details[open] > summary::after {
 }
 
 .rm-glow-kids .kids-header {
-  background: linear-gradient(90deg, #22d3ee 0%, #818cf8 42%, #ff4fa3 100%);
+  background: #fffde8;
   border-bottom: 4px solid #ffe14a;
-  box-shadow: 0 14px 36px rgba(20, 20, 90, 0.18);
-  backdrop-filter: blur(18px);
+  box-shadow:
+    0 0 0 4px #ff4fa3,
+    0 12px 28px rgba(20, 20, 90, 0.14);
 }
 
 .rm-glow-kids .kids-ribbon {
-  background: linear-gradient(90deg, #38bdf8, #a3e635, #ffe14a, #ff8ec8, #c4b5fd);
-  border-bottom: 3px solid #fff;
+  background: #fffde8;
+  border-bottom: 3px solid #ffe14a;
   color: #1a1a6a;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.rm-glow-kids .kids-back {
+  display: inline-flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 9999px;
+  border: 3px solid #fff;
+  background: #fffde8;
+  padding: 0 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1a1a6a;
+  box-shadow: 0 0 0 3px #38bdf8;
+}
+
+.rm-glow-kids .kids-nav {
+  background: #fffde8;
+  border-top: 4px solid #ffe14a;
+  box-shadow:
+    0 0 0 4px #ff4fa3,
+    0 -10px 28px rgba(20, 20, 90, 0.12);
 }
 
 .rm-glow-kids .rm-xp-track {

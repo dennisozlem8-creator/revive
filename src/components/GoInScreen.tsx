@@ -130,16 +130,16 @@ export function GoInScreen({ mode }: GoInScreenProps) {
               className="h-full w-full object-cover object-[center_35%]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#4a2c78]/75 via-transparent to-transparent" />
-            <p className="rm-kids-type absolute bottom-1.5 left-3 flex items-center gap-1.5 text-sm font-bold text-white drop-shadow sm:text-base">
+            <p className="rm-kids-type absolute bottom-1.5 left-3 flex items-center gap-1.5 text-lg font-extrabold text-white drop-shadow">
               <KidsIcon name="star" size={16} /> No sign-in
             </p>
           </div>
           <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-[#ffe08a] via-[#ffd0f0] to-[#b8e0ff] px-3 py-2 sm:px-4">
             <span>
-              <p className="rm-kids-type flex items-center gap-2 text-base font-bold text-[#2a1848]">
+              <p className="rm-kids-type flex items-center gap-2 text-xl font-extrabold text-[#2a1848]">
                 <KidsIcon name="gamepad" size={18} /> Kids Quest
               </p>
-              <p className="text-xs font-semibold text-[#5a3a18] sm:text-sm">The bots ask. You stretch. No email needed.</p>
+              <p className="text-lg font-extrabold text-[#2a1848] sm:text-xl">Quest bots count your stretches. No email.</p>
             </span>
             <Chevron className="text-[#c47a32]" />
           </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Fredoka, Source_Serif_4 } from "next/font/google";
+import { Geist, Geist_Mono, Baloo_2, Source_Serif_4 } from "next/font/google";
 import { AuthGate } from "@/components/AuthGate";
 import { AuthProvider } from "@/components/AuthProvider";
 import { HeartRateProvider } from "@/components/HeartRateProvider";
@@ -24,10 +24,11 @@ const sourceSerif = Source_Serif_4({
   display: "swap",
 });
 
-const kidsDisplay = Fredoka({
+const kidsDisplay = Baloo_2({
   variable: "--font-kids",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {

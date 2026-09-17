@@ -109,8 +109,8 @@ export function QuestGame({
     <div className="kids-glass overflow-hidden p-6">
       <div className="flex items-start gap-4">
         <KidsIcon name={avatarIcon} size={72} />
-        <div className="relative flex-1 rounded-2xl border border-amber-200/80 bg-white/85 px-4 py-3 text-indigo-950">
-          <p className="text-sm font-semibold">{speech()}</p>
+        <div className="relative flex-1 rounded-2xl border-2 border-white bg-white px-4 py-3 text-[#1a1a6a]">
+          <p className="text-xl font-extrabold leading-snug">{speech()}</p>
         </div>
       </div>
 
@@ -143,23 +143,23 @@ export function QuestGame({
           </svg>
         </div>
         <div className="flex-1">
-          <p className="font-bold text-indigo-950">
+          <p className="text-xl font-extrabold text-[#1a1a6a]">
             {connecting
-              ? "Connecting sensor…"
+              ? "Connecting…"
               : connected
                 ? recording
-                  ? "Sensor recording"
-                  : "Sensor connected"
-                : "Sensor offline"}
+                  ? "Move with the bot"
+                  : "Ready to stretch"
+                : "Tap Connect"}
           </p>
-          <p className="text-xs text-muted">
+          <p className="text-base font-bold text-[#1a1a6a]">
             {connecting
-              ? "Demo pairing — takes about 2 seconds"
+              ? "Wait 2 seconds"
               : connected
                 ? recording
-                  ? "Move your joint — reps count when form is correct"
-                  : "Green light on — ready to quest"
-                : "Tap Connect to pair the demo sensor"}
+                  ? "Bend, then stand up"
+                  : "Tap Start when you are ready"
+                : "This is a practice sensor"}
           </p>
         </div>
         {!connected && (
@@ -167,7 +167,7 @@ export function QuestGame({
             type="button"
             disabled={connecting}
             onClick={handleConnect}
-            className="kids-cta-magic rounded-full px-4 py-2 text-sm disabled:opacity-60"
+            className="kids-cta rounded-full px-5 py-3 text-xl disabled:opacity-60"
           >
             {connecting ? (
               <span className="inline-flex items-center gap-2">
@@ -202,12 +202,12 @@ export function QuestGame({
         )}
       </div>
 
-      <h3 className="kids-title-ink mt-4 text-center text-2xl">
+      <h3 className="kids-title-ink mt-4 text-center text-3xl">
         <KidsIconTitle icon="target" size={32} className="justify-center">
           {media.kidsQuest.title}
         </KidsIconTitle>
       </h3>
-      <p className="mt-1 text-center text-body">{media.kidsQuest.story}</p>
+      <p className="mt-2 text-center text-lg font-bold text-[#1a1a6a]">{media.kidsQuest.story}</p>
 
       {connected && (
         <>
@@ -273,7 +273,7 @@ export function QuestGame({
           <button
             type="button"
             onClick={onComplete}
-            className="mt-4 inline-flex items-center justify-center gap-2 kids-cta rounded-full px-6 py-3 text-sm"
+            className="mt-4 inline-flex items-center justify-center gap-2 kids-cta rounded-full px-6 py-3 text-xl"
           >
             Continue
             <KidsIcon name="rocket" size={20} />
@@ -287,16 +287,16 @@ export function QuestGame({
             lastRepTickRef.current = -99;
             setRecording(true);
           }}
-          className="kids-cta mt-6 w-full rounded-2xl py-5 text-lg"
+          className="kids-cta mt-6 w-full rounded-2xl py-5 text-2xl"
         >
           <span className="inline-flex items-center justify-center gap-2">
-            Start sensor quest
+            Start
             <KidsIcon name="gamepad" size={24} />
           </span>
         </button>
       ) : (
-        <p className="mt-4 text-center text-sm font-semibold text-brand-light animate-pulse-soft">
-          Sensor active. Do the exercise movement!
+        <p className="mt-4 text-center text-xl font-extrabold text-[#1a1a6a] animate-pulse-soft">
+          Keep stretching!
         </p>
       )}
     </div>

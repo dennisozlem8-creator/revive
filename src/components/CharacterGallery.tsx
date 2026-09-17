@@ -43,16 +43,16 @@ function CharacterCard({
       >
         <KidsIcon name={unlocked ? character.avatar : "mystery"} size={compact ? 44 : 56} />
       </span>
-      <p className={`mt-2 font-bold ${unlocked ? "text-foreground" : "text-muted"}`}>
-        {unlocked ? character.name : "???"}
+      <p className={`mt-2 text-lg font-extrabold ${unlocked ? "text-[#1a1a6a]" : "text-[#1a1a6a]/50"}`}>
+        {unlocked ? character.name : "Locked"}
       </p>
       {unlocked ? (
-        <p className="mt-0.5 text-xs text-muted">{character.trait}</p>
+        <p className="mt-0.5 text-base font-bold text-[#1a1a6a]">{character.trait}</p>
       ) : (
-        <p className="mt-1 text-xs text-muted/80">{character.unlockHint}</p>
+        <p className="mt-1 text-base font-bold text-[#1a1a6a]/70">{character.unlockHint}</p>
       )}
       {selected && unlocked && (
-        <span className="absolute -right-1 -top-1 inline-flex items-center gap-0.5 rounded-full border-2 border-white bg-gradient-to-b from-[#ffe14a] to-[#ffb703] px-2 py-0.5 text-[10px] font-bold text-[#1a1a6a] shadow">
+        <span className="absolute -right-1 -top-1 inline-flex items-center gap-0.5 rounded-full border-2 border-white bg-[#ffe14a] px-2 py-1 text-sm font-extrabold text-[#1a1a6a] shadow-[0_0_0_3px_#ff4fa3]">
           <KidsIcon name="star" size={14} />
           Active
         </span>
@@ -72,7 +72,7 @@ export function CharacterGallery({
 
   return (
     <section className="mt-6">
-      <div className="relative overflow-hidden rounded-[1.75rem] border-4 border-white shadow-[0_0_0_4px_#ff4fa3,0_18px_36px_rgba(20,20,90,0.16)]">
+      <div className="overflow-hidden rounded-[1.75rem] border-4 border-white shadow-[0_0_0_4px_#ff4fa3,0_18px_36px_rgba(20,20,90,0.16)]">
         <SafePicture
           src="/kids/hero-collection.webp?v=1"
           alt="Five colorful quest bots lined up at candy HQ."
@@ -80,18 +80,19 @@ export function CharacterGallery({
           height={200}
           className="h-28 w-full object-cover object-[center_75%] sm:h-32"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a6a]/80 via-transparent to-transparent" />
-        <div className="absolute bottom-4 left-5">
-          <h2 className="text-2xl font-bold tracking-tight text-amber-50 drop-shadow-md">
-            <KidsIconTitle icon="hero" size={32} className="text-amber-50">
-              Bot crew
-            </KidsIconTitle>
-          </h2>
-          <p className="text-sm font-medium text-amber-100/90">Unlock quest bots by stretching and scoring</p>
+        <div className="kids-caption flex items-center justify-between gap-3 p-4">
+          <div>
+            <h2 className="kids-title-ink text-3xl">
+              <KidsIconTitle icon="hero" size={36}>
+                Bot crew
+              </KidsIconTitle>
+            </h2>
+            <p className="mt-1 text-lg font-bold text-[#1a1a6a]">Tap a bot to play</p>
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full border-2 border-white bg-white px-3 py-1 text-lg font-extrabold text-[#1a1a6a] shadow-[0_0_0_3px_#ffe14a]">
+            <KidsIcon name="star" size={18} /> {unlockedCount}/{total}
+          </span>
         </div>
-        <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full border-2 border-white bg-white/90 px-3 py-1 text-sm font-bold text-[#1a1a6a] shadow">
-          <KidsIcon name="star" size={16} /> {unlockedCount}/{total}
-        </span>
       </div>
       <div
         className={`mt-5 grid gap-3 ${

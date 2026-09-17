@@ -165,12 +165,12 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a6a]/75 via-[#1a1a6a]/25 to-transparent" />
           <div className="rm-glow-kids absolute inset-0 flex flex-col justify-end gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
             <div className="kids-glass p-3 sm:max-w-xl sm:p-4">
-              <p className="rm-kids-type flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#8a4a10]">
+              <p className="rm-kids-type text-base font-extrabold text-[#1a1a6a]">
                 Physical therapy exercises
               </p>
-              <h2 className="rm-kids-type kids-title-ink mt-0.5 text-2xl sm:text-3xl">Kids Quest</h2>
-              <p className="mt-1 text-sm font-medium leading-5 text-[#3a2a58]">
-                The bots ask. You stretch, squat, and score — today&apos;s reps, with stars.
+              <h2 className="kids-wordmark mt-1 text-3xl sm:text-4xl">Kids Quest</h2>
+              <p className="mt-1 text-lg font-bold leading-6 text-[#1a1a6a]">
+                The bots ask. You stretch, squat, and score.
               </p>
             </div>
             <Link href="/kids" className="kids-cta rm-btn rm-kids-type h-10 min-h-0 rounded-full px-5 text-sm sm:h-11 sm:text-base">

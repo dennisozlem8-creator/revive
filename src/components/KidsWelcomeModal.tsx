@@ -38,23 +38,23 @@ export function KidsWelcomeModal({ onDismiss }: KidsWelcomeModalProps) {
             </div>
           </div>
           <div className="px-7 pb-8 pt-2">
-            <p className="inline-flex items-center gap-1 rounded-full border-2 border-white bg-[#ffe14a] px-4 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[#1a1a6a] shadow-[0_0_0_3px_#ff4fa3]">
-              <KidsIcon name="party" size={16} />
-              Physical therapy unlocked
+            <p className="inline-flex items-center gap-1 rounded-full border-2 border-white bg-[#ffe14a] px-4 py-2 text-base font-extrabold text-[#1a1a6a] shadow-[0_0_0_3px_#ff4fa3]">
+              <KidsIcon name="party" size={18} />
+              Time to stretch
             </p>
             <h2
               id="kids-welcome-title"
-              className="kids-title-ink mt-3 text-3xl sm:text-4xl"
+              className="kids-title-ink mt-4 text-4xl sm:text-5xl"
             >
-              Welcome to Kids Quest
+              Kids Quest
             </h2>
-            <p className="mt-3 font-medium text-indigo-900/80">
-              The bots ask. You stretch, squat, and earn XP.
+            <p className="mt-3 text-xl font-bold text-[#1a1a6a]">
+              The bots ask. You stretch.
             </p>
             <button
               type="button"
               onClick={handleEnter}
-              className="kids-cta mt-7 inline-flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-lg"
+              className="kids-cta mt-7 inline-flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-2xl"
             >
               Let&apos;s stretch!
               <KidsIcon name="rocket" size={26} />

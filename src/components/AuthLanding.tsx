@@ -345,16 +345,15 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 className="rm-glow-kids relative block min-h-[14rem] overflow-hidden rounded-[1.35rem] shadow-[0_12px_24px_rgba(40,24,8,0.14)] sm:min-h-[16rem]"
               >
                 <PhotoFrame src="/images/landing-kids-quest.webp?v=4" alt="Kids Quest: colorful quest bots doing physical therapy stretches and reps." className="absolute inset-0 h-full w-full" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a6a]/80 via-[#1a1a6a]/15 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
+                <div className="absolute inset-x-0 bottom-0 kids-caption flex items-end justify-between gap-3 p-4 sm:p-5">
                   <div>
-                    <p className="rm-kids-type text-[11px] font-bold uppercase tracking-[0.16em] text-yellow-200">Physical therapy exercises</p>
-                    <p className="rm-kids-type mt-0.5 text-2xl text-amber-50 drop-shadow sm:text-3xl">Kids Quest</p>
-                    <p className="mt-1 max-w-xs text-sm font-medium leading-5 text-yellow-50/95">
-                      Candy quest bots ask the moves. You stretch, squat, and score. No sign-in.
+                    <p className="rm-kids-type text-base font-extrabold text-[#1a1a6a]">Physical therapy exercises</p>
+                    <p className="kids-wordmark mt-1 text-3xl sm:text-4xl">Kids Quest</p>
+                    <p className="mt-1 max-w-xs text-lg font-bold leading-6 text-[#1a1a6a]">
+                      The bots ask. You stretch. No sign-in.
                     </p>
                   </div>
-                  <span className="kids-cta rm-btn rm-kids-type h-9 min-h-0 rounded-full px-4 text-sm">Open</span>
+                  <span className="kids-cta rm-btn rm-kids-type h-11 min-h-0 rounded-full px-5 text-lg">Open</span>
                 </div>
               </Link>
             </div>

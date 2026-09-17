@@ -12,6 +12,16 @@ export function SensorHelp({ variant = "default" }: SensorHelpProps) {
 
   const isKids = variant === "kids";
 
+  if (isKids) {
+    return (
+      <div className="kids-glass p-4">
+        <p className="text-lg font-extrabold text-[#1a1a6a]">
+          Practice sensor. Stretch with the picture. The bots count.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`${
