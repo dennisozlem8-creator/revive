@@ -40,13 +40,10 @@ export function ImpactBand({ locale }: { locale: Locale }) {
             ))}
           </div>
 
-          <div className="mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="rm-serif text-[1.45rem] font-semibold leading-tight text-white sm:text-[1.7rem]">
-                {t("impactAnswerTitle", locale)}
-              </p>
-              <p className="mt-1.5 text-[11px] leading-4 text-white/60">{t("impactSources", locale)}</p>
-            </div>
+          <div className="mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:items-center sm:justify-between">
+            <p className="rm-serif text-[1.45rem] font-semibold leading-tight text-white sm:text-[1.7rem]">
+              {t("impactAnswerTitle", locale)}
+            </p>
             <TryDemoButton className="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-white px-7 text-sm font-semibold text-[#1b3348] shadow-[0_12px_28px_rgba(0,0,0,0.28)] transition hover:bg-[#e8f3fb]" />
           </div>
         </div>

@@ -316,7 +316,6 @@ const copy = {
     impactStat3: "41M",
     impactStat3Label: "Spanish at home",
     impactAnswerTitle: "Measure it. Report it. English and Spanish.",
-    impactSources: "Published need, not our results. HEP · APTA · Census.",
   },
   es: {
     home: "Inicio",
@@ -616,7 +615,6 @@ const copy = {
     impactStat3: "41M",
     impactStat3Label: "Español en casa",
     impactAnswerTitle: "Mídelo. Infórmalo. Inglés y español.",
-    impactSources: "Necesidad publicada, no nuestros resultados. HEP · APTA · Censo.",
   },
 } as const;
 
