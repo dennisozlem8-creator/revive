@@ -82,7 +82,7 @@ function Marker({
 
 export function RomChart({ className = "" }: { className?: string }) {
   return (
-    <div className={`flex h-full flex-col justify-between rounded-[1.5rem] border border-[#c5d9ea] bg-white p-5 sm:p-6 ${className}`}>
+    <div className={`flex h-full flex-col justify-between border border-[#c5d9ea] bg-white p-6 sm:p-7 ${className}`}>
       <div>
         <p className="rm-label text-brand-light">Progress</p>
         <p className="rm-serif mt-1 text-2xl font-semibold">Motion is rising</p>
@@ -121,11 +121,11 @@ export function PhonePreview({
   children: ReactNode;
 }) {
   return (
-    <article className="overflow-hidden rounded-[1.5rem] border border-[var(--border)] bg-white shadow-[0_12px_28px_rgba(27,51,72,0.06)]">
-      <div className="bg-[#1b3348] px-4 py-2 text-center text-[11px] font-semibold tracking-[0.14em] text-white/80">
+    <article className="overflow-hidden rounded-[2rem] bg-white shadow-[0_16px_40px_rgba(27,51,72,0.07)] ring-1 ring-[#4f90c6]/12">
+      <div className="bg-[#e8f3fb] px-4 py-2.5 text-center text-[11px] font-semibold tracking-[0.16em] text-brand-light">
         {title.toUpperCase()}
       </div>
-      <div className="aspect-[4/5] bg-[#e8f3fb] p-3">{children}</div>
+      <div className="aspect-[4/5] bg-[#f7fbfe] p-3">{children}</div>
     </article>
   );
 }
