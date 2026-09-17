@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
+import { ImpactBand } from "@/components/ImpactBand";
 import { JointMarks, MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame, PhotoGoniometerPhoto } from "@/components/LandingMedia";
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
@@ -107,6 +108,12 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               </a>
               <TryDemoButton className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:h-11 sm:flex-none sm:px-7" />
               <a
+                href="#impact"
+                className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:h-11 sm:flex-none sm:px-7"
+              >
+                {t("impactNav", locale)}
+              </a>
+              <a
                 href="#how-it-works"
                 className="inline-flex h-10 flex-1 items-center justify-center rounded-full border border-[#9dc4b0] bg-white/80 px-5 text-sm font-semibold text-[#2a4638] transition hover:bg-[#e7f1ea] sm:h-11 sm:flex-none sm:px-7"
               >
@@ -129,6 +136,8 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             </div>
           </div>
         </section>
+
+        <ImpactBand locale={locale} cta={cta} />
 
         <section id="how-it-works" className="scroll-mt-20 bg-[#1b3348] text-white">
           <div className="mx-auto grid w-full max-w-6xl items-stretch lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
@@ -363,6 +372,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm font-medium text-muted">
+            <a href="#impact" className="hover:text-foreground">
+              {t("impactNav", locale)}
+            </a>
             <a href="#how-it-works" className="hover:text-foreground">
               {t("howItWorks", locale)}
             </a>

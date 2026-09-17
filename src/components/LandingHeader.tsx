@@ -16,6 +16,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
   const { locale } = useClinicLocale();
   const cta = mode === "login" ? t("signIn", locale) : t("createAccount", locale);
   const nav = [
+    { href: "#impact", label: t("impactNav", locale) },
     { href: "#how-it-works", label: t("howItWorks", locale) },
     { href: "#sensors", label: t("photoAndSensors", locale) },
     { href: "#features", label: t("features", locale) },
