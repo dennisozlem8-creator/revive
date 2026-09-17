@@ -6,7 +6,6 @@ import { BottomNav } from "@/components/BottomNav";
 import { bodyAreas } from "@/lib/body-areas";
 import { useAuth } from "@/components/AuthProvider";
 import { t } from "@/lib/i18n";
-import { KidsIcon } from "@/components/KidsIcon";
 import { AuthLanding } from "@/components/AuthLanding";
 import { isCareTeam } from "@/lib/users";
 
@@ -65,8 +64,8 @@ export default function Home() {
 
       <main className="relative z-10 mx-auto flex w-full max-w-5xl flex-col px-6 pb-8">
         <section className="overflow-hidden rounded-[1.75rem] border border-[var(--border)] bg-white p-6 shadow-[0_16px_40px_rgba(27,51,72,0.07)] sm:p-8">
-          <p className="rm-label">Physical Therapy Assistance</p>
-          <h1 className="mt-2 text-[2rem] font-bold leading-tight tracking-tight text-foreground sm:text-4xl">
+          <p className="rm-label text-brand-light">Physical Therapy Assistance</p>
+          <h1 className="rm-serif mt-2 text-[2rem] font-semibold leading-tight text-foreground sm:text-4xl">
             {isPatient ? `Welcome back, ${firstName}.` : t("moveBetter", locale)}
           </h1>
           <p className="mt-3 max-w-2xl text-lg leading-8 text-body">
@@ -78,12 +77,12 @@ export default function Home() {
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:max-w-md">
             {isPatient && (
-              <Link href="/briefing" className="rm-btn rm-btn-primary inline-flex w-full">
+              <Link href="/briefing" className="rm-btn rm-btn-brand inline-flex w-full rounded-full">
                 {t("goToBriefing", locale)} →
               </Link>
             )}
             {isCareTeam(user.role) && (
-              <Link href="/doctor" className="rm-btn rm-btn-primary inline-flex w-full">
+              <Link href="/doctor" className="rm-btn rm-btn-brand inline-flex w-full rounded-full">
                 Open care dashboard →
               </Link>
             )}
@@ -91,28 +90,35 @@ export default function Home() {
         </section>
 
         {isPatient && (
-          <section className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <Link href="/goniometer" className="rm-card p-5 transition hover:border-brand/50 hover:shadow-md">
-              <p className="text-sm font-semibold uppercase tracking-wide text-brand-light">Measure</p>
-              <h2 className="mt-1 text-lg font-bold">Photo Goniometer</h2>
-              <p className="mt-1 text-sm leading-6 text-body">Record a clip and get the next sets.</p>
-            </Link>
-            <Link href="/muscle" className="rm-card p-5 transition hover:border-brand/50 hover:shadow-md">
-              <p className="text-sm font-semibold uppercase tracking-wide text-brand-light">Sensor</p>
-              <h2 className="mt-1 text-lg font-bold">MyoWare 2.0</h2>
-              <p className="mt-1 text-sm leading-6 text-body">Connect the muscle sensor over Bluetooth or USB.</p>
-            </Link>
-            <Link href="/session" className="rm-card p-5 transition hover:border-brand/50 hover:shadow-md">
-              <p className="text-sm font-semibold uppercase tracking-wide text-brand-light">Session</p>
-              <h2 className="mt-1 text-lg font-bold">Live recovery</h2>
-              <p className="mt-1 text-sm leading-6 text-body">Run today's ROM test and exercises.</p>
-            </Link>
+          <section className="mt-8">
+            <p className="rm-label text-brand-light">Today&apos;s tools</p>
+            <h2 className="rm-serif mt-1 text-2xl font-semibold">Continue recovery</h2>
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <Link
+                href="/goniometer"
+                className="rm-card p-5 transition hover:border-brand/50 hover:shadow-md"
+              >
+                <p className="rm-label text-brand-light">Measure</p>
+                <h3 className="mt-2 text-lg font-semibold">Photo Goniometer</h3>
+                <p className="mt-1 text-sm leading-6 text-body">Record a clip and get the next sets.</p>
+              </Link>
+              <Link href="/muscle" className="rm-card p-5 transition hover:border-brand/50 hover:shadow-md">
+                <p className="rm-label text-brand-light">Sensor</p>
+                <h3 className="mt-2 text-lg font-semibold">MyoWare 2.0</h3>
+                <p className="mt-1 text-sm leading-6 text-body">Connect the muscle sensor over Bluetooth or USB.</p>
+              </Link>
+              <Link href="/session" className="rm-card p-5 transition hover:border-brand/50 hover:shadow-md">
+                <p className="rm-label text-brand-light">Session</p>
+                <h3 className="mt-2 text-lg font-semibold">Live recovery</h3>
+                <p className="mt-1 text-sm leading-6 text-body">Run today&apos;s ROM test and exercises.</p>
+              </Link>
+            </div>
           </section>
         )}
 
         <section className="mt-10">
-          <p className="rm-label">Body areas</p>
-          <h2 className="mt-1 text-2xl font-bold">Start an assessment</h2>
+          <p className="rm-label text-brand-light">Body areas</p>
+          <h2 className="rm-serif mt-1 text-2xl font-semibold">Start an assessment</h2>
           <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {bodyAreas.map((area) => (
               <Link
@@ -123,7 +129,7 @@ export default function Home() {
                 <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-brand-soft text-brand transition group-hover:bg-brand group-hover:text-white">
                   {areaIcons[area.id]}
                 </div>
-                <h3 className="mt-5 text-xl font-bold text-foreground">{area.label}</h3>
+                <h3 className="mt-5 text-xl font-semibold text-foreground">{area.label}</h3>
                 <p className="mt-2 flex-1 text-base leading-7 text-body">{area.description}</p>
                 <span className="mt-5 inline-flex items-center gap-1 text-base font-semibold text-brand-light">
                   Start assessment →
@@ -133,17 +139,19 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-8 overflow-hidden rounded-[1.75rem] border border-[#c5bdd8] bg-[#ece7f4]">
-          <Link href="/kids" className="flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="flex items-center gap-2 text-xl font-bold text-[#2a1848]">
-                <KidsIcon name="gamepad" size={26} /> Kids Quest
-              </p>
-              <p className="mt-1 text-sm leading-6 text-[#3a2a58]">
-                Storybook adventure world for younger patients.
-              </p>
-            </div>
-            <span className="rm-btn rm-btn-brand">{t("kidsQuest", locale)} →</span>
+        <section className="mt-8 rounded-[1.75rem] border border-[var(--border)] bg-white p-6 sm:flex sm:items-center sm:justify-between sm:p-8">
+          <div>
+            <p className="rm-label text-brand-light">Younger patients</p>
+            <h2 className="rm-serif mt-1 text-2xl font-semibold text-foreground">Kids Quest</h2>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-body">
+              Storybook adventure world for younger patients, kept separate from the adult clinic.
+            </p>
+          </div>
+          <Link
+            href="/kids"
+            className="mt-4 inline-flex h-12 items-center justify-center rounded-full border border-[var(--border)] px-6 text-sm font-semibold text-brand-light transition hover:border-brand/40 sm:mt-0"
+          >
+            {t("kidsQuest", locale)}
           </Link>
         </section>
       </main>

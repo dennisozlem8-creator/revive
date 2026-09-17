@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import { resetAppData } from "@/lib/app-reset";
 import { useAuth } from "./AuthProvider";
 
-export function ResetAppButton() {
+type ResetAppButtonProps = {
+  variant?: "default" | "quiet";
+};
+
+export function ResetAppButton({ variant = "default" }: ResetAppButtonProps) {
   const router = useRouter();
   const { logout } = useAuth();
 
@@ -17,6 +21,18 @@ export function ResetAppButton() {
     logout();
     router.replace("/register");
     router.refresh();
+  }
+
+  if (variant === "quiet") {
+    return (
+      <button
+        type="button"
+        onClick={handleReset}
+        className="relative z-10 mt-5 w-full text-center text-xs text-muted transition hover:text-foreground"
+      >
+        Reset this device
+      </button>
+    );
   }
 
   return (

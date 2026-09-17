@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Fredoka } from "next/font/google";
+import { Geist, Geist_Mono, Fredoka, Source_Serif_4 } from "next/font/google";
 import { AuthGate } from "@/components/AuthGate";
 import { AuthProvider } from "@/components/AuthProvider";
 import { HeartRateProvider } from "@/components/HeartRateProvider";
@@ -18,6 +18,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 const kidsDisplay = Fredoka({
   variable: "--font-kids",
   subsets: ["latin"],
@@ -25,9 +31,9 @@ const kidsDisplay = Fredoka({
 });
 
 export const metadata: Metadata = {
-  title: "Revive Motion",
+  title: "Revive Motion | Physical Therapy Assistance",
   description:
-    "Physical Therapy Assistance. Equal recovery for every patient, regardless of income, language, or location.",
+    "Home physical therapy assistance. Measure range of motion, follow today’s session, and keep your clinician in the loop.",
 };
 
 export default function RootLayout({
@@ -38,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${kidsDisplay.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} ${kidsDisplay.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>

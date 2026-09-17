@@ -7,6 +7,8 @@ Source: [https://github.com/dennisozlem8-creator/revive](https://github.com/denn
 
 Kids Quest is a storybook adventure world for exercises, with original kingdoms and hero art. Adult clinic pages stay on the light clinic theme.
 
+The public homepage is a clinic-style landing: sticky navigation, serif headlines, how-it-works, and a Go in portal for patients, clinicians, and caregivers. Signed-in home is the recovery dashboard.
+
 ## Photo Goniometer
 
 Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo tab), or today’s briefing.

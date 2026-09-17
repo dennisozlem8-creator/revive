@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { AuthForm } from "./AuthForm";
-import { KidsIcon } from "./KidsIcon";
 import { ResetAppButton } from "./ResetAppButton";
 import type { UserRole } from "@/lib/users";
 
@@ -14,31 +12,35 @@ const entries: {
   id: GoInRole;
   title: string;
   subtitle: string;
-  tileClass: string;
 }[] = [
   {
     id: "patient",
     title: "Patient",
-    subtitle: "Exercises and recovery at home",
-    tileClass: "border-[#b7d4e8] bg-[#e8f3fb] text-[#1b3348]",
+    subtitle: "Home sessions, measurement, and today’s plan",
   },
   {
     id: "doctor",
-    title: "Doctor",
-    subtitle: "Monitor linked patients",
-    tileClass: "border-[#b7cfc0] bg-[#e7f1ea] text-[#2a4638]",
+    title: "Clinician",
+    subtitle: "Monitor linked patients from the care dashboard",
   },
   {
     id: "caregiver",
     title: "Caregiver",
-    subtitle: "Follow a family member’s progress",
-    tileClass: "border-[#d4c6b0] bg-[#f3eee6] text-[#4a3d32]",
+    subtitle: "Follow a family member’s recovery",
   },
 ];
 
 type GoInScreenProps = {
   mode: "login" | "register";
 };
+
+function Chevron() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-brand-light" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 export function GoInScreen({ mode }: GoInScreenProps) {
   const [entry, setEntry] = useState<GoInRole | null>(null);
@@ -51,86 +53,76 @@ export function GoInScreen({ mode }: GoInScreenProps) {
           onClick={() => setEntry(null)}
           className="mb-4 text-sm font-medium text-brand-light hover:text-brand"
         >
-          ← Back
+          ← Back to roles
         </button>
         <AuthForm key={entry} mode={mode} defaultRole={entry} />
-        <ResetAppButton />
-        <p className="mt-6 text-center text-base text-foreground">
-          {mode === "login" ? (
-            <>
-              No account?{" "}
-              <Link href="/register" className="font-medium text-brand-light hover:text-brand">
-                Create one
-              </Link>
-            </>
-          ) : (
-            <>
-              Already have an account?{" "}
-              <Link href="/login" className="font-medium text-brand-light hover:text-brand">
-                Sign in
-              </Link>
-            </>
-          )}
-        </p>
+        <ResetAppButton variant="quiet" />
+        <SwitchAuthLink mode={mode} />
       </>
     );
   }
 
   return (
     <>
-      <div className="flex flex-col gap-3">
+      <p className="rm-label">Secure access</p>
+      <h2 className="rm-serif mt-1 text-2xl font-semibold text-foreground">
+        {mode === "login" ? "Go in" : "Create an account"}
+      </h2>
+      <p className="mt-2 text-sm leading-6 text-muted">
+        {mode === "login"
+          ? "Choose who you are on this device, then sign in."
+          : "Choose who you are, then create an account on this device."}
+      </p>
+      <div className="mt-6 flex flex-col gap-2">
         {entries.map((item) => (
           <button
             key={item.id}
             type="button"
             onClick={() => setEntry(item.id)}
-            className={`min-h-[4.5rem] rounded-2xl border px-5 py-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${item.tileClass}`}
+            className="flex min-h-[4.25rem] items-center justify-between gap-4 rounded-2xl border border-[var(--border)] bg-[#f7fbfe] px-5 py-4 text-left transition hover:border-brand/45 hover:bg-white hover:shadow-sm"
           >
-            <p className="text-lg font-bold">{item.title}</p>
-            <p className="mt-1 text-sm leading-6 opacity-90">{item.subtitle}</p>
+            <span>
+              <p className="text-base font-semibold text-foreground">{item.title}</p>
+              <p className="mt-0.5 text-sm leading-6 text-muted">{item.subtitle}</p>
+            </span>
+            <Chevron />
           </button>
         ))}
         <Link
           href="/kids"
-          className="overflow-hidden rounded-2xl border border-[#c5bdd8] bg-[#ece7f4] text-left transition hover:-translate-y-0.5 hover:shadow-md"
+          className="flex min-h-[4.25rem] items-center justify-between gap-4 rounded-2xl border border-[var(--border)] bg-white px-5 py-4 text-left transition hover:border-brand/45 hover:shadow-sm"
         >
-          <div className="relative h-28">
-            <Image
-              src="/kids/welcome-hero.svg"
-              alt=""
-              width={640}
-              height={360}
-              className="h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#3d3558]/80 to-transparent" />
-            <div className="absolute bottom-3 left-5 right-5">
-              <p className="flex items-center gap-2 text-lg font-bold text-white">
-                <KidsIcon name="gamepad" size={22} />
-                Kids Quest
-              </p>
-              <p className="text-sm font-medium text-white">Storybook adventure world</p>
-            </div>
-          </div>
+          <span>
+            <p className="text-base font-semibold text-foreground">Kids Quest</p>
+            <p className="mt-0.5 text-sm leading-6 text-muted">Storybook world for younger patients</p>
+          </span>
+          <Chevron />
         </Link>
       </div>
-      <ResetAppButton />
-      <p className="mt-6 text-center text-base text-foreground">
-        {mode === "login" ? (
-          <>
-            No account?{" "}
-            <Link href="/register" className="font-medium text-brand-light hover:text-brand">
-              Create one
-            </Link>
-          </>
-        ) : (
-          <>
-            Already have an account?{" "}
-            <Link href="/login" className="font-medium text-brand-light hover:text-brand">
-              Sign in
-            </Link>
-          </>
-        )}
-      </p>
+      <ResetAppButton variant="quiet" />
+      <SwitchAuthLink mode={mode} />
     </>
+  );
+}
+
+function SwitchAuthLink({ mode }: { mode: "login" | "register" }) {
+  return (
+    <p className="mt-5 text-center text-sm text-muted">
+      {mode === "login" ? (
+        <>
+          No account?{" "}
+          <Link href="/register" className="font-semibold text-brand-light hover:text-brand">
+            Create one
+          </Link>
+        </>
+      ) : (
+        <>
+          Already have an account?{" "}
+          <Link href="/login" className="font-semibold text-brand-light hover:text-brand">
+            Sign in
+          </Link>
+        </>
+      )}
+    </p>
   );
 }

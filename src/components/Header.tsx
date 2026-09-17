@@ -20,8 +20,9 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
 
   const logo = (
     <Logo
-      size={52}
+      size={40}
       showText={false}
+      compact
       className={isCaregiver ? "[&_span]:text-[var(--caregiver-text)]" : ""}
     />
   );
@@ -29,9 +30,9 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   const isKids = variant === "kids";
 
   return (
-    <header
+      <header
       className={`relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 sm:px-6 ${
-        isKids ? "kids-header rounded-b-[1.75rem] py-3" : "py-6"
+        isKids ? "kids-header rounded-b-[1.75rem] py-3" : "py-5"
       }`}
     >
       {linkHome ? (
@@ -92,9 +93,9 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
             )}
             <Link
               href="/kids"
-              className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-400 to-fuchsia-500 px-3 py-1.5 text-sm font-black text-white shadow"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-sm font-semibold text-brand-light transition hover:border-brand/40"
             >
-              <KidsIcon name="gamepad" size={18} /> {t("kidsQuest", locale)}
+              {t("kidsQuest", locale)}
             </Link>
           </>
         )}

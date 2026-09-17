@@ -13,7 +13,7 @@ type AuthFormProps = {
 
 const roleCopy: Record<UserRole, string> = {
   patient: "Patient",
-  doctor: "Doctor",
+  doctor: "Clinician",
   caregiver: "Caregiver",
 };
 
@@ -71,18 +71,15 @@ export function AuthForm({ mode, defaultRole = "patient" }: AuthFormProps) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-2xl border border-[var(--border)] bg-surface p-8"
-    >
-      <h1 className="text-2xl font-semibold">
+    <form onSubmit={handleSubmit}>
+      <h1 className="rm-serif text-2xl font-semibold">
         {mode === "login" ? `Welcome back, ${roleCopy[role]}` : `Create a ${roleCopy[role]} account`}
       </h1>
       <p className="mt-2 text-sm text-muted">
         {role === "patient"
           ? "Sign in to access assessments, quests, and notifications."
           : role === "doctor"
-            ? "Doctors can monitor linked patients from the clinic dashboard."
+            ? "Clinicians can monitor linked patients from the clinic dashboard."
             : "Caregivers can follow a family member’s recovery progress."}
       </p>
 
