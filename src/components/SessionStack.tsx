@@ -17,8 +17,8 @@ const slides = [
     label: "Live plan",
   },
   {
-    src: "/images/landing-older-phone.webp?v=1",
-    alt: "An older patient using Revive Motion on a phone.",
+    src: "/images/landing-child-phone.webp?v=1",
+    alt: "A 10-year-old using Revive Motion on a phone at home.",
     label: "On this device",
   },
   {
