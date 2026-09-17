@@ -16,6 +16,7 @@ import { calculateStreak } from "@/lib/streak";
 import { getCharacterById } from "@/lib/kids-characters";
 import { hasSeenKidsWelcome } from "@/lib/kids-mode";
 import {
+  EMPTY_QUEST_PROGRESS,
   loadKidsProgress,
   saveKidsProgress,
   syncKidsProgress,
@@ -72,7 +73,7 @@ export default function KidsQuestPage() {
   const xpPct = Math.min(100, (xp / 1000) * 100);
   const streak = user ? calculateStreak(user) : 0;
   const questsDone = user ? Object.values(user.questProgress).filter(Boolean).length : 0;
-  const questProgress = user?.questProgress ?? {};
+  const questProgress = user?.questProgress ?? EMPTY_QUEST_PROGRESS;
 
   const selectedCharacter = getCharacterById(kidsProgress.selectedId);
   const heroAvatar = selectedCharacter?.avatar ?? "hero";
@@ -80,7 +81,13 @@ export default function KidsQuestPage() {
   const checkUnlocks = useCallback(() => {
     const current = loadKidsProgress();
     const { data, newlyUnlocked } = syncKidsProgress(questProgress, streak, current);
-    setKidsProgress(data);
+    setKidsProgress((prev) =>
+      prev.selectedId === data.selectedId &&
+      prev.unlockedIds.length === data.unlockedIds.length &&
+      prev.unlockedIds.every((id, index) => id === data.unlockedIds[index])
+        ? prev
+        : data
+    );
     if (newlyUnlocked.length > 0) {
       setCelebrateIds((prev) => [...prev, ...newlyUnlocked]);
       const names = newlyUnlocked

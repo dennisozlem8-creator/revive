@@ -12,6 +12,8 @@ const DEFAULT: KidsProgressData = {
   selectedId: "hero-hank",
 };
 
+export const EMPTY_QUEST_PROGRESS: Record<string, boolean> = {};
+
 export function loadKidsProgress(): KidsProgressData {
   if (typeof window === "undefined") return DEFAULT;
   try {
