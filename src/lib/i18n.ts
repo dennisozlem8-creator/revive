@@ -308,7 +308,6 @@ const copy = {
     openMenu: "Open menu",
     closeMenu: "Close menu",
     impactNav: "The need",
-    impactKicker: "The need — not our results",
     impactTitle: "Most recovery happens at home. Almost none of it gets a real angle.",
     impactText: "Clinics measure the joint. Home programs often go unmeasured. That is a national gap, not a small one.",
     impactStat1: "50–70%",
@@ -624,7 +623,6 @@ const copy = {
     openMenu: "Abrir menú",
     closeMenu: "Cerrar menú",
     impactNav: "La necesidad",
-    impactKicker: "La necesidad — no nuestros resultados",
     impactTitle: "La mayor parte de la recuperación ocurre en casa. Casi ninguna sesión tiene un ángulo real.",
     impactText:
       "En la clínica se mide la articulación. En casa, el programa a menudo no se mide. Esa brecha es nacional, no pequeña.",

@@ -24,19 +24,18 @@ export function ImpactBand({
 
   return (
     <section id="impact" className="scroll-mt-20">
-      <div className="relative isolate min-h-[22rem] overflow-hidden sm:min-h-[26rem] lg:min-h-[32rem]">
+      <div className="relative isolate overflow-hidden">
         <SafePicture
           src="/images/landing-older-session.webp?v=1"
           alt=""
           className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#1b3348] via-[#1b3348]/88 to-[#1b3348]/45" />
-        <div className="relative mx-auto flex min-h-[22rem] w-full max-w-6xl flex-col justify-end px-4 pb-16 pt-12 sm:min-h-[26rem] sm:px-6 sm:pb-20 lg:min-h-[32rem] lg:pb-24">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#9dc4b0]">{t("impactKicker", locale)}</p>
-          <h2 className="rm-serif mt-3 max-w-3xl text-[2rem] font-semibold leading-[1.08] text-white sm:text-5xl lg:text-[3.35rem]">
+        <div className="relative mx-auto w-full max-w-6xl px-4 pb-12 pt-8 sm:px-6 sm:pb-14 sm:pt-10 lg:pb-16">
+          <h2 className="rm-serif max-w-3xl text-[2rem] font-semibold leading-[1.08] text-white sm:text-5xl lg:text-[3.35rem]">
             {t("impactTitle", locale)}
           </h2>
-          <p className="mt-4 max-w-xl text-base leading-7 text-white/85 sm:text-lg sm:leading-8">{t("impactText", locale)}</p>
+          <p className="mt-3 max-w-xl text-base leading-7 text-white/85 sm:text-lg sm:leading-8">{t("impactText", locale)}</p>
         </div>
       </div>
 
