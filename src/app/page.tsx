@@ -164,10 +164,10 @@ export default function Home() {
           <PhotoFrame src="/images/landing-kids-quest.webp?v=5" alt="Quest bots stretching on a green meadow." className="absolute inset-0 h-full w-full" />
           <div className="absolute inset-x-0 bottom-0 kids-caption flex flex-col gap-3 p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
             <div>
-              <p className="text-sm font-semibold text-[#5b6685]">Physical therapy for kids</p>
+              <p className="text-sm font-semibold text-[#5b6685]">Stretch with the bots</p>
               <h2 className="kids-wordmark mt-1 text-3xl sm:text-4xl">Kids Quest</h2>
               <p className="mt-1 max-w-md text-base leading-6 text-[#5b6685]">
-                The bots ask. You stretch. Open a world on the map.
+                The bots ask. You stretch.
               </p>
             </div>
             <Link href="/kids" className="kids-cta h-11 min-h-0 rounded-full px-5 text-base">

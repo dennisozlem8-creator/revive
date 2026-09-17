@@ -41,11 +41,9 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
           className="h-36 w-full object-cover object-[center_62%] sm:h-40"
         />
         <div className="kids-caption px-5 py-4">
-          <p className="text-sm font-semibold text-[#5b6685]">Physical therapy for kids</p>
+          <p className="text-sm font-semibold text-[#5b6685]">Stretch with the bots</p>
           <p className="kids-wordmark mt-1 text-2xl">Kids Quest</p>
-          <p className="mt-1 text-sm text-[#5b6685]">
-            The bots ask. You stretch.
-          </p>
+          <p className="mt-1 text-sm text-[#5b6685]">The bots ask. You stretch.</p>
           <span className="kids-cta mt-4 inline-flex rounded-full px-5 py-2.5 text-base">Open</span>
         </div>
       </Link>

@@ -72,8 +72,8 @@ export function CharacterGallery({
         />
         <div className="kids-caption flex items-end justify-between gap-3 px-5 py-4">
           <div>
-            <h2 className="kids-title-ink text-2xl sm:text-3xl">Bot crew</h2>
-            <p className="mt-1 text-base text-[#5b6685]">Tap a bot to take them on stretches.</p>
+            <h2 className="kids-title-ink text-2xl sm:text-3xl">Meet the bots</h2>
+            <p className="mt-1 text-base text-[#5b6685]">Tap a bot to stretch with them.</p>
           </div>
           <p className="text-sm font-semibold text-[#5b6685]">
             {unlockedCount}/{total}

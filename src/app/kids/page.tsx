@@ -42,8 +42,8 @@ const questZones: {
 
 const howSteps = [
   { n: "1", title: "Pick a world", text: "Tap a picture on the map." },
-  { n: "2", title: "Start a stretch", text: "Open one card. The bot talks." },
-  { n: "3", title: "Match the picture", text: "Bend, then stand. Reps count." },
+  { n: "2", title: "Start a stretch", text: "The bots ask. You stretch." },
+  { n: "3", title: "Count the stretch", text: "Photo, motion, or muscle." },
 ];
 
 const levels = [
@@ -151,10 +151,10 @@ export default function KidsQuestPage() {
               />
               <div className="kids-caption flex flex-col gap-5 px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
                 <div>
-                  <p className="text-sm font-semibold tracking-wide text-[#5b6685]">Physical therapy for kids</p>
+                  <p className="text-sm font-semibold tracking-wide text-[#5b6685]">Stretch with the bots</p>
                   <h1 className="kids-wordmark mt-1 text-[2.15rem] leading-none sm:text-4xl">Kids Quest</h1>
                   <p className="mt-2 max-w-md text-base leading-6 text-[#5b6685]">
-                    {selectedCharacter?.name ?? "Hank Bot"} counts {firstName}&apos;s stretches. Tap a world to begin.
+                    The bots ask. You stretch. {selectedCharacter?.name ?? "Hank Bot"} counts {firstName}&apos;s reps.
                   </p>
                 </div>
                 <div className="flex gap-8 text-[#243056]">
@@ -191,7 +191,7 @@ export default function KidsQuestPage() {
             <section className="mt-8">
               <div>
                 <h2 className="kids-title-ink text-2xl sm:text-3xl">Stretch map</h2>
-                <p className="mt-1 text-base text-[#5b6685]">{level.name}. Open a world.</p>
+                <p className="mt-1 text-base text-[#5b6685]">{level.name}. Pick a world. Start a stretch.</p>
               </div>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {questZones.map((zone) => (
@@ -289,7 +289,7 @@ export default function KidsQuestPage() {
         )}
 
         {activeExercise && (
-          <section className="mx-auto max-w-lg">
+          <section className="mx-auto max-w-xl">
             <button type="button" onClick={() => setActiveExerciseId(null)} className="kids-back">
               Stretches
             </button>

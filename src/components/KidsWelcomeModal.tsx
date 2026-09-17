@@ -29,19 +29,19 @@ export function KidsWelcomeModal({ onDismiss }: KidsWelcomeModalProps) {
             className="h-48 w-full object-cover object-[center_72%] sm:h-56"
           />
           <div className="px-7 pb-8 pt-5">
-            <p className="text-sm font-semibold text-[#5b6685]">Physical therapy for kids</p>
+            <p className="text-sm font-semibold text-[#5b6685]">Stretch with the bots</p>
             <h2 id="kids-welcome-title" className="kids-title-ink mt-2 text-4xl">
               Kids Quest
             </h2>
             <p className="mt-3 text-base text-[#5b6685]">
-              The bots ask. You stretch. Open a world on the map to begin.
+              The bots ask. You stretch. Pick a world. Start a stretch.
             </p>
             <button
               type="button"
               onClick={handleEnter}
               className="kids-cta mt-6 inline-flex w-full items-center justify-center rounded-full py-3.5 text-xl"
             >
-              Start
+              Start stretching
             </button>
           </div>
         </div>
