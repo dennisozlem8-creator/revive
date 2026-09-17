@@ -33,7 +33,7 @@ export function ImpactBand({ locale }: { locale: Locale }) {
                 <p className="rm-serif text-[2.8rem] font-semibold leading-none tracking-tight text-white drop-shadow-[0_8px_18px_rgba(0,0,0,0.35)] sm:text-[3.6rem] lg:text-[4.1rem]">
                   {stat.value}
                 </p>
-                <p className="mt-2 max-w-[18rem] text-sm font-semibold leading-5 text-white/80 sm:text-[15px] sm:leading-6">
+                <p className="mt-2 max-w-[20rem] text-sm font-semibold leading-5 text-white/80 sm:text-[15px] sm:leading-6">
                   {stat.label}
                 </p>
               </article>
@@ -41,7 +41,7 @@ export function ImpactBand({ locale }: { locale: Locale }) {
           </div>
 
           <div className="mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:items-center sm:justify-between">
-            <p className="rm-serif max-w-xl text-[1.25rem] font-semibold leading-snug text-white sm:max-w-2xl sm:text-[1.5rem]">
+            <p className="rm-serif max-w-xl text-[1.2rem] font-semibold leading-snug text-white sm:max-w-2xl sm:text-[1.45rem]">
               {t("impactAnswerTitle", locale)}
             </p>
             <TryDemoButton className="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-white px-7 text-sm font-semibold text-[#1b3348] shadow-[0_12px_28px_rgba(0,0,0,0.28)] transition hover:bg-[#e8f3fb]" />
