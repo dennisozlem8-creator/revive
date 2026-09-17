@@ -6,15 +6,21 @@ export function PhotoFrame({
   alt,
   className = "",
   children,
+  fit = "cover",
 }: {
   src: string;
   alt: string;
   className?: string;
   children?: ReactNode;
+  fit?: "cover" | "contain";
 }) {
   return (
-    <div className={`relative overflow-hidden bg-[#d7e8f6] ${className}`}>
-      <SafePicture src={src} alt={alt} className="absolute inset-0 h-full w-full object-cover" />
+    <div className={`relative overflow-hidden ${fit === "contain" ? "bg-white" : "bg-[#d7e8f6]"} ${className}`}>
+      <SafePicture
+        src={src}
+        alt={alt}
+        className={`absolute inset-0 h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
+      />
       {children}
     </div>
   );

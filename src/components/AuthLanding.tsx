@@ -41,24 +41,27 @@ const solutions = [
     alt: "Helper photographing a seated patient.",
     className: "border-[#b7d4c4] bg-[#e7f6ee]",
     titleClass: "text-[#2a7a58]",
+    fit: "cover" as const,
   },
   {
     title: "Motion sensor",
     subtitle: "MPU-6050 on the joint.",
     points: ["Live angle", "Hands-free", "During the session"],
-    src: "/images/landing-mpu-knee.webp?v=real",
+    src: "/images/landing-mpu.png",
     alt: "MPU motion sensors on the upper arm and wrist with the joint angle marked.",
     className: "border-[#c5c9e8] bg-[#eef0fb]",
     titleClass: "text-[#4a4f8a]",
+    fit: "contain" as const,
   },
   {
     title: "Muscle sensor",
     subtitle: "MyoWare 2.0.",
     points: ["Muscle effort", "Flex to see the signal", "Bluetooth or USB"],
-    src: "/images/landing-myoware-arm.webp?v=real",
+    src: "/images/landing-myoware.png",
     alt: "MyoWare muscle sensor with electrode pads on an upper arm.",
     className: "border-[#d0c4e4] bg-[#f3eefc]",
     titleClass: "text-[#5a3d8a]",
+    fit: "contain" as const,
   },
 ];
 
@@ -117,7 +120,40 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section id="how-it-works" className="scroll-mt-28 bg-white">
+        <section id="sensors" className="scroll-mt-28 bg-white">
+          <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-6">
+            <p className="rm-label text-brand-light">Wear a sensor</p>
+            <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">MPU-6050 and MyoWare</h2>
+            <div className="mt-8 grid gap-5 lg:grid-cols-2">
+              <article className="overflow-hidden rounded-[1.5rem] border border-[#c5c9e8] bg-[#eef0fb]">
+                <PhotoFrame
+                  src="/images/landing-mpu.png"
+                  alt="MPU motion sensors on the upper arm and wrist with the joint angle marked."
+                  fit="contain"
+                  className="h-72 sm:h-80"
+                />
+                <div className="p-5">
+                  <h3 className="text-xl font-bold uppercase text-[#4a4f8a]">Motion sensor</h3>
+                  <p className="mt-1 text-sm font-semibold">MPU-6050 on the joint. Live angle, hands-free.</p>
+                </div>
+              </article>
+              <article className="overflow-hidden rounded-[1.5rem] border border-[#d0c4e4] bg-[#f3eefc]">
+                <PhotoFrame
+                  src="/images/landing-myoware.png"
+                  alt="MyoWare muscle sensor with electrode pads on an upper arm."
+                  fit="contain"
+                  className="h-72 sm:h-80"
+                />
+                <div className="p-5">
+                  <h3 className="text-xl font-bold uppercase text-[#5a3d8a]">Muscle sensor</h3>
+                  <p className="mt-1 text-sm font-semibold">MyoWare 2.0. Flex to see the signal over Bluetooth or USB.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="how-it-works" className="scroll-mt-28 bg-[#f7fbfe]">
           <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-6">
             <p className="rm-label text-brand-light">Three steps</p>
             <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">How it works</h2>
@@ -140,14 +176,14 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section id="sensors" className="scroll-mt-28 bg-[#1b3348] py-14 text-white">
+        <section className="bg-[#1b3348] py-14 text-white">
           <div className="mx-auto w-full max-w-6xl px-5 sm:px-6">
             <p className="rm-label text-[#9ec6e0]">Choose a way to measure</p>
             <h2 className="rm-serif mt-1 text-3xl font-semibold sm:text-4xl">Photo and sensors</h2>
             <div className="mt-8 grid gap-5 lg:grid-cols-3">
               {solutions.map((item) => (
                 <article key={item.title} className={`overflow-hidden rounded-[1.5rem] border text-foreground ${item.className}`}>
-                  <PhotoFrame src={item.src} alt={item.alt} className="h-52" />
+                  <PhotoFrame src={item.src} alt={item.alt} fit={item.fit} className="h-64 sm:h-72" />
                   <div className="p-5">
                     <h3 className={`text-xl font-bold uppercase ${item.titleClass}`}>{item.title}</h3>
                     <p className="mt-1 text-sm font-semibold">{item.subtitle}</p>
@@ -180,7 +216,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               </PhonePreview>
               <PhonePreview title="Session">
                 <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
-                  <PhotoFrame src="/images/landing-mpu-knee.webp?v=real" alt="" className="h-28" />
+                  <PhotoFrame src="/images/landing-mpu.png" alt="" fit="contain" className="h-28" />
                   <div className="p-3">
                     <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-light">Live</p>
                     <p className="rm-serif mt-1 text-3xl font-semibold">92 deg</p>
