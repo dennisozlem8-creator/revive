@@ -81,6 +81,10 @@ body {
   letter-spacing: -0.03em;
 }
 
+.rm-kids-type {
+  font-family: var(--font-kids), var(--font-geist-sans), system-ui, sans-serif;
+}
+
 details > summary {
   list-style: none;
 }

@@ -139,20 +139,21 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-8 rounded-[1.75rem] border border-[var(--border)] bg-white p-6 sm:flex sm:items-center sm:justify-between sm:p-8">
-          <div>
-            <p className="rm-label text-brand-light">Younger patients</p>
-            <h2 className="rm-serif mt-1 text-2xl font-semibold text-foreground">Kids Quest</h2>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-body">
-              Storybook adventure world for younger patients, kept separate from the adult clinic.
-            </p>
+        <section className="rm-glow-kids relative mt-8 overflow-hidden rounded-[1.75rem] p-6 sm:p-8">
+          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="kids-glass p-5 sm:max-w-xl">
+              <p className="rm-kids-type flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-[#8a4a10]">
+                Younger patients
+              </p>
+              <h2 className="rm-kids-type kids-title-ink mt-1 text-3xl">Kids Quest</h2>
+              <p className="mt-2 text-sm font-medium leading-6 text-[#3a2a58]">
+                Storybook adventure world for younger patients, with kingdoms, quests, and gold stars.
+              </p>
+            </div>
+            <Link href="/kids" className="kids-cta rm-btn rm-kids-type h-12 rounded-full px-6 text-base">
+              {t("kidsQuest", locale)}
+            </Link>
           </div>
-          <Link
-            href="/kids"
-            className="mt-4 inline-flex h-12 items-center justify-center rounded-full border border-[var(--border)] px-6 text-sm font-semibold text-brand-light transition hover:border-brand/40 sm:mt-0"
-          >
-            {t("kidsQuest", locale)}
-          </Link>
         </section>
       </main>
       {isPatient && <BottomNav />}

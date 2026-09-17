@@ -31,7 +31,11 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-muted transition hover:text-foreground"
+              className={
+                item.href === "/kids"
+                  ? "rm-kids-type rounded-full bg-gradient-to-r from-amber-200 via-fuchsia-200 to-sky-200 px-3 py-1 text-sm font-bold text-[#4a2c0a] shadow-sm"
+                  : "text-sm font-medium text-muted transition hover:text-foreground"
+              }
             >
               {item.label}
             </Link>
@@ -78,7 +82,11 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="border-b border-[var(--border)] py-3 text-base font-medium text-foreground last:border-b-0"
+                className={
+                  item.href === "/kids"
+                    ? "rm-kids-type border-b border-[var(--border)] py-3 text-base font-bold text-[#c47a32] last:border-b-0"
+                    : "border-b border-[var(--border)] py-3 text-base font-medium text-foreground last:border-b-0"
+                }
               >
                 {item.label}
               </Link>

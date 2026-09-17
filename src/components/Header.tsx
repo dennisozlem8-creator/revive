@@ -93,7 +93,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
             )}
             <Link
               href="/kids"
-              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-sm font-semibold text-brand-light transition hover:border-brand/40"
+              className="rm-kids-type inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-200 via-fuchsia-200 to-sky-200 px-3 py-1.5 text-sm font-bold text-[#4a2c0a] shadow-sm"
             >
               {t("kidsQuest", locale)}
             </Link>
