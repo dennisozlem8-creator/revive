@@ -86,11 +86,11 @@ export default function DashboardPage() {
           text={t("takeSidePhoto", locale)}
         />
         <DashPhotoLink
-          href="/session"
+          href="/motion"
           src="/images/landing-mpu.png?v=7"
           kicker="02 Coach"
-          title={t("liveSession", locale)}
-          text={t("followRomTest", locale)}
+          title="MPU-6050"
+          text="Live angle while you move."
         />
         <DashPhotoLink
           href="/charts"
