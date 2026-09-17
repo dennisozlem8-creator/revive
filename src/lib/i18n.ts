@@ -607,7 +607,7 @@ const copy = {
     openMenu: "Abrir menú",
     closeMenu: "Cerrar menú",
     impactNav: "La necesidad",
-    impactTitle: "Los pacientes se recuperan en casa.\nLa clínica no ve el ángulo de la articulación.",
+    impactTitle: "Pacientes se recuperan en casa.\nLa clínica no ve el ángulo.",
     impactStat1: "50–70%",
     impactStat1Label: "de los ejercicios en casa incompletos",
     impactStat2: "12,000",
