@@ -69,52 +69,52 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/90 backdrop-blur-xl">
       <div className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-      {linkHome ? (
-        <Link
-          href={isCareTeam(user?.role) ? "/doctor" : "/briefing"}
-          className="transition hover:opacity-85"
-        >
-          {logo}
-        </Link>
-      ) : (
-        logo
-      )}
-      <div className="flex items-center gap-2 sm:gap-3">
-        <LanguageToggle />
-        {(!user || user.role === "patient") && (
-          <>
-            {user?.role === "patient" && (
-              <Link href="/dashboard" className="hidden text-sm font-medium text-brand-light hover:text-brand sm:inline">
-                {t("dashboard", locale)}
+        {linkHome ? (
+          <Link
+            href={isCareTeam(user?.role) ? "/doctor" : "/briefing"}
+            className="transition hover:opacity-85"
+          >
+            {logo}
+          </Link>
+        ) : (
+          logo
+        )}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <LanguageToggle />
+          {(!user || user.role === "patient") && (
+            <>
+              {user?.role === "patient" && (
+                <Link href="/dashboard" className="hidden text-sm font-medium text-brand-light hover:text-brand sm:inline">
+                  {t("dashboard", locale)}
+                </Link>
+              )}
+              <Link
+                href="/kids"
+                className="rm-kids-type inline-flex items-center rounded-full bg-[#f5c84a] px-3 py-1.5 text-sm font-bold text-[#243056] shadow-sm"
+              >
+                {t("kidsQuest", locale)}
               </Link>
-            )}
-            <Link
-              href="/kids"
-              className="rm-kids-type inline-flex items-center rounded-full bg-[#f5c84a] px-3 py-1.5 text-sm font-bold text-[#243056] shadow-sm"
-            >
-              {t("kidsQuest", locale)}
-            </Link>
-          </>
-        )}
-        {user && (
-          <>
-            <span className={`hidden text-sm sm:inline ${isCaregiver ? "text-[var(--caregiver-muted)]" : "text-muted"}`}>
-              {user.name.split(" ")[0]}
-            </span>
-            <button
-              type="button"
-              onClick={logout}
-              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-                isCaregiver
-                  ? "border-[#cbd5e1] text-[var(--caregiver-muted)] hover:bg-white"
-                  : "border-[var(--border)] text-muted hover:text-foreground"
-              }`}
-            >
-              {t("signOut", locale)}
-            </button>
-          </>
-        )}
-      </div>
+            </>
+          )}
+          {user && (
+            <>
+              <span className={`hidden text-sm sm:inline ${isCaregiver ? "text-[var(--caregiver-muted)]" : "text-muted"}`}>
+                {user.name.split(" ")[0]}
+              </span>
+              <button
+                type="button"
+                onClick={logout}
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                  isCaregiver
+                    ? "border-[#cbd5e1] text-[var(--caregiver-muted)] hover:bg-white"
+                    : "border-[var(--border)] text-muted hover:text-foreground"
+                }`}
+              >
+                {t("signOut", locale)}
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );
