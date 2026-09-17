@@ -98,6 +98,9 @@ const copy = {
     backToBriefing: "Back to briefing",
     photoHelp:
       "Use a phone or laptop camera. The app can find hip, knee, and ankle. If the pose is unclear, tap the three points.",
+    photoMarksHelp:
+      "Hip, knee, and ankle are marked on the photo. The number is the joint angle from those three points.",
+    measuringPhoto: "Measuring the knee on this photo…",
     notADiagnosis:
       "Estimated angle for progress tracking only. This is not a diagnosis and does not replace a physical therapist.",
     openProgressCharts: "Open progress charts",
@@ -399,6 +402,9 @@ const copy = {
     backToBriefing: "Volver al resumen",
     photoHelp:
       "Usa la cámara del teléfono o de la computadora. La app puede encontrar cadera, rodilla y tobillo. Si la pose no es clara, toca los tres puntos.",
+    photoMarksHelp:
+      "Cadera, rodilla y tobillo están marcados en la foto. El número es el ángulo de la articulación con esos tres puntos.",
+    measuringPhoto: "Midiendo la rodilla en esta foto…",
     notADiagnosis:
       "El ángulo es solo para seguir el progreso. No es un diagnóstico y no sustituye a un fisioterapeuta.",
     openProgressCharts: "Abrir gráficas de progreso",

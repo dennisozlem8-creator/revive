@@ -154,6 +154,120 @@ function drawPose(
   }
 }
 
+function MarkedJointPhoto({
+  src,
+  points,
+  angle,
+  labels,
+  measuring,
+  measuringLabel = "Measuring the knee on this photo…",
+  imgClassName = "max-h-[28rem] w-full bg-background object-contain",
+}: {
+  src: string;
+  points: Partial<Record<LandmarkId, Point>>;
+  angle: number | null;
+  labels: Record<LandmarkId, string>;
+  measuring?: boolean;
+  measuringLabel?: string;
+  imgClassName?: string;
+}) {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [box, setBox] = useState({ left: 0, top: 0, width: 100, height: 100 });
+
+  function sync() {
+    const img = imgRef.current;
+    const wrap = wrapRef.current;
+    if (!img || !wrap || !img.naturalWidth) return;
+    const wr = wrap.getBoundingClientRect();
+    const content = contentBox(img);
+    setBox({
+      left: ((content.left - wr.left) / wr.width) * 100,
+      top: ((content.top - wr.top) / wr.height) * 100,
+      width: (content.width / wr.width) * 100,
+      height: (content.height / wr.height) * 100,
+    });
+  }
+
+  useEffect(() => {
+    sync();
+    const onResize = () => sync();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [src, points]);
+
+  return (
+    <div ref={wrapRef} className="relative overflow-hidden rounded-2xl bg-background">
+      {/* Native img. next/image is named Image and crashes React 19 in this app. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img ref={imgRef} src={src} alt="Side-view joint photo" className={imgClassName} onLoad={sync} />
+      <svg
+        className="pointer-events-none absolute"
+        style={{
+          left: `${box.left}%`,
+          top: `${box.top}%`,
+          width: `${box.width}%`,
+          height: `${box.height}%`,
+        }}
+      >
+        {points.hip && points.knee && (
+          <line
+            x1={`${points.hip.x * 100}%`}
+            y1={`${points.hip.y * 100}%`}
+            x2={`${points.knee.x * 100}%`}
+            y2={`${points.knee.y * 100}%`}
+            stroke="#60a5fa"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+        )}
+        {points.knee && points.ankle && (
+          <line
+            x1={`${points.knee.x * 100}%`}
+            y1={`${points.knee.y * 100}%`}
+            x2={`${points.ankle.x * 100}%`}
+            y2={`${points.ankle.y * 100}%`}
+            stroke="#f59e0b"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+        )}
+        {LANDMARK_ORDER.map(
+          (id) =>
+            points[id] && (
+              <g key={id}>
+                <circle cx={`${points[id]!.x * 100}%`} cy={`${points[id]!.y * 100}%`} r="9" fill={DOT_COLOR[id]} />
+                <text
+                  x={`${points[id]!.x * 100}%`}
+                  y={`${Math.max(points[id]!.y * 100 - 4, 6)}%`}
+                  textAnchor="middle"
+                  fill="#ffffff"
+                  stroke="#1b3348"
+                  strokeWidth="3"
+                  paintOrder="stroke"
+                  fontSize="13"
+                  fontWeight="700"
+                >
+                  {labels[id]}
+                </text>
+              </g>
+            )
+        )}
+      </svg>
+      {angle != null && !measuring && (
+        <p className="absolute left-3 top-3 rounded-full bg-[#1b3348] px-3 py-1 text-lg font-semibold text-white shadow-[0_8px_18px_rgba(0,0,0,0.28)]">
+          {angle}°
+        </p>
+      )}
+      {measuring && (
+        <div className="absolute inset-x-0 bottom-0 bg-[#1b3348]/90 px-4 py-3 text-center text-sm font-semibold text-white">
+          {measuringLabel}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function PhotoGoniometer({
   userEmail,
   goal,
@@ -747,15 +861,15 @@ export function PhotoGoniometer({
                 )}
               </div>
             ) : photoUrl ? (
-              <div className="relative">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photoUrl} alt="Side-view photo" className="max-h-80 w-full bg-background object-contain" />
-                {photoAnalyzing && (
-                  <div className="absolute inset-x-0 bottom-0 bg-background/90 px-4 py-3 text-center text-sm">
-                    Measuring the knee on this photo…
-                  </div>
-                )}
-              </div>
+              <MarkedJointPhoto
+                src={photoUrl}
+                points={points}
+                angle={photoAngle}
+                labels={{ hip: t("hip", locale), knee: t("knee", locale), ankle: t("ankle", locale) }}
+                measuring={photoAnalyzing}
+                measuringLabel={t("measuringPhoto", locale)}
+                imgClassName="max-h-80 w-full bg-background object-contain"
+              />
             ) : videoUrl && videoReady ? (
               <video
                 ref={playbackRef}
@@ -1051,6 +1165,17 @@ export function PhotoGoniometer({
           {!photoAnalyzing && photoAngle != null && (
             <>
               <h2 className="mt-1 text-xl font-bold">Photo analysis</h2>
+              <p className="mt-2 text-sm leading-6 text-muted">{t("photoMarksHelp", locale)}</p>
+              {photoUrl && (
+                <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--border)]">
+                  <MarkedJointPhoto
+                    src={photoUrl}
+                    points={points}
+                    angle={photoAngle}
+                    labels={{ hip: t("hip", locale), knee: t("knee", locale), ankle: t("ankle", locale) }}
+                  />
+                </div>
+              )}
               <p className="rm-display mt-4 text-correct">{photoAngle}°</p>
               {photoCoach && (
                 <MovementCoachCard
@@ -1059,12 +1184,6 @@ export function PhotoGoniometer({
                   history={rows}
                   goal={goal}
                 />
-              )}
-              {photoUrl && points.hip && points.knee && points.ankle && (
-                <div className="relative mt-4 overflow-hidden rounded-2xl border border-[var(--border)] bg-background">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={photoUrl} alt="Analyzed photo" className="max-h-72 w-full object-contain" />
-                </div>
               )}
               {metaFields(exercise, setExercise, joint, setJoint, note, setNote)}
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
