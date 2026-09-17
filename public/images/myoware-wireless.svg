@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" role="img" aria-labelledby="title desc">
   <title id="title">MyoWare 2.0 Wireless Shield stacked on the muscle sensor</title>
   <desc id="desc">Snap the Wireless Shield onto the MyoWare 2.0 sensor. No jumper wires. USB is only for programming the shield.</desc>
@@ -7,13 +8,13 @@
   <text x="180" y="186" text-anchor="middle" fill="#8ec5e8" font-family="system-ui,sans-serif" font-size="12">muscle sensor + pads</text>
   <rect x="88" y="44" width="184" height="86" rx="16" fill="#4f90c6"/>
   <text x="180" y="80" text-anchor="middle" fill="#ffffff" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Wireless Shield</text>
-  <text x="180" y="102" text-anchor="middle" fill="#e8f3fb" font-family="system-ui,sans-serif" font-size="12">ESP32 · Bluetooth</text>
+  <text x="180" y="102" text-anchor="middle" fill="#e8f3fb" font-family="system-ui,sans-serif" font-size="12">ESP32 - Bluetooth</text>
   <rect x="360" y="44" width="220" height="184" rx="18" fill="#ffffff" stroke="#b7d4e8"/>
   <text x="470" y="86" text-anchor="middle" fill="#1b3348" font-family="system-ui,sans-serif" font-size="15" font-weight="700">Do this</text>
   <g font-family="system-ui,sans-serif" font-size="13" fill="#1b3348">
     <text x="380" y="122">1. Program the shield over USB</text>
     <text x="380" y="148">2. Unplug. Snap onto sensor</text>
     <text x="380" y="174">3. POWER SOURCE = VBAT</text>
-    <text x="380" y="200">4. POWER ON · Chrome Bluetooth</text>
+    <text x="380" y="200">4. POWER ON - Chrome Bluetooth</text>
   </g>
 </svg>

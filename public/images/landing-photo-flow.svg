@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 140" fill="none">
   <rect width="720" height="140" rx="20" fill="#f7fbfe"/>
   <g font-family="ui-sans-serif,system-ui" font-weight="700" font-size="12" text-anchor="middle">
@@ -14,7 +15,7 @@
     <text x="184" y="100" fill="#1b3348">3 points</text>
     <path d="M226 52h28" stroke="#4f90c6" stroke-width="3"/>
     <circle cx="298" cy="52" r="28" fill="#eef0fb" stroke="#5a6f82"/>
-    <text x="298" y="58" fill="#4a4f8a" font-size="14">92°</text>
+    <text x="298" y="58" fill="#4a4f8a" font-size="14">92 deg</text>
     <text x="298" y="100" fill="#1b3348">Angle</text>
     <path d="M340 52h28" stroke="#4f90c6" stroke-width="3"/>
     <circle cx="412" cy="52" r="28" fill="#f3eee6" stroke="#c47a32"/>

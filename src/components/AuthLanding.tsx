@@ -1,28 +1,19 @@
 import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
-import { KidsIcon } from "@/components/KidsIcon";
+import {
+  AngleChartArt,
+  AppScreenArt,
+  MpuArt,
+  MyowareArt,
+  PeoplePhotoArt,
+  PhotoFlowArt,
+} from "@/components/LandingArt";
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
 
 type AuthLandingProps = {
   mode: "login" | "register";
 };
-
-function Picture({
-  src,
-  alt,
-  className,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-}) {
-  return (
-    // Native img so SVG schematics always paint (next/image can hide them as alt text).
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} className={className} />
-  );
-}
 
 const solutions = [
   {
@@ -31,8 +22,7 @@ const solutions = [
     points: ["Side-view photo", "Tap hip, knee, ankle", "See the angle"],
     className: "border-[#b7d4c4] bg-[#e7f6ee]",
     titleClass: "text-[#2a7a58]",
-    image: "/images/landing-people-photo.svg?v=3",
-    alt: "Helper photographing a seated patient from the side.",
+    Art: PeoplePhotoArt,
   },
   {
     title: "Motion sensor",
@@ -40,8 +30,7 @@ const solutions = [
     points: ["Live angle", "Hands-free", "During the session"],
     className: "border-[#c5c9e8] bg-[#eef0fb]",
     titleClass: "text-[#4a4f8a]",
-    image: "/images/landing-mpu.svg",
-    alt: "Motion sensor worn on the knee.",
+    Art: MpuArt,
   },
   {
     title: "Muscle sensor",
@@ -49,16 +38,15 @@ const solutions = [
     points: ["Muscle effort", "Flex to see the signal", "Bluetooth or USB"],
     className: "border-[#d0c4e4] bg-[#f3eefc]",
     titleClass: "text-[#5a3d8a]",
-    image: "/images/landing-myoware.svg",
-    alt: "MyoWare muscle sensor schematic.",
+    Art: MyowareArt,
   },
 ];
 
 const inside = [
-  { title: "Briefing", src: "/images/briefing-hero.svg", alt: "Today’s briefing screen" },
-  { title: "Session", src: "/images/session-hero.svg", alt: "Live session screen" },
-  { title: "Dashboard", src: "/images/dashboard-hero.svg", alt: "Progress dashboard" },
-  { title: "Check-in", src: "/images/check-in-hero.svg", alt: "Daily check-in screen" },
+  { title: "Briefing", kind: "briefing" as const },
+  { title: "Session", kind: "session" as const },
+  { title: "Dashboard", kind: "dashboard" as const },
+  { title: "Check-in", kind: "checkin" as const },
 ];
 
 export function AuthLanding({ mode }: AuthLandingProps) {
@@ -105,11 +93,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
 
             <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] lg:items-start">
               <div className="overflow-hidden rounded-[1.5rem] border border-[#b7d4e8] bg-white">
-                <Picture
-                  src="/images/landing-people-photo.svg?v=3"
-                  alt="A helper takes a side-view photo. Hip, knee, and ankle are marked. The angle reads 92 degrees."
-                  className="h-auto w-full"
-                />
+                <PeoplePhotoArt className="h-auto w-full" />
               </div>
               <section id="go-in" className="scroll-mt-28">
                 <div className="rounded-[1.75rem] border border-[var(--border)] bg-white p-6 shadow-[0_22px_50px_rgba(27,51,72,0.1)] sm:p-7">
@@ -124,18 +108,10 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           <div className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-6">
             <h2 className="rm-serif text-3xl font-semibold text-foreground">How it works</h2>
             <div className="mt-6 overflow-hidden rounded-[1.25rem] border border-[#c5d9ea] bg-white">
-              <Picture
-                src="/images/landing-photo-flow.svg?v=3"
-                alt="Photo, three points, angle, save, chart, then today’s exercises."
-                className="h-auto w-full"
-              />
+              <PhotoFlowArt className="h-auto w-full" />
             </div>
             <div className="mt-6 overflow-hidden rounded-[1.25rem] border border-[#c5d9ea] bg-white">
-              <Picture
-                src="/images/landing-angle-chart.svg?v=3"
-                alt="Marked hip, knee, and ankle with a 92 degree estimate and a rising motion chart."
-                className="h-auto w-full"
-              />
+              <AngleChartArt className="h-auto w-full" />
             </div>
           </div>
         </section>
@@ -146,11 +122,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             <div className="mt-8 grid gap-4 lg:grid-cols-3">
               {solutions.map((item) => (
                 <article key={item.title} className={`overflow-hidden rounded-[1.5rem] border text-foreground ${item.className}`}>
-                  <Picture
-                    src={item.image}
-                    alt={item.alt}
-                    className="h-40 w-full object-cover"
-                  />
+                  <item.Art className="h-40 w-full" />
                   <div className="p-5">
                     <h3 className={`text-xl font-bold uppercase ${item.titleClass}`}>{item.title}</h3>
                     <p className="mt-1 text-sm font-semibold">{item.subtitle}</p>
@@ -172,11 +144,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {inside.map((item) => (
                 <article key={item.title} className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[#f7fbfe]">
-                  <Picture
-                    src={item.src}
-                    alt={item.alt}
-                    className="h-28 w-full object-cover"
-                  />
+                  <AppScreenArt kind={item.kind} className="h-28 w-full" />
                   <p className="px-4 py-3 text-sm font-semibold">{item.title}</p>
                 </article>
               ))}
@@ -191,9 +159,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               className="rm-glow-kids mt-6 flex items-center justify-between overflow-hidden rounded-[1.5rem] p-5"
             >
               <span className="rm-kids-type kids-title-ink text-2xl">Kids Quest</span>
-              <span className="kids-cta rm-btn h-11 rounded-full px-5 text-sm">
-                <KidsIcon name="gamepad" size={20} /> Open
-              </span>
+              <span className="kids-cta rm-btn h-11 rounded-full px-5 text-sm">Open</span>
             </Link>
           </div>
         </section>

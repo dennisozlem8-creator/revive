@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { ReactNode } from "react";
 import { KIDS_ICON_SRC, type KidsIconName } from "@/lib/kids-icons";
 
@@ -11,7 +10,9 @@ type KidsIconProps = {
 
 export function KidsIcon({ name, size = 28, className = "", alt = "" }: KidsIconProps) {
   return (
-    <Image
+    // Native img: next/image named Image crashes React 19 ("use the new operator").
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
       src={KIDS_ICON_SRC[name]}
       alt={alt}
       width={size}

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
@@ -9,7 +10,7 @@ import { t } from "@/lib/i18n";
 import { AuthLanding } from "@/components/AuthLanding";
 import { isCareTeam } from "@/lib/users";
 
-const areaIcons: Record<string, React.ReactNode> = {
+const areaIcons: Record<string, ReactNode> = {
   ankle: (
     <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8" stroke="currentColor" strokeWidth="1.5">
       <path d="M8 20V12l2-4h4l2 4v8" strokeLinecap="round" strokeLinejoin="round" />

@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "./AuthProvider";
 import { KidsIcon } from "./KidsIcon";
+import { KidsQuestBannerArt } from "./LandingArt";
 
 const KIDS_HREF = "/kids";
 
@@ -39,13 +39,7 @@ export function KidsModeLink({ className = "", variant = "default" }: KidsModeLi
         <span className="flex justify-center" aria-hidden>
           <KidsIcon name="gamepad" size={56} />
         </span>
-        <Image
-          src="/kids/welcome-hero.svg"
-          alt=""
-          width={240}
-          height={120}
-          className="mx-auto mt-2 h-24 w-auto object-cover sm:h-28"
-        />
+        <KidsQuestBannerArt className="mx-auto mt-2 h-24 w-full object-cover sm:h-28" />
         <p className="mt-3 inline-flex items-center justify-center gap-2 text-lg font-bold text-amber-900">
           <KidsIcon name="gamepad" size={28} />
           Enter Kids Quest World

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 340" fill="none">
   <rect width="800" height="340" rx="28" fill="#e8f3fb"/>
   <ellipse cx="400" cy="312" rx="300" ry="14" fill="#c5d9ea"/>
@@ -18,7 +19,7 @@
   <text x="642" y="272" fill="#3a7d62" font-size="12" font-family="ui-sans-serif,system-ui" font-weight="700">KNEE</text>
   <text x="690" y="190" fill="#4f90c6" font-size="12" font-family="ui-sans-serif,system-ui" font-weight="700">ANKLE</text>
   <rect x="700" y="214" width="58" height="28" rx="14" fill="#4f90c6"/>
-  <text x="729" y="233" text-anchor="middle" fill="#fff" font-size="14" font-family="ui-sans-serif,system-ui" font-weight="700">92°</text>
+  <text x="729" y="233" text-anchor="middle" fill="#fff" font-size="14" font-family="ui-sans-serif,system-ui" font-weight="700">92 deg</text>
   <circle cx="188" cy="148" r="24" fill="#e8c4a8"/>
   <rect x="164" y="172" width="50" height="70" rx="16" fill="#3a7d62"/>
   <path d="M172 242c-10 20-4 36 16 38" stroke="#2a3d52" stroke-width="12" stroke-linecap="round"/>
