@@ -48,6 +48,10 @@ export default function MuscleSensorPage() {
       </div>
       <PhotoFrame src="/images/landing-myoware.png?v=6" alt="" className="mt-6 h-40 rounded-[1.35rem] lg:hidden" />
 
+      <div className="mt-6">
+        <MyoWarePanel />
+      </div>
+
       <HelpBlock title="Wireless — do this now">
           <ol className="list-decimal space-y-2 pl-5">
             <li>Leave the Elegoo Uno unplugged. The Wireless Shield has its own USB port and battery.</li>
@@ -84,10 +88,6 @@ export default function MuscleSensorPage() {
             Factory firmware waits for USB and will not work with this website — upload the file above.
           </p>
       </HelpBlock>
-
-        <div className="mt-6">
-          <MyoWarePanel />
-        </div>
 
         <DashCard className="mt-4 p-5">
           <h2 className="rm-serif text-xl font-semibold text-[#1b3348]">Wireless stack</h2>
