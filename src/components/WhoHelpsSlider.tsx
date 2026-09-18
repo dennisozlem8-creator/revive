@@ -76,7 +76,7 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
         <div className="flex items-start justify-between gap-4">
           <div className="max-w-2xl">
             <SectionKicker>{t("whoHelpsKicker", locale)}</SectionKicker>
-            <h3 id="who-helps-title" className="rm-serif mt-3 text-[1.7rem] font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
+            <h3 id="who-helps-title" className="rm-serif mt-4 text-[1.7rem] font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
               {t("whoHelpsTitle", locale)}
             </h3>
             <p className="mt-2 hidden max-w-xl text-base leading-7 text-[#1b3348] sm:block sm:text-lg sm:leading-8">

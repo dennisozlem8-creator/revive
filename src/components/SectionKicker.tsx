@@ -7,14 +7,16 @@ export function SectionKicker({
 }) {
   const palette =
     tone === "dark"
-      ? "bg-white/12 text-white ring-white/25"
-      : "bg-[#e8f3fb] text-[#1b3348] ring-[#4f90c6]/30";
+      ? "bg-white text-[#1b3348] shadow-[0_12px_28px_rgba(0,0,0,0.22)]"
+      : "bg-[#1b3348] text-white shadow-[0_12px_28px_rgba(27,51,72,0.22)]";
+  const dot = tone === "dark" ? "bg-[#4f90c6]" : "bg-[#7eb3d9]";
 
   return (
     <p
-      className={`inline-flex items-center rounded-full px-4 py-1.5 text-sm font-bold uppercase tracking-[0.18em] shadow-[0_8px_18px_rgba(27,51,72,0.06)] ring-1 sm:px-5 sm:py-2 sm:text-base ${palette}`}
+      className={`inline-flex max-w-full items-center gap-2.5 rounded-full px-4 py-2 text-[0.72rem] font-bold uppercase leading-none tracking-[0.2em] sm:px-5 sm:py-2.5 sm:text-[0.8rem] ${palette}`}
     >
-      {children}
+      <span aria-hidden className={`h-2 w-2 shrink-0 rounded-full ${dot}`} />
+      <span className="min-w-0">{children}</span>
     </p>
   );
 }

@@ -20,7 +20,7 @@ function SectionIntro({ kicker, title, text }: { kicker: string; title: string; 
   return (
     <div className="max-w-3xl">
       <SectionKicker>{kicker}</SectionKicker>
-      <h2 className="rm-serif mt-3 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">{title}</h2>
+      <h2 className="rm-serif mt-4 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">{title}</h2>
       <p className="mt-2 max-w-2xl text-base leading-7 text-[#1b3348] sm:text-lg sm:leading-8">{text}</p>
     </div>
   );
@@ -144,7 +144,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           <div className="mx-auto grid w-full max-w-6xl items-start lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
             <div className="flex flex-col justify-center px-4 py-10 sm:px-6 lg:sticky lg:top-20 lg:self-start lg:px-8 lg:py-16">
               <SectionKicker tone="dark">{t("guidedOnDevice", locale)}</SectionKicker>
-              <h2 className="rm-serif mt-3 text-3xl font-semibold leading-[1.1] sm:text-4xl">
+              <h2 className="rm-serif mt-4 text-3xl font-semibold leading-[1.1] sm:text-4xl">
                 {t("sessionsAtHome", locale)}
               </h2>
               <p className="mt-3 max-w-md text-sm leading-6 text-white/80 sm:text-base">
