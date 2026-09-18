@@ -91,7 +91,9 @@ export function HeartRatePanel({ compact, hideWired, onConnected }: HeartRatePan
                 : `${deviceName} · live beats per minute`
               : connected
                 ? `${deviceName} · keep the sensor on the finger or chest`
-                : heartRateBrowserHelp()}
+                : hideWired
+                  ? "Pair a Bluetooth heart-rate strap for live BPM."
+                  : heartRateBrowserHelp()}
           </p>
         </div>
         {live ? (
@@ -147,7 +149,7 @@ export function HeartRatePanel({ compact, hideWired, onConnected }: HeartRatePan
         </div>
       )}
 
-      {blocked && !connected && (
+      {blocked && !connected && !hideWired && (
         <p className="mt-3 rounded-xl bg-alert/10 px-3 py-3 text-sm font-medium text-alert">{blocked}</p>
       )}
 
@@ -183,10 +185,16 @@ export function HeartRatePanel({ compact, hideWired, onConnected }: HeartRatePan
         </p>
       )}
 
-      {!canConnect && (
+      {!canConnect && !hideWired && (
         <p className="mt-3 text-sm text-muted">
           Open this site on a Windows or Mac computer in <strong className="text-foreground">Chrome or Edge</strong>.
           A phone — even Chrome on iPhone — cannot see the USB cable. Arduino IDE does not turn USB on for the phone.
+        </p>
+      )}
+      {hideWired && !connected && !bluetoothSupported && (
+        <p className="mt-3 text-sm text-muted">
+          Open this site in <strong className="text-foreground">Chrome or Edge</strong> on a computer to pair a
+          Bluetooth heart strap.
         </p>
       )}
 

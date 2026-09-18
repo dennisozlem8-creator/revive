@@ -97,13 +97,21 @@ export default function BriefingPage() {
         ) : null}
       </DashCard>
 
-      <div className="mt-6 grid gap-3 lg:grid-cols-3">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <DashPhotoLink
           href="/goniometer"
           src="/images/landing-photo-goniometer.png?v=2"
           kicker={t("measure", locale)}
           title={t("recordTodaysClip", locale)}
           text={progress.headline}
+        />
+        <DashPhotoLink
+          href="/motion"
+          src="/images/landing-mpu.png?v=8"
+          kicker={t("connectMpu", locale)}
+          title="MPU-6050"
+          text={t("mpuLiveAngle", locale)}
+          imgClassName="object-cover object-[left_40%]"
         />
         <DashPhotoLink
           href="/muscle"

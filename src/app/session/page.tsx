@@ -21,6 +21,7 @@ import { t } from "@/lib/i18n";
 import { PeakBarChart, TestLiveCharts } from "@/components/TestLiveCharts";
 import { HeartRatePanel } from "@/components/HeartRatePanel";
 import { MyoWarePanel } from "@/components/MyoWarePanel";
+import { MotionPanel, PhotoMeasureCard } from "@/components/MotionPanel";
 import { useHeartRate } from "@/components/HeartRateProvider";
 import { useMyoWare } from "@/components/MyoWareProvider";
 import { demoFlexAt } from "@/lib/muscle-demo";
@@ -38,6 +39,7 @@ export default function SessionPage() {
   const [emg, setEmg] = useState(42);
   const [hr, setHr] = useState(72);
   const [recording, setRecording] = useState(false);
+  const [motionReady, setMotionReady] = useState(false);
   const [summary, setSummary] = useState<SessionSummary | null>(null);
   const [completedIds, setCompletedIds] = useState<string[]>([]);
   const [wave, setWave] = useState<number[]>(() => Array(24).fill(0));
@@ -61,8 +63,21 @@ export default function SessionPage() {
   useEffect(() => {
     if (!recording) return;
     const interval = setInterval(() => {
-      const next = Math.min(target + 5, Math.round(40 + Math.random() * (target - 20)));
-      setAngle(next);
+      if (!motionReady) {
+        const next = Math.min(target + 5, Math.round(40 + Math.random() * (target - 20)));
+        setAngle(next);
+        setWave((prev) => [...prev.slice(1), next]);
+        if (next >= target * 0.88) {
+          setReps((r) => Math.min(targetReps, r + (Math.random() > 0.7 ? 1 : 0)));
+        }
+      } else {
+        setAngle((current) => {
+          if (current >= target * 0.88) {
+            setReps((r) => Math.min(targetReps, r + (Math.random() > 0.7 ? 1 : 0)));
+          }
+          return current;
+        });
+      }
       if (heart.connected && heart.bpm) {
         setHr(heart.bpm);
         setHrWave((prev) => [...prev.slice(1), heart.bpm as number]);
@@ -71,13 +86,9 @@ export default function SessionPage() {
         setHr(fake);
         setHrWave((prev) => [...prev.slice(1), fake]);
       }
-      setWave((prev) => [...prev.slice(1), next]);
-      if (next >= target * 0.88) {
-        setReps((r) => Math.min(targetReps, r + (Math.random() > 0.7 ? 1 : 0)));
-      }
     }, 800);
     return () => clearInterval(interval);
-  }, [recording, target, targetReps, heart.connected, heart.bpm]);
+  }, [recording, target, targetReps, heart.connected, heart.bpm, motionReady]);
 
   useEffect(() => {
     if (!recording) return;
@@ -153,15 +164,18 @@ export default function SessionPage() {
       <DashIntro
         kicker={t("liveSession", locale)}
         title={user.ptPrescription?.exerciseName ?? "ROM sensor test"}
-        text="Live angle, muscle, and effort. MyoWare shows real numbers when connected. Heart stays off unless you pair a strap."
+        text="Photo, wireless motion, wireless muscle, or a heart strap. Same session."
       />
       <div className="mt-5">
         <DashHero
-          src="/images/landing-mpu.png?v=8"
-          kicker="03 Coach"
+          src="/images/landing-photo-goniometer.png?v=2"
+          kicker="01 Measure"
           title={recording ? "Recording now" : "Ready to record"}
-          text={recording ? "Hold the pose. End the test when the peak looks honest." : "Connect MyoWare if you have it, then start the ROM test."}
-          imgClassName="object-cover object-[left_42%]"
+          text={
+            recording
+              ? "Hold the pose. End the test when the peak looks honest."
+              : "Open a photo or pair a wireless sensor, then start the ROM test."
+          }
         />
       </div>
 
@@ -174,20 +188,34 @@ export default function SessionPage() {
           hint={muscle.connected ? "MyoWare ENV" : "Connect for real numbers"}
         />
         <DashStat
-          label={heart.connected ? "Heart live" : "Heart demo"}
+          label={heart.connected ? "Heart live" : "Heart"}
           value={heart.connected && heart.bpm ? heart.bpm : hr}
           hint={heart.connected ? "BPM from strap" : "Pair a strap to go live"}
         />
       </div>
 
       <div className="mt-6 space-y-4">
+        <PhotoMeasureCard />
+        <MotionPanel
+          live={recording}
+          onConnected={() => setMotionReady(true)}
+          onAngle={(next) => {
+            setAngle(next);
+            setWave((prev) => [...prev.slice(1), next]);
+          }}
+        />
         <MyoWarePanel />
         <HeartRatePanel compact hideWired />
         <FeedbackBox state={feedback} angle={angle} target={target} locale={locale} />
 
         <TestLiveCharts
           series={[
-            { label: "Live angle", values: wave, unit: "°", max: 100 },
+            {
+              label: motionReady ? "Live angle (MPU-6050)" : "Live angle",
+              values: wave,
+              unit: "°",
+              max: 100,
+            },
             {
               label: muscle.connected ? "Muscle effort (MyoWare)" : "Muscle effort (demo)",
               values: muscle.connected && muscle.history.some((v) => v > 0) ? muscle.history : emgWave,
@@ -205,7 +233,7 @@ export default function SessionPage() {
         <PeakBarChart
           title="This test vs your plan"
           bars={[
-            { label: "Live angle", value: angle, goal: target },
+            { label: motionReady ? "MPU angle" : "Live angle", value: angle, goal: target },
             { label: "Baseline", value: user.baselineRom, goal: target },
             { label: "Goal", value: target },
           ]}
