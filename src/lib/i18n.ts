@@ -206,10 +206,7 @@ const copy = {
     fullSpanish: "Full Spanish version — tap ES in the header.",
     skipToSignIn: "Skip to sign in",
     heroTitle: "Physical Therapy Monitoring at Home.",
-    heroText:
-      "Revive Motion bridges the gap between the clinic and the home by turning rehab exercises into measurable recovery data. Photograph the joint, or wear a wireless motion or muscle sensor.",
-    heroPassport:
-      "Those readings become the Recovery Passport — one tracking score the clinician can open. It is not a diagnosis.",
+    heroText: "A photo or wireless sensor turns home exercises into a Recovery Passport the clinic can open.",
     createAccount: "Create an account",
     howItWorks: "How it works",
     photoAndSensors: "Photo & sensors",
@@ -565,10 +562,7 @@ const copy = {
     fullSpanish: "Versión completa en español. Toca EN para volver al inglés.",
     skipToSignIn: "Ir a entrar",
     heroTitle: "Monitoreo de fisioterapia en casa.",
-    heroText:
-      "Revive Motion cierra la brecha entre la clínica y el hogar al convertir los ejercicios de rehabilitación en datos medibles de recuperación. Fotografía la articulación o usa un sensor inalámbrico de movimiento o músculo.",
-    heroPassport:
-      "Esas lecturas se vuelven el Pasaporte de recuperación: un puntaje de seguimiento que el clínico puede abrir. No es un diagnóstico.",
+    heroText: "Una foto o un sensor inalámbrico convierte los ejercicios en casa en un Pasaporte de recuperación que la clínica puede abrir.",
     createAccount: "Crear una cuenta",
     howItWorks: "Cómo funciona",
     photoAndSensors: "Foto y sensores",
