@@ -72,7 +72,7 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
   return (
     <section className="bg-[#f7fbfe]" aria-labelledby="who-helps-title">
       <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
-        <div className="flex items-end justify-between gap-4">
+        <div className="flex items-start justify-between gap-4">
           <div className="max-w-2xl">
             <p className="text-sm font-semibold leading-6 text-[#2f4a60] sm:text-base">{t("whoHelpsKicker", locale)}</p>
             <h3 id="who-helps-title" className="rm-serif mt-1 text-[1.7rem] font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
@@ -82,32 +82,15 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
               {t("whoHelpsText", locale)}
             </p>
           </div>
-          <div className="mb-0.5 hidden shrink-0 items-center gap-2 sm:flex">
-            <p className="pr-1 text-sm font-semibold tabular-nums text-[#2f4a60]">
-              {tf("whoHelpsOf", locale, { n: String(index + 1).padStart(2, "0"), total: String(total).padStart(2, "0") })}
-            </p>
-            <button
-              type="button"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#1b3348] shadow-[0_10px_24px_rgba(27,51,72,0.08)] ring-1 ring-[#4f90c6]/15 transition hover:bg-[#e8f3fb]"
-              aria-label={t("whoHelpsPrev", locale)}
-              onClick={() => goTo(index - 1)}
-            >
-              <Chevron dir="prev" />
-            </button>
-            <button
-              type="button"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#1b3348] shadow-[0_10px_24px_rgba(27,51,72,0.08)] ring-1 ring-[#4f90c6]/15 transition hover:bg-[#e8f3fb]"
-              aria-label={t("whoHelpsNext", locale)}
-              onClick={() => goTo(index + 1)}
-            >
-              <Chevron dir="next" />
-            </button>
-          </div>
+          <p className="hidden shrink-0 pt-2 text-sm font-semibold tabular-nums text-[#2f4a60] sm:block">
+            {tf("whoHelpsOf", locale, { n: String(index + 1).padStart(2, "0"), total: String(total).padStart(2, "0") })}
+          </p>
         </div>
 
+        <div className="relative mt-5 sm:mt-6">
         <div
           ref={scroller}
-          className="-mx-4 mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:mt-6 sm:gap-4 sm:px-6 lg:mx-0 lg:px-0"
+          className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:gap-4 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:scroll-px-0 lg:px-0"
           aria-roledescription="carousel"
           aria-label={t("whoHelpsTitle", locale)}
           tabIndex={0}
@@ -148,6 +131,25 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
               </figure>
             );
           })}
+        </div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 right-0 hidden items-center justify-between px-3 sm:flex lg:px-2">
+            <button
+              type="button"
+              className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#1b3348] shadow-[0_12px_28px_rgba(8,20,32,0.18)] ring-1 ring-[#4f90c6]/15 transition hover:bg-white"
+              aria-label={t("whoHelpsPrev", locale)}
+              onClick={() => goTo(index - 1)}
+            >
+              <Chevron dir="prev" />
+            </button>
+            <button
+              type="button"
+              className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#1b3348] shadow-[0_12px_28px_rgba(8,20,32,0.18)] ring-1 ring-[#4f90c6]/15 transition hover:bg-white"
+              aria-label={t("whoHelpsNext", locale)}
+              onClick={() => goTo(index + 1)}
+            >
+              <Chevron dir="next" />
+            </button>
+          </div>
         </div>
 
         <div className="mt-4 flex items-center justify-between gap-3 sm:hidden">
