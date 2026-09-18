@@ -344,6 +344,9 @@ const copy = {
     helpUnderservedTitle: "Underserved communities",
     helpUnderservedText: "Cost and English-only tools should not block the report.",
     whoHelpsNote: "For progress tracking only. This is not a diagnosis and does not replace a clinician.",
+    whoHelpsPrev: "Previous story",
+    whoHelpsNext: "Next story",
+    whoHelpsOf: "{n} of {total}",
   },
   es: {
     home: "Inicio",
@@ -671,6 +674,9 @@ const copy = {
     helpUnderservedTitle: "Comunidades desatendidas",
     helpUnderservedText: "El costo y las herramientas solo en inglés no deben bloquear el informe.",
     whoHelpsNote: "Solo para seguimiento. Esto no es un diagnóstico y no reemplaza a un clínico.",
+    whoHelpsPrev: "Historia anterior",
+    whoHelpsNext: "Siguiente historia",
+    whoHelpsOf: "{n} de {total}",
   },
 } as const;
 

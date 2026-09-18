@@ -2,19 +2,8 @@
 
 import { SafePicture } from "@/components/SafePicture";
 import { TryDemoButton } from "@/components/TryDemoButton";
-import { t, type CopyKey, type Locale } from "@/lib/i18n";
-
-const WHO_HELPS: { img: string; title: CopyKey; text: CopyKey; alt: CopyKey }[] = [
-  { img: "/images/impact-sports.png?v=2", title: "helpSportsTitle", text: "helpSportsText", alt: "helpSportsTitle" },
-  { img: "/images/impact-stroke.png?v=2", title: "helpStrokeTitle", text: "helpStrokeText", alt: "helpStrokeTitle" },
-  { img: "/images/impact-parkinsons.png?v=2", title: "helpParkinsonTitle", text: "helpParkinsonText", alt: "helpParkinsonTitle" },
-  { img: "/images/impact-surgery.png?v=2", title: "helpSurgeryTitle", text: "helpSurgeryText", alt: "helpSurgeryTitle" },
-  { img: "/images/impact-older.png?v=2", title: "helpOlderTitle", text: "helpOlderText", alt: "helpOlderTitle" },
-  { img: "/images/impact-disability.png?v=2", title: "helpDisabilityTitle", text: "helpDisabilityText", alt: "helpDisabilityTitle" },
-  { img: "/images/impact-chronic.png?v=2", title: "helpChronicTitle", text: "helpChronicText", alt: "helpChronicTitle" },
-  { img: "/images/impact-rural.png?v=2", title: "helpRuralTitle", text: "helpRuralText", alt: "helpRuralTitle" },
-  { img: "/images/impact-underserved.png?v=2", title: "helpUnderservedTitle", text: "helpUnderservedText", alt: "helpUnderservedTitle" },
-];
+import { WhoHelpsSlider } from "@/components/WhoHelpsSlider";
+import { t, type Locale } from "@/lib/i18n";
 
 export function ImpactBand({ locale }: { locale: Locale }) {
   const stats = [
@@ -68,40 +57,7 @@ export function ImpactBand({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="bg-[#f7fbfe]">
-        <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-semibold leading-6 text-[#2f4a60] sm:text-base">{t("whoHelpsKicker", locale)}</p>
-            <h3 className="rm-serif mt-1 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
-              {t("whoHelpsTitle", locale)}
-            </h3>
-            <p className="mx-auto mt-2 max-w-2xl text-base leading-7 text-[#1b3348] sm:text-lg sm:leading-8">
-              {t("whoHelpsText", locale)}
-            </p>
-          </div>
-
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {WHO_HELPS.map((item) => (
-              <article
-                key={item.title}
-                className="overflow-hidden rounded-[1.35rem] bg-white text-center shadow-[0_12px_28px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12 sm:text-left"
-              >
-                <SafePicture
-                  src={item.img}
-                  alt={t(item.alt, locale)}
-                  className="h-44 w-full object-cover object-center sm:h-48"
-                />
-                <div className="px-4 py-4 sm:px-5">
-                  <h4 className="rm-serif text-xl font-semibold leading-tight text-[#1b3348]">{t(item.title, locale)}</h4>
-                  <p className="mt-1 text-sm leading-6 text-[#2f4a60] sm:text-[15px]">{t(item.text, locale)}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-6 text-[#2f4a60]">{t("whoHelpsNote", locale)}</p>
-        </div>
-      </section>
+      <WhoHelpsSlider locale={locale} />
     </div>
   );
 }
