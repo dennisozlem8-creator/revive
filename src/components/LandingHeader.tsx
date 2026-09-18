@@ -84,10 +84,10 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
       {open && (
         <nav
           id="landing-mobile-nav"
-          className="border-t border-[var(--border)] bg-white px-5 py-3 lg:hidden"
+          className="border-t border-[var(--border)] bg-white px-3 py-3 sm:px-6 lg:hidden"
           aria-label="Mobile"
         >
-          <div className="mx-auto flex max-w-6xl flex-col">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2">
             {nav.map((item) => (
               <Link
                 key={item.href}
@@ -95,8 +95,8 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
                 onClick={() => setOpen(false)}
                 className={
                   item.href === "/kids"
-                    ? "rm-kids-type border-b border-[var(--border)] py-3 text-base font-bold text-[#243056] last:border-b-0"
-                    : "border-b border-[var(--border)] py-3 text-base font-medium text-foreground last:border-b-0"
+                    ? "rm-kids-type inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-[#f5c84a] px-4 text-sm font-bold text-[#243056] shadow-sm"
+                    : "inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-[#4f90c6]/40 bg-white px-4 text-sm font-semibold text-[#1b3348]"
                 }
               >
                 {item.label}

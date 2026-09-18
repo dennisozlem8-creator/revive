@@ -100,23 +100,23 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             <p className="mt-2 max-w-xl text-sm font-semibold text-[#3d7eb4] sm:text-[0.95rem]">
               {t("fullSpanish", locale)}
             </p>
-            <div className="mt-3 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               <a
                 href="#go-in"
-                className="inline-flex h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light sm:h-11 sm:px-7"
+                className="inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-brand px-4 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light sm:h-11 sm:px-7"
               >
                 {cta}
               </a>
-              <TryDemoButton className="inline-flex h-11 items-center justify-center rounded-full border border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:px-7" />
+              <TryDemoButton className="inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-[#4f90c6] bg-white px-4 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:h-11 sm:px-7" />
               <a
                 href="#impact"
-                className="inline-flex h-11 items-center justify-center rounded-full border border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:px-7"
+                className="inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-[#4f90c6] bg-white px-4 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:h-11 sm:px-7"
               >
                 {t("impactNav", locale)}
               </a>
               <a
                 href="#how-it-works"
-                className="inline-flex h-11 items-center justify-center rounded-full border border-[#9dc4b0] bg-white/80 px-5 text-sm font-semibold text-[#2a4638] transition hover:bg-[#e7f1ea] sm:px-7"
+                className="inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-[#9dc4b0] bg-white/80 px-4 text-sm font-semibold text-[#2a4638] transition hover:bg-[#e7f1ea] sm:h-11 sm:px-7"
               >
                 {t("seeHow", locale)}
               </a>
