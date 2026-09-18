@@ -36,7 +36,6 @@ export function PassportBand({ locale }: { locale: Locale }) {
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-sm leading-6 text-[#2f4a60]">{t("whoHelpsNote", locale)}</p>
           <div className="mt-6 flex flex-wrap gap-2">
             <TryDemoButton className="inline-flex h-10 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light sm:h-11 sm:px-7" />
             <a

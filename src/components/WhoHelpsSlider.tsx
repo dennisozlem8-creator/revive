@@ -201,8 +201,6 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
             </button>
           ))}
         </div>
-
-        <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-6 text-[#2f4a60] sm:mt-6">{t("whoHelpsNote", locale)}</p>
       </div>
     </section>
   );
