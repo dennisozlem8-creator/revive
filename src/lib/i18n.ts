@@ -321,6 +321,9 @@ const copy = {
     impactAnswerTitle: "Home therapy, visible to the clinic.",
     impactAnswerText:
       "Patients photograph the session on a phone or laptop, or wear a muscle sensor. The clinician gets a one-page report. The whole app runs in English or Spanish.",
+    keyMessageKicker: "Key message",
+    keyMessageQuote:
+      "Revive Motion bridges the gap between the clinic and the home by turning rehabilitation exercises into measurable recovery data.",
     whoHelpsKicker: "Who this helps",
     whoHelpsTitle: "One home session. Nine kinds of recovery.",
     whoHelpsText:
@@ -651,6 +654,9 @@ const copy = {
     impactAnswerTitle: "Terapia en casa, visible para la clínica.",
     impactAnswerText:
       "Los pacientes fotografían la sesión en el teléfono o la computadora, o usan un sensor muscular. El clínico recibe un informe de una página. Toda la app funciona en inglés o en español.",
+    keyMessageKicker: "Mensaje clave",
+    keyMessageQuote:
+      "Revive Motion cierra la brecha entre la clínica y el hogar al convertir los ejercicios de rehabilitación en datos medibles de recuperación.",
     whoHelpsKicker: "A quién ayuda",
     whoHelpsTitle: "Una sesión en casa. Nueve tipos de recuperación.",
     whoHelpsText:
