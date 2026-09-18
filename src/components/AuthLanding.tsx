@@ -9,6 +9,7 @@ import { Logo } from "@/components/Logo";
 import { SessionStack } from "@/components/SessionStack";
 import { TryDemoButton } from "@/components/TryDemoButton";
 import { useClinicLocale } from "@/components/useClinicLocale";
+import { SectionKicker } from "@/components/SectionKicker";
 import { t, tf } from "@/lib/i18n";
 
 type AuthLandingProps = {
@@ -18,8 +19,8 @@ type AuthLandingProps = {
 function SectionIntro({ kicker, title, text }: { kicker: string; title: string; text: string }) {
   return (
     <div className="max-w-3xl">
-      <p className="text-sm font-semibold leading-6 text-[#2f4a60] sm:text-base">{kicker}</p>
-      <h2 className="rm-serif mt-1 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">{title}</h2>
+      <SectionKicker>{kicker}</SectionKicker>
+      <h2 className="rm-serif mt-3 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">{title}</h2>
       <p className="mt-2 max-w-2xl text-base leading-7 text-[#1b3348] sm:text-lg sm:leading-8">{text}</p>
     </div>
   );
@@ -142,8 +143,8 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         <section id="how-it-works" className="scroll-mt-20 bg-[#1b3348] text-white">
           <div className="mx-auto grid w-full max-w-6xl items-start lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
             <div className="flex flex-col justify-center px-4 py-10 sm:px-6 lg:sticky lg:top-20 lg:self-start lg:px-8 lg:py-16">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#9dc4b0]">{t("guidedOnDevice", locale)}</p>
-              <h2 className="rm-serif mt-2 text-3xl font-semibold leading-[1.1] sm:text-4xl">
+              <SectionKicker tone="dark">{t("guidedOnDevice", locale)}</SectionKicker>
+              <h2 className="rm-serif mt-3 text-3xl font-semibold leading-[1.1] sm:text-4xl">
                 {t("sessionsAtHome", locale)}
               </h2>
               <p className="mt-3 max-w-md text-sm leading-6 text-white/80 sm:text-base">

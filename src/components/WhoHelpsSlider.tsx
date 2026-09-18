@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SafePicture } from "@/components/SafePicture";
+import { SectionKicker } from "@/components/SectionKicker";
 import { t, tf, type CopyKey, type Locale } from "@/lib/i18n";
 
 const WHO_HELPS: { img: string; title: CopyKey; text: CopyKey }[] = [
@@ -74,8 +75,8 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
       <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
         <div className="flex items-start justify-between gap-4">
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold leading-6 text-[#2f4a60] sm:text-base">{t("whoHelpsKicker", locale)}</p>
-            <h3 id="who-helps-title" className="rm-serif mt-1 text-[1.7rem] font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
+            <SectionKicker>{t("whoHelpsKicker", locale)}</SectionKicker>
+            <h3 id="who-helps-title" className="rm-serif mt-3 text-[1.7rem] font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
               {t("whoHelpsTitle", locale)}
             </h3>
             <p className="mt-2 hidden max-w-xl text-base leading-7 text-[#1b3348] sm:block sm:text-lg sm:leading-8">
