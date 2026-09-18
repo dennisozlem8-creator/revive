@@ -9,7 +9,9 @@ Kids Quest is a physical therapy stretch world for kids — original 3D quest bo
 
 ## Demo clips
 
-`public/demos/kids-quest-demo.mp4` is a 30-second clip of the real Kids Quest app: Knee → Heel Slides → wireless motion, live angle and reps counting to 12/12, then Sam Bot unlock. Same idea as the Photo Goniometer / MPU / MyoWare demos — live numbers from the app, not a toy mock.
+`public/demos/revive-motion-whole-app-demo.mp4` is a 1:20 walkthrough of the live app for Congressional App Challenge 2026: homepage and Recovery Passport, patient briefing and charts, Photo Goniometer (marked 126°), live MPU-6050 angle, live MyoWare, the session stack (Photo, MPU, muscle, heart), Kids Quest Heel Slides to 12/12, session report, Spanish, and the clinician dashboard. Real screens and live numbers, not a toy mock.
+
+`public/demos/kids-quest-demo.mp4` is a 30-second clip of Kids Quest only: Knee → Heel Slides → wireless motion, live angle and reps counting to 12/12, then Sam Bot unlock.
 
 ## Demo account
 
