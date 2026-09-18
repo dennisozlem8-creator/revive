@@ -27,14 +27,17 @@ export function SessionStack({ locale = "en" }: { locale?: Locale }) {
   ] as const;
 
   return (
-    <div className="flex flex-col gap-3 py-4 lg:py-8" aria-label={`${t("photoFirst", locale)}, ${t("sessionSlide", locale)}, ${t("livePlan", locale)}`}>
+    <div
+      className="relative isolate flex flex-col gap-6 py-4 sm:gap-8 lg:py-8"
+      aria-label={`${t("photoFirst", locale)}, ${t("sessionSlide", locale)}, ${t("livePlan", locale)}`}
+    >
       {slides.map((slide, index) => (
         <figure
           key={slide.n}
           className="sticky top-20 overflow-hidden rounded-[1.35rem] bg-[#d7e8f6] shadow-[0_18px_40px_rgba(8,20,32,0.28)] lg:top-24"
           style={{ zIndex: index + 1 }}
         >
-          <div className="relative h-72 sm:h-80 lg:h-[min(34rem,78vh)]">
+          <div className="relative h-[min(28rem,70svh)] sm:h-80 lg:h-[min(34rem,78vh)]">
             <SafePicture
               src={slide.src}
               alt={slide.alt}
@@ -49,6 +52,7 @@ export function SessionStack({ locale = "en" }: { locale?: Locale }) {
           </div>
         </figure>
       ))}
+      <div className="h-[30vh] shrink-0" aria-hidden />
     </div>
   );
 }

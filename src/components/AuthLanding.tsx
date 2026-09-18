@@ -75,7 +75,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
   ];
 
   return (
-    <div className="min-h-full overflow-x-hidden bg-background text-foreground">
+    <div className="min-h-full overflow-x-clip bg-background text-foreground">
       <a
         href="#go-in"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:shadow"
@@ -140,8 +140,8 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         <ImpactBand locale={locale} />
 
         <section id="how-it-works" className="scroll-mt-20 bg-[#1b3348] text-white">
-          <div className="mx-auto grid w-full max-w-6xl items-stretch lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-            <div className="flex flex-col justify-center px-4 py-10 sm:px-6 lg:sticky lg:top-16 lg:self-start lg:px-8 lg:py-16">
+          <div className="mx-auto grid w-full max-w-6xl items-start lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+            <div className="flex flex-col justify-center px-4 py-10 sm:px-6 lg:sticky lg:top-20 lg:self-start lg:px-8 lg:py-16">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#9dc4b0]">{t("guidedOnDevice", locale)}</p>
               <h2 className="rm-serif mt-2 text-3xl font-semibold leading-[1.1] sm:text-4xl">
                 {t("sessionsAtHome", locale)}
