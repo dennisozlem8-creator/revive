@@ -13,6 +13,8 @@ Kids Quest is a physical therapy stretch world for kids — original 3D quest bo
 
 `public/demos/kids-quest-demo.mp4` is a 30-second clip of Kids Quest only: Knee → Heel Slides → wireless motion, live angle and reps counting to 12/12, then Sam Bot unlock.
 
+`public/demos/revive-motion-clinician-demo.mp4` is a 34-second clip of the clinician loop: Try clinician demo → caseload (Jordan Rivera, Passport 76, peak 92°, 6 clips) → movement review and saved photo/motion clips → push a care plan. Real screens and saved numbers, not a toy mock.
+
 ## Demo account
 
 Tap **Try the demo** on the homepage, or sign in:
