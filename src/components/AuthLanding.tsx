@@ -96,10 +96,13 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             <h1 className="rm-serif mt-4 max-w-3xl text-[1.85rem] font-semibold leading-[1.08] text-foreground sm:text-4xl lg:text-5xl">
               {t("heroTitle", locale)}
             </h1>
-            <p className="mt-2 max-w-xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
+            <p className="mt-2 max-w-2xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
               {t("heroText", locale)}
             </p>
-            <p className="mt-2 max-w-xl text-sm font-semibold text-[#3d7eb4] sm:text-[0.95rem]">
+            <p className="mt-2 max-w-2xl text-[0.95rem] font-semibold leading-6 text-[#1b3348] sm:text-base sm:leading-7">
+              {t("heroPassport", locale)}
+            </p>
+            <p className="mt-2 max-w-2xl text-sm font-semibold text-[#3d7eb4] sm:text-[0.95rem]">
               {t("fullSpanish", locale)}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
