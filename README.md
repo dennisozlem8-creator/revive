@@ -7,6 +7,10 @@ Source: [https://github.com/dennisozlem8-creator/revive](https://github.com/denn
 
 Kids Quest is a physical therapy stretch world for kids — original 3D quest bots, a calm sky UI, and a three-tap map. Stretch with the bots. Photo Goniometer (live camera or tap three points), MPU-6050, and MyoWare 2.0 all count reps and save the reading on this device. Adult clinic pages stay on the light clinic theme.
 
+## Demo clips
+
+`public/demos/kids-quest-demo.mp4` is a 30-second clip of the real Kids Quest app: Knee → Heel Slides → wireless motion, live angle and reps counting to 12/12, then Sam Bot unlock. Same idea as the Photo Goniometer / MPU / MyoWare demos — live numbers from the app, not a toy mock.
+
 ## Demo account
 
 Tap **Try the demo** on the homepage, or sign in:
