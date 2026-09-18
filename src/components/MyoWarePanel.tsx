@@ -215,7 +215,7 @@ export function MyoWarePanel({ compact }: MyoWarePanelProps) {
                 }
               }}
             >
-              Connect with USB (Uno)
+              Connect with USB (setup only)
             </button>
           </>
         ) : (

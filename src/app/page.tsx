@@ -135,7 +135,7 @@ export default function Home() {
               src="/images/landing-myoware.png?v=6"
               kicker="02 Muscle"
               title="MyoWare 2.0"
-              text="Connect Bluetooth or USB, then flex."
+              text="Wireless pads. Flex, then save to the Recovery Passport."
             />
             <DashPhotoLink
               href="/session"

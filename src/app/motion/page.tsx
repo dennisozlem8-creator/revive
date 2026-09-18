@@ -16,7 +16,7 @@ export default function MotionSensorPage() {
       <DashIntro
         kicker="Motion sensor"
         title="MPU-6050"
-        text="Play a demo move to see live angle spike. Strap above and below the joint when you have the sensor."
+        text="Wireless MPU-6050 straps above and below the joint. Play a demo move, then wear the straps. Live angle fills the Recovery Passport."
       />
       <div className="mt-5">
         <MotionLiveDemo />

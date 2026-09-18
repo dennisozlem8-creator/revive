@@ -41,7 +41,7 @@ export default function MuscleSensorPage() {
       <DashIntro
         kicker="Muscle sensor"
         title="MyoWare 2.0"
-        text="Play a demo flex to see effort spike. Connect Bluetooth or USB for real ENV from the pads."
+        text="Wireless MyoWare 2.0. Play a demo flex, then connect with Bluetooth. The effort reading fills the Recovery Passport."
       />
       <div className="mt-5">
         <MuscleLiveDemo />

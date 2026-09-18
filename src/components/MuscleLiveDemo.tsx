@@ -125,7 +125,7 @@ export function MuscleLiveDemo() {
             {running ? "Replay demo flex" : "Play a demo flex"}
           </button>
           <p className="mt-2 text-center text-sm text-[#2f4a60]">
-            Same screen as a live squeeze. Connect Bluetooth or USB below for real ENV from the pads.
+            Same screen as a live squeeze. Connect the wireless MyoWare below for real ENV from the pads.
           </p>
         </div>
         <SafePicture

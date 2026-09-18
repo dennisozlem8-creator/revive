@@ -120,7 +120,7 @@ export function MotionLiveDemo() {
             {running ? "Replay demo move" : "Play a demo move"}
           </button>
           <p className="mt-2 text-center text-sm text-[#2f4a60]">
-            Same screen as a live ROM move. Strap the MPU-6050 above and below the joint when you have the hardware.
+            Same screen as a live ROM move. Wear the wireless MPU-6050 straps above and below the joint when you have the hardware.
           </p>
         </div>
         <div className="hidden bg-[#cfe4f4] lg:flex lg:items-center">

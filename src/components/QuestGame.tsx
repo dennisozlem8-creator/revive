@@ -48,14 +48,14 @@ const measures: { id: MeasureId; kicker: string; name: string; line: string; ima
     id: "motion",
     kicker: "MPU-6050",
     name: "Motion",
-    line: "Strap the sensor. Live angle. The bots count.",
+    line: "Strap the wireless sensor. Live angle. The bots count.",
     image: "/images/landing-mpu.png?v=8",
   },
   {
     id: "muscle",
     kicker: "MyoWare 2.0",
     name: "Muscle",
-    line: "Flex. Bluetooth, USB, or practice.",
+    line: "Flex. Wireless pads, or practice.",
     image: "/images/landing-myoware.png?v=6",
   },
 ];
@@ -384,7 +384,7 @@ export function QuestGame({
                       : "Connected. Flex the muscle under the pads."
                     : musclePractice
                       ? "Practice mode. Flex with the picture."
-                      : "Ask a grown-up to connect Bluetooth or USB."}
+                      : "Ask a grown-up to connect the wireless pads."}
               </p>
               {muscle.error && <p className="mt-1 text-sm text-[#5b6685]">{muscle.error}</p>}
               {!muscle.connected && (
@@ -395,15 +395,7 @@ export function QuestGame({
                     onClick={() => void muscle.connectBluetooth()}
                     className="kids-cta rounded-full px-4 py-2 text-sm disabled:opacity-60"
                   >
-                    Bluetooth
-                  </button>
-                  <button
-                    type="button"
-                    disabled={muscle.connecting}
-                    onClick={() => void muscle.connectUsb()}
-                    className="kids-cta-magic kids-cta rounded-full px-4 py-2 text-sm disabled:opacity-60"
-                  >
-                    USB
+                    Wireless
                   </button>
                   {!musclePractice && (
                     <button
