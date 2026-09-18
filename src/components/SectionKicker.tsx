@@ -13,7 +13,7 @@ export function SectionKicker({
 
   return (
     <p
-      className={`inline-flex max-w-full items-center gap-2.5 rounded-full px-4 py-2 text-[0.72rem] font-bold uppercase leading-none tracking-[0.2em] sm:px-5 sm:py-2.5 sm:text-[0.8rem] ${palette}`}
+      className={`inline-flex w-fit max-w-full self-start items-center gap-2.5 rounded-full px-4 py-2 text-[0.72rem] font-bold uppercase leading-none tracking-[0.2em] sm:px-5 sm:py-2.5 sm:text-[0.8rem] ${palette}`}
     >
       <span aria-hidden className={`h-2 w-2 shrink-0 rounded-full ${dot}`} />
       <span className="min-w-0">{children}</span>
