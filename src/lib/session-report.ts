@@ -3,6 +3,7 @@ import type { Locale } from "./i18n";
 import { t } from "./i18n";
 import { loadMyoWareRecordings } from "./myoware-log";
 import { summarizeCheckIn } from "./pre-briefing-questions";
+import { recoveryPassport } from "./recovery-passport";
 import type { User } from "./users";
 
 export type SessionReportData = {
@@ -18,6 +19,7 @@ export type SessionReportData = {
   pain: number | null;
   checkIn: string | null;
   goal: number;
+  passportScore: number | null;
 };
 
 function latestOf(rows: GoniometerMeasurement[], source: GoniometerMeasurement["source"]) {
@@ -32,6 +34,7 @@ export function buildSessionReport(user: User): SessionReportData {
   const muscle = loadMyoWareRecordings(user.email).at(-1) ?? null;
   const photo = latestOf(clips, "photo") ?? latestOf(clips, "video");
   const motion = latestOf(clips, "motion");
+  const passport = recoveryPassport(clips, { goal: user.targetRom || 100, sessionDays: user.sessionDays });
   return {
     patientName: user.name,
     email: user.email,
@@ -45,6 +48,7 @@ export function buildSessionReport(user: User): SessionReportData {
     pain: user.painToday ?? null,
     checkIn: user.checkInAnswers ? summarizeCheckIn(user.checkInAnswers) : null,
     goal: user.targetRom || 100,
+    passportScore: passport.score,
   };
 }
 
@@ -60,6 +64,7 @@ export function formatReportText(report: SessionReportData, locale: Locale) {
     `${t("liveMotion", locale)}: ${report.motion ? `${report.motion.angle}°` : none}`,
     `${t("musclePeak", locale)}: ${report.musclePeak != null ? String(report.musclePeak) : none}`,
     `${t("pain", locale)}: ${report.pain != null ? `${report.pain} / 10` : none}`,
+    `${t("passportTitle", locale)}: ${report.passportScore != null ? String(report.passportScore) : none}`,
     `${t("notADiagnosis", locale)}`,
   ];
   return lines.join("\n");

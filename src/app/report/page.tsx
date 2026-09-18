@@ -3,6 +3,8 @@
 import { DashCard, DashIntro, DashShell, DashStat } from "@/components/clinic/DashKit";
 import { DemoBanner } from "@/components/DemoBanner";
 import { useAuth } from "@/components/AuthProvider";
+import { loadMeasurements } from "@/lib/goniometer";
+import { recoveryPassport } from "@/lib/recovery-passport";
 import { buildSessionReport, formatReportText } from "@/lib/session-report";
 import { clinicLocale, t } from "@/lib/i18n";
 
@@ -17,6 +19,7 @@ export default function SessionReportPage() {
   if (!user) return null;
   const locale = clinicLocale(user);
   const report = buildSessionReport(user);
+  const passport = recoveryPassport(loadMeasurements(user.email), { goal: user.targetRom || 100, sessionDays: user.sessionDays });
   const dateLabel = new Date(report.date).toLocaleString(locale === "es" ? "es" : "en", {
     dateStyle: "medium",
     timeStyle: "short",
@@ -72,6 +75,11 @@ export default function SessionReportPage() {
       </DashCard>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <ValueCard
+          label={t("passportTitle", locale)}
+          value={passport.score != null ? String(passport.score) : t("noReading", locale)}
+          hint={t("passportHowBuilt", locale)}
+        />
         <ValueCard
           label={t("stillPhoto", locale)}
           value={report.photo ? `${report.photo.angle}°` : t("noReading", locale)}

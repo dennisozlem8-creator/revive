@@ -19,6 +19,8 @@ import { isCareTeam } from "@/lib/users";
 import { KidsQuestPromo, PhotoFrame } from "@/components/LandingMedia";
 import { loadMeasurements } from "@/lib/goniometer";
 import { doctorWatchLevel, progressSnapshot } from "@/lib/recovery-plan";
+import { recoveryPassport } from "@/lib/recovery-passport";
+import { RecoveryPassportCard } from "@/components/RecoveryPassportCard";
 import { calculateStreak } from "@/lib/streak";
 
 export default function Home() {
@@ -42,6 +44,7 @@ export default function Home() {
   const firstName = user.name.split(" ")[0];
   const clips = loadMeasurements(user.email);
   const progress = progressSnapshot(clips, user.targetRom || 100, locale);
+  const passport = recoveryPassport(clips, { goal: user.targetRom || 100, sessionDays: user.sessionDays });
   const streak = calculateStreak(user);
   const patients = careTeam ? getPatientsForDoctor() : [];
   const caseloadClips = patients.reduce((sum, patient) => sum + loadMeasurements(patient.email).length, 0);
@@ -91,7 +94,11 @@ export default function Home() {
       </section>
 
       {isPatient && (
-        <section className="mt-6 grid gap-3 sm:grid-cols-3">
+        <>
+          <section className="mt-6">
+            <RecoveryPassportCard passport={passport} locale={locale} />
+          </section>
+          <section className="mt-6 grid gap-3 sm:grid-cols-3">
           <DashStat
             label="Latest peak"
             value={progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
@@ -100,6 +107,7 @@ export default function Home() {
           <DashStat label="Streak" value={streak} hint={streak > 0 ? "Days in a row" : "Do a session to start"} />
           <DashStat label="Saved clips" value={clips.length} hint="Photo, motion, or muscle" />
         </section>
+        </>
       )}
 
       {careTeam && (
@@ -156,8 +164,8 @@ export default function Home() {
                   <div>
                     <p className="rm-serif text-xl font-semibold text-[#1b3348]">{patient.name}</p>
                     <p className="mt-1 text-sm text-[#2f4a60]">
-                      {watch.label} · {snap.latestPeak != null ? `${snap.latestPeak}°` : "No clips"} · streak{" "}
-                      {calculateStreak(patient)}
+                      {watch.label} · {snap.latestPeak != null ? `${snap.latestPeak}°` : "No clips"} · passport{" "}
+                      {recoveryPassport(rows, { goal: patient.targetRom || 100, sessionDays: patient.sessionDays }).score ?? "—"}
                     </p>
                   </div>
                   <span className="text-sm font-semibold text-[#1b3348]">Review →</span>

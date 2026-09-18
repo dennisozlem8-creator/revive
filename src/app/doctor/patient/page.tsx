@@ -9,7 +9,10 @@ import { GoniometerProgressChart } from "@/components/GoniometerProgressChart";
 import { ProgressInsight } from "@/components/ProgressInsight";
 import { loadMeasurements } from "@/lib/goniometer";
 import { doctorWatchLevel } from "@/lib/recovery-plan";
+import { recoveryPassport } from "@/lib/recovery-passport";
+import { RecoveryPassportCard } from "@/components/RecoveryPassportCard";
 import { isCareTeam } from "@/lib/users";
+import { clinicLocale, t } from "@/lib/i18n";
 
 function PatientMovementView() {
   const { user, getPatientsForDoctor } = useAuth();
@@ -19,6 +22,8 @@ function PatientMovementView() {
   const rows = useMemo(() => (email ? loadMeasurements(email) : []), [email]);
   const watch = doctorWatchLevel(rows);
   const goal = patient?.targetRom || 100;
+  const locale = clinicLocale(user);
+  const passport = recoveryPassport(rows, { goal, sessionDays: patient?.sessionDays });
 
   if (!isCareTeam(user?.role)) {
     return (
@@ -56,7 +61,11 @@ function PatientMovementView() {
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <DashStat label="Clips" value={rows.length} />
         <DashStat label="Latest peak" value={rows.length ? `${rows[rows.length - 1].angle}°` : "—"} />
-        <DashStat label="Goal" value={`${goal}°`} />
+        <DashStat label={t("passportScoreLabel", locale)} value={passport.score != null ? passport.score : "—"} />
+      </div>
+
+      <div className="mt-6">
+        <RecoveryPassportCard passport={passport} locale={locale} />
       </div>
 
       <div className="mt-6 space-y-4">

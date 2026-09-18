@@ -10,9 +10,10 @@ import { isCareTeam } from "@/lib/users";
 import type { AppNotification } from "@/lib/notifications";
 import { loadMeasurements } from "@/lib/goniometer";
 import { doctorWatchLevel, progressSnapshot } from "@/lib/recovery-plan";
+import { recoveryPassport } from "@/lib/recovery-passport";
 import { GoniometerProgressChart } from "@/components/GoniometerProgressChart";
 import { DemoBanner } from "@/components/DemoBanner";
-import { clinicLocale } from "@/lib/i18n";
+import { clinicLocale, t } from "@/lib/i18n";
 
 export default function DoctorDashboardPage() {
   const { user, getPatientsForDoctor } = useAuth();
@@ -75,6 +76,7 @@ export default function DoctorDashboardPage() {
               const rows = loadMeasurements(patient.email);
               const watch = doctorWatchLevel(rows);
               const progress = progressSnapshot(rows, patient.targetRom || 100);
+              const passport = recoveryPassport(rows, { goal: patient.targetRom || 100, sessionDays: patient.sessionDays });
               return (
                 <article key={patient.email} className="grid gap-4 p-5 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] sm:p-6">
                   <div>
@@ -98,6 +100,12 @@ export default function DoctorDashboardPage() {
                           {progress.latestPeak != null ? `${progress.latestPeak}°` : "—"}
                         </p>
                         <p className="text-sm text-[#2f4a60]">Latest peak</p>
+                      </div>
+                      <div>
+                        <p className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">
+                          {passport.score != null ? passport.score : "—"}
+                        </p>
+                        <p className="text-sm text-[#2f4a60]">{t("passportScoreLabel", locale)}</p>
                       </div>
                       <div>
                         <p className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">{rows.length}</p>

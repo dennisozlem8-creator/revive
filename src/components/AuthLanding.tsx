@@ -277,28 +277,17 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                     </div>
                   </div>
                 </PhonePreview>
-                <PhonePreview title={t("previewDashboard", locale)}>
+                <PhonePreview title={t("previewPassport", locale)}>
                   <div className="flex h-full flex-col px-3 py-3">
                     <p className="text-xs font-semibold text-[#2f4a60]">{t("previewThisWeek", locale)}</p>
-                    <p className="mt-0.5 text-base font-semibold sm:text-lg">{t("previewRangeWeek", locale)}</p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      <span className="rounded-full bg-[#e8f3fb] px-2.5 py-1 text-xs font-semibold text-[#1b3348]">{t("previewPhotoDeg", locale)}</span>
-                      <span className="rounded-full bg-[#e7f1ea] px-2.5 py-1 text-xs font-semibold text-[#2a7a58]">{t("previewLiveDeg", locale)}</span>
+                    <p className="mt-0.5 text-base font-semibold sm:text-lg">{t("previewPassport", locale)}</p>
+                    <p className="rm-serif mt-3 text-4xl font-semibold leading-none tabular-nums">{t("previewPassportScore", locale)}</p>
+                    <p className="mt-1 text-sm text-muted">{t("passportOf100", locale)}</p>
+                    <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#e8f3fb]">
+                      <span className="block h-full w-[76%] rounded-full bg-[#4f90c6]" />
                     </div>
-                    <svg viewBox="0 0 200 90" className="mt-3 w-full flex-1" role="img" aria-label={t("previewRangeWeek", locale)}>
-                      <defs>
-                        <linearGradient id="rm-dash-fill" x1="0" x2="0" y1="0" y2="1">
-                          <stop offset="0%" stopColor="#4f90c6" stopOpacity="0.35" />
-                          <stop offset="100%" stopColor="#4f90c6" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M8,78 L8,70 L40,62 L72,54 L104,40 L136,30 L192,18 L192,78 Z" fill="url(#rm-dash-fill)" />
-                      <polyline points="8,70 40,62 72,54 104,40 136,30 192,18" fill="none" stroke="#4f90c6" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <circle cx="192" cy="18" r="4.5" fill="#3a7d62" />
-                      <text x="8" y="88" fontSize="8" fill="#4d6478">Mon</text>
-                      <text x="168" y="88" fontSize="8" fill="#4d6478">Sun</text>
-                    </svg>
-                    <p className="mt-2 text-xs text-muted">{t("previewSharedClinician", locale)}</p>
+                    <p className="mt-3 text-sm font-semibold text-[#1b3348]">{t("previewVelocity", locale)}</p>
+                    <p className="mt-auto pt-3 text-xs text-muted">{t("previewSharedClinician", locale)}</p>
                   </div>
                 </PhonePreview>
                 <PhonePreview title={t("checkIn", locale)}>

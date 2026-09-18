@@ -19,6 +19,8 @@ import { DemoBanner } from "@/components/DemoBanner";
 import { ReportActions } from "@/components/ReportActions";
 import { loadMeasurements } from "@/lib/goniometer";
 import { preExerciseSetup, progressSnapshot, setupStepText } from "@/lib/recovery-plan";
+import { recoveryPassport } from "@/lib/recovery-passport";
+import { RecoveryPassportCard } from "@/components/RecoveryPassportCard";
 import { clinicLocale, t, tf } from "@/lib/i18n";
 
 export default function DashboardPage() {
@@ -41,6 +43,7 @@ export default function DashboardPage() {
   const questsDone = Object.values(user.questProgress).filter(Boolean).length;
   const clips = loadMeasurements(user.email);
   const progress = progressSnapshot(clips, user.targetRom || 100, locale);
+  const passport = recoveryPassport(clips, { goal: user.targetRom || 100, sessionDays: user.sessionDays });
   const todayExercise = user.ptPrescription?.exerciseName ?? "Heel Slide";
   const setup = preExerciseSetup(todayExercise).slice(0, 3);
   const heat = lastDaysActive(user, 28);
@@ -63,6 +66,10 @@ export default function DashboardPage() {
         }
       />
       <DashLoop />
+
+      <div className="mt-6">
+        <RecoveryPassportCard passport={passport} locale={locale} />
+      </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <DashRing

@@ -11,6 +11,8 @@ import { summarizeCheckIn } from "@/lib/pre-briefing-questions";
 import { clinicLocale, t, tf } from "@/lib/i18n";
 import { loadMeasurements } from "@/lib/goniometer";
 import { preExerciseSetup, progressSnapshot, setupStepText } from "@/lib/recovery-plan";
+import { recoveryPassport } from "@/lib/recovery-passport";
+import { RecoveryPassportCard } from "@/components/RecoveryPassportCard";
 import { PhotoFrame } from "@/components/LandingMedia";
 
 export default function BriefingPage() {
@@ -29,6 +31,7 @@ export default function BriefingPage() {
   const setup = preExerciseSetup(todayExercise).slice(0, 4);
   const clips = loadMeasurements(user.email);
   const progress = progressSnapshot(clips, user.targetRom || 100, locale);
+  const passport = recoveryPassport(clips, { goal: user.targetRom || 100, sessionDays: user.sessionDays });
   const goal = user.targetRom || 100;
 
   return (
@@ -57,6 +60,10 @@ export default function BriefingPage() {
           className="min-h-[10rem] rounded-[1.5rem] lg:min-h-[12rem]"
           imgClassName="object-cover object-[center_20%]"
         />
+      </div>
+
+      <div className="mt-6">
+        <RecoveryPassportCard passport={passport} locale={locale} />
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-3">

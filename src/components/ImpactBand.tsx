@@ -42,21 +42,18 @@ export function ImpactBand({ locale }: { locale: Locale }) {
               ))}
             </div>
 
-            <div className="mt-6 sm:mt-7">
-              <TryDemoButton className="inline-flex h-11 w-full items-center justify-center rounded-full bg-white px-7 text-sm font-semibold text-[#1b3348] shadow-[0_12px_28px_rgba(0,0,0,0.28)] transition hover:bg-[#e8f3fb] sm:w-auto" />
+            <div className="mt-6 flex flex-col gap-4 sm:mt-7 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <p className="rm-serif text-[1.35rem] font-semibold leading-snug text-white sm:text-[1.6rem]">
+                  {t("impactAnswerTitle", locale)}
+                </p>
+                <p className="mt-2 text-[15px] leading-6 text-white/82 sm:text-base sm:leading-7">
+                  {t("impactAnswerText", locale)}
+                </p>
+              </div>
+              <TryDemoButton className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-full bg-white px-7 text-sm font-semibold text-[#1b3348] shadow-[0_12px_28px_rgba(0,0,0,0.28)] transition hover:bg-[#e8f3fb] sm:w-auto" />
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="bg-white">
-        <div className="mx-auto w-full max-w-3xl px-4 py-8 text-center sm:px-6 lg:py-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#4f90c6]">{t("keyMessageKicker", locale)}</p>
-          <blockquote className="rm-serif mt-3 text-[1.4rem] font-semibold leading-snug text-[#1b3348] sm:text-[1.85rem] sm:leading-[1.2]">
-            {t("keyMessageQuote", locale)}
-          </blockquote>
-          <span className="mx-auto mt-4 block h-0.5 w-16 rounded-full bg-[#4f90c6]" aria-hidden />
-          <p className="mt-4 text-[15px] leading-6 text-[#2f4a60] sm:text-base sm:leading-7">{t("impactAnswerText", locale)}</p>
         </div>
       </section>
 
