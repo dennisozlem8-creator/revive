@@ -164,7 +164,7 @@ export default function SessionPage() {
       <DashIntro
         kicker={t("liveSession", locale)}
         title={user.ptPrescription?.exerciseName ?? "ROM sensor test"}
-        text="Photo, wireless motion, wireless muscle, or a heart strap. Same session."
+        text="Photo, MPU-6050 on an Elegoo, wireless muscle, or a heart strap. Same session."
       />
       <div className="mt-5">
         <DashHero
@@ -174,7 +174,7 @@ export default function SessionPage() {
           text={
             recording
               ? "Hold the pose. End the test when the peak looks honest."
-              : "Open a photo or pair a wireless sensor, then start the ROM test."
+              : "Open a photo or connect the Elegoo, then start the ROM test."
           }
         />
       </div>
@@ -197,6 +197,7 @@ export default function SessionPage() {
       <div className="mt-6 space-y-4">
         <PhotoMeasureCard />
         <MotionPanel
+          compact
           live={recording}
           onConnected={() => setMotionReady(true)}
           onAngle={(next) => {

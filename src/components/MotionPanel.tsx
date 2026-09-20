@@ -2,8 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { simulateDeviceConnect } from "@/lib/device-sensor";
-import { demoMotionAt } from "@/lib/motion-demo";
+import {
+  connectWiredMpu,
+  mpuUsbHelp,
+  mpuUsbSupported,
+  parseSerialMpuLine,
+  requestUsbMpuPort,
+  type MpuConnection,
+} from "@/lib/mpu-sensor";
 import { SafePicture } from "@/components/SafePicture";
 
 type MotionPanelProps = {
@@ -17,27 +23,80 @@ export function MotionPanel({ compact, live, onConnected, onAngle }: MotionPanel
   const [connecting, setConnecting] = useState(false);
   const [ready, setReady] = useState(false);
   const [angle, setAngle] = useState(0);
-  const startedRef = useRef(0);
+  const [error, setError] = useState("");
+  const [deviceName, setDeviceName] = useState("");
+  const [serialLog, setSerialLog] = useState<string[]>([]);
+  const [i2cOk, setI2cOk] = useState(false);
+  const connectionRef = useRef<MpuConnection | null>(null);
   const onAngleRef = useRef(onAngle);
+  const onConnectedRef = useRef(onConnected);
   onAngleRef.current = onAngle;
+  onConnectedRef.current = onConnected;
+  const usbOk = mpuUsbSupported();
 
   useEffect(() => {
-    if (!ready || !live) return;
-    startedRef.current = performance.now();
-    const id = window.setInterval(() => {
-      const sample = demoMotionAt(performance.now() - startedRef.current);
-      setAngle(sample.angle);
-      onAngleRef.current?.(sample.angle);
-    }, 80);
-    return () => window.clearInterval(id);
-  }, [ready, live]);
+    return () => {
+      connectionRef.current?.disconnect();
+      connectionRef.current = null;
+    };
+  }, []);
 
-  async function connect() {
+  async function connectUsb() {
+    if (!usbOk) {
+      setError(mpuUsbHelp());
+      return;
+    }
     setConnecting(true);
-    await simulateDeviceConnect();
-    setConnecting(false);
-    setReady(true);
-    onConnected?.();
+    setError("");
+    setSerialLog([]);
+    setI2cOk(false);
+    try {
+      const port = await requestUsbMpuPort();
+      const connection = await connectWiredMpu({
+        port,
+        onAngle: (next) => {
+          setAngle(next);
+          setI2cOk(true);
+          setReady(true);
+          onAngleRef.current?.(next);
+        },
+        onLine: (line) => {
+          setSerialLog((prev) => [...prev.slice(-7), line]);
+          const sample = parseSerialMpuLine(line);
+          if (sample?.hello) setReady(true);
+          if (sample?.i2cOk) setI2cOk(true);
+          if (sample?.error) setError(sample.error.replace(/^ERR\s+/i, ""));
+        },
+        onDisconnect: () => {
+          connectionRef.current = null;
+          setReady(false);
+          setConnecting(false);
+        },
+      });
+      connectionRef.current = connection;
+      setDeviceName(connection.deviceName);
+      setReady(true);
+      onConnectedRef.current?.();
+    } catch (err) {
+      const name = err instanceof DOMException ? err.name : "";
+      if (name === "NotFoundError" || name === "AbortError") {
+        setError("No USB device was chosen. Plug in the Elegoo, close Serial Monitor, tap Connect with USB, then pick Arduino Uno.");
+      } else {
+        setError(err instanceof Error ? err.message : "Could not open USB.");
+      }
+    } finally {
+      setConnecting(false);
+    }
+  }
+
+  function disconnect() {
+    connectionRef.current?.disconnect();
+    connectionRef.current = null;
+    setReady(false);
+    setAngle(0);
+    setSerialLog([]);
+    setI2cOk(false);
+    setError("");
   }
 
   return (
@@ -53,34 +112,73 @@ export function MotionPanel({ compact, live, onConnected, onAngle }: MotionPanel
         <div className="min-w-0 flex-1">
           <p className="font-semibold text-foreground">
             {connecting
-              ? "Finding the motion sensor"
+              ? "Opening the Elegoo USB port"
               : ready
-                ? live
+                ? i2cOk || angle > 0
                   ? "MPU-6050 — live angle"
-                  : "MPU-6050 connected — motion sensor ready"
+                  : "MPU-6050 connected — waiting for ANGLE"
                 : "Connect MPU-6050"}
           </p>
           <p className="mt-1 text-sm text-muted">
             {ready
-              ? "Wireless motion on the joint. The live number is the angle."
-              : "Strap the wireless sensor above and below the joint, then Connect."}
+              ? `${deviceName || "Elegoo Uno R3"} · live tilt from the MPU-6050`
+              : compact
+                ? "Elegoo Uno over USB. Live angle while you move."
+                : mpuUsbHelp()}
           </p>
         </div>
         {ready ? <p className="rm-display tabular-nums text-[#1b3348]">{angle}°</p> : null}
       </div>
 
-      {!ready ? (
-        <button
-          type="button"
-          className="rm-btn rm-btn-brand mt-4 w-full disabled:opacity-40 sm:w-auto sm:px-8"
-          disabled={connecting}
-          onClick={() => void connect()}
-        >
-          {connecting ? "Connecting…" : "Connect"}
-        </button>
-      ) : (
-        <p className="mt-3 text-sm text-muted">Wireless MPU-6050. Live angle while you move.</p>
+      {ready && !compact && (
+        <div className="mt-4 rounded-2xl border border-[var(--border)] bg-background px-4 py-3">
+          <p className="text-xs font-bold uppercase tracking-wide text-muted">Motion signal</p>
+          <p className="mt-1 font-semibold text-foreground">
+            {i2cOk || angle > 0 ? "USB yes — move the joint and watch ANGLE" : "USB yes — waiting for I2C OK and ANGLE"}
+          </p>
+          <p className="mt-1 text-sm text-body">
+            Tape the MPU-6050 on one bone of the joint. Keep USB plugged into the computer. The number is tilt, not a diagnosis.
+          </p>
+        </div>
       )}
+
+      {!compact && serialLog.length > 0 && (
+        <div className="mt-3 rounded-xl bg-background px-3 py-2 font-mono text-xs text-muted">
+          <p className="mb-1 font-sans text-[11px] font-semibold uppercase tracking-wide text-muted">
+            Sensor log — look for HELLO MPU6050 and ANGLE
+          </p>
+          {serialLog.map((line, i) => (
+            <p
+              key={`${line}-${i}`}
+              className={/^(HELLO|ANGLE|I2C OK|WHO|SCAN)\b/i.test(line) ? "font-semibold text-foreground" : undefined}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {error ? <p className="mt-3 text-sm text-alert">{error}</p> : null}
+      {live && ready ? (
+        <p className="mt-3 text-sm font-semibold text-brand-light">Live angle is filling this session.</p>
+      ) : null}
+
+      <div className={`mt-4 flex flex-col gap-2 ${compact ? "" : "sm:flex-row"}`}>
+        {!ready ? (
+          <button
+            type="button"
+            className="rm-btn rm-btn-brand w-full disabled:opacity-40 sm:w-auto sm:px-8"
+            disabled={connecting || !usbOk}
+            onClick={() => void connectUsb()}
+          >
+            {connecting ? "Connecting…" : "Connect with USB"}
+          </button>
+        ) : (
+          <button type="button" className="rm-btn rm-btn-ghost w-full sm:w-auto sm:px-8" onClick={disconnect}>
+            Disconnect
+          </button>
+        )}
+      </div>
     </section>
   );
 }

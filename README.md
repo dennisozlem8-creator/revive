@@ -41,6 +41,13 @@ Signed-in patients can open **Photo Goniometer** from Dashboard, Charts (Photo t
 
 The estimate is for progress tracking, not a diagnosis. Video files are not stored in the browser database.
 
+## MPU-6050 (Elegoo Uno R3)
+
+1. VCC → Uno 5V. If the pin is labeled only 3.3V, use Uno 3.3V. GND → GND. SCL → A5. SDA → A4. Leave INT empty.
+2. Arduino IDE: Tools → Board → **Arduino Uno**. Download `wired-mpu.ino` from the Motion page (`/motion`). File → Open. Upload. Close Serial Monitor.
+3. Open Chrome or Edge. Go to **MPU-6050** (`/motion`). Tap **Connect with USB**. Pick the Arduino.
+4. The page confirms `HELLO MPU6050 ELEGOO_UNO_R3`, then live `ANGLE` lines. Tape the sensor on the limb and move.
+
 ## MyoWare 2.0 Wireless Shield
 
 Do not use the Elegoo Uno for this. The Wireless Shield is its own ESP32 board.

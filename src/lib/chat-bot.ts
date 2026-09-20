@@ -32,9 +32,14 @@ const faq: { keywords: string[]; answer: string }[] = [
       "Elbow rehab focuses on gradual loading and eccentric exercises. Use a brace during activity if recommended, and ice after sessions if swollen.",
   },
   {
+    keywords: ["mpu", "6050", "uno", "elegoo", "motion sensor", "gyroscope", "accel"],
+    answer:
+      "MPU-6050 uses the Elegoo Uno over USB. VCC to 5V (or 3.3V if that pin is labeled only 3.3V), GND to GND, SCL to A5, SDA to A4. Download wired-mpu.ino from the Motion page. Board: Arduino Uno. Upload, close Serial Monitor. Chrome → MPU-6050 → Connect with USB. Look for HELLO MPU6050 and ANGLE.",
+  },
+  {
     keywords: ["rom", "range of motion", "sensor", "heart", "bpm", "polar", "bluetooth"],
     answer:
-      "Pair a Bluetooth heart-rate strap, or plug in a wired Arduino pulse sensor over USB. Open Heart sensor, tap Connect with USB, then Record this session. Polar H9/H10, Wahoo TICKR, Coospo, Magene work over Bluetooth. Apple Watch usually does not. Joint ROM is still a demo; use Photo Goniometer for a real knee angle.",
+      "For joint angle, use Photo Goniometer or MPU-6050 on the Elegoo over USB (Motion page → Connect with USB). For heart rate, pair a Bluetooth strap or a wired pulse sensor. Polar H9/H10, Wahoo TICKR, Coospo, Magene work over Bluetooth. Apple Watch usually does not.",
   },
   {
     keywords: ["myoware", "myo ware", "emg", "muscle", "env", "wireless", "bluetooth"],
