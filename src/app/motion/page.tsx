@@ -39,6 +39,33 @@ export default function MotionSensorPage() {
         imgClassName="object-cover object-[left_42%]"
       />
 
+      <DashCard className="mt-6 p-5">
+        <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Do this now — no I2C</h2>
+        <p className="mt-2 text-sm leading-6 text-[#2f4a60]">
+          USB is working. The MPU-6050 did not answer. That is a power or wire problem, not a website problem.
+        </p>
+        <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-6 text-[#2f4a60]">
+          <li>Disconnect on this page. Close Serial Monitor. Unplug USB.</li>
+          <li>
+            Read the power pin. If it says <strong className="text-[#1b3348]">VCC</strong> or{" "}
+            <strong className="text-[#1b3348]">VIN</strong>, that wire goes to Uno{" "}
+            <strong className="text-[#1b3348]">5V</strong>. If it says only{" "}
+            <strong className="text-[#1b3348]">3.3V</strong>, use Uno 3.3V. Never put 5V on a 3.3V-only pin.
+          </li>
+          <li>GND → GND on the Elegoo board (not only a breadboard rail). Push all four wires in hard.</li>
+          <li>SCL → A5. SDA → A4. Leave INT, AD0, XDA, and XCL empty.</li>
+          <li>
+            Download{" "}
+            <a className="font-medium text-brand-light underline" href="/firmware/wired-mpu">
+              wired-mpu.ino
+            </a>
+            . File → Open that file. Tools → Board → Arduino Uno. Upload. Close Serial Monitor.
+          </li>
+          <li>Chrome → Connect with USB. Look for SCAN 0x68 or 0x69, then I2C OK and ANGLE — not SCAN none.</li>
+          <li>If SCAN is still none, swap only SCL and SDA, re-upload, then Connect with USB again.</li>
+        </ol>
+      </DashCard>
+
       <div className="mt-6">
         <MotionPanel />
       </div>
@@ -46,6 +73,16 @@ export default function MotionSensorPage() {
       <DashCard className="mt-4 p-5">
         <h2 className="rm-serif text-xl font-semibold text-[#1b3348]">Elegoo Uno — four wires</h2>
         <p className="mt-2 text-sm text-[#2f4a60]">Use the computer that has Arduino IDE. Chrome or Edge, not Safari.</p>
+        <div className="mt-4 overflow-hidden rounded-xl bg-white ring-1 ring-[#4f90c6]/12">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/mpu6050-wiring.svg"
+            alt="MPU-6050 VCC to 5V, GND to GND, SCL to A5, SDA to A4"
+            width={640}
+            height={280}
+            className="h-auto w-full"
+          />
+        </div>
         <ol className="mt-4 list-decimal space-y-1 pl-5 text-sm text-body">
           <li>VCC → Uno 5V. If that pin is labeled only 3.3V, use Uno 3.3V instead. Never put 5V on a 3.3V-only pin.</li>
           <li>GND → GND</li>
@@ -77,9 +114,10 @@ export default function MotionSensorPage() {
 
       <HelpBlock title="If SCAN says none">
         <ol className="list-decimal space-y-2 pl-5">
-          <li>Power: VCC on 5V, or 3.3V if the module pin is labeled only 3.3V. GND must be on GND.</li>
-          <li>SCL in A5, SDA in A4. Swap those two only if SCAN stays none after a power check.</li>
-          <li>Close Serial Monitor. Only Chrome can hold the USB port at the same time as this page.</li>
+          <li>Confirm four wires only: VCC, GND, SCL, SDA. INT, AD0, XDA, XCL stay empty.</li>
+          <li>Power: if the pin says VCC or VIN, use Uno 5V. If it says only 3.3V, use Uno 3.3V. GND must be on the Elegoo GND.</li>
+          <li>SCL in A5, SDA in A4. If SCAN is still none, swap those two wires and upload again.</li>
+          <li>Re-upload wired-mpu.ino. Close Serial Monitor. Chrome → Connect with USB.</li>
         </ol>
       </HelpBlock>
 

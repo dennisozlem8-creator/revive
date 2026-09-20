@@ -32,9 +32,9 @@ const faq: { keywords: string[]; answer: string }[] = [
       "Elbow rehab focuses on gradual loading and eccentric exercises. Use a brace during activity if recommended, and ice after sessions if swollen.",
   },
   {
-    keywords: ["mpu", "6050", "uno", "elegoo", "motion sensor", "gyroscope", "accel"],
+    keywords: ["mpu", "6050", "uno", "elegoo", "motion sensor", "gyroscope", "accel", "i2c", "scan none"],
     answer:
-      "MPU-6050 uses the Elegoo Uno over USB. VCC to 5V (or 3.3V if that pin is labeled only 3.3V), GND to GND, SCL to A5, SDA to A4. Download wired-mpu.ino from the Motion page. Board: Arduino Uno. Upload, close Serial Monitor. Chrome → MPU-6050 → Connect with USB. Look for HELLO MPU6050 and ANGLE.",
+      "No I2C means USB works and the MPU-6050 did not answer. VCC to 5V (or 3.3V if that pin is labeled only 3.3V), GND to GND, SCL to A5, SDA to A4. Re-download wired-mpu.ino, upload, close Serial Monitor. Chrome → Connect with USB. Look for SCAN 0x68 or 0x69, not SCAN none. If still none, swap SCL and SDA and upload again.",
   },
   {
     keywords: ["rom", "range of motion", "sensor", "heart", "bpm", "polar", "bluetooth"],

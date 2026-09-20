@@ -65,7 +65,14 @@ export function MotionPanel({ compact, live, onConnected, onAngle }: MotionPanel
           const sample = parseSerialMpuLine(line);
           if (sample?.hello) setReady(true);
           if (sample?.i2cOk) setI2cOk(true);
-          if (sample?.error) setError(sample.error.replace(/^ERR\s+/i, ""));
+          if (sample?.error) {
+            const raw = sample.error.replace(/^ERR\s+/i, "");
+            setError(
+              /no I2C/i.test(raw)
+                ? "USB yes — no I2C. Check VCC power (5V vs 3.3V), GND, then swap SCL and SDA and re-upload wired-mpu.ino."
+                : raw
+            );
+          }
         },
         onDisconnect: () => {
           connectionRef.current = null;
@@ -134,7 +141,9 @@ export function MotionPanel({ compact, live, onConnected, onAngle }: MotionPanel
         <div className="mt-4 rounded-2xl border border-[var(--border)] bg-background px-4 py-3">
           <p className="text-xs font-bold uppercase tracking-wide text-muted">Motion signal</p>
           <p className="mt-1 font-semibold text-foreground">
-            {i2cOk || angle > 0 ? "USB yes — move the joint and watch ANGLE" : "USB yes — waiting for I2C OK and ANGLE"}
+            {i2cOk || angle > 0
+              ? "USB yes — move the joint and watch ANGLE"
+              : "USB yes — waiting for I2C OK. If the log says SCAN none, the chip has no power or SCL/SDA are swapped."}
           </p>
           <p className="mt-1 text-sm text-body">
             Tape the MPU-6050 on one bone of the joint. Keep USB plugged into the computer. The number is tilt, not a diagnosis.

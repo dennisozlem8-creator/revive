@@ -47,6 +47,7 @@ The estimate is for progress tracking, not a diagnosis. Video files are not stor
 2. Arduino IDE: Tools → Board → **Arduino Uno**. Download `wired-mpu.ino` from the Motion page (`/motion`). File → Open. Upload. Close Serial Monitor.
 3. Open Chrome or Edge. Go to **MPU-6050** (`/motion`). Tap **Connect with USB**. Pick the Arduino.
 4. The page confirms `HELLO MPU6050 ELEGOO_UNO_R3`, then live `ANGLE` lines. Tape the sensor on the limb and move.
+5. If the log says `SCAN none` or `no I2C`, USB is fine and the chip did not answer. Recheck VCC (5V vs 3.3V) and GND, re-upload `wired-mpu.ino`, then swap SCL and SDA.
 
 ## MyoWare 2.0 Wireless Shield
 
