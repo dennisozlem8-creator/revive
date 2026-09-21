@@ -3,8 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AuthForm } from "./AuthForm";
-import { SafePicture } from "./SafePicture";
-import { TryDemoButton } from "./TryDemoButton";
 import { ResetAppButton } from "./ResetAppButton";
 import { useClinicLocale } from "./useClinicLocale";
 import { t } from "@/lib/i18n";
@@ -88,24 +86,7 @@ export function GoInScreen({ mode }: GoInScreenProps) {
       <p className="mt-1 text-sm leading-5 text-muted">
         {signingIn ? t("chooseRole", locale) : t("createAccountWho", locale)}
       </p>
-      {signingIn && (
-        <div className="mt-3 flex flex-col gap-2 rounded-2xl border border-[#9ec6e0] bg-[#e8f3fb] p-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm font-semibold text-[#1b3348]">{t("noAccountYet", locale)}</p>
-          <Link
-            href="/register"
-            className="inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-brand px-5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(79,144,198,0.28)] transition hover:bg-brand-light"
-          >
-            {t("createAccount", locale)}
-            <span aria-hidden className="ml-2">→</span>
-          </Link>
-        </div>
-      )}
       <div className="mt-3 flex flex-col gap-1.5">
-        <TryDemoButton className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light" />
-        <TryDemoButton
-          role="doctor"
-          className="inline-flex h-11 items-center justify-center rounded-full border border-[#9dc4b0] bg-white px-5 text-sm font-semibold text-[#2a4638] transition hover:bg-[#e7f1ea]"
-        />
         {entries.map((item) => (
           <button
             key={item.id}
@@ -123,24 +104,6 @@ export function GoInScreen({ mode }: GoInScreenProps) {
             <span className={`shrink-0 text-sm font-semibold ${item.chevronClass}`}>{t("next", locale)}</span>
           </button>
         ))}
-        <Link
-          href="/kids"
-          className="rm-glow-kids overflow-hidden rounded-[1.25rem] border border-[rgba(36,48,86,0.08)] text-left shadow-[0_8px_24px_rgba(36,48,86,0.08)] transition hover:-translate-y-0.5 hover:shadow-lg"
-        >
-          <SafePicture
-            src="/images/landing-kids-quest.webp?v=5"
-            alt=""
-            className="h-40 w-full object-cover object-[center_72%] sm:h-44"
-          />
-          <div className="kids-caption flex flex-col items-center gap-2 px-3 py-3 text-center sm:flex-row sm:items-center sm:justify-between sm:px-4 sm:text-left">
-            <span>
-              <p className="text-sm font-semibold text-[#5b6685]">{t("stretchWithBots", locale)}</p>
-              <p className="kids-wordmark mt-0.5 text-2xl leading-none">{t("kidsQuest", locale)}</p>
-              <p className="mt-1 text-sm leading-5 text-[#5b6685]">{t("botsAskYouStretch", locale)}</p>
-            </span>
-            <span className="shrink-0 text-sm font-semibold text-[#4d8ef0]">{t("open", locale)}</span>
-          </div>
-        </Link>
       </div>
       <ResetAppButton variant="quiet" />
       <SwitchAuthLink mode={mode} />

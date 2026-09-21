@@ -1,5 +1,5 @@
-import { AuthLanding } from "@/components/AuthLanding";
+import { AccountGate } from "@/components/AccountGate";
 
 export default function LoginPage() {
-  return <AuthLanding mode="login" accountFirst />;
+  return <AccountGate mode="login" />;
 }

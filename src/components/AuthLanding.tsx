@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { GoInScreen } from "@/components/GoInScreen";
 import { ImpactBand } from "@/components/ImpactBand";
 import { PassportBand } from "@/components/PassportBand";
 import { MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame, PhotoGoniometerPhoto } from "@/components/LandingMedia";
@@ -15,7 +14,6 @@ import { t, tf } from "@/lib/i18n";
 
 type AuthLandingProps = {
   mode: "login" | "register";
-  accountFirst?: boolean;
 };
 
 function SectionIntro({ kicker, title, text }: { kicker: string; title: string; text: string }) {
@@ -28,7 +26,7 @@ function SectionIntro({ kicker, title, text }: { kicker: string; title: string; 
   );
 }
 
-export function AuthLanding({ mode, accountFirst = false }: AuthLandingProps) {
+export function AuthLanding({ mode }: AuthLandingProps) {
   const { locale } = useClinicLocale();
   const primaryCta = mode === "login" ? t("createAccount", locale) : t("signIn", locale);
   const primaryHref = mode === "login" ? "/register" : "/login";
@@ -59,7 +57,7 @@ export function AuthLanding({ mode, accountFirst = false }: AuthLandingProps) {
   return (
     <div className="min-h-full overflow-x-clip bg-background text-foreground">
       <a
-        href="#go-in"
+        href="/login"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:shadow"
       >
         {t("skipToSignIn", locale)}
@@ -129,14 +127,6 @@ export function AuthLanding({ mode, accountFirst = false }: AuthLandingProps) {
             </PhotoFrame>
           </div>
         </section>
-
-        {accountFirst && (
-          <div className="mx-auto w-full max-w-xl px-4 pb-8 sm:px-6">
-            <section id="go-in" className="scroll-mt-20 rounded-[1.25rem] bg-white p-3 shadow-[0_16px_36px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/15 sm:p-4">
-              <GoInScreen mode={mode} />
-            </section>
-          </div>
-        )}
 
         <ImpactBand locale={locale} />
 
