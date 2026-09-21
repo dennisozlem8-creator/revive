@@ -373,11 +373,10 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
             <div className="grid items-center overflow-hidden rounded-[1.75rem] bg-white shadow-[0_16px_36px_rgba(27,51,72,0.08)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
               <div className="p-6 sm:p-8">
-                <SectionKicker>{t("youngerPatients", locale)}</SectionKicker>
+                <SectionKicker>{t("kidsQuest", locale)}</SectionKicker>
                 <h2 className="rm-serif mt-4 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
                   {t("kidsBandTitle", locale)}
                 </h2>
-                <p className="mt-3 max-w-xl text-base leading-7 text-[#2f4a60]">{t("kidsBandText", locale)}</p>
                 <div className="mt-5">
                   <Link href="/kids" className="inline-flex h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-bold text-white">
                     {t("open", locale)} {t("kidsQuest", locale)}

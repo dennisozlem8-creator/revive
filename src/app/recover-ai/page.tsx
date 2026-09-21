@@ -60,7 +60,7 @@ export default function RecoverAIPage() {
 
   function askStarter(key: CoachStarter, label: string) {
     if (!user) return;
-    const answer = coachStarterAnswer(key, user, locale, progress.latestPeak);
+    const answer = coachStarterAnswer(key, user, locale, progress.latestPeak, progress.firstPeak);
     setMessages((prev) => [...prev, { role: "user", text: label }, { role: "assistant", text: answer }]);
   }
 
@@ -76,7 +76,7 @@ export default function RecoverAIPage() {
       if (!user) return;
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", text: getCoachResponse(text, user) },
+        { role: "assistant", text: getCoachResponse(text, user, { firstPeak: progress.firstPeak, latestPeak: progress.latestPeak }) },
       ]);
     }, 450);
   }

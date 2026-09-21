@@ -7,7 +7,8 @@ export function coachStarterAnswer(
   key: CoachStarter,
   user: User,
   locale: Locale,
-  latestPeak: number | null
+  latestPeak: number | null,
+  firstPeak: number | null = null
 ): string {
   const es = locale === "es";
   const name = user.name.split(" ")[0];
@@ -17,7 +18,7 @@ export function coachStarterAnswer(
   const pain = user.painToday ?? 3;
   const goal = user.targetRom || 100;
   const peak = latestPeak != null ? `${latestPeak}°` : es ? "aún sin lectura" : "no reading yet";
-  const start = `${user.baselineRom}°`;
+  const from = firstPeak != null ? `${firstPeak}°` : `${user.baselineRom}°`;
 
   if (key === "today") {
     return es
@@ -35,12 +36,12 @@ export function coachStarterAnswer(
   }
   if (key === "score") {
     return es
-      ? `${name}, 76 es el Pasaporte de recuperación de la muestra: sesiones de esta semana, rango hacia la meta y velocidad. No es un diagnóstico. Tu rango guardado es ${peak} y la meta es ${goal}°.`
-      : `${name}, 76 is the sample Recovery Passport: sessions this week, range toward the goal, and velocity. It is not a diagnosis. Your saved range is ${peak} and the goal is ${goal}°.`;
+      ? `${name}, 76 es el Pasaporte de recuperación de la muestra: sesiones de esta semana, rango hacia la meta y velocidad. No es un diagnóstico. El rango guardado pasó de ${from} a ${peak}. La meta es ${goal}°.`
+      : `${name}, 76 is the sample Recovery Passport: sessions this week, range toward the goal, and velocity. It is not a diagnosis. Saved range moved from ${from} to ${peak}. The goal is ${goal}°.`;
   }
   return es
-    ? `${name}, tu clínico abre el mismo Pasaporte. Ve ${exercise}, el dolor de hoy (${pain}/10) y el rango de ${start} hacia ${peak}, con meta de ${goal}°.`
-    : `${name}, your clinician opens the same Passport. They see ${exercise}, today’s pain (${pain}/10), and range from ${start} toward ${peak}, with a goal of ${goal}°.`;
+    ? `${name}, tu clínico abre el mismo Pasaporte. Ve ${exercise}, el dolor de hoy (${pain}/10) y el rango de ${from} a ${peak}, con meta de ${goal}°.`
+    : `${name}, your clinician opens the same Passport. They see ${exercise}, today’s pain (${pain}/10), and range from ${from} to ${peak}, with a goal of ${goal}°.`;
 }
 
 const faq: { keywords: string[]; answer: string }[] = [
@@ -147,7 +148,11 @@ export function getChatResponse(input: string): string {
   return fallback;
 }
 
-export function getCoachResponse(input: string, user?: User | null): string {
+export function getCoachResponse(
+  input: string,
+  user?: User | null,
+  range?: { firstPeak: number | null; latestPeak: number | null }
+): string {
   const message = input.toLowerCase().trim();
   if (!message) return "Tell me how you're feeling or what you'd like help with today.";
 
@@ -176,16 +181,16 @@ export function getCoachResponse(input: string, user?: User | null): string {
   }
 
   if (user && (message.includes("what should i do today") || message.includes("qué hago hoy") || message.includes("que hago hoy"))) {
-    return coachStarterAnswer("today", user, message.includes("hoy") ? "es" : "en", null);
+    return coachStarterAnswer("today", user, message.includes("hoy") ? "es" : "en", range?.latestPeak ?? null, range?.firstPeak ?? null);
   }
   if (user && (message.includes("pain is high") || message.includes("dolor está alto") || message.includes("dolor esta alto"))) {
-    return coachStarterAnswer("pain", user, message.includes("dolor") ? "es" : "en", null);
+    return coachStarterAnswer("pain", user, message.includes("dolor") ? "es" : "en", range?.latestPeak ?? null, range?.firstPeak ?? null);
   }
   if (user && (message.includes("what does 76") || message.includes("significa 76"))) {
-    return coachStarterAnswer("score", user, message.includes("significa") ? "es" : "en", null);
+    return coachStarterAnswer("score", user, message.includes("significa") ? "es" : "en", range?.latestPeak ?? null, range?.firstPeak ?? null);
   }
   if (user && (message.includes("clinician see") || message.includes("verá mi clínico") || message.includes("vera mi clinico"))) {
-    return coachStarterAnswer("clinic", user, message.includes("clínico") || message.includes("clinico") ? "es" : "en", null);
+    return coachStarterAnswer("clinic", user, message.includes("clínico") || message.includes("clinico") ? "es" : "en", range?.latestPeak ?? null, range?.firstPeak ?? null);
   }
 
   if (user && (message.includes("today") || message.includes("plan") || message.includes("exercise"))) {
