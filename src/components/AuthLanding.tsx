@@ -83,37 +83,36 @@ export function AuthLanding({ mode, accountFirst = false }: AuthLandingProps) {
               <p className="mt-3 max-w-xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
                 {t("heroText", locale)}
               </p>
-              <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Link
                   href={primaryHref}
-                  className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)] transition hover:-translate-y-0.5 hover:bg-brand-light"
+                  className="inline-flex h-14 min-w-[15rem] items-center justify-center rounded-full bg-brand px-8 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)] transition hover:-translate-y-0.5 hover:bg-brand-light"
                 >
                   {primaryCta}
                   <span aria-hidden className="ml-2">→</span>
                 </Link>
-                <TryDemoButton className="inline-flex h-12 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-bold text-[#1b3348] transition hover:bg-[#e8f3fb]" />
-              </div>
-              <TryDemoButton
-                role="doctor"
-                className="mt-3 inline-flex text-sm font-bold text-[#2a4638] underline-offset-4 hover:underline"
-              />
-            </div>
-            <div className="relative">
-              <PhotoFrame
-                src="/images/landing-older-phone.webp?v=1"
-                alt={t("sameSessionPhone", locale)}
-                imgClassName="object-[center_18%]"
-                className="min-h-[18rem] rounded-[1.35rem] shadow-[0_16px_36px_rgba(27,51,72,0.12)] sm:min-h-[24rem]"
-              />
-              <div className="absolute bottom-4 right-4 w-40 rounded-2xl bg-white/95 p-3 shadow-[0_12px_28px_rgba(27,51,72,0.16)] ring-1 ring-white">
-                <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.14em] text-[#3d7eb4]">{t("previewPassport", locale)}</p>
-                <p className="rm-serif text-4xl font-semibold leading-none text-[#1b3348]">{t("previewPassportScore", locale)}</p>
-                <p className="mt-1 text-[0.7rem] font-semibold text-[#2f4a60]">{t("previewSharedClinician", locale)}</p>
-                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e8f3fb]">
-                  <span className="block h-full w-[76%] rounded-full bg-[#4f90c6]" />
+                <div className="flex flex-col gap-2">
+                  <TryDemoButton className="inline-flex h-11 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-bold text-[#1b3348] transition hover:bg-[#e8f3fb]" />
+                  <TryDemoButton
+                    role="doctor"
+                    className="inline-flex h-11 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-bold text-[#1b3348] transition hover:bg-[#e8f3fb]"
+                  />
                 </div>
               </div>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {[t("heroPillCamera", locale), t("heroPillMotion", locale), t("heroPillMuscle", locale), t("heroPillLanguage", locale)].map((pill) => (
+                  <li key={pill} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#5d7386] ring-1 ring-[#d5e4ef]">
+                    {pill}
+                  </li>
+                ))}
+              </ul>
             </div>
+            <PhotoFrame
+              src="/images/landing-hero-man.jpg"
+              alt={t("sameSessionPhone", locale)}
+              imgClassName="object-cover object-center"
+              className="min-h-[18rem] rounded-[1.5rem] shadow-[0_16px_36px_rgba(27,51,72,0.12)] sm:min-h-[24rem]"
+            />
           </div>
         </section>
 
@@ -277,19 +276,24 @@ export function AuthLanding({ mode, accountFirst = false }: AuthLandingProps) {
                   <p className="mb-3 text-sm leading-5 text-[#2f4a60]">{t("screenA4", locale)}</p>
                   <PhonePreview title={t("reportWord", locale)}>
                     <div className="flex h-full flex-col px-3 py-3">
-                      <p className="text-xs font-semibold text-[#2f4a60]">{t("screenQ4", locale)}</p>
+                      <p className="text-xs font-semibold text-[#2f4a60]">{t("reportWord", locale)}</p>
                       <p className="rm-serif mt-1 text-4xl font-semibold leading-none">{t("previewPassportScore", locale)}</p>
+                      <p className="mt-1 text-xs text-muted">{t("reportShared", locale)}</p>
                       <div className="mt-3 space-y-2">
                         <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
                           <span className="text-xs font-medium text-muted">{t("previewKneeExtension", locale)}</span>
                           <span className="text-sm font-semibold">78 deg</span>
                         </div>
                         <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
-                          <span className="text-xs font-medium text-muted">{t("pain", locale)}</span>
+                          <span className="text-xs font-medium text-muted">{t("painBefore", locale)}</span>
                           <span className="text-sm font-semibold">2 / 10</span>
                         </div>
+                        <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
+                          <span className="text-xs font-medium text-muted">{t("repsCompleted", locale)}</span>
+                          <span className="text-sm font-semibold">{tf("previewRepOf", locale, { n: 2, total: 3 })}</span>
+                        </div>
                       </div>
-                      <p className="mt-auto pt-3 text-xs font-bold text-[#3a7d62]">{t("previewSharedClinician", locale)}</p>
+                      <p className="mt-auto pt-3 text-xs font-bold text-[#3a7d62]">{t("clinicianReady", locale)}</p>
                     </div>
                   </PhonePreview>
                 </div>
@@ -298,41 +302,55 @@ export function AuthLanding({ mode, accountFirst = false }: AuthLandingProps) {
           </div>
         </section>
 
-        <section className="bg-white">
-          <div className="mx-auto grid w-full max-w-6xl items-center gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:py-12">
-            <div>
-              <SectionKicker>{t("youngerPatients", locale)}</SectionKicker>
-              <h2 className="rm-serif mt-4 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
-                {t("kidsBandTitle", locale)}
-              </h2>
-              <p className="mt-3 max-w-xl text-base leading-7 text-[#2f4a60]">{t("kidsBandText", locale)}</p>
-              <Link href="/kids" className="mt-5 inline-flex h-12 items-center justify-center rounded-full bg-[#f5c84a] px-6 text-sm font-bold text-[#243056]">
-                {t("open", locale)} {t("kidsQuest", locale)}
-              </Link>
+        <section className="bg-[#f7fbfe]">
+          <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
+            <div className="grid items-center overflow-hidden rounded-[1.75rem] bg-white shadow-[0_16px_36px_rgba(27,51,72,0.08)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+              <div className="p-6 sm:p-8">
+                <SectionKicker>{t("youngerPatients", locale)}</SectionKicker>
+                <h2 className="rm-serif mt-4 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
+                  {t("kidsBandTitle", locale)}
+                </h2>
+                <p className="mt-3 max-w-xl text-base leading-7 text-[#2f4a60]">{t("kidsBandText", locale)}</p>
+                <div className="mt-5 flex flex-wrap items-center gap-4">
+                  <Link href="/kids" className="inline-flex h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-bold text-white">
+                    {t("open", locale)} {t("kidsQuest", locale)}
+                  </Link>
+                  <Link href="/kids" className="text-sm font-bold text-[#1b3348]">
+                    {t("kidsSeeHow", locale)} →
+                  </Link>
+                </div>
+              </div>
+              <PhotoFrame
+                src="/images/landing-kids-meadow.jpg"
+                alt={t("kidsQuest", locale)}
+                imgClassName="object-cover object-center"
+                className="min-h-[16rem] lg:min-h-[20rem]"
+              />
             </div>
-            <PhotoFrame
-              src="/images/landing-kids-quest.webp?v=5"
-              alt={t("kidsQuest", locale)}
-              imgClassName="object-cover object-[center_70%]"
-              className="min-h-[16rem] rounded-[1.5rem] shadow-[0_16px_36px_rgba(36,48,86,0.12)]"
-            />
           </div>
         </section>
       </main>
 
-      <section className="bg-[#1b3348] text-white">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-start gap-4 px-4 py-10 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <h2 className="rm-serif text-3xl font-semibold leading-tight">{t("closeLoopTitle", locale)}</h2>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-white/80 sm:text-base">{t("closeLoopText", locale)}</p>
+      <section className="bg-[#1b3348] text-center text-white">
+        <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
+          <h2 className="rm-serif text-3xl font-semibold leading-tight sm:text-4xl">{t("closeLoopTitle", locale)}</h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-white/80 sm:text-base">{t("closeLoopText", locale)}</p>
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href={primaryHref}
+              className="inline-flex h-14 min-w-[16rem] items-center justify-center rounded-full bg-brand px-8 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)]"
+            >
+              {primaryCta}
+              <span aria-hidden className="ml-2">→</span>
+            </Link>
+            <TryDemoButton
+              role="doctor"
+              className="inline-flex h-12 items-center justify-center rounded-full bg-white px-5 text-sm font-bold text-[#1b3348]"
+            />
+            <Link href="/login" className="inline-flex h-12 items-center justify-center rounded-full bg-white px-5 text-sm font-bold text-[#1b3348]">
+              {t("signInOrCreate", locale)}
+            </Link>
           </div>
-          <Link
-            href={primaryHref}
-            className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)]"
-          >
-            {primaryCta}
-            <span aria-hidden className="ml-2">→</span>
-          </Link>
         </div>
       </section>
 
