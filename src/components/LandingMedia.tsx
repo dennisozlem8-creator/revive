@@ -253,13 +253,13 @@ export function PhonePreview({
   children: ReactNode;
 }) {
   return (
-    <article className="flex h-full min-h-[20.5rem] flex-col rounded-[1.85rem] bg-gradient-to-b from-[#d7ebf7] to-[#cfe4f4] p-2 shadow-[0_18px_36px_rgba(27,51,72,0.1)] ring-1 ring-white/70 sm:min-h-[24.5rem] sm:p-2.5">
-      <div className="flex items-center justify-center gap-2 pb-2 pt-0.5">
+    <article className="flex flex-col rounded-[1.6rem] bg-gradient-to-b from-[#d7ebf7] to-[#cfe4f4] p-1.5 shadow-[0_18px_36px_rgba(27,51,72,0.1)] ring-1 ring-white/70 sm:p-2">
+      <div className="flex items-center justify-center gap-2 pb-1.5 pt-0.5">
         <span className="h-1 w-7 rounded-full bg-[#1b3348]/20" />
         <p className="text-sm font-semibold tracking-wide text-[#1b3348]">{title}</p>
         <span className="h-1 w-7 rounded-full bg-[#1b3348]/20" />
       </div>
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.35rem] bg-white">
+      <div className="overflow-hidden rounded-[1.2rem] bg-white">
         {children}
       </div>
     </article>

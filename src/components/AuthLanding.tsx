@@ -197,33 +197,33 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section id="features" className="scroll-mt-20 bg-[#e8f3fb] py-8 lg:py-12">
+        <section id="features" className="scroll-mt-20 bg-[#e8f3fb] py-6 lg:py-8">
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-            <div className="overflow-hidden rounded-[2rem] bg-white/80 p-4 shadow-[0_16px_40px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12 sm:p-6 lg:p-8">
+            <div className="overflow-hidden rounded-[1.75rem] bg-white/80 p-4 shadow-[0_16px_40px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12 sm:p-5">
               <SectionIntro
                 kicker={t("whatYouUse", locale)}
                 title={t("insideTheApp", locale)}
                 text={t("insideTheAppText", locale)}
               />
-              <p className="mt-3 text-sm font-bold text-[#3d7eb4] lg:hidden">{t("slideSideways", locale)}</p>
-              <div className="mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-4 lg:overflow-visible">
+              <p className="mt-2 text-sm font-bold text-[#3d7eb4] lg:hidden">{t("slideSideways", locale)}</p>
+              <div className="mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-4 lg:items-start lg:overflow-visible">
                 <div className="w-[78%] shrink-0 snap-start lg:w-auto">
                   <p className="text-xs font-extrabold text-[#4f90c6]">01</p>
                   <p className="text-base font-bold text-[#1b3348]">{t("screenQ1", locale)}</p>
-                  <p className="mb-3 text-sm leading-5 text-[#2f4a60]">{t("screenA1", locale)}</p>
+                  <p className="mb-2 text-sm leading-5 text-[#2f4a60]">{t("screenA1", locale)}</p>
                 <PhonePreview title={t("previewBriefing", locale)}>
-                  <div className="flex h-full flex-col">
-                    <div className="relative h-[7.5rem] sm:h-40">
+                  <div>
+                    <div className="relative h-24 sm:h-28">
                       <PhotoFrame src="/images/landing-exercise.webp" alt="" className="absolute inset-0 h-full w-full" />
                       <span className="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-[#1b3348]">
                         {t("previewToday", locale)}
                       </span>
                     </div>
-                    <div className="flex flex-1 flex-col px-3 py-3">
+                    <div className="px-3 py-2.5">
                       <p className="text-xs font-semibold text-[#2f4a60]">{t("todaysPrescription", locale)}</p>
-                      <p className="mt-1 text-base font-semibold leading-snug sm:text-lg">{t("previewKneeExtension", locale)}</p>
+                      <p className="mt-0.5 text-base font-semibold leading-snug">{t("previewKneeExtension", locale)}</p>
                       <p className="mt-0.5 text-sm text-muted">{t("previewSetsPhoto", locale)}</p>
-                      <div className="mt-auto flex items-center justify-between pt-3">
+                      <div className="mt-2 flex items-center justify-between">
                         <span className="text-xs font-medium text-muted">{t("photoGoniometer", locale)}</span>
                         <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">{t("previewStart", locale)}</span>
                       </div>
@@ -234,19 +234,19 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 <div className="w-[78%] shrink-0 snap-start lg:w-auto">
                   <p className="text-xs font-extrabold text-[#4f90c6]">02</p>
                   <p className="text-base font-bold text-[#1b3348]">{t("screenQ2", locale)}</p>
-                  <p className="mb-3 text-sm leading-5 text-[#2f4a60]">{t("screenA2", locale)}</p>
+                  <p className="mb-2 text-sm leading-5 text-[#2f4a60]">{t("screenA2", locale)}</p>
                 <PhonePreview title={t("previewSession", locale)}>
-                  <div className="flex h-full flex-col">
-                    <div className="relative h-[7.5rem] sm:h-40">
+                  <div>
+                    <div className="relative h-24 sm:h-28">
                       <MpuAnglePhoto alt="" className="absolute inset-0 h-full w-full" imgClassName="object-cover object-[left_40%]" />
                       <span className="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-[#1b3348]">
                         {t("previewLive", locale)}
                       </span>
                     </div>
-                    <div className="flex flex-1 flex-col px-3 py-3">
+                    <div className="px-3 py-2.5">
                       <p className="rm-serif text-3xl font-semibold leading-none">78 deg</p>
                       <p className="mt-1 text-sm text-muted">{t("previewLiveMotion", locale)}</p>
-                      <div className="mt-auto flex items-center gap-1.5 pt-3">
+                      <div className="mt-2 flex items-center gap-1.5">
                         <span className="h-2 w-2 rounded-full bg-brand" />
                         <span className="h-2 w-2 rounded-full bg-brand" />
                         <span className="h-2 w-2 rounded-full bg-[#d7e8f6]" />
@@ -259,45 +259,45 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 <div className="w-[78%] shrink-0 snap-start lg:w-auto">
                   <p className="text-xs font-extrabold text-[#4f90c6]">03</p>
                   <p className="text-base font-bold text-[#1b3348]">{t("screenQ3", locale)}</p>
-                  <p className="mb-3 text-sm leading-5 text-[#2f4a60]">{t("screenA3", locale)}</p>
+                  <p className="mb-2 text-sm leading-5 text-[#2f4a60]">{t("screenA3", locale)}</p>
                   <PhonePreview title={t("previewPassport", locale)}>
-                    <div className="flex h-full flex-col px-3 py-3 sm:px-4 sm:py-4">
+                    <div className="px-3 py-2.5">
                       <p className="text-xs font-semibold text-[#2f4a60]">{t("previewThisWeek", locale)}</p>
-                      <p className="mt-0.5 text-base font-semibold sm:text-lg">{t("previewPassport", locale)}</p>
-                      <p className="rm-serif mt-3 text-4xl font-semibold leading-none tabular-nums sm:text-5xl">{t("previewPassportScore", locale)}</p>
+                      <p className="mt-0.5 text-base font-semibold">{t("previewPassport", locale)}</p>
+                      <p className="rm-serif mt-2 text-4xl font-semibold leading-none tabular-nums">{t("previewPassportScore", locale)}</p>
                       <p className="mt-1 text-sm text-muted">{t("passportOf100", locale)}</p>
-                      <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#e8f3fb]">
+                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#e8f3fb]">
                         <span className="block h-full w-[76%] rounded-full bg-[#4f90c6]" />
                       </div>
-                      <p className="mt-3 text-sm font-semibold text-[#1b3348]">{t("previewVelocity", locale)}</p>
-                      <p className="mt-auto pt-3 text-xs text-muted">{t("previewSharedClinician", locale)}</p>
+                      <p className="mt-2 text-sm font-semibold text-[#1b3348]">{t("previewVelocity", locale)}</p>
+                      <p className="mt-2 text-xs text-muted">{t("previewSharedClinician", locale)}</p>
                     </div>
                   </PhonePreview>
                 </div>
                 <div className="w-[78%] shrink-0 snap-start lg:w-auto">
                   <p className="text-xs font-extrabold text-[#4f90c6]">04</p>
                   <p className="text-base font-bold text-[#1b3348]">{t("screenQ4", locale)}</p>
-                  <p className="mb-3 text-sm leading-5 text-[#2f4a60]">{t("screenA4", locale)}</p>
+                  <p className="mb-2 text-sm leading-5 text-[#2f4a60]">{t("screenA4", locale)}</p>
                   <PhonePreview title={t("reportWord", locale)}>
-                    <div className="flex h-full flex-col px-3 py-3">
+                    <div className="px-3 py-2.5">
                       <p className="text-xs font-semibold text-[#2f4a60]">{t("reportWord", locale)}</p>
                       <p className="rm-serif mt-1 text-4xl font-semibold leading-none">{t("previewPassportScore", locale)}</p>
                       <p className="mt-1 text-xs text-muted">{t("reportShared", locale)}</p>
-                      <div className="mt-3 space-y-2">
-                        <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
+                      <div className="mt-2 space-y-1.5">
+                        <div className="flex items-center justify-between rounded-lg bg-[#f7fbfe] px-2.5 py-1.5">
                           <span className="text-xs font-medium text-muted">{t("previewKneeExtension", locale)}</span>
                           <span className="text-sm font-semibold">78 deg</span>
                         </div>
-                        <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
+                        <div className="flex items-center justify-between rounded-lg bg-[#f7fbfe] px-2.5 py-1.5">
                           <span className="text-xs font-medium text-muted">{t("painBefore", locale)}</span>
                           <span className="text-sm font-semibold">2 / 10</span>
                         </div>
-                        <div className="flex items-center justify-between rounded-xl bg-[#f7fbfe] px-3 py-2">
+                        <div className="flex items-center justify-between rounded-lg bg-[#f7fbfe] px-2.5 py-1.5">
                           <span className="text-xs font-medium text-muted">{t("repsCompleted", locale)}</span>
                           <span className="text-sm font-semibold">{tf("previewRepOf", locale, { n: 2, total: 3 })}</span>
                         </div>
                       </div>
-                      <p className="mt-auto pt-3 text-xs font-bold text-[#3a7d62]">{t("clinicianReady", locale)}</p>
+                      <p className="mt-2 text-xs font-bold text-[#3a7d62]">{t("clinicianReady", locale)}</p>
                     </div>
                   </PhonePreview>
                 </div>
