@@ -140,24 +140,64 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
   }, []);
 
   return (
-    <section className="bg-[#f7fbfe]" aria-labelledby="who-helps-title">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
-        <div className="flex items-start justify-between gap-4">
+    <section className="relative isolate overflow-hidden bg-[#f7fbfe]" aria-labelledby="who-helps-title">
+      <div className="pointer-events-none absolute -right-28 -top-32 h-96 w-96 rounded-full bg-[#b9d9ee]/40 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-36 -left-32 h-96 w-96 rounded-full bg-[#c7e1d1]/35 blur-3xl" />
+      <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
+        <div className="grid items-end gap-6 lg:grid-cols-[minmax(0,1.18fr)_minmax(20rem,0.82fr)] lg:gap-10">
           <div className="max-w-2xl">
             <SectionKicker>{t("whoHelpsKicker", locale)}</SectionKicker>
-            <h3 id="who-helps-title" className="rm-serif mt-4 text-[1.7rem] font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
+            <h3
+              id="who-helps-title"
+              className="rm-serif mt-4 whitespace-pre-line text-[1.85rem] font-semibold leading-[1.08] tracking-tight text-[#1b3348] sm:text-[2.65rem] lg:text-[3.15rem]"
+            >
               {t("whoHelpsTitle", locale)}
             </h3>
-            <p className="mt-2 hidden max-w-xl text-base leading-7 text-[#1b3348] sm:block sm:text-lg sm:leading-8">
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-[#38556d] sm:text-base sm:leading-7">
               {t("whoHelpsText", locale)}
             </p>
           </div>
-          <p className="hidden shrink-0 pt-2 text-sm font-semibold tabular-nums text-[#2f4a60] sm:block">
+
+          <aside className="rounded-[1.35rem] border border-[#4f90c6]/15 bg-white p-5 shadow-[0_18px_42px_rgba(27,51,72,0.10)] sm:p-6">
+            <p className="text-[0.65rem] font-extrabold uppercase tracking-[0.16em] text-[#4f90c6]">
+              {t("whoHelpsSummaryKicker", locale)}
+            </p>
+            <p className="rm-serif mt-2 text-xl font-semibold leading-tight text-[#1b3348] sm:text-2xl">
+              {t("whoHelpsSummaryTitle", locale)}
+            </p>
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              <div className="rounded-xl bg-[#e8f3fb] px-2 py-3 text-center">
+                <p className="rm-serif text-2xl font-semibold leading-none text-[#1b3348]">9</p>
+                <p className="mt-1 text-[0.6rem] font-extrabold leading-tight text-[#48657c] sm:text-[0.68rem]">
+                  {t("whoHelpsGroups", locale)}
+                </p>
+              </div>
+              <div className="rounded-xl bg-[#e8f3fb] px-2 py-3 text-center">
+                <p className="rm-serif text-2xl font-semibold leading-none text-[#1b3348]">1</p>
+                <p className="mt-1 text-[0.6rem] font-extrabold leading-tight text-[#48657c] sm:text-[0.68rem]">
+                  {t("whoHelpsSharedPassport", locale)}
+                </p>
+              </div>
+              <div className="rounded-xl bg-[#e8f3fb] px-2 py-3 text-center">
+                <p className="rm-serif text-xl font-semibold leading-none text-[#1b3348] sm:text-2xl">EN + ES</p>
+                <p className="mt-1 text-[0.6rem] font-extrabold leading-tight text-[#48657c] sm:text-[0.68rem]">
+                  {t("whoHelpsFullExperience", locale)}
+                </p>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div className="mt-6 flex items-center justify-between gap-4">
+          <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.15em] text-[#4f90c6] sm:text-xs">
+            {t("whoHelpsExplore", locale)}
+          </p>
+          <p className="shrink-0 text-xs font-semibold tabular-nums text-[#2f4a60] sm:text-sm">
             {tf("whoHelpsOf", locale, { n: String(index + 1).padStart(2, "0"), total: String(total).padStart(2, "0") })}
           </p>
         </div>
 
-        <div className="relative mt-5 sm:mt-6">
+        <div className="relative mt-3">
         <div
           ref={scroller}
           className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:gap-4 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:scroll-px-0 lg:px-0"
@@ -293,6 +333,8 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
               {i < IMPACT_SOURCES.length - 1 ? ", " : "."}
             </span>
           ))}
+          {" "}
+          {t("whoHelpsSourceNote", locale)}
         </p>
       </div>
     </section>
