@@ -1,6 +1,5 @@
 "use client";
 
-import { SectionKicker } from "@/components/SectionKicker";
 import { TryDemoButton } from "@/components/TryDemoButton";
 import { t, type Locale } from "@/lib/i18n";
 
@@ -19,8 +18,7 @@ export function PassportBand({ locale }: { locale: Locale }) {
     <section id="passport" className="scroll-mt-20 bg-[#e8f3fb]">
       <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 lg:py-14">
         <div>
-          <SectionKicker>{t("passportSignatureKicker", locale)}</SectionKicker>
-          <h2 className="rm-serif mt-4 text-3xl font-semibold leading-[1.08] text-[#1b3348] sm:text-[2.6rem]">
+          <h2 className="rm-serif text-3xl font-semibold leading-[1.08] text-[#1b3348] sm:text-[2.6rem]">
             {t("passportTitle", locale)}
           </h2>
           <p className="mt-3 max-w-xl text-base leading-7 text-[#1b3348] sm:text-lg sm:leading-8">

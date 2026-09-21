@@ -92,8 +92,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           <div className="pointer-events-none absolute right-[-6rem] top-16 h-72 w-72 rounded-full bg-[#9dc4b0]/25 blur-3xl" />
 
           <div className="relative mx-auto w-full max-w-6xl px-4 pb-8 pt-5 sm:px-6 lg:pb-10 lg:pt-8">
-            <SectionKicker>{t("passportSignatureKicker", locale)}</SectionKicker>
-            <h1 className="rm-serif mt-4 max-w-3xl text-[1.85rem] font-semibold leading-[1.08] text-foreground sm:text-4xl lg:text-5xl">
+            <h1 className="rm-serif max-w-3xl text-[1.85rem] font-semibold leading-[1.08] text-foreground sm:text-4xl lg:text-5xl">
               {t("heroTitle", locale)}
             </h1>
             <p className="mt-2 max-w-2xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
