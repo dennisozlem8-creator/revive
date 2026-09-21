@@ -71,6 +71,21 @@ const WHO_HELPS: { img: string; title: CopyKey; stat: CopyKey; statText: CopyKey
   },
 ];
 
+const IMPACT_SOURCES = [
+  { label: "CDC sports injuries", href: "https://blogs.cdc.gov/nchs/2016/11/18/3325/" },
+  { label: "CDC stroke", href: "https://www.cdc.gov/stroke/data-research/facts-stats/index.html" },
+  { label: "Parkinson’s Foundation", href: "https://www.parkinson.org/understanding-parkinsons/statistics" },
+  { label: "American College of Rheumatology", href: "https://rheumatology.org/patients/joint-replacement-surgery" },
+  { label: "CDC falls", href: "https://www.cdc.gov/falls/data-research/index.html" },
+  { label: "CDC disability", href: "https://www.cdc.gov/places/measure-definitions/disability.html" },
+  { label: "CDC arthritis", href: "https://www.cdc.gov/mmwr/volumes/72/wr/mm7241a1.htm" },
+  {
+    label: "U.S. Census rural population",
+    href: "https://www.census.gov/programs-surveys/geography/guidance/geo-areas/urban-rural/2020-ua-facts.html",
+  },
+  { label: "U.S. Census language data", href: "https://data.census.gov/table/ACSST1Y2023.S1601" },
+] as const;
+
 function Chevron({ dir }: { dir: "prev" | "next" }) {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
@@ -263,7 +278,22 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
             </button>
           ))}
         </div>
-        <p className="mt-4 max-w-4xl text-xs leading-5 text-[#4d6478]">{t("whoHelpsEstimateNote", locale)}</p>
+        <p className="mt-4 max-w-5xl text-xs leading-5 text-[#4d6478]">
+          {t("whoHelpsSources", locale)}:{" "}
+          {IMPACT_SOURCES.map((source, i) => (
+            <span key={source.href}>
+              <a
+                href={source.href}
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-[#2575b7] underline-offset-2 hover:underline"
+              >
+                {source.label}
+              </a>
+              {i < IMPACT_SOURCES.length - 1 ? ", " : "."}
+            </span>
+          ))}
+        </p>
       </div>
     </section>
   );

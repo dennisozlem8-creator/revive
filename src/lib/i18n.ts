@@ -367,8 +367,7 @@ const copy = {
     helpUnderservedStat: "41M",
     helpUnderservedStatText: "speak Spanish at home; about 16M have limited English",
     helpUnderservedText: "Cost and English-only tools should not block the report.",
-    whoHelpsEstimateNote:
-      "U.S. population estimates from CDC, Census, the Parkinson's Foundation, and the American College of Rheumatology. These are populations, not Revive Motion results.",
+    whoHelpsSources: "Sources",
     whoHelpsPrev: "Previous story",
     whoHelpsNext: "Next story",
     whoHelpsOf: "{n} of {total}",
@@ -746,8 +745,7 @@ const copy = {
     helpUnderservedStat: "41M",
     helpUnderservedStatText: "hablan español en casa; unos 16M tienen inglés limitado",
     helpUnderservedText: "El costo y las herramientas solo en inglés no deben bloquear el informe.",
-    whoHelpsEstimateNote:
-      "Estimaciones de población de EE. UU. de los CDC, el Censo, la Parkinson's Foundation y el American College of Rheumatology. Son poblaciones, no resultados de Revive Motion.",
+    whoHelpsSources: "Fuentes",
     whoHelpsPrev: "Historia anterior",
     whoHelpsNext: "Siguiente historia",
     whoHelpsOf: "{n} de {total}",
