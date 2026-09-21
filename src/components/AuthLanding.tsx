@@ -83,19 +83,22 @@ export function AuthLanding({ mode, accountFirst = false }: AuthLandingProps) {
               <p className="mt-3 max-w-xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
                 {t("heroText", locale)}
               </p>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="mt-5 flex max-w-xl flex-col gap-2.5 sm:flex-row sm:items-stretch">
                 <Link
                   href={primaryHref}
-                  className="inline-flex h-14 min-w-[15rem] items-center justify-center rounded-full bg-brand px-8 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)] transition hover:-translate-y-0.5 hover:bg-brand-light"
+                  className="inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-brand px-8 text-[1.05rem] font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light sm:h-auto sm:min-h-[5.5rem] sm:flex-1"
                 >
-                  {primaryCta}
-                  <span aria-hidden className="ml-2">→</span>
+                  {mode === "login" ? t("heroCreate", locale) : t("signIn", locale)}
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden>
+                    <rect x="4.25" y="4.25" width="15.5" height="15.5" rx="3" />
+                    <path d="M12 8.5v7M8.5 12h7" strokeLinecap="round" />
+                  </svg>
                 </Link>
-                <div className="flex flex-col gap-2">
-                  <TryDemoButton className="inline-flex h-11 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-bold text-[#1b3348] transition hover:bg-[#e8f3fb]" />
+                <div className="flex flex-col gap-2 sm:w-[15.5rem]">
+                  <TryDemoButton className="inline-flex h-11 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:flex-1" />
                   <TryDemoButton
                     role="doctor"
-                    className="inline-flex h-11 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-bold text-[#1b3348] transition hover:bg-[#e8f3fb]"
+                    className="inline-flex h-11 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:flex-1"
                   />
                 </div>
               </div>
@@ -108,11 +111,22 @@ export function AuthLanding({ mode, accountFirst = false }: AuthLandingProps) {
               </ul>
             </div>
             <PhotoFrame
-              src="/images/landing-hero-man.jpg"
+              src="/images/landing-hero-face.jpg"
               alt={t("sameSessionPhone", locale)}
-              imgClassName="object-cover object-center"
-              className="min-h-[18rem] rounded-[1.5rem] shadow-[0_16px_36px_rgba(27,51,72,0.12)] sm:min-h-[24rem]"
-            />
+              imgClassName="object-cover object-[center_28%]"
+              className="aspect-[4/3] rounded-[1.6rem] shadow-[0_18px_40px_rgba(27,51,72,0.12)]"
+            >
+              <div className="absolute bottom-3 right-3 w-[62%] max-w-[15.5rem] rounded-2xl bg-white p-3.5 shadow-[0_14px_32px_rgba(27,51,72,0.16)] sm:bottom-4 sm:right-4 sm:p-4">
+                <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#8aa0b3]">
+                  {t("passportOverlayKicker", locale)}
+                </p>
+                <p className="rm-serif mt-1 text-[2.6rem] font-semibold leading-none text-[#1b3348] sm:text-5xl">76</p>
+                <p className="mt-1 text-xs leading-4 text-[#5d7386] sm:text-sm">{t("passportOverlayNote", locale)}</p>
+                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#e6eef5]" aria-hidden>
+                  <div className="h-full w-[76%] rounded-full bg-[#4f90c6]" />
+                </div>
+              </div>
+            </PhotoFrame>
           </div>
         </section>
 
