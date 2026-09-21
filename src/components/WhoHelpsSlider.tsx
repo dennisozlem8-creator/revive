@@ -179,11 +179,11 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
                     {n}
                   </p>
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#1b3348]/95 via-[#1b3348]/78 to-transparent px-4 pb-4 pt-20 sm:px-6 sm:pb-5 sm:pt-24">
-                    <div className="mb-2 flex items-end gap-2.5 text-white">
-                      <strong className="rm-display shrink-0 text-2xl font-semibold leading-none sm:text-[2rem]">
+                    <div className="mb-2 text-white sm:flex sm:items-end sm:gap-2.5">
+                      <strong className="rm-display block shrink-0 text-2xl font-semibold leading-none sm:text-[2rem]">
                         {t(item.stat, locale)}
                       </strong>
-                      <span className="max-w-[24rem] text-[0.72rem] font-semibold leading-[1.25] text-white/90 sm:text-xs">
+                      <span className="mt-1 block max-w-[24rem] text-[0.72rem] font-semibold leading-[1.3] text-white/90 sm:mt-0 sm:text-xs">
                         {t(item.statText, locale)}
                       </span>
                     </div>
