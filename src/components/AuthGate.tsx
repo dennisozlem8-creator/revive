@@ -5,14 +5,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "./AuthProvider";
 import { todayDateString } from "@/lib/streak";
 
-const PUBLIC_PATHS = ["/login", "/register", "/kids"];
+const PUBLIC_PATHS = ["/login", "/register", "/kids", "/story"];
 const LOGGED_OUT_OK = [...PUBLIC_PATHS, "/"];
 const ONBOARDING_PATH = "/onboarding";
 const CHECK_IN_PATH = "/check-in";
 /** Patient paths reachable without completing onboarding */
 const ONBOARDING_EXEMPT = [ONBOARDING_PATH, "/kids"];
 /** Patient paths reachable without completing daily check-in */
-const CHECK_IN_EXEMPT = [CHECK_IN_PATH, ONBOARDING_PATH, "/kids", "/goniometer", "/heart", "/muscle", "/motion", "/report"];
+const CHECK_IN_EXEMPT = [CHECK_IN_PATH, ONBOARDING_PATH, "/kids", "/story", "/goniometer", "/heart", "/muscle", "/motion", "/report"];
 
 function patientNeedsCheckIn(lastCheckInDate?: string) {
   return lastCheckInDate !== todayDateString();

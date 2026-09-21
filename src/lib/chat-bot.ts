@@ -1,4 +1,47 @@
+import type { Locale } from "@/lib/i18n";
 import type { User } from "@/lib/users";
+
+export type CoachStarter = "today" | "pain" | "score" | "clinic";
+
+export function coachStarterAnswer(
+  key: CoachStarter,
+  user: User,
+  locale: Locale,
+  latestPeak: number | null
+): string {
+  const es = locale === "es";
+  const name = user.name.split(" ")[0];
+  const exercise = user.ptPrescription?.exerciseName ?? (es ? "el ejercicio prescrito" : "the prescribed exercise");
+  const sets = user.ptPrescription?.sets ?? 3;
+  const reps = user.ptPrescription?.reps ?? 10;
+  const pain = user.painToday ?? 3;
+  const goal = user.targetRom || 100;
+  const peak = latestPeak != null ? `${latestPeak}°` : es ? "aún sin lectura" : "no reading yet";
+  const start = `${user.baselineRom}°`;
+
+  if (key === "today") {
+    return es
+      ? `${name}, hoy empieza con ${exercise}. ${sets} series de ${reps}. Usa solo el método que indicó tu clínico, luego comparte el informe.`
+      : `${name}, start with ${exercise}. ${sets} sets of ${reps}. Use only the method your clinician prescribed, then share the report.`;
+  }
+  if (key === "pain") {
+    return es
+      ? pain >= 7
+        ? `${name}, el dolor está en ${pain}/10. Hoy solo movimientos suaves. La fuerza espera. Para si el dolor se vuelve agudo.`
+        : `${name}, el dolor está en ${pain}/10, así que el plan de hoy puede incluir fuerza después del movimiento suave. Para si el dolor se vuelve agudo.`
+      : pain >= 7
+        ? `${name}, pain is ${pain}/10. Today stays gentle. Strength waits. Stop if pain turns sharp.`
+        : `${name}, pain is ${pain}/10, so today’s plan can include strength after the gentle move. Stop if pain turns sharp.`;
+  }
+  if (key === "score") {
+    return es
+      ? `${name}, 76 es el Pasaporte de recuperación de la muestra: sesiones de esta semana, rango hacia la meta y velocidad. No es un diagnóstico. Tu rango guardado es ${peak} y la meta es ${goal}°.`
+      : `${name}, 76 is the sample Recovery Passport: sessions this week, range toward the goal, and velocity. It is not a diagnosis. Your saved range is ${peak} and the goal is ${goal}°.`;
+  }
+  return es
+    ? `${name}, tu clínico abre el mismo Pasaporte. Ve ${exercise}, el dolor de hoy (${pain}/10) y el rango de ${start} hacia ${peak}, con meta de ${goal}°.`
+    : `${name}, your clinician opens the same Passport. They see ${exercise}, today’s pain (${pain}/10), and range from ${start} toward ${peak}, with a goal of ${goal}°.`;
+}
 
 const faq: { keywords: string[]; answer: string }[] = [
   {
@@ -130,6 +173,19 @@ export function getCoachResponse(input: string, user?: User | null): string {
       return `${first}, you're building momentum with ${sessions} session${sessions !== 1 ? "s" : ""} so far. Stay consistent ${user.sessionDays} days per week in the ${user.sessionTime} — small daily wins add up toward your ${user.targetRom}° goal.`;
     }
     return `${first}, strong progress! You've logged ${sessions} sessions toward your ${user.injuryType} rehab. Baseline ${user.baselineRom}° → goal ${user.targetRom}° (${romGap}° to gain). Keep today's prescription and maintain your streak.`;
+  }
+
+  if (user && (message.includes("what should i do today") || message.includes("qué hago hoy") || message.includes("que hago hoy"))) {
+    return coachStarterAnswer("today", user, message.includes("hoy") ? "es" : "en", null);
+  }
+  if (user && (message.includes("pain is high") || message.includes("dolor está alto") || message.includes("dolor esta alto"))) {
+    return coachStarterAnswer("pain", user, message.includes("dolor") ? "es" : "en", null);
+  }
+  if (user && (message.includes("what does 76") || message.includes("significa 76"))) {
+    return coachStarterAnswer("score", user, message.includes("significa") ? "es" : "en", null);
+  }
+  if (user && (message.includes("clinician see") || message.includes("verá mi clínico") || message.includes("vera mi clinico"))) {
+    return coachStarterAnswer("clinic", user, message.includes("clínico") || message.includes("clinico") ? "es" : "en", null);
   }
 
   if (user && (message.includes("today") || message.includes("plan") || message.includes("exercise"))) {

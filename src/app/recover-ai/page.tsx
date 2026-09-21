@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { DashCard, DashIntro, DashRing, DashShell, DashStat } from "@/components/clinic/DashKit";
 import { useAuth } from "@/components/AuthProvider";
 import { calculateStreak, lastDaysActive } from "@/lib/streak";
-import { getCoachResponse } from "@/lib/chat-bot";
-import { t } from "@/lib/i18n";
+import { coachStarterAnswer, getCoachResponse, type CoachStarter } from "@/lib/chat-bot";
+import { t, type CopyKey } from "@/lib/i18n";
 import { loadMeasurements } from "@/lib/goniometer";
 import { progressSnapshot } from "@/lib/recovery-plan";
 import { TodayPlan } from "@/components/ExerciseLibrary";
@@ -49,6 +49,19 @@ export default function RecoverAIPage() {
     const prompt = `Patient completed ${sessions} sessions. Streak ${streak} days. ROM from ${user.baselineRom} to goal ${user.targetRom}. Pain ${user.painToday ?? 3}/10.`;
     const suffix = locale === "es" ? " Responde en español." : " recovery recommendation";
     setReport(getCoachResponse(prompt + suffix, user));
+  }
+
+  const starters: { key: CoachStarter; label: CopyKey }[] = [
+    { key: "today", label: "coachQToday" },
+    { key: "pain", label: "coachQPain" },
+    { key: "score", label: "coachQScore" },
+    { key: "clinic", label: "coachQClinic" },
+  ];
+
+  function askStarter(key: CoachStarter, label: string) {
+    if (!user) return;
+    const answer = coachStarterAnswer(key, user, locale, progress.latestPeak);
+    setMessages((prev) => [...prev, { role: "user", text: label }, { role: "assistant", text: answer }]);
   }
 
   function sendMessage(e: React.FormEvent) {
@@ -109,6 +122,18 @@ export default function RecoverAIPage() {
           <div className="border-b border-[#e8f3fb] px-5 py-4">
             <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Chat with RecoverAI</h2>
             <p className="mt-1 text-sm text-[#2f4a60]">Rehab coaching on this device — no API key needed.</p>
+          </div>
+          <div className="flex flex-wrap gap-2 border-b border-[#e8f3fb] px-4 py-4">
+            {starters.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => askStarter(item.key, t(item.label, locale))}
+                className="rounded-full bg-[#e8f3fb] px-3 py-1.5 text-left text-sm font-semibold text-[#1b3348]"
+              >
+                {t(item.label, locale)}
+              </button>
+            ))}
           </div>
           <div className="max-h-72 space-y-3 overflow-y-auto p-4">
             {messages.map((msg, i) => (

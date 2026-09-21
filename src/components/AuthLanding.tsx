@@ -131,6 +131,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               </ul>
               <p className="mt-2 max-w-xl text-sm leading-5 text-[#2f4a60]">{t("heroOneMethod", locale)}</p>
               <p className="mt-2 text-xs font-semibold text-[#5d7386]">{t("heroPillLanguage", locale)}</p>
+              <Link href="/story" className="mt-3 inline-flex text-sm font-semibold text-[#1b3348] underline decoration-[#4f90c6]/50 underline-offset-4">
+                {t("storyLink", locale)}
+              </Link>
             </div>
           </div>
         </section>
