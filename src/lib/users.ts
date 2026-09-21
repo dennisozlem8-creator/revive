@@ -1,5 +1,7 @@
 export type InjuryType = "knee" | "ankle" | "elbow" | "wrist" | "other";
 
+export type MeasureMethod = "camera" | "motion" | "muscle";
+
 export type PTPrescription = {
   exerciseName: string;
   sets: number;
@@ -8,6 +10,8 @@ export type PTPrescription = {
   targetAngle: number;
   notes: string;
   updatedAt: string;
+  /** The one capture method the clinician assigned. Missing values mean the phone camera. */
+  method?: MeasureMethod;
 };
 
 export type UserRole = "patient" | "doctor" | "caregiver";

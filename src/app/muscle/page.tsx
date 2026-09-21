@@ -39,9 +39,9 @@ export default function MuscleSensorPage() {
   return (
     <DashShell>
       <DashIntro
-        kicker="Muscle sensor"
-        title="MyoWare 2.0"
-        text="Wireless MyoWare 2.0. Play a demo flex, then connect with Bluetooth. The effort reading fills the Recovery Passport."
+        kicker="Measure"
+        title="Bluetooth muscle sensor"
+        text="Play a demo flex, then connect with Bluetooth. The effort reading fills the Recovery Passport."
       />
       <div className="mt-5">
         <MuscleLiveDemo />
@@ -52,7 +52,7 @@ export default function MuscleSensorPage() {
         <MyoWarePanel />
       </div>
 
-      <HelpBlock title="Wireless — do this now">
+      <HelpBlock title="Bluetooth — do this now">
           <ol className="list-decimal space-y-2 pl-5">
             <li>Leave the Elegoo Uno unplugged. The Wireless Shield has its own USB port and battery.</li>
             <li>Unstack the Wireless Shield from the muscle sensor. Plug USB into the <strong className="text-foreground">Wireless Shield</strong>.</li>

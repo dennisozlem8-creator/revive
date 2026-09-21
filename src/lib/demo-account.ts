@@ -97,7 +97,8 @@ function demoPatient(locale: Locale): User {
       reps: 10,
       holdSeconds: 12,
       targetAngle: 100,
-      notes: "Side-view photo first. Live strap is optional. Share the session report after you measure.",
+      notes: "Phone camera is the prescribed method. Share the session report after you measure.",
+      method: "camera",
       updatedAt: daysAgo(6),
     },
   };

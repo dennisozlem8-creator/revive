@@ -21,6 +21,7 @@ import { loadMeasurements } from "@/lib/goniometer";
 import { doctorWatchLevel, progressSnapshot } from "@/lib/recovery-plan";
 import { recoveryPassport } from "@/lib/recovery-passport";
 import { RecoveryPassportCard } from "@/components/RecoveryPassportCard";
+import { DailyPath } from "@/components/DailyPath";
 import { calculateStreak } from "@/lib/streak";
 
 export default function Home() {
@@ -63,11 +64,11 @@ export default function Home() {
           />
           <div className="p-5 sm:p-7">
             <DashIntro
-              kicker="Physical therapy at home"
+              kicker={isPatient ? t("homePatientKicker", locale) : "Care team"}
               title={isPatient ? `Welcome back, ${firstName}.` : t("moveBetter", locale)}
               text={
                 isPatient
-                  ? "Start with a photo or sensor, then do today’s session. Your clinician sees the same numbers."
+                  ? t("homePatientText", locale)
                   : careTeam
                     ? "Open a linked patient, review saved clips, and send the next plan."
                     : "Choose a body area for screening, movement tests, and today’s exercises."
@@ -105,7 +106,7 @@ export default function Home() {
             hint={progress.headline}
           />
           <DashStat label="Streak" value={streak} hint={streak > 0 ? "Days in a row" : "Do a session to start"} />
-          <DashStat label="Saved clips" value={clips.length} hint="Photo, motion, or muscle" />
+          <DashStat label="Saved clips" value={clips.length} hint={t("clipsFromMethod", locale)} />
         </section>
         </>
       )}
@@ -119,33 +120,9 @@ export default function Home() {
       )}
 
       {isPatient && (
-        <section className="mt-6">
-          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Continue recovery</h2>
-          <p className="mt-1 text-base text-[#2f4a60]">Measure, then coach. Pick one way to start.</p>
-          <div className="mt-4 grid gap-3 lg:grid-cols-3">
-            <DashPhotoLink
-              href="/goniometer"
-              src="/images/landing-photo-goniometer.png?v=2"
-              kicker="01 Measure"
-              title="Photo Goniometer"
-              text="Side-view photo or clip. The angle is saved."
-            />
-            <DashPhotoLink
-              href="/muscle"
-              src="/images/landing-myoware.png?v=6"
-              kicker="02 Muscle"
-              title="MyoWare 2.0"
-              text="Wireless pads. Flex, then save to the Recovery Passport."
-            />
-            <DashPhotoLink
-              href="/session"
-              src="/images/landing-mpu.png?v=8"
-              kicker="03 Coach"
-              title="Live session"
-              text="Run today’s ROM test and exercises."
-            />
-          </div>
-        </section>
+        <div className="mt-6">
+          <DailyPath locale={locale} prescription={user.ptPrescription} />
+        </div>
       )}
 
       {careTeam && patients.length > 0 && (
@@ -176,22 +153,24 @@ export default function Home() {
         </DashCard>
       )}
 
-      <section className="mt-8">
-        <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Start an assessment</h2>
-        <p className="mt-1 text-base text-[#2f4a60]">Pick the joint your clinician asked you to work on.</p>
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {bodyAreas.map((area) => (
-            <DashPhotoLink
-              key={area.id}
-              href={`/${area.id}`}
-              src={area.cover}
-              kicker="Body area"
-              title={area.label}
-              text={area.description}
-            />
-          ))}
-        </div>
-      </section>
+      {careTeam && (
+        <section className="mt-8">
+          <h2 className="rm-serif text-2xl font-semibold text-[#1b3348]">Start an assessment</h2>
+          <p className="mt-1 text-base text-[#2f4a60]">Pick the joint your clinician asked you to work on.</p>
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {bodyAreas.map((area) => (
+              <DashPhotoLink
+                key={area.id}
+                href={`/${area.id}`}
+                src={area.cover}
+                kicker="Body area"
+                title={area.label}
+                text={area.description}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       <KidsQuestPromo
         className="mt-6"

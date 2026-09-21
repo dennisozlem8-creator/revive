@@ -25,9 +25,9 @@ export default function MotionSensorPage() {
   return (
     <DashShell>
       <DashIntro
-        kicker="Motion sensor"
-        title="MPU-6050"
-        text="Elegoo Uno R3 plus MPU-6050. Play a demo move, then Connect with USB. Live angle fills the Recovery Passport."
+        kicker="Measure"
+        title="USB motion sensor"
+        text="Play a demo move, then connect with USB. The live angle fills the Recovery Passport."
       />
       <div className="mt-5">
         <MotionLiveDemo />

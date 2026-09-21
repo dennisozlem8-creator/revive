@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { DashCard, DashIntro, DashLoop, DashPhotoLink, DashRing, DashShell, DashStat } from "@/components/clinic/DashKit";
+import { DashCard, DashIntro, DashLoop, DashRing, DashShell, DashStat } from "@/components/clinic/DashKit";
 import { useAuth } from "@/components/AuthProvider";
 import { DemoBanner } from "@/components/DemoBanner";
 import { ReportActions } from "@/components/ReportActions";
@@ -14,6 +14,7 @@ import { preExerciseSetup, progressSnapshot, setupStepText } from "@/lib/recover
 import { recoveryPassport } from "@/lib/recovery-passport";
 import { RecoveryPassportCard } from "@/components/RecoveryPassportCard";
 import { PhotoFrame } from "@/components/LandingMedia";
+import { DailyPath } from "@/components/DailyPath";
 
 export default function BriefingPage() {
   const { user } = useAuth();
@@ -97,36 +98,8 @@ export default function BriefingPage() {
         ) : null}
       </DashCard>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <DashPhotoLink
-          href="/goniometer"
-          src="/images/landing-photo-goniometer.png?v=2"
-          kicker={t("measure", locale)}
-          title={t("recordTodaysClip", locale)}
-          text={progress.headline}
-        />
-        <DashPhotoLink
-          href="/motion"
-          src="/images/landing-mpu.png?v=8"
-          kicker={t("connectMpu", locale)}
-          title="MPU-6050"
-          text={t("mpuLiveAngle", locale)}
-          imgClassName="object-cover object-[left_40%]"
-        />
-        <DashPhotoLink
-          href="/muscle"
-          src="/images/landing-myoware.png?v=6"
-          kicker={t("muscle", locale)}
-          title={t("connectMyoware", locale)}
-          text={t("flexAfterConnect", locale)}
-        />
-        <DashPhotoLink
-          href="/check-in"
-          src="/images/landing-younger-phone.webp?v=1"
-          kicker={t("checkIn", locale)}
-          title={t("logHowYouFeel", locale)}
-          text={t("painStiffnessPlan", locale)}
-        />
+      <div className="mt-6">
+        <DailyPath locale={locale} prescription={prescription} showOther />
       </div>
 
       <DashCard className="mt-6 p-5 sm:p-6">

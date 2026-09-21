@@ -25,6 +25,7 @@ import { MotionPanel, PhotoMeasureCard } from "@/components/MotionPanel";
 import { useHeartRate } from "@/components/HeartRateProvider";
 import { useMyoWare } from "@/components/MyoWareProvider";
 import { demoFlexAt } from "@/lib/muscle-demo";
+import { prescribedMethod } from "@/lib/measure-method";
 
 type Phase = "recording" | "exercises" | "report";
 
@@ -49,6 +50,7 @@ export default function SessionPage() {
   const muscleClockRef = useRef(0);
 
   const locale = user?.language ?? "en";
+  const method = prescribedMethod(user?.ptPrescription);
   const target = user?.ptPrescription?.targetAngle ?? user?.targetRom ?? 90;
   const feedback = getFeedbackState(angle, target);
   const targetReps = user?.ptPrescription?.reps ?? 10;
@@ -164,7 +166,7 @@ export default function SessionPage() {
       <DashIntro
         kicker={t("liveSession", locale)}
         title={user.ptPrescription?.exerciseName ?? "ROM sensor test"}
-        text="Photo, MPU-6050 on an Elegoo, wireless muscle, or a heart strap. Same session."
+        text={t("sessionIntro", locale)}
       />
       <div className="mt-5">
         <DashHero
@@ -174,7 +176,7 @@ export default function SessionPage() {
           text={
             recording
               ? "Hold the pose. End the test when the peak looks honest."
-              : "Open a photo or connect the Elegoo, then start the ROM test."
+              : t("sessionReady", locale)
           }
         />
       </div>
@@ -183,42 +185,62 @@ export default function SessionPage() {
         <DashRing value={angle} max={target} label="Live range vs goal" display={`${angle}°`} />
         <DashStat label={t("reps", locale)} value={`${reps}/${targetReps}`} hint="Counted this test" />
         <DashStat
-          label={muscle.connected ? "Muscle live" : "Muscle demo"}
+          label={muscle.connected ? t("muscleLive", locale) : t("muscleDemo", locale)}
           value={muscle.connected && muscle.emg != null ? muscle.emg : emg}
-          hint={muscle.connected ? "MyoWare ENV" : "Connect for real numbers"}
+          hint={muscle.connected ? t("chartMuscle", locale) : t("muscleConnectHint", locale)}
         />
         <DashStat
-          label={heart.connected ? "Heart live" : "Heart"}
+          label={heart.connected ? t("heartLive", locale) : t("heartLabel", locale)}
           value={heart.connected && heart.bpm ? heart.bpm : hr}
-          hint={heart.connected ? "BPM from strap" : "Pair a strap to go live"}
+          hint={heart.connected ? t("heartLiveHint", locale) : t("heartDemoHint", locale)}
         />
       </div>
 
       <div className="mt-6 space-y-4">
-        <PhotoMeasureCard />
-        <MotionPanel
-          compact
-          live={recording}
-          onConnected={() => setMotionReady(true)}
-          onAngle={(next) => {
-            setAngle(next);
-            setWave((prev) => [...prev.slice(1), next]);
-          }}
-        />
-        <MyoWarePanel />
-        <HeartRatePanel compact hideWired />
+        {method === "camera" ? <PhotoMeasureCard /> : null}
+        {method === "motion" ? (
+          <MotionPanel
+            compact
+            live={recording}
+            onConnected={() => setMotionReady(true)}
+            onAngle={(next) => {
+              setAngle(next);
+              setWave((prev) => [...prev.slice(1), next]);
+            }}
+          />
+        ) : null}
+        {method === "muscle" ? <MyoWarePanel /> : null}
+        <details className="rounded-[1.35rem] bg-white px-5 py-4 shadow-[0_12px_28px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12">
+          <summary className="cursor-pointer text-sm font-semibold text-[#1b3348]">{t("otherTools", locale)}</summary>
+          <div className="mt-4 space-y-4">
+            {method !== "camera" ? <PhotoMeasureCard /> : null}
+            {method !== "motion" ? (
+              <MotionPanel
+                compact
+                live={recording}
+                onConnected={() => setMotionReady(true)}
+                onAngle={(next) => {
+                  setAngle(next);
+                  setWave((prev) => [...prev.slice(1), next]);
+                }}
+              />
+            ) : null}
+            {method !== "muscle" ? <MyoWarePanel /> : null}
+            <HeartRatePanel compact hideWired />
+          </div>
+        </details>
         <FeedbackBox state={feedback} angle={angle} target={target} locale={locale} />
 
         <TestLiveCharts
           series={[
             {
-              label: motionReady ? "Live angle (MPU-6050)" : "Live angle",
+              label: motionReady ? t("chartUsbMotion", locale) : t("chartLiveAngle", locale),
               values: wave,
               unit: "°",
               max: 100,
             },
             {
-              label: muscle.connected ? "Muscle effort (MyoWare)" : "Muscle effort (demo)",
+              label: muscle.connected ? t("chartMuscle", locale) : t("chartMuscleDemo", locale),
               values: muscle.connected && muscle.history.some((v) => v > 0) ? muscle.history : emgWave,
               max: 100,
             },
@@ -234,7 +256,7 @@ export default function SessionPage() {
         <PeakBarChart
           title="This test vs your plan"
           bars={[
-            { label: motionReady ? "MPU angle" : "Live angle", value: angle, goal: target },
+            { label: motionReady ? t("chartUsbAngle", locale) : t("chartLiveAngle", locale), value: angle, goal: target },
             { label: "Baseline", value: user.baselineRom, goal: target },
             { label: "Goal", value: target },
           ]}

@@ -65,14 +65,14 @@ export function MyoWarePanel({ compact }: MyoWarePanelProps) {
         <div className="min-w-0 flex-1">
           <p className="font-semibold text-foreground">
             {connecting
-              ? "Looking for MyoWare…"
+              ? "Looking for the Bluetooth muscle sensor…"
               : live
                 ? flexed
-                  ? "MyoWare 2.0 — muscle working"
-                  : "MyoWare 2.0 connected — flex to see effort"
+                  ? "Bluetooth muscle sensor — muscle working"
+                  : "Bluetooth muscle sensor — flex to see effort"
                 : connected
-                  ? "MyoWare connected — waiting for ENV numbers"
-                  : "Connect MyoWare 2.0"}
+                  ? "Bluetooth muscle sensor — waiting for a reading"
+                  : "Bluetooth muscle sensor"}
           </p>
           <p className="mt-1 text-sm text-muted">
             {live

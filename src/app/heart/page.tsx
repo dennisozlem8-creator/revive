@@ -44,7 +44,7 @@ export default function HeartSensorPage() {
       <DashCard className="mt-5 p-5">
         <p className="text-base leading-7 text-[#1b3348]">
           <Link href="/muscle" className="font-semibold text-[#1b3348] underline">
-            Connect MyoWare 2.0
+            Bluetooth muscle sensor
           </Link>{" "}
           if you are not using the heart chip. <strong>No I2C</strong> means the USB cable works and the heart chip did not answer — that is a power or wire problem, not a website problem.
         </p>

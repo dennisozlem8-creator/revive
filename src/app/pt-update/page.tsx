@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { DashCard, DashIntro, DashShell, DashStat } from "@/components/clinic/DashKit";
 import { useAuth } from "@/components/AuthProvider";
-import { isCareTeam } from "@/lib/users";
+import { isCareTeam, type MeasureMethod } from "@/lib/users";
 import { calculateStreak } from "@/lib/streak";
 import { loadMeasurements } from "@/lib/goniometer";
 import { progressSnapshot } from "@/lib/recovery-plan";
@@ -18,6 +18,7 @@ export default function PTUpdatePage() {
   const [hold, setHold] = useState(12);
   const [angle, setAngle] = useState(90);
   const [notes, setNotes] = useState("");
+  const [method, setMethod] = useState<MeasureMethod>("camera");
   const [sent, setSent] = useState(false);
 
   const patients = getPatientsForDoctor();
@@ -44,6 +45,7 @@ export default function PTUpdatePage() {
       holdSeconds: hold,
       targetAngle: angle,
       notes,
+      method,
       updatedAt: new Date().toISOString(),
     });
     setSent(true);
@@ -103,6 +105,18 @@ export default function PTUpdatePage() {
             </div>
           ))}
         </div>
+        <label className="block text-sm font-semibold text-[#2f4a60]">
+          Prescribed method
+          <select
+            value={method}
+            onChange={(event) => setMethod(event.target.value as MeasureMethod)}
+            className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[#f7fbfe] px-4 py-4 text-base font-normal text-[#1b3348]"
+          >
+            <option value="camera">Phone or laptop camera</option>
+            <option value="motion">USB motion sensor</option>
+            <option value="muscle">Bluetooth muscle sensor</option>
+          </select>
+        </label>
         <textarea
           value={notes}
           onChange={(event) => setNotes(event.target.value)}

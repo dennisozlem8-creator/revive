@@ -7,7 +7,6 @@ import {
   DashHeat,
   DashIntro,
   DashLoop,
-  DashPhotoLink,
   DashRing,
   DashShell,
   DashStat,
@@ -22,6 +21,7 @@ import { preExerciseSetup, progressSnapshot, setupStepText } from "@/lib/recover
 import { recoveryPassport } from "@/lib/recovery-passport";
 import { RecoveryPassportCard } from "@/components/RecoveryPassportCard";
 import { clinicLocale, t, tf } from "@/lib/i18n";
+import { DailyPath } from "@/components/DailyPath";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -84,29 +84,8 @@ export default function DashboardPage() {
         <DashStat label={t("activeDays", locale)} value={totalActiveDays} hint={tf("savedClips", locale, { n: clips.length })} />
       </div>
 
-      <div className="mt-6 grid gap-3 lg:grid-cols-3">
-        <DashPhotoLink
-          href="/goniometer"
-          src="/images/landing-photo-goniometer.png?v=2"
-          kicker={`01 ${t("measure", locale)}`}
-          title={t("photoGoniometer", locale)}
-          text={t("takeSidePhoto", locale)}
-        />
-        <DashPhotoLink
-          href="/motion"
-          src="/images/landing-mpu.png?v=8"
-          kicker="02 Coach"
-          title="MPU-6050"
-          text="Wireless live angle while you move."
-          imgClassName="object-cover object-[left_40%]"
-        />
-        <DashPhotoLink
-          href="/charts"
-          src="/images/landing-exercise.webp"
-          kicker={`03 ${t("reportKicker", locale)}`}
-          title={t("progressCharts", locale)}
-          text={t("showTheTrend", locale)}
-        />
+      <div className="mt-6">
+        <DailyPath locale={locale} prescription={user.ptPrescription} showOther={false} />
       </div>
 
       <div className="mt-6">

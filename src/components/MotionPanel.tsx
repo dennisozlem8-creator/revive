@@ -119,18 +119,18 @@ export function MotionPanel({ compact, live, onConnected, onAngle }: MotionPanel
         <div className="min-w-0 flex-1">
           <p className="font-semibold text-foreground">
             {connecting
-              ? "Opening the Elegoo USB port"
+              ? "Opening the USB motion sensor"
               : ready
                 ? i2cOk || angle > 0
-                  ? "MPU-6050 — live angle"
-                  : "MPU-6050 connected — waiting for ANGLE"
-                : "Connect MPU-6050"}
+                  ? "USB motion sensor — live angle"
+                  : "USB motion sensor connected — waiting for the angle"
+                : "USB motion sensor"}
           </p>
           <p className="mt-1 text-sm text-muted">
             {ready
-              ? `${deviceName || "Elegoo Uno R3"} · live tilt from the MPU-6050`
+              ? `${deviceName || "USB motion sensor"} · live tilt`
               : compact
-                ? "Elegoo Uno over USB. Live angle while you move."
+                ? "USB motion sensor. Live angle while you move."
                 : mpuUsbHelp()}
           </p>
         </div>
@@ -203,13 +203,13 @@ export function PhotoMeasureCard() {
         className="h-28 w-32 shrink-0 object-cover sm:h-32 sm:w-40"
       />
       <span className="flex min-w-0 flex-1 flex-col justify-center px-4 py-4">
-        <span className="text-sm font-semibold text-[#2f4a60]">Photo Goniometer</span>
-        <span className="mt-0.5 font-semibold text-foreground">Measure with a photo</span>
+        <span className="text-sm font-semibold text-[#2f4a60]">Camera</span>
+        <span className="mt-0.5 font-semibold text-foreground">Phone or laptop camera</span>
         <span className="mt-1 text-sm text-muted">
-          Phone or laptop camera. The app marks hip, knee, and ankle — or you tap the three points.
+          Side view. The app marks hip, knee, and ankle — or you tap the three points.
         </span>
         <span className="rm-btn rm-btn-brand mt-3 inline-flex h-10 w-fit min-h-0 rounded-full px-5 text-sm">
-          Open Photo Goniometer
+          Open the camera
         </span>
       </span>
     </Link>

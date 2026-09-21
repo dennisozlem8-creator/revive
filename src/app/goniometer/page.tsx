@@ -26,7 +26,7 @@ export default function GoniometerPage() {
     <DashShell wide={false}>
       <DashIntro
         kicker={t("measure", locale)}
-        title={t("photoGoniometer", locale)}
+        title={t("wayPhotoTitle", locale)}
         text={t("photoHelp", locale)}
       />
       <PhotoFrame
