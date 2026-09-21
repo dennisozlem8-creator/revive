@@ -315,54 +315,54 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        <section id="library" className="scroll-mt-20 bg-white">
+        <section id="library" className="scroll-mt-20 bg-[#e8f3fb]">
           <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
-            <div className="grid items-start gap-6 lg:grid-cols-2">
-              <div>
-                <SectionIntro kicker={t("libraryKicker", locale)} title={t("libraryTitle", locale)} text={t("libraryText", locale)} />
-                <ol className="mt-5 space-y-3">
-                  {[t("libraryPoint1", locale), t("libraryPoint2", locale), t("libraryPoint3", locale)].map((line, index) => (
-                    <li key={line} className="flex gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e8f3fb] text-sm font-bold text-[#1b3348]">
-                        {index + 1}
-                      </span>
-                      <p className="pt-1 text-base leading-6 text-[#2f4a60]">{line}</p>
-                    </li>
-                  ))}
-                </ol>
-                <Link
-                  href={primaryHref}
-                  className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.28)]"
-                >
-                  {primaryCta}
-                </Link>
-              </div>
-              <div className="rounded-[1.6rem] bg-[#1b3348] p-5 text-white shadow-[0_16px_36px_rgba(27,51,72,0.16)] sm:p-6">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/70">{t("librarySampleKicker", locale)}</p>
-                <h3 className="rm-serif mt-2 text-3xl font-semibold">{t("librarySampleTitle", locale)}</h3>
-                <p className="mt-1 text-sm text-white/75">{t("librarySampleMeta", locale)}</p>
-                <ol className="mt-5 space-y-3">
-                  {[
-                    ["01", "heel-slides", t("librarySample1Name", locale), t("librarySample1Meta", locale), t("librarySample1Why", locale)],
-                    ["02", "quad-sets", t("librarySample2Name", locale), t("librarySample2Meta", locale), t("librarySample2Why", locale)],
-                    ["03", "mini-squats", t("librarySample3Name", locale), t("librarySample3Meta", locale), t("librarySample3Why", locale)],
-                  ].map(([n, figure, name, meta, why]) => (
-                    <li key={n} className="flex gap-3 rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
-                      <div className="h-24 w-28 shrink-0 overflow-hidden rounded-xl">
-                        <ExerciseFigure id={figure} title={name} className="h-full w-full" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-[#9dc4e4]">{n}</p>
-                        <p className="mt-1 text-lg font-semibold leading-tight">{name}</p>
-                        <p className="text-sm text-white/75">{meta}</p>
-                        <p className="mt-1 text-sm leading-5 text-white/85">{why}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-                <p className="mt-4 text-xs leading-5 text-white/65">{t("librarySampleNote", locale)}</p>
-              </div>
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <SectionIntro kicker={t("libraryKicker", locale)} title={t("libraryTitle", locale)} text={t("libraryText", locale)} />
+              <Link
+                href={primaryHref}
+                className="inline-flex h-12 shrink-0 items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.28)]"
+              >
+                {primaryCta}
+              </Link>
             </div>
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              <p className="rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-[#1b3348] ring-1 ring-[#4f90c6]/20">
+                {t("librarySampleKicker", locale)}
+              </p>
+              <p className="text-sm font-semibold text-[#2f4a60]">{t("librarySampleMeta", locale)}</p>
+            </div>
+            <p className="mt-3 text-sm font-bold text-[#3d7eb4] lg:hidden">{t("slideSideways", locale)}</p>
+            <div className="mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-3 lg:overflow-visible">
+              {[
+                ["01", "heel-slides", t("librarySample1Name", locale), t("librarySample1Meta", locale), t("librarySample1Why", locale)],
+                ["02", "quad-sets", t("librarySample2Name", locale), t("librarySample2Meta", locale), t("librarySample2Why", locale)],
+                ["03", "mini-squats", t("librarySample3Name", locale), t("librarySample3Meta", locale), t("librarySample3Why", locale)],
+              ].map(([n, figure, name, meta, why]) => (
+                <article
+                  key={n}
+                  className="flex w-[84%] shrink-0 snap-start flex-col overflow-hidden rounded-[1.45rem] bg-white shadow-[0_16px_36px_rgba(27,51,72,0.08)] ring-1 ring-[#4f90c6]/12 lg:w-auto"
+                >
+                  <div className="h-44 bg-[#f4f9fc] sm:h-48">
+                    <ExerciseFigure id={figure} title={name} className="h-full w-full" />
+                  </div>
+                  <div className="flex flex-1 flex-col p-4 sm:p-5">
+                    <p className="text-xs font-extrabold tracking-[0.12em] text-[#4f90c6]">{n}</p>
+                    <h3 className="rm-serif mt-1 text-2xl font-semibold leading-tight text-[#1b3348]">{name}</h3>
+                    <p className="mt-2 text-sm font-semibold text-[#1b3348]">{meta}</p>
+                    <p className="mt-2 text-sm leading-6 text-[#2f4a60]">{why}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-3">
+              {[t("libraryPoint1", locale), t("libraryPoint2", locale), t("libraryPoint3", locale)].map((line) => (
+                <li key={line} className="rounded-2xl bg-white/80 px-4 py-3 text-sm leading-6 text-[#1b3348] ring-1 ring-[#4f90c6]/15">
+                  {line}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-sm leading-6 text-[#2f4a60]">{t("librarySampleNote", locale)}</p>
           </div>
         </section>
 
