@@ -15,6 +15,7 @@ import { t, tf } from "@/lib/i18n";
 
 type AuthLandingProps = {
   mode: "login" | "register";
+  accountFirst?: boolean;
 };
 
 function SectionIntro({ kicker, title, text }: { kicker: string; title: string; text: string }) {
@@ -27,7 +28,7 @@ function SectionIntro({ kicker, title, text }: { kicker: string; title: string; 
   );
 }
 
-export function AuthLanding({ mode }: AuthLandingProps) {
+export function AuthLanding({ mode, accountFirst = false }: AuthLandingProps) {
   const { locale } = useClinicLocale();
   const primaryCta = mode === "login" ? t("createAccount", locale) : t("signIn", locale);
   const primaryHref = mode === "login" ? "/register" : "/login";
@@ -82,7 +83,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               <p className="mt-3 max-w-xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
                 {t("heroText", locale)}
               </p>
-              <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+              <div className="mt-5 flex flex-col gap-2 sm:flex-row">
                 <Link
                   href={primaryHref}
                   className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)] transition hover:-translate-y-0.5 hover:bg-brand-light"
@@ -91,11 +92,11 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   <span aria-hidden className="ml-2">→</span>
                 </Link>
                 <TryDemoButton className="inline-flex h-12 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-bold text-[#1b3348] transition hover:bg-[#e8f3fb]" />
-                <TryDemoButton
-                  role="doctor"
-                  className="inline-flex h-12 items-center justify-center rounded-full border border-[#9dc4b0] bg-white px-5 text-sm font-bold text-[#2a4638] transition hover:bg-[#e7f1ea]"
-                />
               </div>
+              <TryDemoButton
+                role="doctor"
+                className="mt-3 inline-flex text-sm font-bold text-[#2a4638] underline-offset-4 hover:underline"
+              />
             </div>
             <div className="relative">
               <PhotoFrame
@@ -116,7 +117,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
-        {mode === "register" && (
+        {accountFirst && (
           <div className="mx-auto w-full max-w-xl px-4 pb-8 sm:px-6">
             <section id="go-in" className="scroll-mt-20 rounded-[1.25rem] bg-white p-3 shadow-[0_16px_36px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/15 sm:p-4">
               <GoInScreen mode={mode} />
@@ -167,9 +168,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         <section id="sensors" className="scroll-mt-20 bg-white">
           <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
             <SectionIntro
-              kicker={t("chooseOneWay", locale)}
-              title={t("photoMotionMuscle", locale)}
-              text={t("oneSensorEnough", locale)}
+              kicker={t("methodKicker", locale)}
+              title={t("methodTitle", locale)}
+              text={t("methodText", locale)}
             />
             <div className="mt-5 grid gap-3 lg:grid-cols-3">
               {ways.map((item, index) => (
@@ -371,16 +372,6 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </Link>
         </div>
       </footer>
-
-      {mode === "login" && (
-        <div className="bg-[#f7fbfe]">
-          <div className="mx-auto w-full max-w-xl px-4 py-8 sm:px-6">
-            <section id="go-in" className="scroll-mt-20 rounded-[1.25rem] bg-white p-3 shadow-[0_16px_36px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/15 sm:p-4">
-              <GoInScreen mode={mode} />
-            </section>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

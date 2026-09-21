@@ -1,5 +1,5 @@
 import { AuthLanding } from "@/components/AuthLanding";
 
 export default function LoginPage() {
-  return <AuthLanding mode="login" />;
+  return <AuthLanding mode="login" accountFirst />;
 }

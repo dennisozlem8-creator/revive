@@ -55,9 +55,9 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <LanguageToggle />
           {mode === "login" && (
-            <a href="#go-in" className="hidden text-sm font-semibold text-[#1b3348] sm:inline">
+            <Link href="/login" className="hidden text-sm font-semibold text-[#1b3348] sm:inline">
               {t("signIn", locale)}
-            </a>
+            </Link>
           )}
           <Link
             href={ctaHref}
