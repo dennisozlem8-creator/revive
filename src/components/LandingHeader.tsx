@@ -20,8 +20,6 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
     { href: "#impact", label: t("impactNav", locale) },
     { href: "#passport", label: t("passportNav", locale) },
     { href: "#how-it-works", label: t("howItWorks", locale) },
-    { href: "#sensors", label: t("photoAndSensors", locale) },
-    { href: "#features", label: t("features", locale) },
     { href: "/kids", label: t("kidsQuest", locale) },
   ];
 

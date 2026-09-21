@@ -4,7 +4,7 @@ import Link from "next/link";
 import { GoInScreen } from "@/components/GoInScreen";
 import { ImpactBand } from "@/components/ImpactBand";
 import { PassportBand } from "@/components/PassportBand";
-import { JointMarks, KidsQuestPromo, MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame, PhotoGoniometerPhoto } from "@/components/LandingMedia";
+import { MpuAnglePhoto, MyoWarePhoto, OverlayCard, PhonePreview, PhotoFrame, PhotoGoniometerPhoto } from "@/components/LandingMedia";
 import { LandingHeader } from "@/components/LandingHeader";
 import { Logo } from "@/components/Logo";
 import { SessionStack } from "@/components/SessionStack";
@@ -29,7 +29,6 @@ function SectionIntro({ kicker, title, text }: { kicker: string; title: string; 
 
 export function AuthLanding({ mode }: AuthLandingProps) {
   const { locale } = useClinicLocale();
-  const cta = mode === "login" ? t("signIn", locale) : t("createAccount", locale);
   const primaryCta = mode === "login" ? t("createAccount", locale) : t("signIn", locale);
   const primaryHref = mode === "login" ? "/register" : "/login";
   const cycle = [
@@ -38,28 +37,6 @@ export function AuthLanding({ mode }: AuthLandingProps) {
     { n: "03", word: t("reportWord", locale), line: t("cycleReport", locale), color: "#4f90c6" },
     { n: "04", word: t("improve", locale), line: t("cycleImprove", locale), color: "#3a7d62" },
   ] as const;
-  const steps = [
-    {
-      n: "01",
-      title: t("stepPhotoTitle", locale),
-      text: t("stepPhotoText", locale),
-      src: "/images/landing-hero-photo.webp?v=3",
-      alt: t("takeSideViewShort", locale),
-    },
-    {
-      n: "02",
-      title: t("stepMarksTitle", locale),
-      text: t("stepMarksText", locale),
-      marks: true,
-    },
-    {
-      n: "03",
-      title: t("stepSessionTitle", locale),
-      text: t("stepSessionText", locale),
-      src: "/images/landing-exercise.webp",
-      alt: t("doTodaysExercises", locale),
-    },
-  ];
   const ways = [
     {
       title: t("wayPhotoTitle", locale),
@@ -105,7 +82,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               <p className="mt-3 max-w-xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
                 {t("heroText", locale)}
               </p>
-              <div className="mt-4 flex flex-col gap-2 sm:max-w-md">
+              <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                 <Link
                   href={primaryHref}
                   className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)] transition hover:-translate-y-0.5 hover:bg-brand-light"
@@ -113,22 +90,12 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   {primaryCta}
                   <span aria-hidden className="ml-2">→</span>
                 </Link>
-                <TryDemoButton className="inline-flex h-11 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-bold text-[#1b3348] transition hover:bg-[#e8f3fb]" />
+                <TryDemoButton className="inline-flex h-12 items-center justify-center rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-bold text-[#1b3348] transition hover:bg-[#e8f3fb]" />
                 <TryDemoButton
                   role="doctor"
-                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#9dc4b0] bg-white px-5 text-sm font-bold text-[#2a4638] transition hover:bg-[#e7f1ea]"
+                  className="inline-flex h-12 items-center justify-center rounded-full border border-[#9dc4b0] bg-white px-5 text-sm font-bold text-[#2a4638] transition hover:bg-[#e7f1ea]"
                 />
-                <a href="#go-in" className="text-center text-sm font-semibold text-[#3d7eb4] hover:text-[#1b3348]">
-                  {cta}
-                </a>
               </div>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {[t("heroPillCamera", locale), t("heroPillMotion", locale), t("heroPillMuscle", locale), t("heroPillLanguage", locale)].map((pill) => (
-                  <li key={pill} className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#1b3348] ring-1 ring-[#4f90c6]/20">
-                    {pill}
-                  </li>
-                ))}
-              </ul>
             </div>
             <div className="relative">
               <PhotoFrame
@@ -147,12 +114,15 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               </div>
             </div>
           </div>
-          <div className="relative mx-auto w-full max-w-6xl px-4 pb-8 sm:px-6">
-            <section id="go-in" className="scroll-mt-20 rounded-[1.25rem] bg-white p-3 shadow-[0_16px_36px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/15 sm:p-4 lg:max-w-xl">
+        </section>
+
+        {mode === "register" && (
+          <div className="mx-auto w-full max-w-xl px-4 pb-8 sm:px-6">
+            <section id="go-in" className="scroll-mt-20 rounded-[1.25rem] bg-white p-3 shadow-[0_16px_36px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/15 sm:p-4">
               <GoInScreen mode={mode} />
             </section>
           </div>
-        </section>
+        )}
 
         <ImpactBand locale={locale} />
 
@@ -190,31 +160,6 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             </div>
             <div className="px-4 pb-10 sm:px-6 lg:px-8 lg:py-10">
               <SessionStack locale={locale} />
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-[#f7fbfe]">
-          <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
-            <SectionIntro
-              kicker={t("howItWorks", locale)}
-              title={t("threeSteps", locale)}
-              text={t("threeStepsText", locale)}
-            />
-            <div className="mt-5 grid gap-3 sm:grid-cols-3">
-              {steps.map((step) => (
-                <OverlayCard
-                  key={step.n}
-                  kicker={step.n}
-                  title={step.title}
-                  text={step.text}
-                  src={step.src}
-                  alt={step.alt}
-                  media={
-                    step.marks ? <JointMarks className="absolute inset-0 h-full w-full" /> : undefined
-                  }
-                />
-              ))}
             </div>
           </div>
         </section>
@@ -349,24 +294,27 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 </div>
               </div>
             </div>
-            <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-              <OverlayCard
-                src="/images/landing-girl-phone.webp?v=1"
-                alt={t("sameSessionPhone", locale)}
-                kicker={t("youngerPatients", locale)}
-                title={t("sameSessionPhone", locale)}
-                text={t("sameSessionPhoneText", locale)}
-                href="#go-in"
-                imgClassName="object-cover object-[center_62%]"
-                className="min-h-[14rem] sm:min-h-[16rem]"
-              />
-              <KidsQuestPromo
-                kicker={t("stretchWithBots", locale)}
-                title={t("kidsQuest", locale)}
-                text={t("botsAskYouStretch", locale)}
-                cta={t("open", locale)}
-              />
+          </div>
+        </section>
+
+        <section className="bg-white">
+          <div className="mx-auto grid w-full max-w-6xl items-center gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:py-12">
+            <div>
+              <SectionKicker>{t("youngerPatients", locale)}</SectionKicker>
+              <h2 className="rm-serif mt-4 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
+                {t("kidsBandTitle", locale)}
+              </h2>
+              <p className="mt-3 max-w-xl text-base leading-7 text-[#2f4a60]">{t("kidsBandText", locale)}</p>
+              <Link href="/kids" className="mt-5 inline-flex h-12 items-center justify-center rounded-full bg-[#f5c84a] px-6 text-sm font-bold text-[#243056]">
+                {t("open", locale)} {t("kidsQuest", locale)}
+              </Link>
             </div>
+            <PhotoFrame
+              src="/images/landing-kids-quest.webp?v=5"
+              alt={t("kidsQuest", locale)}
+              imgClassName="object-cover object-[center_70%]"
+              className="min-h-[16rem] rounded-[1.5rem] shadow-[0_16px_36px_rgba(36,48,86,0.12)]"
+            />
           </div>
         </section>
       </main>
@@ -423,6 +371,16 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </Link>
         </div>
       </footer>
+
+      {mode === "login" && (
+        <div className="bg-[#f7fbfe]">
+          <div className="mx-auto w-full max-w-xl px-4 py-8 sm:px-6">
+            <section id="go-in" className="scroll-mt-20 rounded-[1.25rem] bg-white p-3 shadow-[0_16px_36px_rgba(27,51,72,0.1)] ring-1 ring-[#4f90c6]/15 sm:p-4">
+              <GoInScreen mode={mode} />
+            </section>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
