@@ -122,6 +122,16 @@ export default function Home() {
       {isPatient && (
         <div className="mt-6">
           <DailyPath locale={locale} prescription={user.ptPrescription} />
+          <Link
+            href="/library"
+            className="mt-4 flex items-center justify-between gap-4 rounded-[1.2rem] bg-white px-5 py-4 shadow-[0_12px_28px_rgba(27,51,72,0.06)] ring-1 ring-[#4f90c6]/12"
+          >
+            <span>
+              <span className="text-sm font-semibold text-[#4f90c6]">{t("libraryKicker", locale)}</span>
+              <span className="mt-1 block font-semibold text-[#1b3348]">{t("libraryHomeLink", locale)}</span>
+            </span>
+            <span className="text-sm font-semibold text-[#1b3348]">→</span>
+          </Link>
         </div>
       )}
 

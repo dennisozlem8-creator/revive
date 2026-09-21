@@ -59,8 +59,8 @@ export default function SessionPage() {
   const areaId = user ? areaIdForInjury(user.injuryType) : "wrist";
   const exercises = useMemo(() => {
     if (!user || !summary) return [];
-    return getSessionRecommendations(areaId, user, summary.angle, getPreviousExerciseIds(areaId));
-  }, [user, areaId, summary, getPreviousExerciseIds]);
+    return getSessionRecommendations(areaId, user, summary.angle, getPreviousExerciseIds(areaId), locale);
+  }, [user, areaId, summary, getPreviousExerciseIds, locale]);
 
   useEffect(() => {
     if (!recording) return;

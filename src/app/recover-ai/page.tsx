@@ -8,6 +8,7 @@ import { getCoachResponse } from "@/lib/chat-bot";
 import { t } from "@/lib/i18n";
 import { loadMeasurements } from "@/lib/goniometer";
 import { progressSnapshot } from "@/lib/recovery-plan";
+import { TodayPlan } from "@/components/ExerciseLibrary";
 
 type Message = { role: "user" | "assistant"; text: string };
 
@@ -74,6 +75,10 @@ export default function RecoverAIPage() {
         title={t("recoverAI", locale)}
         text="Ask about today’s plan, pain, or range. Answers stay on this device. Charts below use saved readings."
       />
+
+      <div className="mt-6">
+        <TodayPlan user={user} />
+      </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <DashRing value={weekPct} max={100} label="Active days this week" display={`${weekPct}%`} />

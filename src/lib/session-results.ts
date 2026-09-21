@@ -1,11 +1,7 @@
+import type { Locale } from "./i18n";
+import { rankExercises } from "./exercise-coach";
 import type { User } from "./users";
-import {
-  getAssessment,
-  getRecommendedExercises,
-  type AssessmentAnswers,
-  type Exercise,
-  type RomValues,
-} from "./assessments";
+import { getAssessment, type Exercise } from "./assessments";
 
 export type SessionSummary = {
   angle: number;
@@ -29,9 +25,10 @@ export function areaIdForInjury(injuryType: string) {
 
 export function getSessionRecommendations(
   areaId: string,
-  user: Pick<User, "painToday" | "checkInAnswers" | "baselineRom" | "targetRom">,
+  user: Pick<User, "painToday" | "checkInAnswers" | "baselineRom" | "targetRom" | "ptPrescription">,
   sessionAngle: number,
-  previousExerciseIds: string[] = []
+  previousExerciseIds: string[] = [],
+  locale: Locale = "en"
 ): Exercise[] {
   const assessment = getAssessment(areaId);
   if (!assessment) return [];
@@ -42,28 +39,19 @@ export function getSessionRecommendations(
     pain = Math.max(pain, 5);
   }
 
-  const answers: AssessmentAnswers = { pain };
-  const romValues: RomValues = {};
-
-  for (const test of assessment.romTests) {
-    const progress = sessionAngle / user.targetRom;
-    romValues[test.id] = Math.round(test.normalMin * progress + sessionAngle * 0.3);
-  }
-
-  if (assessment.romTests[0]) {
-    romValues[assessment.romTests[0].id] = sessionAngle;
-  }
-
-  const recommended = getRecommendedExercises(
+  const ranked = rankExercises({
     areaId,
-    answers,
-    romValues,
-    previousExerciseIds
-  );
+    pain,
+    latestPeak: sessionAngle,
+    goal: user.targetRom || user.ptPrescription?.targetAngle || 90,
+    prescribedName: user.ptPrescription?.exerciseName,
+    previousIds: previousExerciseIds,
+    locale,
+  });
+  const today = ranked.filter((row) => row.today).map((row) => row.exercise);
+  if (today.length >= 3) return today.slice(0, 3);
 
-  if (recommended.length >= 3) return recommended;
-
-  const ids = new Set(recommended.map((e) => e.id));
-  const fill = assessment.exercises.filter((e) => !ids.has(e.id)).slice(0, 3 - recommended.length);
-  return [...recommended, ...fill];
+  const ids = new Set(today.map((exercise) => exercise.id));
+  const fill = assessment.exercises.filter((exercise) => !ids.has(exercise.id)).slice(0, 3 - today.length);
+  return [...today, ...fill];
 }

@@ -314,6 +314,52 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           </div>
         </section>
 
+        <section id="library" className="scroll-mt-20 bg-white">
+          <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
+            <div className="grid items-start gap-6 lg:grid-cols-2">
+              <div>
+                <SectionIntro kicker={t("libraryKicker", locale)} title={t("libraryTitle", locale)} text={t("libraryText", locale)} />
+                <ol className="mt-5 space-y-3">
+                  {[t("libraryPoint1", locale), t("libraryPoint2", locale), t("libraryPoint3", locale)].map((line, index) => (
+                    <li key={line} className="flex gap-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e8f3fb] text-sm font-bold text-[#1b3348]">
+                        {index + 1}
+                      </span>
+                      <p className="pt-1 text-base leading-6 text-[#2f4a60]">{line}</p>
+                    </li>
+                  ))}
+                </ol>
+                <Link
+                  href={primaryHref}
+                  className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.28)]"
+                >
+                  {primaryCta}
+                </Link>
+              </div>
+              <div className="rounded-[1.6rem] bg-[#1b3348] p-5 text-white shadow-[0_16px_36px_rgba(27,51,72,0.16)] sm:p-6">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/70">{t("librarySampleKicker", locale)}</p>
+                <h3 className="rm-serif mt-2 text-3xl font-semibold">{t("librarySampleTitle", locale)}</h3>
+                <p className="mt-1 text-sm text-white/75">{t("librarySampleMeta", locale)}</p>
+                <ol className="mt-5 space-y-3">
+                  {[
+                    ["01", t("librarySample1Name", locale), t("librarySample1Meta", locale), t("librarySample1Why", locale)],
+                    ["02", t("librarySample2Name", locale), t("librarySample2Meta", locale), t("librarySample2Why", locale)],
+                    ["03", t("librarySample3Name", locale), t("librarySample3Meta", locale), t("librarySample3Why", locale)],
+                  ].map(([n, name, meta, why]) => (
+                    <li key={n} className="rounded-2xl bg-white/10 px-4 py-3 ring-1 ring-white/15">
+                      <p className="text-xs font-bold text-[#9dc4e4]">{n}</p>
+                      <p className="mt-1 text-lg font-semibold">{name}</p>
+                      <p className="text-sm text-white/75">{meta}</p>
+                      <p className="mt-1 text-sm leading-5 text-white/85">{why}</p>
+                    </li>
+                  ))}
+                </ol>
+                <p className="mt-4 text-xs leading-5 text-white/65">{t("librarySampleNote", locale)}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="bg-[#f7fbfe]">
           <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
             <div className="grid items-center overflow-hidden rounded-[1.75rem] bg-white shadow-[0_16px_36px_rgba(27,51,72,0.08)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
@@ -381,6 +427,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
             </a>
             <a href="#features" className="hover:text-foreground">
               {t("features", locale)}
+            </a>
+            <a href="#library" className="hover:text-foreground">
+              {t("libraryNav", locale)}
             </a>
             <Link href="/kids" className="hover:text-foreground">
               {t("kidsQuest", locale)}

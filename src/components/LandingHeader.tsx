@@ -22,6 +22,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
     { href: "#how-it-works", label: t("howItWorks", locale) },
     { href: "#sensors", label: t("sensorsNav", locale) },
     { href: "#features", label: t("appNav", locale) },
+    { href: "#library", label: t("libraryNav", locale) },
     { href: "/kids", label: t("kidsQuest", locale) },
   ];
 
