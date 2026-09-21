@@ -32,9 +32,9 @@ const kidsDisplay = Baloo_2({
 });
 
 export const metadata: Metadata = {
-  title: "Revive Motion | Physical Therapy Monitoring at Home",
+  title: "Revive Motion | Clinician-prescribed therapy at home",
   description:
-    "Physical therapy monitoring at home. Measure, coach, report, improve with Photo Goniometer, MPU-6050, or MyoWare 2.0.",
+    "Complete the plan your clinician prescribed, capture movement at home, and share one Recovery Passport with the care team.",
 };
 
 export default function RootLayout({

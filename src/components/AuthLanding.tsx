@@ -69,8 +69,8 @@ export function AuthLanding({ mode }: AuthLandingProps) {
           <div className="pointer-events-none absolute -left-28 top-0 h-64 w-64 rounded-full bg-[#4f90c6]/15 blur-3xl" />
           <div className="pointer-events-none absolute right-[-6rem] top-16 h-72 w-72 rounded-full bg-[#9dc4b0]/25 blur-3xl" />
 
-          <div className="relative mx-auto grid w-full max-w-6xl items-center gap-6 px-4 pb-8 pt-5 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:pb-10 lg:pt-8">
-            <div>
+          <div className="relative mx-auto grid w-full max-w-6xl items-center gap-5 px-4 pb-8 pt-5 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:gap-6 lg:pb-10 lg:pt-8">
+            <div className="lg:col-start-1 lg:row-start-1">
               <p className="inline-flex items-center gap-2 rounded-full bg-[#1b3348] px-3 py-1.5 text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-white">
                 <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[#7eb3d9]" />
                 {t("heroKicker", locale)}
@@ -81,7 +81,27 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               <p className="mt-3 max-w-xl text-[0.95rem] leading-6 text-body sm:text-base sm:leading-7">
                 {t("heroText", locale)}
               </p>
-              <div className="mt-5 flex max-w-xl flex-col gap-2.5 sm:flex-row sm:items-stretch">
+            </div>
+            <PhotoFrame
+              src="/images/landing-hero-face.jpg"
+              alt={t("sameSessionPhone", locale)}
+              imgClassName="object-cover object-[center_28%]"
+              className="aspect-[4/3] rounded-[1.6rem] shadow-[0_18px_40px_rgba(27,51,72,0.12)] lg:col-start-2 lg:row-span-2 lg:row-start-1"
+            >
+              <div className="absolute bottom-3 right-3 w-[62%] max-w-[15.5rem] rounded-2xl bg-white p-3.5 shadow-[0_14px_32px_rgba(27,51,72,0.16)] sm:bottom-4 sm:right-4 sm:p-4">
+                <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#8aa0b3]">
+                  {t("passportOverlayKicker", locale)}
+                </p>
+                <p className="rm-serif mt-1 text-[2.6rem] font-semibold leading-none text-[#1b3348] sm:text-5xl">76</p>
+                <p className="mt-1 text-xs leading-4 text-[#5d7386] sm:text-sm">{t("passportOverlayNote", locale)}</p>
+                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#e6eef5]" aria-hidden>
+                  <div className="h-full w-[76%] rounded-full bg-[#4f90c6]" />
+                </div>
+              </div>
+            </PhotoFrame>
+            <div className="lg:col-start-1 lg:row-start-2">
+              <p className="text-sm font-semibold text-[#3d7eb4]">{t("heroRoles", locale)}</p>
+              <div className="mt-3 flex max-w-xl flex-col gap-2.5 sm:flex-row sm:items-stretch">
                 <Link
                   href={primaryHref}
                   className="inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-brand px-8 text-[1.05rem] font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light sm:h-auto sm:min-h-[5.5rem] sm:flex-1"
@@ -108,23 +128,6 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 ))}
               </ul>
             </div>
-            <PhotoFrame
-              src="/images/landing-hero-face.jpg"
-              alt={t("sameSessionPhone", locale)}
-              imgClassName="object-cover object-[center_28%]"
-              className="aspect-[4/3] rounded-[1.6rem] shadow-[0_18px_40px_rgba(27,51,72,0.12)]"
-            >
-              <div className="absolute bottom-3 right-3 w-[62%] max-w-[15.5rem] rounded-2xl bg-white p-3.5 shadow-[0_14px_32px_rgba(27,51,72,0.16)] sm:bottom-4 sm:right-4 sm:p-4">
-                <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#8aa0b3]">
-                  {t("passportOverlayKicker", locale)}
-                </p>
-                <p className="rm-serif mt-1 text-[2.6rem] font-semibold leading-none text-[#1b3348] sm:text-5xl">76</p>
-                <p className="mt-1 text-xs leading-4 text-[#5d7386] sm:text-sm">{t("passportOverlayNote", locale)}</p>
-                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#e6eef5]" aria-hidden>
-                  <div className="h-full w-[76%] rounded-full bg-[#4f90c6]" />
-                </div>
-              </div>
-            </PhotoFrame>
           </div>
         </section>
 
@@ -208,7 +211,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               <p className="mt-2 text-sm font-bold text-[#3d7eb4] lg:hidden">{t("slideSideways", locale)}</p>
               <div className="mt-3 flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto pb-1 lg:grid lg:grid-cols-4 lg:overflow-visible">
                 <div className="flex w-[78%] shrink-0 snap-start flex-col lg:w-auto">
-                  <div className="mb-2 min-h-[6.5rem]">
+                  <div className="mb-2 min-h-[4.75rem]">
                     <p className="text-xs font-extrabold text-[#4f90c6]">01</p>
                     <p className="text-base font-bold text-[#1b3348]">{t("screenQ1", locale)}</p>
                     <p className="text-sm leading-5 text-[#2f4a60]">{t("screenA1", locale)}</p>
@@ -234,7 +237,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 </PhonePreview>
                 </div>
                 <div className="flex w-[78%] shrink-0 snap-start flex-col lg:w-auto">
-                  <div className="mb-2 min-h-[6.5rem]">
+                  <div className="mb-2 min-h-[4.75rem]">
                     <p className="text-xs font-extrabold text-[#4f90c6]">02</p>
                     <p className="text-base font-bold text-[#1b3348]">{t("screenQ2", locale)}</p>
                     <p className="text-sm leading-5 text-[#2f4a60]">{t("screenA2", locale)}</p>
@@ -261,7 +264,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 </PhonePreview>
                 </div>
                 <div className="flex w-[78%] shrink-0 snap-start flex-col lg:w-auto">
-                  <div className="mb-2 min-h-[6.5rem]">
+                  <div className="mb-2 min-h-[4.75rem]">
                     <p className="text-xs font-extrabold text-[#4f90c6]">03</p>
                     <p className="text-base font-bold text-[#1b3348]">{t("screenQ3", locale)}</p>
                     <p className="text-sm leading-5 text-[#2f4a60]">{t("screenA3", locale)}</p>
@@ -281,7 +284,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   </PhonePreview>
                 </div>
                 <div className="flex w-[78%] shrink-0 snap-start flex-col lg:w-auto">
-                  <div className="mb-2 min-h-[6.5rem]">
+                  <div className="mb-2 min-h-[4.75rem]">
                     <p className="text-xs font-extrabold text-[#4f90c6]">04</p>
                     <p className="text-base font-bold text-[#1b3348]">{t("screenQ4", locale)}</p>
                     <p className="text-sm leading-5 text-[#2f4a60]">{t("screenA4", locale)}</p>
@@ -323,12 +326,9 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   {t("kidsBandTitle", locale)}
                 </h2>
                 <p className="mt-3 max-w-xl text-base leading-7 text-[#2f4a60]">{t("kidsBandText", locale)}</p>
-                <div className="mt-5 flex flex-wrap items-center gap-4">
+                <div className="mt-5">
                   <Link href="/kids" className="inline-flex h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-bold text-white">
                     {t("open", locale)} {t("kidsQuest", locale)}
-                  </Link>
-                  <Link href="/kids" className="text-sm font-bold text-[#1b3348]">
-                    {t("kidsSeeHow", locale)} →
                   </Link>
                 </div>
               </div>
@@ -347,20 +347,12 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
           <h2 className="rm-serif text-3xl font-semibold leading-tight sm:text-4xl">{t("closeLoopTitle", locale)}</h2>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-white/80 sm:text-base">{t("closeLoopText", locale)}</p>
-          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-6 flex justify-center">
             <Link
               href={primaryHref}
-              className="inline-flex h-14 min-w-[16rem] items-center justify-center rounded-full bg-brand px-8 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)]"
+              className="inline-flex h-12 min-w-[14rem] items-center justify-center rounded-full bg-brand px-8 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)]"
             >
               {primaryCta}
-              <span aria-hidden className="ml-2">→</span>
-            </Link>
-            <TryDemoButton
-              role="doctor"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-white px-5 text-sm font-bold text-[#1b3348]"
-            />
-            <Link href="/login" className="inline-flex h-12 items-center justify-center rounded-full bg-white px-5 text-sm font-bold text-[#1b3348]">
-              {t("signInOrCreate", locale)}
             </Link>
           </div>
         </div>
