@@ -27,10 +27,10 @@ export function SessionStack({ locale = "en" }: { locale?: Locale }) {
   ] as const;
 
   return (
-    <div className="mx-auto flex w-full max-w-xl flex-col gap-3 py-6 lg:py-8">
+    <div className="mx-auto flex w-full max-w-xl flex-col gap-2 py-3 lg:py-4">
       {slides.map((slide) => (
-        <figure key={slide.n} className="overflow-hidden rounded-[1.25rem] bg-[#d7e8f6] shadow-[0_16px_32px_rgba(8,20,32,0.28)]">
-          <div className="relative h-40 sm:h-48">
+        <figure key={slide.n} className="overflow-hidden rounded-[1.15rem] bg-[#d7e8f6] shadow-[0_16px_32px_rgba(8,20,32,0.28)]">
+          <div className="relative h-32 sm:h-36">
             <SafePicture src={slide.src} alt={slide.alt} className="absolute inset-0 h-full w-full object-cover object-[center_20%]" />
             <p className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-[#1b3348]">
               {slide.n} {slide.label}

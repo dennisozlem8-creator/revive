@@ -20,6 +20,8 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
     { href: "#impact", label: t("impactNav", locale) },
     { href: "#passport", label: t("passportNav", locale) },
     { href: "#how-it-works", label: t("howItWorks", locale) },
+    { href: "#sensors", label: t("sensorsNav", locale) },
+    { href: "#features", label: t("appNav", locale) },
     { href: "/kids", label: t("kidsQuest", locale) },
   ];
 
@@ -36,7 +38,7 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
           <span className="truncate text-sm font-semibold tracking-tight text-foreground sm:text-[1.05rem]">Revive Motion</span>
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-4 lg:flex" aria-label="Primary">
           {nav.map((item) => (
             <Link
               key={item.href}

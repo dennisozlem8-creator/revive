@@ -137,7 +137,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
 
         <section id="how-it-works" className="scroll-mt-20 bg-[#1b3348] text-white">
           <div className="mx-auto grid w-full max-w-6xl items-start lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-            <div className="flex flex-col justify-center px-4 py-10 sm:px-6 lg:sticky lg:top-20 lg:self-start lg:px-8 lg:py-16">
+            <div className="flex flex-col justify-center px-4 py-8 sm:px-6 lg:sticky lg:top-20 lg:self-start lg:px-8 lg:py-10">
               <SectionKicker tone="dark">{t("guidedOnDevice", locale)}</SectionKicker>
               <h2 className="rm-serif mt-4 text-3xl font-semibold leading-[1.1] sm:text-4xl">
                 {t("sessionsAtHome", locale)}
@@ -158,14 +158,8 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   </li>
                 ))}
               </ol>
-              <Link
-                href={primaryHref}
-                className="mt-7 inline-flex h-11 w-fit items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-[#1b3348] transition hover:bg-[#e8f3fb]"
-              >
-                {primaryCta}
-              </Link>
             </div>
-            <div className="px-4 pb-10 sm:px-6 lg:px-8 lg:py-10">
+            <div className="px-4 pb-6 sm:px-6 lg:px-8 lg:py-6">
               <SessionStack locale={locale} />
             </div>
           </div>
