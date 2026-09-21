@@ -10,6 +10,7 @@ import { SessionStack } from "@/components/SessionStack";
 import { TryDemoButton } from "@/components/TryDemoButton";
 import { useClinicLocale } from "@/components/useClinicLocale";
 import { SectionKicker } from "@/components/SectionKicker";
+import { ExerciseFigure } from "@/components/ExerciseFigure";
 import { t, tf } from "@/lib/i18n";
 
 type AuthLandingProps = {
@@ -342,15 +343,20 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 <p className="mt-1 text-sm text-white/75">{t("librarySampleMeta", locale)}</p>
                 <ol className="mt-5 space-y-3">
                   {[
-                    ["01", t("librarySample1Name", locale), t("librarySample1Meta", locale), t("librarySample1Why", locale)],
-                    ["02", t("librarySample2Name", locale), t("librarySample2Meta", locale), t("librarySample2Why", locale)],
-                    ["03", t("librarySample3Name", locale), t("librarySample3Meta", locale), t("librarySample3Why", locale)],
-                  ].map(([n, name, meta, why]) => (
-                    <li key={n} className="rounded-2xl bg-white/10 px-4 py-3 ring-1 ring-white/15">
-                      <p className="text-xs font-bold text-[#9dc4e4]">{n}</p>
-                      <p className="mt-1 text-lg font-semibold">{name}</p>
-                      <p className="text-sm text-white/75">{meta}</p>
-                      <p className="mt-1 text-sm leading-5 text-white/85">{why}</p>
+                    ["01", "heel-slides", t("librarySample1Name", locale), t("librarySample1Meta", locale), t("librarySample1Why", locale)],
+                    ["02", "quad-sets", t("librarySample2Name", locale), t("librarySample2Meta", locale), t("librarySample2Why", locale)],
+                    ["03", "mini-squats", t("librarySample3Name", locale), t("librarySample3Meta", locale), t("librarySample3Why", locale)],
+                  ].map(([n, figure, name, meta, why]) => (
+                    <li key={n} className="flex gap-3 rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
+                      <div className="h-24 w-28 shrink-0 overflow-hidden rounded-xl">
+                        <ExerciseFigure id={figure} title={name} className="h-full w-full" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs font-bold text-[#9dc4e4]">{n}</p>
+                        <p className="mt-1 text-lg font-semibold leading-tight">{name}</p>
+                        <p className="text-sm text-white/75">{meta}</p>
+                        <p className="mt-1 text-sm leading-5 text-white/85">{why}</p>
+                      </div>
                     </li>
                   ))}
                 </ol>

@@ -3,9 +3,9 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { DashCard } from "@/components/clinic/DashKit";
+import { ExerciseFigure } from "@/components/ExerciseFigure";
 import { assessments, type Exercise } from "@/lib/assessments";
 import { rankExercises, type RankedExercise } from "@/lib/exercise-coach";
-import { getExerciseMedia } from "@/lib/exercise-media";
 import { loadMeasurements } from "@/lib/goniometer";
 import { clinicLocale, t, tf, type Locale } from "@/lib/i18n";
 import { progressSnapshot } from "@/lib/recovery-plan";
@@ -222,76 +222,80 @@ function PlanRow({
   onToggle?: () => void;
   onSwap?: (id: string) => void;
 }) {
-  const media = getExerciseMedia(row.exercise.id, row.exercise.name);
-  const body = (
-    <div className="flex gap-3">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={media.image} alt="" className="h-16 w-16 shrink-0 rounded-2xl bg-[#e8f3fb] object-cover" />
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          {index != null ? <span className="text-sm font-bold text-[#4f90c6]">{index}</span> : null}
-          <h3 className="rm-serif text-xl font-semibold text-[#1b3348]">{row.exercise.name}</h3>
-          {row.prescribed ? (
-            <span className="rounded-full bg-[#3a7d62] px-2 py-0.5 text-xs font-bold text-white">{t("prescribedByPt", locale)}</span>
-          ) : null}
-          {row.paused ? (
-            <span className="rounded-full bg-[#e8f3fb] px-2 py-0.5 text-xs font-bold text-[#1b3348]">{t("libraryPaused", locale)}</span>
-          ) : row.today && index == null ? (
-            <span className="rounded-full bg-[#e8f3fb] px-2 py-0.5 text-xs font-bold text-[#1b3348]">{t("libraryOnToday", locale)}</span>
-          ) : null}
-        </div>
-        <p className="mt-1 text-sm font-semibold text-[#1b3348]">
-          {row.dose} · {row.detail.minutes} {t("libraryMin", locale)} · {row.detail.equipment}
-        </p>
-        <ul className="mt-2 space-y-1">
-          {row.reasons.map((reason) => (
-            <li key={reason} className="text-sm leading-6 text-[#2f4a60]">
-              {reason}
-            </li>
-          ))}
-        </ul>
+  const summary = (
+    <>
+      <div className="flex flex-wrap items-center gap-2">
+        {index != null ? <span className="text-sm font-bold text-[#4f90c6]">{index}</span> : null}
+        <h3 className="rm-serif text-xl font-semibold text-[#1b3348]">{row.exercise.name}</h3>
+        {row.prescribed ? (
+          <span className="rounded-full bg-[#3a7d62] px-2 py-0.5 text-xs font-bold text-white">{t("prescribedByPt", locale)}</span>
+        ) : null}
+        {row.paused ? (
+          <span className="rounded-full bg-[#e8f3fb] px-2 py-0.5 text-xs font-bold text-[#1b3348]">{t("libraryPaused", locale)}</span>
+        ) : row.today && index == null ? (
+          <span className="rounded-full bg-[#e8f3fb] px-2 py-0.5 text-xs font-bold text-[#1b3348]">{t("libraryOnToday", locale)}</span>
+        ) : null}
       </div>
-    </div>
+      <p className="mt-1 text-sm font-semibold text-[#1b3348]">
+        {row.dose} · {row.detail.minutes} {t("libraryMin", locale)} · {row.detail.equipment}
+      </p>
+      <ul className="mt-2 space-y-1">
+        {row.reasons.map((reason) => (
+          <li key={reason} className="text-sm leading-6 text-[#2f4a60]">
+            {reason}
+          </li>
+        ))}
+      </ul>
+      {onToggle ? (
+        <span className="mt-2 inline-block text-sm font-semibold text-[#1b3348]">{open ? t("libraryHide", locale) : t("libraryShow", locale)}</span>
+      ) : null}
+    </>
   );
 
-  if (compact || !onToggle) {
-    return <article className="rounded-[1.2rem] bg-white p-4 ring-1 ring-[#4f90c6]/12">{body}</article>;
-  }
-
   return (
-    <article className="rounded-[1.2rem] bg-white p-4 ring-1 ring-[#4f90c6]/12">
-      <button type="button" onClick={onToggle} className="w-full text-left">
-        {body}
-        <span className="mt-2 inline-block text-sm font-semibold text-[#1b3348]">{open ? t("libraryHide", locale) : t("libraryShow", locale)}</span>
-      </button>
-      {open ? (
-        <div className="mt-3 border-t border-[#e8f3fb] pt-3">
-          <p className="text-sm font-semibold text-[#1b3348]">{t("librarySteps", locale)}</p>
-          <ol className="mt-2 space-y-2">
-            {row.detail.steps.map((step, stepIndex) => (
-              <li key={step} className="flex gap-2 text-sm leading-6 text-[#2f4a60]">
-                <span className="font-bold text-[#1b3348]">{stepIndex + 1}</span>
-                <span>{step}</span>
-              </li>
-            ))}
-          </ol>
-          <p className="mt-3 text-sm font-semibold leading-6 text-[#1b3348]">{row.detail.stopIf}</p>
-          {onSwap && (row.detail.easierId || row.detail.harderId) ? (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {row.detail.easierId ? (
-                <button type="button" onClick={() => onSwap(row.detail.easierId!)} className="rounded-full bg-[#e8f3fb] px-3 py-1.5 text-sm font-semibold text-[#1b3348]">
-                  {t("libraryEasier", locale)}
-                </button>
-              ) : null}
-              {row.detail.harderId ? (
-                <button type="button" onClick={() => onSwap(row.detail.harderId!)} className="rounded-full bg-[#e8f3fb] px-3 py-1.5 text-sm font-semibold text-[#1b3348]">
-                  {t("libraryHarder", locale)}
-                </button>
+    <article className="overflow-hidden rounded-[1.2rem] bg-white ring-1 ring-[#4f90c6]/12">
+      <div className="grid grid-cols-1 sm:grid-cols-[11.5rem_1fr] sm:min-h-36">
+        <div className={`overflow-hidden bg-[#e8f3fb] ${compact ? "h-28" : open ? "h-52" : "h-40"} sm:h-full`}>
+          <ExerciseFigure id={row.exercise.id} title={row.exercise.name} className="h-full w-full" />
+        </div>
+        <div className="min-w-0 p-4">
+          {onToggle ? (
+            <button type="button" onClick={onToggle} className="w-full text-left">
+              {summary}
+            </button>
+          ) : (
+            summary
+          )}
+          {open ? (
+            <div className="mt-3 border-t border-[#e8f3fb] pt-3">
+              <p className="text-sm font-semibold text-[#1b3348]">{t("librarySteps", locale)}</p>
+              <ol className="mt-2 space-y-2">
+                {row.detail.steps.map((step, stepIndex) => (
+                  <li key={step} className="flex gap-2 text-sm leading-6 text-[#2f4a60]">
+                    <span className="font-bold text-[#1b3348]">{stepIndex + 1}</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-3 text-sm font-semibold leading-6 text-[#1b3348]">{row.detail.stopIf}</p>
+              {onSwap && (row.detail.easierId || row.detail.harderId) ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {row.detail.easierId ? (
+                    <button type="button" onClick={() => onSwap(row.detail.easierId as string)} className="rounded-full bg-[#e8f3fb] px-3 py-1.5 text-sm font-semibold text-[#1b3348]">
+                      {t("libraryEasier", locale)}
+                    </button>
+                  ) : null}
+                  {row.detail.harderId ? (
+                    <button type="button" onClick={() => onSwap(row.detail.harderId as string)} className="rounded-full bg-[#e8f3fb] px-3 py-1.5 text-sm font-semibold text-[#1b3348]">
+                      {t("libraryHarder", locale)}
+                    </button>
+                  ) : null}
+                </div>
               ) : null}
             </div>
           ) : null}
         </div>
-      ) : null}
+      </div>
     </article>
   );
 }
