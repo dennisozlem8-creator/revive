@@ -94,7 +94,8 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 </p>
                 <p className="rm-serif mt-1 text-[2.6rem] font-semibold leading-none text-[#1b3348] sm:text-5xl">76</p>
                 <p className="mt-1 text-xs leading-4 text-[#5d7386] sm:text-sm">{t("passportOverlayNote", locale)}</p>
-                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#e6eef5]" aria-hidden>
+                <p className="mt-1 text-[0.68rem] leading-4 text-[#3d7eb4]">{t("scoreMeaning", locale)}</p>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e6eef5]" aria-hidden>
                   <div className="h-full w-[76%] rounded-full bg-[#4f90c6]" />
                 </div>
               </div>
@@ -127,6 +128,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                   </li>
                 ))}
               </ul>
+              <p className="mt-2 max-w-xl text-sm leading-5 text-[#2f4a60]">{t("heroOneMethod", locale)}</p>
             </div>
           </div>
         </section>

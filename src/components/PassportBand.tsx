@@ -95,7 +95,8 @@ export function PassportBand({ locale }: { locale: Locale }) {
                 ))}
               </ul>
             </div>
-            <div className="mt-4 grid grid-cols-3 gap-2">
+            <p className="mt-3 text-xs font-semibold leading-4 text-[#3d7eb4]">{t("scoreMeaning", locale)}</p>
+            <div className="mt-3 grid grid-cols-3 gap-2">
               <Mini value={t("passportPreviewVelocity", locale)} label={t("passportVelocity", locale)} />
               <Mini value={t("passportPreviewWeek", locale)} label={t("passportWeek", locale)} />
               <Mini value={t("passportPreviewRange", locale)} label={t("passportRange", locale)} />
