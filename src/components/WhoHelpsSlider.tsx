@@ -5,16 +5,70 @@ import { SafePicture } from "@/components/SafePicture";
 import { SectionKicker } from "@/components/SectionKicker";
 import { t, tf, type CopyKey, type Locale } from "@/lib/i18n";
 
-const WHO_HELPS: { img: string; title: CopyKey; text: CopyKey }[] = [
-  { img: "/images/impact-sports.png?v=3", title: "helpSportsTitle", text: "helpSportsText" },
-  { img: "/images/impact-stroke.png?v=3", title: "helpStrokeTitle", text: "helpStrokeText" },
-  { img: "/images/impact-parkinsons.png?v=3", title: "helpParkinsonTitle", text: "helpParkinsonText" },
-  { img: "/images/impact-surgery.png?v=3", title: "helpSurgeryTitle", text: "helpSurgeryText" },
-  { img: "/images/impact-older.png?v=3", title: "helpOlderTitle", text: "helpOlderText" },
-  { img: "/images/impact-disability.png?v=3", title: "helpDisabilityTitle", text: "helpDisabilityText" },
-  { img: "/images/impact-chronic.png?v=3", title: "helpChronicTitle", text: "helpChronicText" },
-  { img: "/images/impact-rural.png?v=3", title: "helpRuralTitle", text: "helpRuralText" },
-  { img: "/images/impact-underserved.png?v=3", title: "helpUnderservedTitle", text: "helpUnderservedText" },
+const WHO_HELPS: { img: string; title: CopyKey; stat: CopyKey; statText: CopyKey; text: CopyKey }[] = [
+  {
+    img: "/images/impact-sports.png?v=3",
+    title: "helpSportsTitle",
+    stat: "helpSportsStat",
+    statText: "helpSportsStatText",
+    text: "helpSportsText",
+  },
+  {
+    img: "/images/impact-stroke.png?v=3",
+    title: "helpStrokeTitle",
+    stat: "helpStrokeStat",
+    statText: "helpStrokeStatText",
+    text: "helpStrokeText",
+  },
+  {
+    img: "/images/impact-parkinsons.png?v=3",
+    title: "helpParkinsonTitle",
+    stat: "helpParkinsonStat",
+    statText: "helpParkinsonStatText",
+    text: "helpParkinsonText",
+  },
+  {
+    img: "/images/impact-surgery.png?v=3",
+    title: "helpSurgeryTitle",
+    stat: "helpSurgeryStat",
+    statText: "helpSurgeryStatText",
+    text: "helpSurgeryText",
+  },
+  {
+    img: "/images/impact-older.png?v=3",
+    title: "helpOlderTitle",
+    stat: "helpOlderStat",
+    statText: "helpOlderStatText",
+    text: "helpOlderText",
+  },
+  {
+    img: "/images/impact-disability.png?v=3",
+    title: "helpDisabilityTitle",
+    stat: "helpDisabilityStat",
+    statText: "helpDisabilityStatText",
+    text: "helpDisabilityText",
+  },
+  {
+    img: "/images/impact-chronic.png?v=3",
+    title: "helpChronicTitle",
+    stat: "helpChronicStat",
+    statText: "helpChronicStatText",
+    text: "helpChronicText",
+  },
+  {
+    img: "/images/impact-rural.png?v=3",
+    title: "helpRuralTitle",
+    stat: "helpRuralStat",
+    statText: "helpRuralStatText",
+    text: "helpRuralText",
+  },
+  {
+    img: "/images/impact-underserved.png?v=3",
+    title: "helpUnderservedTitle",
+    stat: "helpUnderservedStat",
+    statText: "helpUnderservedStatText",
+    text: "helpUnderservedText",
+  },
 ];
 
 function Chevron({ dir }: { dir: "prev" | "next" }) {
@@ -115,7 +169,7 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
                 aria-hidden={i !== index}
                 className="relative w-[86%] shrink-0 snap-start overflow-hidden rounded-[1.35rem] bg-[#d7e8f6] shadow-[0_18px_40px_rgba(8,20,32,0.18)] sm:w-[70%] lg:w-[62%]"
               >
-                <div className="relative h-72 sm:h-80 lg:h-[26.5rem]">
+                <div className="relative h-[21rem] sm:h-80 lg:h-[26.5rem]">
                   <SafePicture
                     src={item.img}
                     alt={t(item.title, locale)}
@@ -124,7 +178,15 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
                   <p className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1 text-sm font-semibold tabular-nums text-[#1b3348] shadow-sm">
                     {n}
                   </p>
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#1b3348]/86 to-transparent px-4 pb-4 pt-16 sm:px-6 sm:pb-5">
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#1b3348]/95 via-[#1b3348]/78 to-transparent px-4 pb-4 pt-20 sm:px-6 sm:pb-5 sm:pt-24">
+                    <div className="mb-2 flex items-end gap-2.5 text-white">
+                      <strong className="rm-display shrink-0 text-2xl font-semibold leading-none sm:text-[2rem]">
+                        {t(item.stat, locale)}
+                      </strong>
+                      <span className="max-w-[24rem] text-[0.72rem] font-semibold leading-[1.25] text-white/90 sm:text-xs">
+                        {t(item.statText, locale)}
+                      </span>
+                    </div>
                     <h4 className="rm-serif text-xl font-semibold leading-tight text-white sm:text-2xl">{t(item.title, locale)}</h4>
                     <p className="mt-1 text-sm font-semibold leading-6 text-white/90 sm:text-base">{t(item.text, locale)}</p>
                   </div>
@@ -201,6 +263,7 @@ export function WhoHelpsSlider({ locale }: { locale: Locale }) {
             </button>
           ))}
         </div>
+        <p className="mt-4 max-w-4xl text-xs leading-5 text-[#4d6478]">{t("whoHelpsEstimateNote", locale)}</p>
       </div>
     </section>
   );
