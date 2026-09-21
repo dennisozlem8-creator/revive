@@ -88,6 +88,18 @@ export function GoInScreen({ mode }: GoInScreenProps) {
       <p className="mt-1 text-sm leading-5 text-muted">
         {signingIn ? t("chooseRole", locale) : t("createAccountWho", locale)}
       </p>
+      {signingIn && (
+        <div className="mt-3 flex flex-col gap-2 rounded-2xl border border-[#9ec6e0] bg-[#e8f3fb] p-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm font-semibold text-[#1b3348]">{t("noAccountYet", locale)}</p>
+          <Link
+            href="/register"
+            className="inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-brand px-5 text-sm font-bold text-white shadow-[0_8px_20px_rgba(79,144,198,0.28)] transition hover:bg-brand-light"
+          >
+            {t("createAccount", locale)}
+            <span aria-hidden className="ml-2">→</span>
+          </Link>
+        </div>
+      )}
       <div className="mt-3 flex flex-col gap-1.5">
         <TryDemoButton className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light" />
         <TryDemoButton

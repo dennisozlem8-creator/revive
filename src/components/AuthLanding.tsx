@@ -30,6 +30,8 @@ function SectionIntro({ kicker, title, text }: { kicker: string; title: string; 
 export function AuthLanding({ mode }: AuthLandingProps) {
   const { locale } = useClinicLocale();
   const cta = mode === "login" ? t("signIn", locale) : t("createAccount", locale);
+  const primaryCta = mode === "login" ? t("createAccount", locale) : t("signIn", locale);
+  const primaryHref = mode === "login" ? "/register" : "/login";
   const cycle = [
     { n: "01", word: t("measure", locale), line: t("cycleMeasure", locale), color: "#9dc4b0" },
     { n: "02", word: t("coach", locale), line: t("cycleCoach", locale), color: "#7eb3d9" },
@@ -102,9 +104,16 @@ export function AuthLanding({ mode }: AuthLandingProps) {
               {t("fullSpanish", locale)}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
+              <Link
+                href={primaryHref}
+                className="inline-flex h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-brand px-6 text-sm font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.34)] transition hover:-translate-y-0.5 hover:bg-brand-light sm:h-12 sm:px-8 sm:text-base"
+              >
+                {primaryCta}
+                <span aria-hidden className="ml-2">→</span>
+              </Link>
               <a
                 href="#go-in"
-                className="inline-flex h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-brand px-4 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(79,144,198,0.28)] transition hover:bg-brand-light sm:h-11 sm:px-7"
+                className="inline-flex h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-full border-2 border-[#4f90c6] bg-white px-5 text-sm font-bold text-[#1b3348] transition hover:bg-[#e8f3fb] sm:h-12 sm:px-7"
               >
                 {cta}
               </a>

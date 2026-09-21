@@ -14,7 +14,8 @@ type LandingHeaderProps = {
 export function LandingHeader({ mode }: LandingHeaderProps) {
   const [open, setOpen] = useState(false);
   const { locale } = useClinicLocale();
-  const cta = mode === "login" ? t("signIn", locale) : t("createAccount", locale);
+  const cta = mode === "login" ? t("createAccount", locale) : t("signIn", locale);
+  const ctaHref = mode === "login" ? "/register" : "/login";
   const nav = [
     { href: "#impact", label: t("impactNav", locale) },
     { href: "#passport", label: t("passportNav", locale) },
@@ -55,12 +56,12 @@ export function LandingHeader({ mode }: LandingHeaderProps) {
 
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <LanguageToggle />
-          <a
-            href="#go-in"
-            className="inline-flex h-9 items-center justify-center rounded-full bg-brand px-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-light sm:h-10 sm:px-4"
+          <Link
+            href={ctaHref}
+            className="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-full bg-brand px-3 text-xs font-bold text-white shadow-[0_8px_20px_rgba(79,144,198,0.3)] transition hover:bg-brand-light sm:h-10 sm:px-5 sm:text-sm"
           >
             {cta}
-          </a>
+          </Link>
           <button
             type="button"
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] text-foreground sm:h-10 sm:w-10 lg:hidden"
