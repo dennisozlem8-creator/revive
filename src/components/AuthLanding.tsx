@@ -122,13 +122,14 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                 </div>
               </div>
               <ul className="mt-4 flex flex-wrap gap-2">
-                {[t("heroPillCamera", locale), t("heroPillMotion", locale), t("heroPillMuscle", locale), t("heroPillLanguage", locale)].map((pill) => (
+                {[t("heroPillCamera", locale), t("heroPillMotion", locale), t("heroPillMuscle", locale)].map((pill) => (
                   <li key={pill} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[#5d7386] ring-1 ring-[#d5e4ef]">
                     {pill}
                   </li>
                 ))}
               </ul>
               <p className="mt-2 max-w-xl text-sm leading-5 text-[#2f4a60]">{t("heroOneMethod", locale)}</p>
+              <p className="mt-2 text-xs font-semibold text-[#5d7386]">{t("heroPillLanguage", locale)}</p>
             </div>
           </div>
         </section>
