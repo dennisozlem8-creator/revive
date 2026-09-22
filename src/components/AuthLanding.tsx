@@ -319,53 +319,68 @@ export function AuthLanding({ mode }: AuthLandingProps) {
         </section>
 
         <section id="library" className="scroll-mt-20 bg-[#e8f3fb]">
-          <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:py-10">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <SectionIntro kicker={t("libraryKicker", locale)} title={t("libraryTitle", locale)} text={t("libraryText", locale)} />
-              <Link
-                href={primaryHref}
-                className="inline-flex h-12 shrink-0 items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-white shadow-[0_12px_28px_rgba(79,144,198,0.28)]"
-              >
-                {primaryCta}
-              </Link>
-            </div>
-            <div className="mt-5 flex flex-wrap items-center gap-2">
-              <p className="rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-[#1b3348] ring-1 ring-[#4f90c6]/20">
-                {t("librarySampleKicker", locale)}
-              </p>
-              <p className="text-sm font-semibold text-[#2f4a60]">{t("librarySampleMeta", locale)}</p>
-            </div>
-            <p className="mt-3 text-sm font-bold text-[#3d7eb4] lg:hidden">{t("slideSideways", locale)}</p>
-            <div className="mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 lg:grid lg:grid-cols-3 lg:overflow-visible">
-              {[
-                ["01", "heel-slides", t("librarySample1Name", locale), t("librarySample1Meta", locale), t("librarySample1Why", locale)],
-                ["02", "quad-sets", t("librarySample2Name", locale), t("librarySample2Meta", locale), t("librarySample2Why", locale)],
-                ["03", "mini-squats", t("librarySample3Name", locale), t("librarySample3Meta", locale), t("librarySample3Why", locale)],
-              ].map(([n, figure, name, meta, why]) => (
-                <article
-                  key={n}
-                  className="flex w-[84%] shrink-0 snap-start flex-col overflow-hidden rounded-[1.45rem] bg-white shadow-[0_16px_36px_rgba(27,51,72,0.08)] ring-1 ring-[#4f90c6]/12 lg:w-auto"
-                >
-                  <div className="h-44 bg-[#f4f9fc] sm:h-48">
-                    <ExerciseFigure id={figure} title={name} className="h-full w-full" />
+          <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
+            <div className="overflow-hidden rounded-[1.75rem] bg-white shadow-[0_18px_40px_rgba(27,51,72,0.08)] ring-1 ring-[#4f90c6]/15">
+              <div className="grid lg:grid-cols-[minmax(17rem,0.82fr)_minmax(0,1.18fr)]">
+                <div className="border-b border-[#e8f3fb] p-6 sm:p-8 lg:border-b-0 lg:border-r">
+                  <SectionKicker>{t("libraryKicker", locale)}</SectionKicker>
+                  <h2 className="rm-serif mt-4 text-3xl font-semibold leading-tight text-[#1b3348] sm:text-[2.35rem]">
+                    {t("libraryTitle", locale)}
+                  </h2>
+                  <p className="mt-3 text-base leading-7 text-[#2f4a60]">{t("libraryText", locale)}</p>
+                  <ol className="mt-6 space-y-3">
+                    {[t("libraryPoint1", locale), t("libraryPoint2", locale), t("libraryPoint3", locale)].map((line, index) => (
+                      <li key={line} className="flex gap-3 text-sm leading-6 text-[#1b3348]">
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#e8f3fb] text-xs font-bold text-[#1b3348]">
+                          {index + 1}
+                        </span>
+                        <span>{line}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="mt-6 text-sm leading-6 text-[#2f4a60]">{t("librarySampleNote", locale)}</p>
+                  <Link
+                    href={primaryHref}
+                    className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 text-base font-bold text-white"
+                  >
+                    {primaryCta}
+                  </Link>
+                </div>
+                <div className="bg-[#f7fbfe] p-5 sm:p-7">
+                  <div className="flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#4f90c6]">{t("librarySampleKicker", locale)}</p>
+                      <p className="rm-serif mt-1 text-2xl font-semibold text-[#1b3348]">{t("librarySampleTitle", locale)}</p>
+                    </div>
+                    <p className="text-sm font-semibold text-[#2f4a60]">{t("librarySampleMeta", locale)}</p>
                   </div>
-                  <div className="flex flex-1 flex-col p-4 sm:p-5">
-                    <p className="text-xs font-extrabold tracking-[0.12em] text-[#4f90c6]">{n}</p>
-                    <h3 className="rm-serif mt-1 text-2xl font-semibold leading-tight text-[#1b3348]">{name}</h3>
-                    <p className="mt-2 text-sm font-semibold text-[#1b3348]">{meta}</p>
-                    <p className="mt-2 text-sm leading-6 text-[#2f4a60]">{why}</p>
+                  <div className="mt-4 overflow-hidden rounded-[1.25rem] bg-white ring-1 ring-[#4f90c6]/12">
+                    {[
+                      ["01", "heel-slides", t("librarySample1Name", locale), t("librarySample1Meta", locale), t("librarySample1Why", locale)],
+                      ["02", "quad-sets", t("librarySample2Name", locale), t("librarySample2Meta", locale), t("librarySample2Why", locale)],
+                      ["03", "mini-squats", t("librarySample3Name", locale), t("librarySample3Meta", locale), t("librarySample3Why", locale)],
+                    ].map(([n, figure, name, meta, why], index) => (
+                      <article
+                        key={n}
+                        className={`grid grid-cols-[5.5rem_1fr] items-center gap-3 p-3 sm:grid-cols-[7.5rem_1fr] sm:gap-4 sm:p-4 ${index > 0 ? "border-t border-[#e8f3fb]" : ""}`}
+                      >
+                        <div className="h-20 overflow-hidden rounded-xl bg-[#f4f9fc] sm:h-24">
+                          <ExerciseFigure id={figure} title={name} className="h-full w-full" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                            <p className="text-xs font-bold tabular-nums text-[#4f90c6]">{n}</p>
+                            <h3 className="rm-serif text-xl font-semibold leading-tight text-[#1b3348]">{name}</h3>
+                          </div>
+                          <p className="mt-1 text-sm font-semibold text-[#1b3348]">{meta}</p>
+                          <p className="mt-1 text-sm leading-6 text-[#2f4a60]">{why}</p>
+                        </div>
+                      </article>
+                    ))}
                   </div>
-                </article>
-              ))}
+                </div>
+              </div>
             </div>
-            <ul className="mt-4 grid gap-2 sm:grid-cols-3">
-              {[t("libraryPoint1", locale), t("libraryPoint2", locale), t("libraryPoint3", locale)].map((line) => (
-                <li key={line} className="rounded-2xl bg-white/80 px-4 py-3 text-sm leading-6 text-[#1b3348] ring-1 ring-[#4f90c6]/15">
-                  {line}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-3 text-sm leading-6 text-[#2f4a60]">{t("librarySampleNote", locale)}</p>
           </div>
         </section>
 
