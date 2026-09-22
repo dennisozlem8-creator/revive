@@ -31,6 +31,7 @@ export function AssessmentFlow({ areaId, areaLabel }: AssessmentFlowProps) {
   const [romValues, setRomValues] = useState<RomValues>({});
   const [deviceSession, setDeviceSession] = useState<DeviceSession | null>(null);
   const [completedIds, setCompletedIds] = useState<string[]>([]);
+  const [exerciseReps, setExerciseReps] = useState(0);
   const savedRef = useRef(false);
 
   const previousExerciseIds = getPreviousExerciseIds(areaId);
@@ -46,21 +47,22 @@ export function AssessmentFlow({ areaId, areaLabel }: AssessmentFlowProps) {
     const peak = Math.max(0, ...Object.values(romValues));
     return {
       angle: peak,
-      reps: exercises.length * 10,
+      reps: exerciseReps,
       emg: 72,
       hr: 78,
       target: user.targetRom,
     };
-  }, [deviceSession, romValues, user, exercises.length]);
+  }, [deviceSession, romValues, user, exerciseReps]);
 
   useEffect(() => {
     if (step !== "report" || exercises.length === 0 || savedRef.current) return;
-    saveExerciseHistory(
-      areaId,
-      completedIds.length ? completedIds : exercises.map((e) => e.id)
-    );
+    const peak = Math.max(0, ...Object.values(romValues));
+    saveExerciseHistory(areaId, completedIds.length ? completedIds : exercises.map((e) => e.id), {
+      angle: peak,
+      reps: exerciseReps,
+    });
     savedRef.current = true;
-  }, [step, areaId, exercises, completedIds, saveExerciseHistory]);
+  }, [step, areaId, exercises, completedIds, saveExerciseHistory, exerciseReps, romValues]);
 
   if (!assessment) return null;
 
@@ -229,8 +231,9 @@ export function AssessmentFlow({ areaId, areaLabel }: AssessmentFlowProps) {
           </section>
           <ExerciseProgram
             exercises={exercises}
-            onComplete={(ids) => {
+            onComplete={(ids, reps) => {
               setCompletedIds(ids);
+              setExerciseReps(reps);
               setStep("report");
             }}
           />

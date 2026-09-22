@@ -26,6 +26,16 @@ export default function ChartsPage() {
   const ordered = clips.slice().sort((a, b) => a.date.localeCompare(b.date));
   const week = lastDaysActive(user, 7);
   const month = lastDaysActive(user, 28);
+  const repsOn = (date: string) => {
+    const fromSessions = user.exerciseHistory.reduce((sum, row) => {
+      return row.completedAt.slice(0, 10) === date ? sum + (row.reps ?? 0) : sum;
+    }, 0);
+    const fromClips = clips.reduce((sum, row) => {
+      return row.date.slice(0, 10) === date ? sum + (row.reps ?? 0) : sum;
+    }, 0);
+    return fromSessions + fromClips;
+  };
+  const weekReps = week.map((day) => repsOn(day.date));
   const streak = calculateStreak(user);
 
   return (
@@ -80,7 +90,7 @@ export default function ChartsPage() {
             <p className="mt-1 text-sm text-[#2f4a60]">{t("aTallBar", locale)}</p>
             <div className="mt-5">
               <DashBars
-                values={week.map((day) => (day.active ? 1 : 0))}
+                values={weekReps}
                 labels={week.map((day) =>
                   new Date(`${day.date}T12:00:00`).toLocaleDateString(undefined, { weekday: "narrow" })
                 )}

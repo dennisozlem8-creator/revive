@@ -96,6 +96,7 @@ function PatientMovementView() {
                       <p className="font-semibold text-[#1b3348]">
                         {row.angle}° · {row.exercise}
                         {row.formScore != null ? ` · form ${row.formScore}` : ""}
+                        {row.reps != null ? ` · ${row.reps} reps` : ""}
                         {row.source === "video"
                           ? " · video"
                           : row.source === "motion"

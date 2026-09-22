@@ -59,7 +59,7 @@ export function SessionResults({ summary, onDone }: SessionResultsProps) {
         </p>
         <div className="mt-5 grid grid-cols-3 gap-3">
           <StatTile value={`${summary.angle}°`} label="Peak ROM" accent="correct" />
-          <StatTile value={summary.reps} label="Reps" accent="brand" />
+          <StatTile value={summary.reps} label="Exercise reps" accent="brand" />
           <StatTile value={`${summary.emg}%`} label="EMG" accent="purple" />
         </div>
       </section>

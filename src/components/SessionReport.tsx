@@ -78,8 +78,13 @@ export function SessionReport({
         <h3 className="rm-serif text-2xl font-semibold text-[#1b3348]">Sensor stats</h3>
         <dl className="mt-4 grid grid-cols-2 gap-4">
           <div>
-            <dt className="text-sm font-semibold text-[#2f4a60]">Reps recorded</dt>
-            <dd className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">{summary.reps}</dd>
+            <dt className="text-sm font-semibold text-[#2f4a60]">Exercise reps</dt>
+            <dd className="rm-serif text-2xl font-semibold tabular-nums text-[#1b3348]">
+              {summary.reps}
+              {summary.testReps ? (
+                <span className="mt-1 block text-sm font-medium text-[#2f4a60]">{summary.testReps} in the range test</span>
+              ) : null}
+            </dd>
           </div>
           <div>
             <dt className="text-sm font-semibold text-[#2f4a60]">EMG effort</dt>

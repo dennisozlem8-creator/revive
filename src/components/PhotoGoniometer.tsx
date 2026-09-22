@@ -751,6 +751,7 @@ export function PhotoGoniometer({
       range: summary.range,
       durationSec: Number(summary.duration.toFixed(1)),
       formScore: videoCoach?.formScore,
+      reps: videoCoach?.reps,
       flags: videoCoach?.findings.filter((f) => f.severity !== "ok").map((f) => f.id),
       nextAction: videoCoach?.progressNote ?? undefined,
       detectedExercise: videoCoach?.detectedExercise,

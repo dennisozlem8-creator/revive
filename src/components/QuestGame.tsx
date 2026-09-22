@@ -4,11 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Exercise } from "@/lib/assessments";
 import { getExerciseMedia, getKidsExerciseImage } from "@/lib/exercise-media";
 import { persistMeasurement } from "@/lib/goniometer";
+import { connectWiredMpu, mpuUsbHelp, mpuUsbSupported, requestUsbMpuPort, type MpuConnection } from "@/lib/mpu-sensor";
+import { createRepCounter } from "@/lib/rep-counter";
 import { useAuth } from "./AuthProvider";
-import {
-  createKidsSensorReading,
-  simulateDeviceConnect,
-} from "@/lib/device-sensor";
 import { getFeedbackState } from "@/lib/feedback";
 import { completeKidsQuestLocal } from "@/lib/kids-progress";
 import { kidsJointForArea, kidsJointLabels, type KidsJoint } from "@/lib/pose-goniometer";
@@ -48,7 +46,7 @@ const measures: { id: MeasureId; kicker: string; name: string; line: string; ima
     id: "motion",
     kicker: "MPU-6050",
     name: "Motion",
-    line: "Strap the wireless sensor. Live angle. The bots count.",
+    line: "USB motion sensor. Bend and return. The bots count each rep.",
     image: "/images/landing-mpu.png?v=8",
   },
   {
@@ -77,6 +75,8 @@ export function QuestGame({
   const [measure, setMeasure] = useState<MeasureId | null>(null);
   const [motionReady, setMotionReady] = useState(false);
   const [motionConnecting, setMotionConnecting] = useState(false);
+  const [motionError, setMotionError] = useState("");
+  const [motionManual, setMotionManual] = useState(false);
   const [musclePractice, setMusclePractice] = useState(false);
   const [photoStatus, setPhotoStatus] = useState<KidsPhotoStatus>({
     cameraReady: false,
@@ -90,9 +90,11 @@ export function QuestGame({
   const [history, setHistory] = useState<number[]>([]);
   const historyRef = useRef<number[]>([]);
   const peakRef = useRef(0);
-  const lastRepAtRef = useRef(0);
-  const lastFlexRef = useRef(false);
   const savedRef = useRef(false);
+  const motionConnection = useRef<MpuConnection | null>(null);
+  const angleCounter = useRef(createRepCounter());
+  const effortCounter = useRef(createRepCounter({ minTravel: 18 }));
+  const recordingRef = useRef(false);
   const measureRef = useRef<MeasureId | null>(null);
   measureRef.current = measure;
 
@@ -113,9 +115,12 @@ export function QuestGame({
   const ready =
     measure === "photo" ? photoReady : measure === "motion" ? motionReady : muscleReady;
   const photoNeedsTaps = measure === "photo" && photoStatus.marked && !photoStatus.cameraReady;
+  const manualCount =
+    photoNeedsTaps || motionManual || (measure === "muscle" && musclePractice && !muscle.connected);
+  recordingRef.current = recording;
 
   const finishQuest = useCallback(
-    (nextAngle: number) => {
+    (nextAngle: number, countedReps: number) => {
       if (savedRef.current) return;
       savedRef.current = true;
       completeKidsQuestLocal(exercise.id, 50);
@@ -130,6 +135,7 @@ export function QuestGame({
         exercise: exercise.name,
         joint: jointLabel,
         angle: Math.round(peak),
+        reps: countedReps,
         note: `Kids Quest ${kind ?? "stretch"}`,
         source: kind === "motion" ? "motion" : kind === "muscle" ? "muscle" : "photo",
         minAngle: historyRef.current.length ? Math.min(...historyRef.current) : undefined,
@@ -142,86 +148,88 @@ export function QuestGame({
     [completeQuest, exercise.id, exercise.name, jointLabel, onQuestComplete, user]
   );
 
-  const countRep = useCallback(
-    (nextAngle: number) => {
-      if (nextAngle < targetAngle * 0.88) return;
-      const now = performance.now();
-      if (now - lastRepAtRef.current < 1200) return;
-      lastRepAtRef.current = now;
-      setReps((r) => {
-        const updated = r + 1;
-        if (updated >= target) finishQuest(nextAngle);
+  const addRep = useCallback(
+    (sample: number) => {
+      setReps((current) => {
+        const updated = current + 1;
+        if (updated >= target) finishQuest(sample, updated);
         return updated;
       });
     },
-    [finishQuest, target, targetAngle]
+    [finishQuest, target]
   );
 
-  const countManualRep = useCallback(() => {
-    const now = performance.now();
-    if (now - lastRepAtRef.current < 600) return;
-    lastRepAtRef.current = now;
-    setReps((r) => {
-      const updated = r + 1;
-      if (updated >= target) finishQuest(peakRef.current || angle || targetAngle);
-      return updated;
-    });
-  }, [angle, finishQuest, target, targetAngle]);
+  useEffect(() => {
+    return () => {
+      motionConnection.current?.disconnect();
+      motionConnection.current = null;
+    };
+  }, []);
 
   useEffect(() => {
-    if (!recording || done || measure !== "motion" || !motionReady) return;
-    const interval = setInterval(() => {
-      const next = createKidsSensorReading(Math.floor(performance.now() / 100), targetAngle);
-      setAngle(next.angle);
-      peakRef.current = Math.max(peakRef.current, next.angle);
-      pushLive(next.angle);
-      countRep(next.angle);
-    }, 100);
-    return () => clearInterval(interval);
-  }, [recording, done, measure, motionReady, targetAngle, countRep]);
-
-  useEffect(() => {
-    if (!recording || done || measure !== "muscle") return;
-    if (musclePractice && !muscle.connected) {
-      const interval = setInterval(() => {
-        const next = createKidsSensorReading(Math.floor(performance.now() / 100), 80);
-        const live = next.emg;
-        setEffort(live);
-        pushLive(live);
-        const flexed = live >= 55;
-        if (flexed && !lastFlexRef.current) countRep(targetAngle);
-        lastFlexRef.current = flexed;
-      }, 100);
-      return () => clearInterval(interval);
-    }
-    if (!muscle.connected) return;
-    const live = muscle.emg ?? 0;
-    setEffort(live);
-    pushLive(live);
-    const flexed = live >= 12;
-    if (flexed && !lastFlexRef.current) countRep(targetAngle);
-    lastFlexRef.current = flexed;
-  }, [recording, done, measure, muscle.connected, muscle.emg, musclePractice, targetAngle, countRep]);
+    if (!recording || done || measure !== "muscle" || !muscle.connected || muscle.emg == null) return;
+    setEffort(muscle.emg);
+    pushLive(muscle.emg);
+    if (effortCounter.current.push(muscle.emg)) addRep(peakRef.current || targetAngle);
+  }, [recording, done, measure, muscle.connected, muscle.emg, addRep, targetAngle]);
 
   function handlePhotoAngle(next: number) {
     setAngle(next);
     peakRef.current = Math.max(peakRef.current, next);
     pushLive(next);
-    if (!recording || done || photoNeedsTaps) return;
-    countRep(next);
+    if (!recordingRef.current || done || photoNeedsTaps) return;
+    if (angleCounter.current.push(next)) addRep(next);
   }
 
-  function connectMotion() {
-    setMotionConnecting(true);
-    simulateDeviceConnect().then(() => {
-      setMotionConnecting(false);
+  function countManualRep() {
+    addRep(peakRef.current || angle || targetAngle);
+  }
+
+  async function connectMotion() {
+    setMotionError("");
+    if (!mpuUsbSupported()) {
+      setMotionError(mpuUsbHelp());
+      setMotionManual(true);
       setMotionReady(true);
-    });
+      return;
+    }
+    setMotionConnecting(true);
+    try {
+      const port = await requestUsbMpuPort();
+      const connection = await connectWiredMpu({
+        port,
+        onAngle: (next) => {
+          setMotionReady(true);
+          setMotionManual(false);
+          setAngle(next);
+          peakRef.current = Math.max(peakRef.current, next);
+          pushLive(next);
+          if (recordingRef.current && angleCounter.current.push(next)) addRep(next);
+        },
+        onDisconnect: () => {
+          motionConnection.current = null;
+          setMotionReady(false);
+        },
+      });
+      motionConnection.current = connection;
+      setMotionReady(true);
+    } catch (err) {
+      const name = err instanceof DOMException ? err.name : "";
+      setMotionError(
+        name === "NotFoundError" || name === "AbortError"
+          ? "No USB device was chosen."
+          : err instanceof Error
+            ? err.message
+            : "Could not open USB."
+      );
+    } finally {
+      setMotionConnecting(false);
+    }
   }
 
   function startStretch() {
-    lastRepAtRef.current = 0;
-    lastFlexRef.current = false;
+    angleCounter.current.reset();
+    effortCounter.current.reset();
     peakRef.current = photoStatus.marked ? angle : 0;
     savedRef.current = false;
     setReps(0);
@@ -245,14 +253,12 @@ export function QuestGame({
       if (motionConnecting) return "Finding the motion sensor.";
       if (!motionReady) return "Connect the MPU-6050 to begin.";
       if (!recording) return `Ready. Do ${exercise.name}.`;
-      if (feedback === "correct") return `Rep ${reps} counted.`;
-      return "Bend, then stand. The bots count.";
+      return motionManual ? "Count each stretch you finish." : "Bend and come back. The bots count that rep.";
     }
     if (muscle.connecting) return "Looking for MyoWare.";
     if (!muscleReady) return "Connect MyoWare, or practice without the sensor.";
     if (!recording) return `Ready. Do ${exercise.name}.`;
-    if (effort >= (musclePractice && !muscle.connected ? 55 : 12)) return `Rep ${reps} counted. Keep flexing.`;
-    return "Flex. The bots count.";
+    return muscle.connected ? "Flex and let go. The bots count that rep." : "Do the stretch, then tap Count this stretch.";
   }
 
   const active = measures.find((item) => item.id === measure);
@@ -352,12 +358,15 @@ export function QuestGame({
                 <p className="text-base text-[#243056]">
                   {motionConnecting
                     ? "Connecting"
-                    : motionReady
-                      ? recording
-                        ? "Live angle"
-                        : "Motion sensor ready"
-                      : "Strap above and below the joint"}
+                    : motionManual
+                      ? "Count each stretch on this device."
+                      : motionReady
+                        ? recording
+                          ? "Live angle"
+                          : "USB motion sensor ready"
+                        : "Plug in the USB motion sensor"}
                 </p>
+                {motionError ? <p className="mt-1 text-sm text-[#5b6685]">{motionError}</p> : null}
               </div>
               {!motionReady && (
                 <button
@@ -443,23 +452,21 @@ export function QuestGame({
           {ready && recording && !done && (
             <>
               <p className="mt-4 text-center text-base font-semibold text-[#243056]">
-                {measure === "muscle"
-                  ? effort >= (musclePractice && !muscle.connected ? 55 : 12)
-                    ? "Nice flex. Rep counted."
-                    : "Flex. The bots count."
-                  : photoNeedsTaps
-                    ? "Do the stretch, then tap Count this stretch."
+                {manualCount
+                  ? "Do the stretch, then tap Count this stretch."
+                  : measure === "muscle"
+                    ? "Flex and let go. That is one rep."
                     : feedbackKidsLabel[feedback]}
               </p>
               <div className="rm-xp-track mt-3 rounded-full">
                 <div className="rm-xp-fill rounded-full" style={{ width: `${Math.min(100, (reps / target) * 100)}%` }} />
               </div>
-              {photoNeedsTaps ? (
+              {manualCount ? (
                 <button type="button" onClick={countManualRep} className="kids-cta mt-4 w-full rounded-full py-4 text-xl">
                   Count this stretch
                 </button>
               ) : (
-                <p className="mt-3 text-center text-base font-medium text-[#5b6685]">Keep stretching.</p>
+                <p className="mt-3 text-center text-base font-medium text-[#5b6685]">Bend and come back. Keep going.</p>
               )}
             </>
           )}

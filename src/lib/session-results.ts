@@ -5,7 +5,10 @@ import { getAssessment, type Exercise } from "./assessments";
 
 export type SessionSummary = {
   angle: number;
+  /** Reps counted while doing the exercises. */
   reps: number;
+  /** Reps counted during the range test, before the exercise list. */
+  testReps?: number;
   emg: number;
   hr: number;
   target: number;

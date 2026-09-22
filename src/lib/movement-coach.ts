@@ -1,4 +1,5 @@
 import { EXERCISE_OPTIONS, type GoniometerMeasurement, type Point } from "./goniometer";
+import { countAngleReps } from "./rep-counter";
 import { summarizeMovement, type MovementSample } from "./pose-goniometer";
 
 export type FindingSeverity = "ok" | "watch" | "unusual";
@@ -21,6 +22,8 @@ export type MovementCoachReport = {
   unusualTimes: number[];
   trackingQuality: "good" | "fair" | "poor";
   formScore: number;
+  /** Full bend-and-return cycles in the clip. A still photo is 0. */
+  reps: number;
   progressNote: string | null;
 };
 
@@ -425,6 +428,7 @@ export function coachMovement(
     unusualTimes: [...new Set(unusualTimes)].slice(0, 6),
     trackingQuality: quality,
     formScore: formScoreFor(findings, quality),
+    reps: countAngleReps(angles),
     progressNote: progressNoteFor(history, summary.peak),
   };
 }
@@ -485,6 +489,7 @@ export function coachPhotoPose(
     unusualTimes: [],
     trackingQuality: "good",
     formScore: offset > 0.08 ? 72 : 90,
+    reps: 0,
     progressNote: null,
   };
 }

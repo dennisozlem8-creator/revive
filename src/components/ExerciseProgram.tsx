@@ -3,13 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import type { Exercise } from "@/lib/assessments";
 import { getExerciseMedia } from "@/lib/exercise-media";
-import { getFeedbackState } from "@/lib/feedback";
+import { t } from "@/lib/i18n";
+import type { MeasureMethod } from "@/lib/users";
+import { createRepCounter } from "@/lib/rep-counter";
 import { useAuth } from "./AuthProvider";
+import { MotionPanel } from "./MotionPanel";
+import { useMyoWare } from "./MyoWareProvider";
+import { MyoWarePanel } from "./MyoWarePanel";
 import { addNotification, sendBrowserNotification } from "@/lib/notifications";
 
 type ExerciseProgramProps = {
   exercises: Exercise[];
-  onComplete: (completedIds: string[]) => void;
+  method?: MeasureMethod;
+  onComplete: (completedIds: string[], reps: number) => void;
 };
 
 type ExerciseAlert = {
@@ -23,74 +29,75 @@ function parseTargetReps(sets: string): number {
   return match ? Number(match[1]) : 10;
 }
 
-export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps) {
+export function ExerciseProgram({ exercises, method = "camera", onComplete }: ExerciseProgramProps) {
   const { user } = useAuth();
+  const muscle = useMyoWare();
   const [index, setIndex] = useState(0);
   const [completed, setCompleted] = useState<string[]>([]);
   const [active, setActive] = useState(false);
   const [reps, setReps] = useState(0);
-  const [simAngle, setSimAngle] = useState(0);
+  const [liveAngle, setLiveAngle] = useState<number | null>(null);
+  const [signalSeen, setSignalSeen] = useState(false);
   const [alerts, setAlerts] = useState<ExerciseAlert[]>([]);
-  const milestoneRef = useRef<Set<number>>(new Set());
-  const lastFeedbackRef = useRef<string>("idle");
+  const totals = useRef<Record<string, number>>({});
+  const angleCounter = useRef(createRepCounter());
+  const effortCounter = useRef(createRepCounter({ minTravel: 18 }));
 
   const current = exercises[index];
   if (!current) return null;
 
   const media = getExerciseMedia(current.id, current.name);
+  const locale = user?.language ?? "en";
   const progress = ((index + 1) / exercises.length) * 100;
   const targetReps = parseTargetReps(current.sets);
-  const targetAngle = user?.targetRom ?? 90;
-  const feedback = getFeedbackState(simAngle, targetAngle);
 
   useEffect(() => {
     setActive(false);
     setReps(0);
-    setSimAngle(0);
+    setLiveAngle(null);
+    setSignalSeen(false);
     setAlerts([]);
-    milestoneRef.current = new Set();
-    lastFeedbackRef.current = "idle";
+    angleCounter.current.reset();
+    effortCounter.current.reset();
   }, [index]);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active || method !== "muscle" || !muscle.connected || muscle.emg == null) return;
+    setSignalSeen(true);
+    if (!effortCounter.current.push(muscle.emg)) return;
+    setReps((count) => {
+      const updated = count + 1;
+      totals.current[current.id] = updated;
+      pushAlert("success", `Rep ${updated} counted. Bend and return.`, "success");
+      if (updated === targetReps) pushAlert("done", `${current.name} complete.`, "milestone");
+      return updated;
+    });
+  }, [active, method, muscle.connected, muscle.emg, current.id, current.name, targetReps]);
 
-    const interval = setInterval(() => {
-      const nextAngle = Math.min(
-        targetAngle + 5,
-        Math.round(30 + Math.random() * (targetAngle - 10))
-      );
-      setSimAngle(nextAngle);
+  function onAngle(next: number) {
+    setLiveAngle(next);
+    if (!active || method === "muscle") return;
+    setSignalSeen(true);
+    if (!angleCounter.current.push(next)) return;
+    setReps((count) => {
+      const updated = count + 1;
+      totals.current[current.id] = updated;
+      pushAlert("success", `Rep ${updated} counted. Bend and return.`, "success");
+      if (updated === targetReps) pushAlert("done", `${current.name} complete.`, "milestone");
+      return updated;
+    });
+  }
 
-      if (nextAngle >= targetAngle * 0.88 && Math.random() > 0.55) {
-        setReps((r) => {
-          const updated = Math.min(targetReps, r + 1);
-          if (updated > r) {
-            pushAlert("success", `Rep ${updated} counted — keep that form!`, "success");
-            if (updated === Math.ceil(targetReps / 2)) {
-              pushAlert("half", `Halfway there — ${targetReps - updated} reps to go!`, "milestone");
-            }
-            if (updated === targetReps) {
-              pushAlert("done", `${current.name} complete! Great work.`, "milestone");
-            }
-          }
-          return updated;
-        });
-      }
-    }, 900);
-
-    return () => clearInterval(interval);
-  }, [active, targetAngle, targetReps, current.name]);
-
-  useEffect(() => {
-    if (!active || feedback === "idle" || feedback === lastFeedbackRef.current) return;
-    lastFeedbackRef.current = feedback;
-    if (feedback === "alert") {
-      pushAlert(`form-${Date.now()}`, "Adjust your form — move slowly through the full range.", "form");
-    } else if (feedback === "almost") {
-      pushAlert(`almost-${Date.now()}`, "Almost there — a little more bend!", "tip");
-    }
-  }, [feedback, active]);
+  function countManualRep() {
+    if (signalSeen) return;
+    setReps((count) => {
+      const updated = count + 1;
+      totals.current[current.id] = updated;
+      pushAlert("success", `Rep ${updated} counted.`, "success");
+      if (updated === targetReps) pushAlert("done", `${current.name} complete.`, "milestone");
+      return updated;
+    });
+  }
 
   function pushAlert(id: string, message: string, tone: ExerciseAlert["tone"]) {
     setAlerts((prev) => {
@@ -119,6 +126,7 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
     setCompleted(nextCompleted);
     pushAlert("finish", `✓ ${current.name} logged.`, "success");
 
+    const total = Object.values(totals.current).reduce((sum, count) => sum + count, 0);
     if (index < exercises.length - 1) {
       setIndex((i) => i + 1);
     } else {
@@ -134,7 +142,7 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
           `Session complete — all ${exercises.length} exercises done!`
         );
       }
-      onComplete(nextCompleted);
+      onComplete(nextCompleted, total);
     }
   }
 
@@ -189,24 +197,28 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
           </p>
 
           {active && (
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rm-card px-4 py-3 text-center">
-                <p className="text-xs text-muted">Reps</p>
-                <p className="text-2xl font-bold text-correct">
-                  {reps}/{targetReps}
-                </p>
+            <div className="mt-4 space-y-3">
+              <p className="text-sm leading-6 text-[#2f4a60]">{t("repCycleHint", locale)}</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rm-card px-4 py-3 text-center">
+                  <p className="text-xs text-muted">{t("reps", locale)}</p>
+                  <p className="text-2xl font-bold text-correct">
+                    {reps}/{targetReps}
+                  </p>
+                </div>
+                <div className="rm-card px-4 py-3 text-center">
+                  <p className="text-xs text-muted">Angle</p>
+                  <p className="text-2xl font-bold text-brand-light">{liveAngle != null ? `${liveAngle}°` : "—"}</p>
+                </div>
               </div>
-              <div className="rm-card px-4 py-3 text-center">
-                <p className="text-xs text-muted">Angle</p>
-                <p className="text-2xl font-bold text-brand-light">{simAngle}°</p>
-              </div>
+              {method === "muscle" ? <MyoWarePanel compact /> : <MotionPanel compact live onAngle={onAngle} />}
             </div>
           )}
 
           <ol className="mt-5 space-y-2 text-sm text-body">
-            <li>1. Get into position shown in the picture</li>
-            <li>2. Complete all sets and reps at a comfortable pace</li>
-            <li>3. Tap below when finished before moving on</li>
+            <li>1. Get into the position in the picture</li>
+            <li>2. Bend and return once for each rep</li>
+            <li>3. Tap below when the set is finished</li>
           </ol>
 
           {!active ? (
@@ -214,14 +226,16 @@ export function ExerciseProgram({ exercises, onComplete }: ExerciseProgramProps)
               Start exercise with sensor
             </button>
           ) : (
-            <button
-              type="button"
-              onClick={markDone}
-              disabled={reps < Math.min(3, targetReps)}
-              className="rm-btn rm-btn-primary mt-8 w-full disabled:opacity-40"
-            >
-              {index < exercises.length - 1 ? "Done — next exercise" : "Finish all exercises"}
-            </button>
+            <div className="mt-8 space-y-3">
+              {!signalSeen ? (
+                <button type="button" onClick={countManualRep} className="rm-btn rm-btn-ghost w-full">
+                  {t("countRepBtn", locale)}
+                </button>
+              ) : null}
+              <button type="button" onClick={markDone} className="rm-btn rm-btn-primary w-full">
+                {index < exercises.length - 1 ? "Done — next exercise" : "Finish all exercises"}
+              </button>
+            </div>
           )}
         </div>
       </section>

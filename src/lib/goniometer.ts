@@ -20,6 +20,7 @@ export type GoniometerMeasurement = {
   range?: number;
   durationSec?: number;
   formScore?: number;
+  reps?: number;
   flags?: string[];
   nextAction?: string;
   detectedExercise?: string;
