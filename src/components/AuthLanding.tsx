@@ -230,7 +230,7 @@ export function AuthLanding({ mode }: AuthLandingProps) {
                       <p className="mt-0.5 text-base font-semibold leading-snug">{t("previewKneeExtension", locale)}</p>
                       <p className="mt-0.5 text-sm text-muted">{t("previewSetsPhoto", locale)}</p>
                       <div className="mt-auto flex items-center justify-between pt-2">
-                        <span className="text-xs font-medium text-muted">{t("photoGoniometer", locale)}</span>
+                        <span className="text-xs font-medium text-muted">{t("passportFeedsPhoto", locale)}</span>
                         <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">{t("previewStart", locale)}</span>
                       </div>
                     </div>
