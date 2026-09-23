@@ -19,9 +19,10 @@
   --gold: #7a6b45;
   --teal: #3d6f7a;
   --kids-bg: #fff4e0;
-  --caregiver-bg: #eef6fb;
-  --caregiver-text: #1b3348;
-  --caregiver-muted: #4d6478;
+  --caregiver-bg: #f4efe6;
+  --caregiver-text: #243028;
+  --caregiver-muted: #5c675c;
+  --caregiver-ink: #2a332c;
   --muted: #2f4a60;
   --body: #1b3348;
   --border: rgba(79, 144, 198, 0.22);
@@ -557,8 +558,8 @@ details[open] > summary::after {
 }
 
 .rm-glow-caregiver {
-  background: var(--caregiver-bg);
-  color: var(--caregiver-text);
+  background: #f4efe6;
+  color: #243028;
 }
 
 @keyframes fade-up {

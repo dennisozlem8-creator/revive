@@ -26,7 +26,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
         compact
         className={isCaregiver ? "[&_span]:text-[var(--caregiver-text)]" : ""}
       />
-      <span className={`whitespace-nowrap text-sm font-semibold tracking-tight sm:text-[1.05rem] ${isCaregiver ? "text-[var(--caregiver-text)]" : "text-foreground"}`}>
+      <span className={`whitespace-nowrap text-sm font-semibold tracking-tight sm:text-[1.05rem] ${isCaregiver ? "text-[#f7f3ea]" : "text-foreground"}`}>
         Revive Motion
       </span>
     </span>
@@ -67,7 +67,13 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
   }
 
   return (
-      <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-white/90 backdrop-blur-xl print:hidden">
+      <header
+        className={`sticky top-0 z-40 border-b print:hidden ${
+          isCaregiver
+            ? "border-[#2a332c] bg-[#2a332c] text-[#f7f3ea]"
+            : "border-[var(--border)] bg-white/90 text-foreground backdrop-blur-xl"
+        }`}
+      >
       <div className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
         {linkHome ? (
           <Link
@@ -80,7 +86,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
           logo
         )}
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
-          <LanguageToggle />
+          <LanguageToggle tone={isCaregiver ? "onInk" : "default"} />
           {(!user || user.role === "patient") && (
             <>
               {user?.role === "patient" && (
@@ -98,7 +104,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
           )}
           {user && (
             <>
-              <span className={`hidden text-sm sm:inline ${isCaregiver ? "text-[var(--caregiver-muted)]" : "text-muted"}`}>
+              <span className={`hidden text-sm sm:inline ${isCaregiver ? "text-[#f7f3ea]" : "text-muted"}`}>
                 {user.name.split(" ")[0]}
               </span>
               <button
@@ -106,7 +112,7 @@ export function Header({ linkHome = false, variant = "patient" }: HeaderProps) {
                 onClick={logout}
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
                   isCaregiver
-                    ? "border-[#cbd5e1] text-[var(--caregiver-muted)] hover:bg-white"
+                    ? "border-white/30 text-[#f7f3ea] hover:bg-white/10"
                     : "border-[var(--border)] text-muted hover:text-foreground"
                 }`}
               >

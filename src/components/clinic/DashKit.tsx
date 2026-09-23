@@ -1,8 +1,12 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { SafePicture } from "@/components/SafePicture";
+import { useAuth } from "@/components/AuthProvider";
+import { isCareTeam } from "@/lib/users";
 
 export function DashShell({
   children,
@@ -15,9 +19,11 @@ export function DashShell({
   caregiver?: boolean;
   wide?: boolean;
 }) {
+  const { user } = useAuth();
+  const care = caregiver || isCareTeam(user?.role);
   return (
-    <div className={`min-h-full overflow-x-hidden ${nav ? "pb-36 sm:pb-32" : "pb-12"} ${caregiver ? "rm-glow-caregiver" : "rm-glow-patient"}`}>
-      <Header linkHome variant={caregiver ? "caregiver" : "patient"} />
+    <div className={`min-h-full overflow-x-hidden ${nav ? "pb-36 sm:pb-32" : "pb-12"} ${care ? "rm-glow-caregiver" : "rm-glow-patient"}`}>
+      <Header linkHome variant={care ? "caregiver" : "patient"} />
       <main className={`mx-auto w-full px-4 pb-10 sm:px-6 ${wide ? "max-w-6xl" : "max-w-2xl"}`}>{children}</main>
       {nav ? <BottomNav /> : null}
     </div>

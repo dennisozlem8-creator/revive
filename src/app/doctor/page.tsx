@@ -50,7 +50,7 @@ export default function DoctorDashboardPage() {
         title="Your patients"
         text="Review saved clips, form flags, and whether range is improving. Nothing here is invented."
         action={
-          <Link href="/pt-update" className="rm-btn rm-btn-brand h-11 min-h-0 rounded-full px-6">
+          <Link href="/pt-update" className="rm-btn h-11 min-h-0 rounded-full bg-[#2a332c] px-6 text-[#f7f3ea] hover:bg-[#3a4a3c]">
             Push exercise update
           </Link>
         }

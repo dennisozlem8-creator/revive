@@ -55,10 +55,17 @@ export function BottomNav() {
   const { user } = useAuth();
   const pathname = usePathname();
   const locale = clinicLocale(user);
-  const tabs = isCareTeam(user?.role) ? doctorTabs : patientTabs;
+  const care = isCareTeam(user?.role);
+  const tabs = care ? doctorTabs : patientTabs;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--border)] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md print:hidden">
+    <nav
+      className={`fixed bottom-0 left-0 right-0 z-40 border-t pb-[env(safe-area-inset-bottom)] print:hidden ${
+        care
+          ? "border-[#2a332c] bg-[#2a332c] text-[#f7f3ea]"
+          : "border-[var(--border)] bg-white/95 backdrop-blur-md"
+      }`}
+    >
       <div className="mx-auto flex w-full max-w-lg items-stretch justify-between gap-1 px-1.5 py-1.5">
         {tabs.map((tab) => {
           const active = pathname === tab.href;
@@ -68,7 +75,13 @@ export function BottomNav() {
               key={tab.href}
               href={tab.href}
               className={`flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl px-1 py-2 text-center text-[11px] font-semibold transition ${
-                active ? "bg-[#e8f3fb] text-[#1b3348]" : "text-[#2f4a60] hover:text-[#1b3348]"
+                active
+                  ? care
+                    ? "bg-[#f4efe6] text-[#2a332c]"
+                    : "bg-[#e8f3fb] text-[#1b3348]"
+                  : care
+                    ? "text-[#f7f3ea]/80 hover:text-[#f7f3ea]"
+                    : "text-[#2f4a60] hover:text-[#1b3348]"
               }`}
             >
               <Icon />

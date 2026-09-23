@@ -13,7 +13,13 @@ export function DemoBanner({ locale }: { locale: Locale }) {
   const clinician = user.email === DEMO_CLINIC_EMAIL;
 
   return (
-    <div className="mb-5 rounded-[1.2rem] bg-[#e8f3fb] px-4 py-3 text-sm leading-6 text-[#1b3348] ring-1 ring-[#4f90c6]/20">
+    <div
+      className={`mb-5 rounded-[1.2rem] px-4 py-3 text-sm leading-6 ring-1 ${
+        clinician
+          ? "bg-[#ebe4d6] text-[#243028] ring-[#2a332c]/15"
+          : "bg-[#e8f3fb] text-[#1b3348] ring-[#4f90c6]/20"
+      }`}
+    >
       <p className="font-semibold">{t("demoKicker", locale)}</p>
       <p className="mt-1">{clinician ? t("demoClinicianBanner", locale) : t("demoBanner", locale)}</p>
       <p className="mt-2 text-xs text-[#2f4a60]">
