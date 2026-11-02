@@ -92,3 +92,15 @@ npm run dev
 Optional Supabase keys in `.env.local` come from your Supabase project. The app still runs without them; accounts and goniometer results stay in local storage.
 
 Open [http://localhost:3000](http://localhost:3000).
+
+## Cadence
+
+[Cadence](cadence/README.md) is a separate voice check-in in this repo. It reflects pace, melody, pauses, and word choice as a private mental-state tone. It is not part of the therapy session flow, and it is not a diagnosis.
+
+```bash
+cd cadence
+npm install
+npm run dev
+```
+
+Open [http://localhost:3010](http://localhost:3010).
